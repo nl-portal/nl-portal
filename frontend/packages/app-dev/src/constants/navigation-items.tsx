@@ -1,15 +1,16 @@
 import { NavigationItem } from "@nl-portal/nl-portal-user-interface";
 import {
   ArchiveIcon,
+  CarIcon,
   CheckCircleIcon,
-  DocumentIcon,
+  EuroIcon,
   GridIcon,
   InboxIcon,
   UserIcon,
 } from "@gemeente-denhaag/icons";
 import { paths } from "./paths";
 
-export const menuItems: NavigationItem[][] = [
+export const navigationItems: NavigationItem[][] = [
   [
     {
       titleTranslationKey: "overview",
@@ -37,9 +38,22 @@ export const menuItems: NavigationItem[][] = [
   ],
   [
     {
-      titleTranslationKey: "sample",
-      path: paths.themeOverview("sample"),
-      icon: <DocumentIcon />,
+      titleTranslationKey: "belastingzaken",
+      path: paths.themeOverview("belastingzaken"),
+      icon: <EuroIcon />,
+      themeSlug: "belastingzaken",
+    },
+    {
+      titleTranslationKey: "parkeren",
+      path: paths.themeOverview("parkeren"),
+      icon: <CarIcon />,
+      themeSlug: "parkeren",
+    },
+    {
+      titleTranslationKey: "inkomensondersteuning",
+      path: paths.themeOverview("inkomensondersteuning"),
+      icon: <EuroIcon />,
+      themeSlug: "inkomensondersteuning",
     },
   ],
   [
