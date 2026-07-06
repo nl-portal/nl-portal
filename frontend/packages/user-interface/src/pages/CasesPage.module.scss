@@ -1,0 +1,8 @@
+@use "../styles/mixins";
+
+.cases {
+  div[role="tabpanel"] {
+    padding: 0;
+    padding-block-start: var(--nlportal-space-block-2xl, 2rem);
+  }
+}

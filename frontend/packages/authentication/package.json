@@ -1,0 +1,57 @@
+{
+  "name": "@nl-portal/nl-portal-authentication",
+  "version": "3.0.3",
+  "author": "Ritense",
+  "license": "EUPL-1.2",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "tsc && vite build",
+    "clean": "rimraf dist",
+    "dev": "vite build --watch --mode development",
+    "preview": "vite preview",
+    "preinstall": "npx only-allow pnpm",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gemeente-denhaag/modal": "^3.0.2",
+    "@gemeente-denhaag/typography": "3.0.1",
+    "jwt-decode": "^4.0.0",
+    "oidc-client-ts": "3.4.1",
+    "react-oidc-context": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-intl": "^7.1.14",
+    "react-router": "^7.10.1",
+    "rimraf": "^6.1.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.0.15"
+  },
+  "peerDependencies": {
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-intl": "^7.1.14",
+    "react-router": "^7.10.1"
+  }
+}

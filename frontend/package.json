@@ -1,0 +1,54 @@
+{
+  "name": "nl-portal-frontend-libraries",
+  "private": true,
+  "packages": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "pnpm clean && pnpm run --recursive --parallel build",
+    "clean": "pnpm run --recursive clean",
+    "codegen": "pnpm run --recursive --parallel codegen",
+    "dev": "pnpm clean && pnpm run --recursive --parallel dev",
+    "lint": "eslint \"packages/**/*.{js,jsx,ts,tsx}\"",
+    "lint:css": "stylelint \"**/*.{css,scss}\"",
+    "lint:fix": "eslint \"packages/**/*.{js,jsx,ts,tsx}\" --fix",
+    "preinstall": "npx only-allow pnpm",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "publish": "lerna publish from-package",
+    "release": "lerna version 3.0.3 --no-changelog --no-private --no-commit-hooks --message 'chore: released %s [skip ci]'",
+    "test": "pnpm run --recursive --parallel test",
+    "typecheck": "pnpm run --recursive --parallel typecheck",
+    "update-patch": "npm-check-updates --configFileName .ncurc.patch.js",
+    "update-minor": "npm-check-updates --configFileName .ncurc.minor.js",
+    "update-major": "npm-check-updates --configFileName .ncurc.major.js",
+    "postinstall": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "20.2.0",
+    "@commitlint/config-conventional": "20.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
+    "eslint": "^9.37.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^16.5.0",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "npm-check-updates": "^19.2.0",
+    "prettier": "3.7.4",
+    "rollup-plugin-peer-deps-external": "2.2.4",
+    "stylelint": "16.26.1",
+    "stylelint-config-standard-scss": "16.0.0",
+    "stylelint-order": "7.0.0",
+    "stylelint-selector-bem-pattern": "4.0.1",
+    "typescript": "5.9.3",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": "^22",
+    "pnpm": "^10"
+  }
+}
