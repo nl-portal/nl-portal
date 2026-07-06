@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -33,8 +33,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -98,18 +98,18 @@ class OpenProductTypeQueryIT(
                     .get()
 
             assertEquals(1, responseBody.get("number")?.intValue())
-            assertEquals("Parkeren", responseBody.requiredAt("/content/0/naam")?.textValue())
-            assertEquals("Parkeervergunning", responseBody.requiredAt("/content/0/uniformeProductNaam")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/code")?.textValue())
-            assertEquals("317ab929-5cb4-4dde-ae4a-489f4d388699", responseBody.requiredAt("/content/0/prijzen/0/uuid")?.textValue())
+            assertEquals("Parkeren", responseBody.requiredAt("/content/0/naam")?.stringValue())
+            assertEquals("Parkeervergunning", responseBody.requiredAt("/content/0/uniformeProductNaam")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/code")?.stringValue())
+            assertEquals("317ab929-5cb4-4dde-ae4a-489f4d388699", responseBody.requiredAt("/content/0/prijzen/0/uuid")?.stringValue())
             assertEquals(100.00, responseBody.requiredAt("/content/0/prijzen/0/prijsopties/0/bedrag")?.doubleValue())
-            assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/content/0/prijzen/0/prijsregels/0/url")?.textValue())
-            assertEquals("link naar Ritense website", responseBody.requiredAt("/content/0/links/0/naam")?.textValue())
-            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/content/0/acties/0/naam")?.textValue())
-            assertEquals("RMWA", responseBody.requiredAt("/content/0/externCodes/0/code")?.textValue())
-            assertEquals("paymentcategorie", responseBody.requiredAt("/content/0/parameters/0/naam")?.textValue())
-            assertEquals("parkeren", responseBody.requiredAt("/content/0/parameters/0/waarde")?.textValue())
-            assertEquals("http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486", responseBody.requiredAt("/content/0/zaaktypen/0/url")?.textValue())
+            assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/content/0/prijzen/0/prijsregels/0/url")?.stringValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/content/0/links/0/naam")?.stringValue())
+            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/content/0/acties/0/naam")?.stringValue())
+            assertEquals("RMWA", responseBody.requiredAt("/content/0/externCodes/0/code")?.stringValue())
+            assertEquals("paymentcategorie", responseBody.requiredAt("/content/0/parameters/0/naam")?.stringValue())
+            assertEquals("parkeren", responseBody.requiredAt("/content/0/parameters/0/waarde")?.stringValue())
+            assertEquals("http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486", responseBody.requiredAt("/content/0/zaaktypen/0/url")?.stringValue())
         }
 
     @Test
@@ -126,18 +126,18 @@ class OpenProductTypeQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("Parkeren", responseBody.requiredAt("/naam")?.textValue())
-            assertEquals("Parkeervergunning", responseBody.requiredAt("/uniformeProductNaam")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/code")?.textValue())
-            assertEquals("317ab929-5cb4-4dde-ae4a-489f4d388699", responseBody.requiredAt("/prijzen/0/uuid")?.textValue())
+            assertEquals("Parkeren", responseBody.requiredAt("/naam")?.stringValue())
+            assertEquals("Parkeervergunning", responseBody.requiredAt("/uniformeProductNaam")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/code")?.stringValue())
+            assertEquals("317ab929-5cb4-4dde-ae4a-489f4d388699", responseBody.requiredAt("/prijzen/0/uuid")?.stringValue())
             assertEquals(100.00, responseBody.requiredAt("/prijzen/0/prijsopties/0/bedrag")?.doubleValue())
-            assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/prijzen/0/prijsregels/0/url")?.textValue())
-            assertEquals("link naar Ritense website", responseBody.requiredAt("/links/0/naam")?.textValue())
-            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/acties/0/naam")?.textValue())
-            assertEquals("RMWA", responseBody.requiredAt("/externCodes/0/code")?.textValue())
-            assertEquals("paymentcategorie", responseBody.requiredAt("/parameters/0/naam")?.textValue())
-            assertEquals("parkeren", responseBody.requiredAt("/parameters/0/waarde")?.textValue())
-            assertEquals("http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486", responseBody.requiredAt("/zaaktypen/0/url")?.textValue())
+            assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/prijzen/0/prijsregels/0/url")?.stringValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/links/0/naam")?.stringValue())
+            assertEquals("watkanikregelen-belastingen", responseBody.requiredAt("/acties/0/naam")?.stringValue())
+            assertEquals("RMWA", responseBody.requiredAt("/externCodes/0/code")?.stringValue())
+            assertEquals("paymentcategorie", responseBody.requiredAt("/parameters/0/naam")?.stringValue())
+            assertEquals("parkeren", responseBody.requiredAt("/parameters/0/waarde")?.stringValue())
+            assertEquals("http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486", responseBody.requiredAt("/zaaktypen/0/url")?.stringValue())
         }
 
     private fun setupMockServer() {

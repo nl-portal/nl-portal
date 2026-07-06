@@ -17,22 +17,21 @@
 object Versions {
     const val everitJsonSchema = "1.14.6"
     const val jsonPath = "2.10.0"
-    const val jsonWebTokens = "0.13.0"
     const val kotlinCoroutines = "1.10.2"
     const val apacheTikaVersion="3.3.0"
     const val clamAvVersion="2.1.2"
     const val apacheCommons = "3.20.0"
     const val commonsIo = "2.21.0"
     const val commonsCodec = "1.22.0"
-    const val graphqlJava ="24.3"
+    const val graphqlJava ="25.0"
     const val graphqlJavaScalars ="24.0"
     const val kotlinLogging = "7.0.13"
-    const val springCloud = "4.3.0"
+    const val springCloud = "5.0.2"
 
     //Test versions
     const val hamcrest = "3.0"
     const val mockitoKotlin = "6.1.0"
     const val okHttp3 = "5.2.0"
     const val postgresql = "42.7.8"
-    const val h2 = "2.3.232"
+    const val h2 = "2.4.240"
 }

@@ -15,8 +15,8 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.treeToValue
+import tools.jackson.databind.JsonNode
+import tools.jackson.module.kotlin.treeToValue
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -36,8 +36,8 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
@@ -66,8 +66,8 @@ class OpenKlant2PartijQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("OBJECT", responseBody.get("kind")?.textValue())
-            assertEquals("PartijResponse", responseBody.get("name")?.textValue())
+            assertEquals("OBJECT", responseBody.get("kind")?.stringValue())
+            assertEquals("PartijResponse", responseBody.get("name")?.stringValue())
         }
 
     @Test
@@ -89,9 +89,9 @@ class OpenKlant2PartijQueryIT(
             verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
 
             assertNotNull(responseBody)
-            assertEquals(SoortPartij.PERSOON.name, responseBody.get("soortPartij")?.textValue())
+            assertEquals(SoortPartij.PERSOON.name, responseBody.get("soortPartij")?.stringValue())
             assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responseBody.get("partijIdentificatie")) }
-            assertEquals("Lucas Boom", responseBody.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
+            assertEquals("Lucas Boom", responseBody.requiredAt("/partijIdentificatie/volledigeNaam")?.stringValue())
         }
 
     @Test
@@ -115,9 +115,9 @@ class OpenKlant2PartijQueryIT(
             verify(openKlant2Service, times(1)).findPartijByAuthentication(any())
 
             assertNotNull(responseBody)
-            assertEquals(SoortPartij.ORGANISATIE.name, responseBody.get("soortPartij")?.textValue())
+            assertEquals(SoortPartij.ORGANISATIE.name, responseBody.get("soortPartij")?.stringValue())
             assertDoesNotThrow { objectMapper.treeToValue<OrganisatieIdentificatie>(responseBody.get("partijIdentificatie")) }
-            assertEquals("Ritense", responseBody.requiredAt("/partijIdentificatie/naam")?.textValue())
+            assertEquals("Ritense", responseBody.requiredAt("/partijIdentificatie/naam")?.stringValue())
         }
 
     @Test
@@ -139,9 +139,9 @@ class OpenKlant2PartijQueryIT(
             verify(openKlant2Service, times(1)).getPartij(any())
 
             assertNotNull(responseBody)
-            assertEquals(SoortPartij.PERSOON.name, responseBody.get("soortPartij")?.textValue())
+            assertEquals(SoortPartij.PERSOON.name, responseBody.get("soortPartij")?.stringValue())
             assertDoesNotThrow { objectMapper.treeToValue<PersoonsIdentificatie>(responseBody.get("partijIdentificatie")) }
-            assertEquals("Lucas Boom", responseBody.requiredAt("/partijIdentificatie/volledigeNaam")?.textValue())
+            assertEquals("Lucas Boom", responseBody.requiredAt("/partijIdentificatie/volledigeNaam")?.stringValue())
         }
 
     @Test

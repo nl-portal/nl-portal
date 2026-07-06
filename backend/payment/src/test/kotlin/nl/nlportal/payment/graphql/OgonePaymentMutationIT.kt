@@ -15,7 +15,7 @@
  */
 package nl.nlportal.payment.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -27,10 +27,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @Deprecated("Is not supported anymore at payment provider, use Direct payment")
@@ -94,9 +94,9 @@ internal class OgonePaymentMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.textValue())
-        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.textValue())
-        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.textValue())
+        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.stringValue())
+        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.stringValue())
+        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.stringValue())
     }
 
     @Test
@@ -151,9 +151,9 @@ internal class OgonePaymentMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.textValue())
-        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.textValue())
-        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.textValue())
+        assertEquals("http://localhost:3000", responseBody.requiredAt("/formFields/0/value")?.stringValue())
+        assertEquals("10025", responseBody.requiredAt("/formFields/9/value")?.stringValue())
+        assertEquals(shaSign, responseBody.requiredAt("/formFields/11/value")?.stringValue())
     }
 
     companion object {

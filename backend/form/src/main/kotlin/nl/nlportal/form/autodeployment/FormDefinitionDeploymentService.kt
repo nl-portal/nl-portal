@@ -15,18 +15,18 @@
  */
 package nl.nlportal.form.autodeployment
 
-import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.core.JacksonException
+import io.github.oshai.kotlinlogging.KotlinLogging
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.form.domain.request.CreateFormDefinitionRequest
 import nl.nlportal.form.service.FormIoFormDefinitionService
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.commons.io.IOUtils
 import org.springframework.core.io.Resource
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.io.support.ResourcePatternUtils
-import java.io.IOException
-import java.nio.charset.StandardCharsets
+import tools.jackson.databind.JsonNode
 
 class FormDefinitionDeploymentService(
     private val formIoFormDefinitionService: FormIoFormDefinitionService,
@@ -61,8 +61,8 @@ class FormDefinitionDeploymentService(
             logger.debug { "something went wrong while reading and saving the form definitions due to: ${e.message}" }
         }
 
-    @Throws(JsonProcessingException::class)
-    private fun getJson(jsonString: String): ObjectNode = Mapper.get().readValue(jsonString, ObjectNode::class.java)
+    @Throws(JacksonException::class)
+    private fun getJson(jsonString: String): JsonNode = Mapper.get().readTree(jsonString)
 
     private fun getFormName(resource: Resource): String {
         var formName = resource.filename

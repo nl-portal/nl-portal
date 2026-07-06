@@ -15,8 +15,8 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -38,8 +38,8 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
@@ -75,24 +75,24 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertTrue(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Bob de Bouwer",
-                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").stringValue(),
             )
             assertEquals(
                 "Bob",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").stringValue(),
             )
             assertEquals(
                 "de",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").stringValue(),
             )
             assertEquals(
                 "Bouwer",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").stringValue(),
             )
         }
 
@@ -116,24 +116,24 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).updatePartij(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertFalse(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Kees de Boer",
-                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").stringValue(),
             )
             assertEquals(
                 "Kees",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").stringValue(),
             )
             assertEquals(
                 "de",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").stringValue(),
             )
             assertEquals(
                 "Boer",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").stringValue(),
             )
         }
 
@@ -158,24 +158,24 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertFalse(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Kees de Boer",
-                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/volledigeNaam").stringValue(),
             )
             assertEquals(
                 "Kees",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voornaam").stringValue(),
             )
             assertEquals(
                 "de",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/voorvoegselAchternaam").stringValue(),
             )
             assertEquals(
                 "Boer",
-                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").textValue(),
+                responseBody.requiredAt("/persoonsIdentificatie/contactnaam/achternaam").stringValue(),
             )
         }
 
@@ -201,12 +201,12 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertTrue(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Gemeente Den Haag",
-                responseBody.requiredAt("/organisatieIdentificatie/naam").textValue(),
+                responseBody.requiredAt("/organisatieIdentificatie/naam").stringValue(),
             )
         }
 
@@ -233,12 +233,12 @@ class OpenKlant2PartijMutationIT(
             verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
-            assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.textValue())
+            assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
             assertTrue(responseBody.requiredAt("/indicatieGeheimhouding").booleanValue())
             assertEquals(
                 "Gemeente Den Haag",
-                responseBody.requiredAt("/organisatieIdentificatie/naam").textValue(),
+                responseBody.requiredAt("/organisatieIdentificatie/naam").stringValue(),
             )
         }
 

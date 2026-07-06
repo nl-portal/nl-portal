@@ -17,9 +17,6 @@
 object Dependencies {
     val everitJsonSchema by lazy { "com.github.erosb:everit-json-schema:${Versions.everitJsonSchema}" }
     val jsonPath by lazy { "com.jayway.jsonpath:json-path:${Versions.jsonPath}" }
-    val jsonWebTokensApi by lazy { "io.jsonwebtoken:jjwt-api:${Versions.jsonWebTokens}" }
-    val jsonWebTokensImpl by lazy { "io.jsonwebtoken:jjwt-impl:${Versions.jsonWebTokens}" }
-    val jsonWebTokensJackson by lazy { "io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebTokens}" }
     val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}" }
     val kotlinCoroutinesReactor by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${Versions.kotlinCoroutines}" }
     val springCloudConfig by lazy { "org.springframework.cloud:spring-cloud-starter-config:${Versions.springCloud}" }
@@ -33,10 +30,11 @@ object Dependencies {
     val apacheCommons by lazy { "org.apache.commons:commons-lang3:${Versions.apacheCommons}"}
     val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJavaScalars}"}
 
-    val jacksonKotlinModule by lazy { "com.fasterxml.jackson.module:jackson-module-kotlin" }
+    val jacksonKotlinModule by lazy { "tools.jackson.module:jackson-module-kotlin" }
     val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}"}
     val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${Versions.springCloud}" }
     val springCloudStreamBinderRabbit by lazy { "org.springframework.cloud:spring-cloud-stream-binder-rabbit:${Versions.springCloud}" }
     val springBootStarter by lazy {"org.springframework.boot:spring-boot-starter"}
     val springWebFlux by lazy {"org.springframework.boot:spring-boot-starter-webflux"}
+    val springBootWebClient by lazy {"org.springframework.boot:spring-boot-starter-webclient"}
 }

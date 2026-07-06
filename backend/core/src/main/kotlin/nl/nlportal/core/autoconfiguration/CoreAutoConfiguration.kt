@@ -15,7 +15,6 @@
  */
 package nl.nlportal.core.autoconfiguration
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
 import nl.nlportal.core.frontend.service.FrontendFeaturesConfigurationService
@@ -27,6 +26,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import tools.jackson.databind.json.JsonMapper
 
 @AutoConfiguration
 @EnableConfigurationProperties(
@@ -34,9 +34,9 @@ import org.springframework.context.annotation.Bean
     FrontendFeaturesConfigurationProperties::class,
 )
 class CoreAutoConfiguration {
-    @Bean
-    @ConditionalOnMissingBean(name = ["objectMapper"])
-    fun objectMapper(): ObjectMapper = Mapper.get()
+    @Bean("objectMapper")
+    @ConditionalOnMissingBean(name = ["jsonMapper"])
+    fun objectMapper(): JsonMapper = Mapper.get()
 
     @Bean
     @ConditionalOnMissingBean(FrontendThemeConfigurationService::class)

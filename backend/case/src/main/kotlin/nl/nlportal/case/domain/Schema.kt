@@ -15,7 +15,7 @@
  */
 package nl.nlportal.case.domain
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 import nl.nlportal.case.domain.meta.MetaJsonSchemaV7Draft
@@ -23,12 +23,13 @@ import nl.nlportal.core.util.ObjectValidator
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
 import org.json.JSONObject
+import tools.jackson.databind.JsonNode
 
 @Embeddable
 data class Schema(
     @Column(name = "`schema`", columnDefinition = "json")
     @JdbcTypeCode(SqlTypes.JSON)
-    var value: ObjectNode,
+    var value: JsonNode,
 ) {
     init {
         ObjectValidator.validate(this)

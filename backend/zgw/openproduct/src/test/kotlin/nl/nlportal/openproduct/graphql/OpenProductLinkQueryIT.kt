@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -33,8 +33,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -98,8 +98,8 @@ class OpenProductLinkQueryIT(
                     .get()
 
             assertEquals(2, responseBody.get("numberOfElements")?.intValue())
-            assertEquals("link naar Ritense website", responseBody.requiredAt("/content/0/naam")?.textValue())
-            assertEquals("https://ritense.com/", responseBody.requiredAt("/content/0/url")?.textValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/content/0/naam")?.stringValue())
+            assertEquals("https://ritense.com/", responseBody.requiredAt("/content/0/url")?.stringValue())
         }
 
     @Test
@@ -116,8 +116,8 @@ class OpenProductLinkQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("link naar Ritense website", responseBody.requiredAt("/naam")?.textValue())
-            assertEquals("https://ritense.com/", responseBody.requiredAt("/url")?.textValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/naam")?.stringValue())
+            assertEquals("https://ritense.com/", responseBody.requiredAt("/url")?.stringValue())
         }
 
     private fun setupMockServer() {

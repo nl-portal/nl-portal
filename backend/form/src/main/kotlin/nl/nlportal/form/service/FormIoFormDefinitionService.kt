@@ -15,6 +15,8 @@
  */
 package nl.nlportal.form.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging.logger
 import nl.nlportal.form.domain.FormDefinitionId
 import nl.nlportal.form.domain.FormIoFormDefinition
 import nl.nlportal.form.domain.request.CreateFormDefinitionRequest
@@ -26,8 +28,8 @@ import java.util.UUID
 class FormIoFormDefinitionService(
     private val formIoFormDefinitionRepository: FormIoFormDefinitionRepository,
 ) {
-    fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition =
-        formIoFormDefinitionRepository.saveAndFlush(
+    fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition {
+        val formIoFormDefinition =
             FormIoFormDefinition(
                 FormDefinitionId.newId(
                     UUID.randomUUID(),
@@ -35,12 +37,26 @@ class FormIoFormDefinitionService(
                 request.getName(),
                 request.getFormDefinition(),
                 request.isReadOnly(),
-            ),
+            )
+        return formIoFormDefinitionRepository.saveAndFlush(
+            formIoFormDefinition,
         )
+    }
 
     fun findAllFormDefinitions(): List<FormIoFormDefinition> = formIoFormDefinitionRepository.findAll()
 
-    fun findFormIoFormDefinitionByName(name: String): FormIoFormDefinition? = formIoFormDefinitionRepository.findByName(name)
+    fun findFormIoFormDefinitionByName(name: String): FormIoFormDefinition? {
+        // try {
+        return formIoFormDefinitionRepository.findByName(name)
+        // } catch (e: Exception) {
+        //    logger.debug { e.message }
+        // }
+        // return null
+    }
 
     fun modify(form: FormIoFormDefinition): FormIoFormDefinition = formIoFormDefinitionRepository.saveAndFlush(form)
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }

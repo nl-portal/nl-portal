@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -35,8 +35,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -108,9 +108,9 @@ class OpenProductThemaQueryIT(
                     .get()
 
             assertEquals(4, responseBody.get("totalElements")?.intValue())
-            assertEquals("Parkeren", responseBody.requiredAt("/content/0/naam")?.textValue())
-            assertEquals("Parkeervergunning", responseBody.requiredAt("/content/0/producttypen/0/uniformeProductNaam")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/producttypen/0/code")?.textValue())
+            assertEquals("Parkeren", responseBody.requiredAt("/content/0/naam")?.stringValue())
+            assertEquals("Parkeervergunning", responseBody.requiredAt("/content/0/producttypen/0/uniformeProductNaam")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/producttypen/0/code")?.stringValue())
         }
 
     @Test
@@ -128,9 +128,9 @@ class OpenProductThemaQueryIT(
                     .get()
 
             assertEquals(2, responseBody.size())
-            assertEquals("Belastingzaken", responseBody.requiredAt("/0/naam")?.textValue())
-            assertEquals("toeristenbelasting", responseBody.requiredAt("/0/producttypen/0/uniformeProductNaam")?.textValue())
-            assertEquals("BELASTINGZAKEN", responseBody.requiredAt("/0/producttypen/0/code")?.textValue())
+            assertEquals("Belastingzaken", responseBody.requiredAt("/0/naam")?.stringValue())
+            assertEquals("toeristenbelasting", responseBody.requiredAt("/0/producttypen/0/uniformeProductNaam")?.stringValue())
+            assertEquals("BELASTINGZAKEN", responseBody.requiredAt("/0/producttypen/0/code")?.stringValue())
         }
 
     @Test
@@ -148,7 +148,7 @@ class OpenProductThemaQueryIT(
                     .get()
 
             assertEquals(2, responseBody.size())
-            assertEquals("HoofdThema", responseBody.requiredAt("/0/naam")?.textValue())
+            assertEquals("HoofdThema", responseBody.requiredAt("/0/naam")?.stringValue())
         }
 
     @Test
@@ -166,9 +166,9 @@ class OpenProductThemaQueryIT(
                     .get()
 
             assertEquals(2, responseBody.size())
-            assertEquals("Belastingzaken", responseBody.requiredAt("/0/thema/naam")?.textValue())
-            assertEquals("toeristenbelasting", responseBody.requiredAt("/0/thema/producttypen/0/uniformeProductNaam")?.textValue())
-            assertEquals("BELASTINGZAKEN", responseBody.requiredAt("/0/thema/producttypen/0/code")?.textValue())
+            assertEquals("Belastingzaken", responseBody.requiredAt("/0/thema/naam")?.stringValue())
+            assertEquals("toeristenbelasting", responseBody.requiredAt("/0/thema/producttypen/0/uniformeProductNaam")?.stringValue())
+            assertEquals("BELASTINGZAKEN", responseBody.requiredAt("/0/thema/producttypen/0/code")?.stringValue())
         }
 
     @Test
@@ -186,7 +186,7 @@ class OpenProductThemaQueryIT(
                     .get()
 
             assertEquals(1, responseBody.size())
-            assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.textValue())
+            assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.stringValue())
         }
 
     @Test
@@ -204,8 +204,8 @@ class OpenProductThemaQueryIT(
                     .get()
 
             assertEquals(2, responseBody.size())
-            assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.textValue())
-            assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.textValue())
+            assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.stringValue())
+            assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.stringValue())
         }
 
     @Test
@@ -222,11 +222,11 @@ class OpenProductThemaQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("Parkeren", responseBody.requiredAt("/naam")?.textValue())
-            assertEquals("Parkeervergunning", responseBody.requiredAt("/producttypen/0/uniformeProductNaam")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/producttypen/0/code")?.textValue())
-            assertEquals("link naar Ritense website", responseBody.requiredAt("/links/0/naam")?.textValue())
-            assertEquals("https://ritense.com/", responseBody.requiredAt("/links/0/url")?.textValue())
+            assertEquals("Parkeren", responseBody.requiredAt("/naam")?.stringValue())
+            assertEquals("Parkeervergunning", responseBody.requiredAt("/producttypen/0/uniformeProductNaam")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttypen/0/code")?.stringValue())
+            assertEquals("link naar Ritense website", responseBody.requiredAt("/links/0/naam")?.stringValue())
+            assertEquals("https://ritense.com/", responseBody.requiredAt("/links/0/url")?.stringValue())
         }
 
     @Test
@@ -244,8 +244,8 @@ class OpenProductThemaQueryIT(
                     .get()
 
             assertEquals(1, responseBody.size())
-            assertEquals("HoofdThema", responseBody.requiredAt("/0/thema/naam")?.textValue())
-            assertEquals("Sub thema", responseBody.requiredAt("/0/subThemas/0/thema/naam")?.textValue())
+            assertEquals("HoofdThema", responseBody.requiredAt("/0/thema/naam")?.stringValue())
+            assertEquals("Sub thema", responseBody.requiredAt("/0/subThemas/0/thema/naam")?.stringValue())
         }
 
     private fun setupMockServer() {
