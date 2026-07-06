@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+coverage
+.idea
+.git
+generated/
+.github
+lerna.json
+pnpm-lock.yaml
+CONTRIBUTING.md

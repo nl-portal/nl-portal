@@ -1,0 +1,8 @@
+.nl-portal-notification {
+  margin-block-start: var(--nlportal-space-block-2xl, 2rem);
+  margin-block-end: 0;
+
+  .utrecht-paragraph {
+    --utrecht-space-around: 0;
+  }
+}
