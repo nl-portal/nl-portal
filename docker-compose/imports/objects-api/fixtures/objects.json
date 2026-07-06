@@ -1,0 +1,870 @@
+[
+    {
+        "model": "core.object",
+        "pk": 1,
+        "fields": {
+            "uuid": "c0021527-7af0-48be-b38d-d8ba9ce8e2b6",
+            "object_type": 1
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 1,
+        "fields": {
+            "index": 1,
+            "object": 1,
+            "version": 1,
+            "data": {
+                "formDefinition": {
+                    "display": "form",
+                    "components": [
+                        {
+                            "key": "html",
+                            "type": "htmlelement",
+                            "input": false,
+                            "label": "HTML",
+                            "content": "De onderstaande informatie dient nog aangeleverd te worden, voordat uw aanvraag in behandeling genomen kan worden.",
+                            "className": "alert alert-info",
+                            "tableView": false,
+                            "refreshOnChange": false
+                        },
+                        {
+                            "key": "informatieverzoek",
+                            "type": "container",
+                            "input": true,
+                            "label": "Informatieverzoek",
+                            "tableView": true,
+                            "components": [
+                                {
+                                    "key": "toelichting",
+                                    "type": "textarea",
+                                    "input": true,
+                                    "label": "Toelichting behandelaar",
+                                    "disabled": true,
+                                    "tableView": false,
+                                    "autoExpand": true
+                                },
+                                {
+                                    "key": "deadline",
+                                    "type": "textarea",
+                                    "input": true,
+                                    "label": "Deadline",
+                                    "disabled": true,
+                                    "tableView": false,
+                                    "autoExpand": true
+                                }
+                            ]
+                        },
+                        {
+                            "key": "bestanden.partnerID",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van het identiteitsbewijs van uw partner",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.partnerID"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad"
+                        },
+                        {
+                            "key": "bestanden.bankafschriftenAfgelopenMaand",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van de bankafschriften van de afgelopen maand",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bankafschriftenAfgelopenMaand"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "informatieverzoek.specifiekeBankrekeningNummers",
+                            "type": "textfield",
+                            "input": true,
+                            "label": "Een kopie van de bankafschriften van de volgende IBAN rekeningen:",
+                            "disabled": true,
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.specifiekeBankafschriftenAfgelopenMaand"
+                            },
+                            "defaultValue": ""
+                        },
+                        {
+                            "key": "bestanden.specifiekeBankafschriftenAfgelopenMaand",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van de bankafschriften van de volgende IBAN rekeningen:",
+                            "hideLabel": "true",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.specifiekeBankafschriftenAfgelopenMaand"
+                            },
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "informatieverzoek.bankrekeningNummersSpecifiekePeriode",
+                            "type": "textfield",
+                            "input": true,
+                            "label": "Een kopie van de bankafschriften van de volgende IBAN rekeningen:",
+                            "disabled": true,
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.specifiekeBankafschriftenPerPeriode"
+                            },
+                            "defaultValue": ""
+                        },
+                        {
+                            "key": "bestanden.specifiekeBankafschriftenPerPeriode",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van de bankafschriften van de volgende IBAN rekeningen:",
+                            "hideLabel": "true",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.specifiekeBankafschriftenPerPeriode"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.bankafschriftenZakelijkeRekeningen",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Bankafschriften zakelijke rekeningen van afgelopen maand:",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bankafschriftenZakelijkeRekeningen"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.bankafschriftenZakelijkeRekeningenPartner",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Bankafschriften zakelijke rekeningen van afgelopen maand Partner:",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bankafschriftenZakelijkeRekeningenPartner"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.laatsteInkomstenSpecificatie",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van uw laatst ontvangen inkomensspecificatie (loonstrook)",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.laatsteInkomstenSpecificatie"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.laatsteInkomstenSpecificatiePartner",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van de laatst ontvangen inkomensspecificatie (loonstrook) van uw partner",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.laatsteInkomstenSpecificatiePartner"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.specificatiePensioen",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van de specificatie van uw pensioen",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.specificatiePensioen"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.belastingaangifte",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van uw belastingaangifte afgelopen jaar",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.belastingaangifteAfgelopenJaar"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.belastingaanslag",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van uw belastingaanslag van afgelopen jaar",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.belastingaanslagAfgelopenJaar"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.jaarrekening",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van de Jaarrekening",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.jaarrekening"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "bestanden.balansrekening",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van de Balansrekening",
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.balansrekening"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "informatieverzoek.opleidingVolgendePersonen",
+                            "type": "textfield",
+                            "input": true,
+                            "label": "Upload hieronder een kopie van het bewijs van inschrijving van de volgende personen:",
+                            "disabled": true,
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bewijsVanInschrijving"
+                            },
+                            "defaultValue": ""
+                        },
+                        {
+                            "key": "bestanden.bewijsVanInschrijving",
+                            "type": "portalFileUpload",
+                            "input": true,
+                            "label": "Een kopie van het bewijs van inschrijving voor de opleiding",
+                            "hideLabel": true,
+                            "tableView": false,
+                            "conditional": {
+                                "eq": true,
+                                "show": true,
+                                "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bewijsVanInschrijving"
+                            },
+                            "defaultValue": [],
+                            "multipleFiles": true,
+                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                        },
+                        {
+                            "key": "documenten",
+                            "type": "hidden",
+                            "input": true,
+                            "label": "Documenten",
+                            "tableView": false,
+                            "defaultValue": [
+                                "/bestanden/partnerID",
+                                "/bestanden/bankafschriftenAfgelopenMaand",
+                                "/bestanden/specifiekeBankafschriftenAfgelopenMaand",
+                                "/bestanden/specifiekeBankafschriftenPerPeriode",
+                                "/bestanden/bankafschriftenZakelijkeRekeningen",
+                                "/bestanden/bankafschriftenZakelijkeRekeningenPartner",
+                                "/bestanden/laatsteInkomstenSpecificatie",
+                                "/bestanden/laatsteInkomstenSpecificatiePartner",
+                                "/bestanden/specificatiePensioen",
+                                "/bestanden/belastingaangifte",
+                                "/bestanden/belastingaanslag",
+                                "/bestanden/jaarrekening",
+                                "/bestanden/balansrekening",
+                                "/bestanden/bewijsVanInschrijving"
+                            ]
+                        },
+                        {
+                            "key": "submit",
+                            "type": "button",
+                            "input": true,
+                            "label": "Doorgaan",
+                            "tableView": false,
+                            "showValidations": false,
+                            "disableOnInvalid": true
+                        }
+                    ]
+                }
+            },
+            "start_at": "2024-04-24",
+            "end_at": null,
+            "registration_at": "2020-09-30",
+            "correct": null,
+            "geometry": null
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 3,
+        "fields": {
+            "uuid": "4b5f4fba-0746-11ed-b939-0242ac120023",
+            "object_type": 2
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 3,
+        "fields": {
+            "index": 1,
+            "object": 3,
+            "version": 1,
+            "data": {
+                "titel": "Verkeersboete voertuig X-999-AA",
+                "status": "open",
+                "soort": "ogonebetaling",
+                "verloopdatum": "2025-09-20T18:25:43.524Z",
+                "identificatie": {
+                    "type": "bsn",
+                    "value": "999993847"
+                },
+                "koppeling": {
+                    "registratie": "zaak",
+                    "value": "703af290-abe0-418c-b9c3-10a65e662788"
+                },
+                "ogonebetaling": {
+                    "bedrag": 147.43,
+                    "betaalkenmerk": "abcdef1234",
+                    "pspid": "MyID"
+                },
+                "verwerker_taak_id": "18af0b6a-967b-4f81-bb8e-a44988e0c2f0",
+                "eigenaar": "gzac-sd"
+            },
+            "start_at": "2024-10-16",
+            "end_at": null,
+            "registration_at": "2024-10-16",
+            "correct": null,
+            "geometry": null
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 4,
+        "fields": {
+            "uuid": "3d6609af-134c-4892-8fa8-71cfdc00a8e9",
+            "object_type": 2
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 4,
+        "fields": {
+            "index": 1,
+            "object": 4,
+            "version": 1,
+            "data": {
+                "titel": "Check loan",
+                "status": "open",
+                "soort": "portaalformulier",
+                "verloopdatum": "2025-09-20T18:25:43.524Z",
+                "identificatie": {
+                    "type": "bsn",
+                    "value": "999993847"
+                },
+                "koppeling": {
+                    "registratie": "zaak",
+                    "value": "703af290-abe0-418c-b9c3-10a65e662788"
+                },
+                "url": {
+                    "uri": "https://google.com"
+                },
+                "portaalformulier": {
+                    "formulier": {
+                        "soort": "url",
+                        "value": "http://localhost:8010/api/v2/objects/c0021527-7af0-48be-b38d-d8ba9ce8e2b6"
+                    },
+                    "data": {
+                        "voornaam": "Jan",
+                        "achternaam": "Smit",
+                        "toestemming": true,
+                        "geboortedatum": "01-01-1970"
+                    },
+                    "verzonden_data": {}
+                },
+                "verwerker_taak_id": "18af0b6a-967b-4f81-bb8e-a44988e0c2f0",
+                "eigenaar": "gzac-sd"
+            },
+            "start_at": "2024-07-18",
+            "end_at": null,
+            "registration_at": "2024-07-18",
+            "correct": null,
+            "geometry": null
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 5,
+        "fields": {
+            "uuid": "9e021130-8cbd-4c6f-846a-677448e21ce8",
+            "object_type": 3
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 5,
+        "fields": {
+            "index": 1,
+            "object": 5,
+            "version": 1,
+            "data": {
+                "geopend": false,
+                "bijlages": [],
+                "onderwerp": "Bericht over uw buurt.",
+                "referentie": "ZAAK-2024-0000000001",
+                "berichtType": "notificatie",
+                "berichtTekst": "Er zijn werkzaamheden komende week in uw buurt. U kunt meer over dit lezen op de volgende website: https://example.com",
+                "identificatie": {
+                    "type": "bsn",
+                    "value": "999993847"
+                },
+                "publicatiedatum": "2024-07-18T00:00:00Z",
+                "handelingsperspectief": "informatie ontvangen",
+                "einddatumHandelingstermijn": "2024-10-31T00:00:00Z"
+            },
+            "start_at": "2024-07-18",
+            "end_at": null,
+            "registration_at": "2024-07-18",
+            "correct": null,
+            "geometry": null
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 6,
+        "fields": {
+            "uuid": "cc47910b-4f3f-43a6-93d3-4dfd49ef3c62",
+            "object_type": 3
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 6,
+        "fields": {
+            "index": 1,
+            "object": 6,
+            "version": 1,
+            "data": {
+                "geopend": true,
+                "bijlages": [],
+                "onderwerp": "Betalingsherinnering",
+                "referentie": "ZAAK-2024-0000000001",
+                "berichtType": "notificatie",
+                "berichtTekst": "Uit de administratie blijkt dat de betaling van de openstaande factuur nog niet binnen is. Helaas is de betalingstermijn inmiddels verstreken.",
+                "identificatie": {
+                    "type": "bsn",
+                    "value": "999993847"
+                },
+                "publicatiedatum": "2024-07-18T00:00:00Z",
+                "handelingsperspectief": "informatie ontvangen",
+                "einddatumHandelingstermijn": "2024-10-31T00:00:00Z"
+            },
+            "start_at": "2024-07-18",
+            "end_at": null,
+            "registration_at": "2024-07-18",
+            "correct": null,
+            "geometry": null
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 7,
+        "fields": {
+            "uuid": "82f1ccd8-b39e-4c54-915d-225d6a4c9876",
+            "object_type": 2
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 7,
+        "fields": {
+            "index": 1,
+            "object": 7,
+            "version": 1,
+            "data": {
+                "titel": "Lees over de nieuwe wetgeving.",
+                "status": "open",
+                "soort": "url",
+                "verloopdatum": "2025-09-20T18:25:43.524Z",
+                "identificatie": {
+                    "type": "bsn",
+                    "value": "999993847"
+                },
+                "koppeling": {
+                    "registratie": "zaak",
+                    "value": "703af290-abe0-418c-b9c3-10a65e662788"
+                },
+                "url": {
+                    "uri": "https://wetten.overheid.nl/"
+                },
+                "verwerker_taak_id": "18af0b6a-967b-4f81-bb8e-a44988e0c2f0",
+                "eigenaar": "gzac-sd"
+            },
+            "start_at": "2024-07-18",
+            "end_at": null,
+            "registration_at": "2024-07-18",
+            "correct": null,
+            "geometry": null
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 8,
+        "fields": {
+            "uuid": "f3828056-9bea-4708-8d4b-ddfd7d86444b",
+            "object_type": 4
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 8,
+        "fields": {
+            "index": 1,
+            "object": 8,
+            "version": 1,
+            "data": {
+                "naam": "parkeren",
+                "statussen": {
+                    "actief": "Actief",
+                    "inaanvraag": "In aanvraag"
+                },
+                "zaaktypen": [],
+                "parameters": {
+                    "paymentcategorie": "parkeren",
+                    "emandatecategorie": "parkeren"
+                },
+                "omschrijving": "Zaken die te maken hebben met parkeren",
+                "eigenschappen": {
+                    "contractnummer": "Contract nummer"
+                },
+                "beslistabelmapping": {
+                    "watkanikregelen": {
+                        "key": "alg-parkeren",
+                        "variabelen": {
+                            "static": [
+                                {
+                                    "name": "formulieren",
+                                    "value": "https://openformulieren-zgw.test.denhaag.nl",
+                                    "classType": "String"
+                                }
+                            ],
+                            "vergunning": [
+                                {
+                                    "name": "vergunningNummer",
+                                    "regex": "$.vergunningNummer",
+                                    "classType": "String"
+                                },
+                                {
+                                    "name": "geldigheideinddatum",
+                                    "regex": "$.einddatumPeriode",
+                                    "classType": "String"
+                                },
+                                {
+                                    "name": "soort",
+                                    "regex": "$.soortVergunning",
+                                    "classType": "String"
+                                },
+                                {
+                                    "name": "pasnummer",
+                                    "regex": "$.pasnummer",
+                                    "classType": "Integer"
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "start_at": "2026-01-07",
+            "registration_at": "2026-01-07"
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 9,
+        "fields": {
+            "uuid": "06d744cf-0dd8-4f61-a0be-e8ce9ed64203",
+            "object_type": 4
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 9,
+        "fields": {
+            "index": 1,
+            "object": 9,
+            "version": 1,
+            "data": {
+
+                "naam": "milieuzoneOldtimerBrommerSnorfiets",
+                "subtypes": {
+                    "3wiel": "Ontheffing 3-wielige brom- en snorfietsen",
+                    "4takt": "Ontheffing 4-takt brom- en snorfietsen",
+                    "medisch": "Ontheffing brom- en snorfietsen op basis van medische indicatie",
+                    "oldtimer": "Ontheffing Oldtimer brom- en snorfietsen"
+                },
+                "statussen": {
+                    "actief": "Actief",
+                    "verlopen": "Verlopen"
+                },
+                "zaaktypen": [
+                ],
+                "omschrijving": "Ontheffing om in een periode met een soort brommer en snorfiets door de milieuzone te rijden.",
+                "eigenschappen": {
+                    "bron": "Bron",
+                    "zaakId": "Zaak identificatie",
+                    "kenteken": "Kenteken",
+                    "datumTijd": "Aanmaakdatum",
+                    "toegestaneDagdelen": "Toegestane dagdelen"
+                },
+                "prefillmapping": {
+                    "nieuw-voertuig-doorgeven": {
+                        "variabelen": {
+                            "product": {
+                                "productId": "$.id"
+                            },
+                            "productverbruiksobject": {
+                                "verbruiksobjectId": "$.id"
+                            }
+                        },
+                        "formulierUrl": "https://openformulieren-zgw.test.denhaag.nl/nieuw-voertuig-doorgeven/startpagina"
+                    }
+                },
+                "beslistabelmapping": {
+                    "watkanikregelen": {
+                        "key": "fd-milieuzone",
+                        "variabelen": {
+                            "static": [
+                                {
+                                    "name": "formulieren",
+                                    "value": "https://openformulieren-zgw.test.denhaag.nl",
+                                    "classType": "String"
+                                }
+                            ],
+                            "product": [
+                                {
+                                    "name": "pid",
+                                    "regex": "$.id",
+                                    "classType": "String"
+                                },
+                                {
+                                    "name": "geldigheideinddatum",
+                                    "regex": "$.geldigTot",
+                                    "classType": "String"
+                                }
+                            ],
+                            "productverbruiksobject": [
+                                {
+                                    "name": "tegoed",
+                                    "regex": "$.data.beschikbareDagdelen",
+                                    "classType": "String"
+                                }
+                            ]
+                        }
+                    }
+                }
+
+
+            },
+            "start_at": "2026-01-07",
+            "registration_at": "2026-01-07"
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 10,
+        "fields": {
+            "uuid": "fffc2fab-bb6f-4d37-8c68-149d5078d111",
+            "object_type": 4
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 10,
+        "fields": {
+            "index": 1,
+            "object": 10,
+            "version": 1,
+            "data": {
+
+                "naam": "belastingzaken",
+                "statussen": {
+                    "actief": "Actief",
+                    "inaanvraag": "In aanvraag"
+                },
+                "zaaktypen": [],
+                "parameters": {
+                    "paymentcategorie": "belastingzaken",
+                    "emandatecategorie": "belastingzaken"
+                },
+                "omschrijving": "Zaken die te maken hebben met belastingzaken",
+                "eigenschappen": {
+                    "contractnummer": "Contract nummer"
+                },
+                "prefillmapping": {
+                    "start-bezwaar-formulier": {
+                        "variabelen": {
+                            "belastingzaken-aanslag": {
+                                "aanslagnummer": "$.aanslagBiljet.aanslagNummer"
+                            }
+                        },
+                        "formulierUrl": "https://openformulieren-zgw.test.denhaag.nl/bezwaar-verzoekschrift-woz-gemeentelijke-belastingen/startpagina"
+                    }
+                },
+                "beslistabelmapping": {
+                    "watkanikregelen": {
+                        "key": "alg-belastingen",
+                        "variabelen": {
+                            "static": [
+                                {
+                                    "name": "formulieren",
+                                    "value": "https://openformulieren-zgw.test.denhaag.nl",
+                                    "classType": "String"
+                                }
+                            ],
+                            "belastingzaken-aanslag": [
+                                {
+                                    "name": "AanslagBiljetOmschrijving",
+                                    "regex": "$.aanslagBiljet.aanslagBiljetOmschrijving",
+                                    "classType": "String"
+                                },
+                                {
+                                    "name": "openstaandSaldo",
+                                    "regex": "$.invorderingsDetails.openstaandSaldo",
+                                    "classType": "Double"
+                                }
+                            ]
+                        }
+                    }
+                }
+
+
+            },
+            "start_at": "2026-01-07",
+            "registration_at": "2026-01-07"
+        }
+    },
+    {
+        "model": "core.object",
+        "pk": 11,
+        "fields": {
+            "uuid": "171a5748-5daa-4815-983c-99afbd808c02",
+            "object_type": 4
+        }
+    },
+    {
+        "model": "core.objectrecord",
+        "pk": 11,
+        "fields": {
+            "index": 1,
+            "object": 11,
+            "version": 1,
+            "data": {
+
+                "naam": "WetToeristischeVerhuur",
+                "statussen": {
+                    "actief": "Actief",
+                    "verlopen": "Verlopen"
+                },
+                "zaaktypen": [
+                ],
+                "omschrijving": "Jaarlijks afgegeven vergunning voor het verhuren van woningen binnen de wet toeristische verhuur.",
+                "eigenschappen": {
+                    "toegestaneDagdelen": "Toegestane dagdelen"
+                },
+                "beslistabelmapping": {
+                    "watkanikregelen": {
+                        "key": "fd-toeristischeverhuur",
+                        "variabelen": {
+                            "static": [
+                                {
+                                    "name": "formulieren",
+                                    "value": "https://openformulieren-zgw.test.denhaag.nl",
+                                    "classType": "String"
+                                }
+                            ],
+                            "product": [
+                                {
+                                    "name": "pid",
+                                    "regex": "$.id",
+                                    "classType": "String"
+                                },
+                                {
+                                    "name": "geldigheideinddatum",
+                                    "regex": "$.geldigTot",
+                                    "classType": "String"
+                                }
+                            ],
+                            "productverbruiksobject": [
+                                {
+                                    "name": "aantalnachten",
+                                    "regex": "$.data.beschikbareDagdelen",
+                                    "classType": "String"
+                                }
+                            ]
+                        }
+                    }
+                }
+
+
+            },
+            "start_at": "2026-01-07",
+            "registration_at": "2026-01-07"
+        }
+    }
+]

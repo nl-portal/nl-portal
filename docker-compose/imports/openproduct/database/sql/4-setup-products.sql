@@ -1,0 +1,96 @@
+/*
+ * Copyright 2015-2021 Ritense BV, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/* add product */
+INSERT INTO public.producten_product(id, uuid, naam, gepubliceerd, aanmaak_datum, update_datum, start_datum, eind_datum, status, prijs, frequentie, verbruiksobject, dataobject, producttype_id, aanvraag_zaak_url)
+VALUES (1, '694242af-d906-470b-b7e1-eb3527886854', 'Parkeren', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', '{
+  "data":{
+    "periodes":[
+      {
+        "did":"2ca085e5-6631-60aa-e063-223c0b0a055d",
+        "status":"actief",
+        "kenteken":"DB754K",
+        "datetimeEnd":"2025-01-27T00:00:00.000Z",
+        "datetimeStart":"2025-01-26T12:00:00.000Z"
+      }
+    ],
+    "kentekens":[
+      "DB754K"
+    ],
+    "beschikbareDagdelen":"39"
+  },
+  "soort":"milieuzoneOldtimerPeriodes",
+  "productInstantie":"62aa1bbb-4055-4df9-91e6-1c6171348044"
+}', null, 1, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+       (2, '55633677-fef4-4ed2-99a4-13efc3360448', 'Parkeren 2', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', null, null, 1, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+       (3, '55515634-bf7d-4f2e-8b30-6bbcc0f8bfdc', 'Parkeren 3', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '20.20', 'eenmalig', null, null, 1, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+       (4, 'b4addadd-71df-45a9-8559-fca53fc79339', 'Belastingzaken', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '0.20', 'eenmalig', null, null, 3, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+       (5, '0f30ac0d-8f53-4326-b384-e1021d262c6c', 'Ooievaarpas', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '0.20', 'eenmalig', null, null, 2, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+        (6, '8e820244-f1eb-45d2-b1bd-0a194e93bb33', 'Product voor testautomatisering', true, now(), now()- INTERVAL '1 DAYS', now(),  now()+ INTERVAL '365 DAYS', 'actief', '666.99', 'jaarlijks', null, null, 4, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+        (7, '94670b32-354b-48ec-8f7e-8ce0c6c936ec', 'Eerst product voor Erfpacht', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '1599.00', 'jaarlijks', null, null, 5, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+        (8, '8c22ad39-7907-4b1a-b0e0-b96ea8aeef61', 'Wachtlijst woonwagen', true, now(), now(), now(),  now()+ INTERVAL '365 DAYS', 'actief', '1599.00', 'jaarlijks', null, null, 6, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2');
+
+
+/* add eigenaar */
+INSERT INTO public.producten_eigenaar(id, uuid, bsn, kvk_nummer, vestigingsnummer, klantnummer, product_id)
+VALUES (1, '104dd54c-4464-45f2-9781-9df2c59a35ed', '999993847', '', '', '', 1),
+        (2, 'bae857cb-c6b0-48f5-88a8-f94e61092a4e', '', '14127293', '', '', 2),
+        (3, '11cca089-5a96-48d7-8fd1-0517a63dbc81', '', '14127293', '000037143557', '', 3),
+        (4, '2bb3b0d7-817c-4755-844b-f48e52f86007', '999993847', '', '', '', 4),
+        (5, 'e64b095d-d06f-490a-83b5-3fa0d8442e63', '999993847', '', '', '', 5),
+        (6, 'ddf8f209-3495-45aa-846a-a82f7ae1015e', '999993847', '', '', '', 6),
+        (7, '5ab358c7-a6da-4298-86bc-dc80716e2acc', '999993847', '', '', '', 7),
+       (8, 'ad00a6d2-9754-48a6-b2d3-a6313c4821c0', '999993847', '', '', '', 8);
+
+/* add zaken */
+INSERT INTO public.producten_zaak(id, product_id, url, urn)
+VALUES  (1, 1, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2', 'urn:nld:dh:zrc:zaken:zaak:uuid:64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+        (2, 2, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2', 'urn:nld:dh:zrc:zaken:zaak:uuid:64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+        (3, 3, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2', 'urn:nld:dh:zrc:zaken:zaak:uuid:64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+        (4, 4, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2', 'urn:nld:dh:zrc:zaken:zaak:uuid:64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+        (5, 5, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2', 'urn:nld:dh:zrc:zaken:zaak:uuid:64eaf9ef-37b4-4898-acc9-ae47bee577a2'),
+         (6, 6, 'http://host.docker.internal:8001/zaken/api/v1/zaken/64eaf9ef-37b4-4898-acc9-ae47bee577a2', 'urn:nld:dh:zrc:zaken:zaak:uuid:64eaf9ef-37b4-4898-acc9-ae47bee577a2');
+
+/* add taken */
+INSERT INTO public.producten_taak(id, product_id, url, urn)
+VALUES (1,  1, null, null);
+
+-- producten_product_id_seq
+SELECT pg_catalog.setval(
+               'public.producten_product_id_seq',
+               COALESCE((SELECT MAX(id) FROM public.producten_product), 1),
+               true
+       );
+
+-- producten_eigenaar_id_seq
+SELECT pg_catalog.setval(
+               'public.producten_eigenaar_id_seq',
+               COALESCE((SELECT MAX(id) FROM public.producten_eigenaar), 1),
+               true
+       );
+
+-- producten_zaak_id_seq
+SELECT pg_catalog.setval(
+               'public.producten_zaak_id_seq',
+               COALESCE((SELECT MAX(id) FROM public.producten_zaak), 1),
+               true
+       );
+
+-- producten_taak_id_seq
+SELECT pg_catalog.setval(
+               'public.producten_taak_id_seq',
+               COALESCE((SELECT MAX(id) FROM public.producten_taak), 1),
+               true
+       );
