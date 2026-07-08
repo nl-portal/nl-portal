@@ -1,0 +1,194 @@
+name: Build and Publish Release
+
+on:
+    workflow_dispatch:
+
+concurrency:
+    group: release-${{ github.ref }}
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+    packages: write
+    id-token: write
+
+jobs:
+    prepare:
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.v.outputs.version }}
+            minor: ${{ steps.v.outputs.minor }}
+            major: ${{ steps.v.outputs.major }}
+            feDistTag: ${{ steps.npmtag.outputs.feDistTag }}
+        steps:
+            -   uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+                with:
+                    fetch-depth: 0
+            -   name: Guard branch
+                run: |
+                    case "${GITHUB_REF_NAME}" in
+                      rc/*) : ;;
+                      *) echo "::error::build-and-publish-release.yml must be dispatched from the rc/* branch being promoted (got ${GITHUB_REF_NAME})."; exit 1 ;;
+                    esac
+            -   name: Read release version
+                id: v
+                run: |
+                    version=$(cat version.txt)
+                    echo "version=${version}" >> "$GITHUB_OUTPUT"
+                    echo "minor=${version%.*}" >> "$GITHUB_OUTPUT"
+                    echo "major=${version%%.*}" >> "$GITHUB_OUTPUT"
+                    echo "::notice::Release version ${version}"
+            -   name: Pre-flight - release line must fast-forward
+                env:
+                    MAJOR: ${{ steps.v.outputs.major }}
+                run: |
+                    branch="release/${MAJOR}.x"
+                    tip=$(git ls-remote --heads origin "${branch}" | cut -f1)
+                    if [ -z "${tip}" ]; then
+                      echo "::notice::${branch} does not exist yet - it will be born from ${GITHUB_SHA}."
+                      exit 0
+                    fi
+                    git fetch origin "${branch}"
+                    if git merge-base --is-ancestor "${tip}" "${GITHUB_SHA}"; then
+                      echo "::notice::${branch} (${tip}) fast-forwards to ${GITHUB_SHA}."
+                    else
+                      echo "::error::${branch} tip ${tip} is not an ancestor of the rc commit ${GITHUB_SHA}; the line cannot fast-forward. Resolve before releasing."
+                      exit 1
+                    fi
+            -   name: Resolve npm dist-tag - latest only if newest
+                id: npmtag
+                env:
+                    VERSION: ${{ steps.v.outputs.version }}
+                    MAJOR: ${{ steps.v.outputs.major }}
+                run: |
+                    highest=$(git tag -l | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
+                    if [ -z "${highest}" ] || [ "$(printf '%s\n%s\n' "${highest}" "${VERSION}" | sort -V | tail -1)" = "${VERSION}" ]; then
+                      tag=latest
+                    else
+                      tag="v${MAJOR}"
+                    fi
+                    echo "feDistTag=${tag}" >> "$GITHUB_OUTPUT"
+                    echo "::notice::npm dist-tag = ${tag} (highest existing release tag: ${highest:-none})."
+
+    stage-be:
+        needs: prepare
+        uses: ./.github/workflows/_stage-be.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+            runTests: false
+            generateReports: true
+
+    stage-fe:
+        needs: prepare
+        uses: ./.github/workflows/_stage-fe.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+            runTests: false
+
+    gate:
+        needs: [prepare, stage-be, stage-fe]
+        runs-on: ubuntu-latest
+        environment: release
+        steps:
+            -   name: Approved
+                env:
+                    VERSION: ${{ needs.prepare.outputs.version }}
+                run: echo "::notice::Release ${VERSION} approved - proceeding to publish."
+
+    promote-be:
+        needs: [prepare, stage-be, gate]
+        uses: ./.github/workflows/_publish-be-native.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+            deployer: sonatype
+            probeCentral: true
+            uploadReports: true
+        secrets: inherit
+
+    publish-fe-npm:
+        needs: [prepare, stage-fe, gate]
+        uses: ./.github/workflows/_publish-fe-npm.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+            distTag: ${{ needs.prepare.outputs.feDistTag }}
+        secrets: inherit
+
+    image-be:
+        needs: [prepare, stage-be, gate]
+        uses: ./.github/workflows/_build-app-image.yml
+        with:
+            stack: backend
+            push: true
+            primaryTag: ghcr.io/nl-portal/nl-portal-backend:${{ needs.prepare.outputs.version }}
+            tags: |
+                ghcr.io/nl-portal/nl-portal-backend:${{ needs.prepare.outputs.version }}
+                ghcr.io/nl-portal/nl-portal-backend:${{ needs.prepare.outputs.minor }}
+                ghcr.io/nl-portal/nl-portal-backend:${{ needs.prepare.outputs.major }}
+        secrets: inherit
+
+    image-fe:
+        needs: [prepare, stage-fe, gate]
+        uses: ./.github/workflows/_build-app-image.yml
+        with:
+            stack: frontend
+            push: true
+            primaryTag: ghcr.io/nl-portal/nl-portal-frontend:${{ needs.prepare.outputs.version }}
+            tags: |
+                ghcr.io/nl-portal/nl-portal-frontend:${{ needs.prepare.outputs.version }}
+                ghcr.io/nl-portal/nl-portal-frontend:${{ needs.prepare.outputs.minor }}
+                ghcr.io/nl-portal/nl-portal-frontend:${{ needs.prepare.outputs.major }}
+        secrets: inherit
+
+    create-release:
+        needs: [prepare, promote-be, publish-fe-npm, image-be, image-fe]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            -   name: Generate GitHub App token
+                id: token
+                uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+                with:
+                    client-id: ${{ secrets.NL_PORTAL_APP_CLIENT_ID }}
+                    private-key: ${{ secrets.NL_PORTAL_APP_PRIVATE_KEY }}
+            -   uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+                with:
+                    token: ${{ steps.token.outputs.token }}
+                    fetch-depth: 0
+            -   name: Advance or birth the release/<major>.x line
+                env:
+                    MAJOR: ${{ needs.prepare.outputs.major }}
+                run: |
+                    branch="release/${MAJOR}.x"
+                    git push origin "${GITHUB_SHA}:refs/heads/${branch}"
+                    echo "::notice::${branch} now at ${GITHUB_SHA}."
+            -   name: Tag the release commit
+                env:
+                    VERSION: ${{ needs.prepare.outputs.version }}
+                run: |
+                    if git ls-remote --exit-code --tags origin "refs/tags/${VERSION}" > /dev/null 2>&1; then
+                      echo "::notice::Tag ${VERSION} already exists - skipping."
+                    else
+                      git tag "${VERSION}" "${GITHUB_SHA}"
+                      git push origin "refs/tags/${VERSION}"
+                    fi
+            -   name: Create the GitHub release
+                env:
+                    GH_TOKEN: ${{ steps.token.outputs.token }}
+                    VERSION: ${{ needs.prepare.outputs.version }}
+                run: |
+                    if gh release view "${VERSION}" > /dev/null 2>&1; then
+                      echo "::notice::Release ${VERSION} already exists - skipping."
+                    else
+                      gh release create "${VERSION}" --title "${VERSION}" --notes "Release ${VERSION}. Release notes are published in the NL Portal documentation."
+                    fi
+            -   name: Delete the release candidate branch
+                env:
+                    RC_BRANCH: ${{ github.ref_name }}
+                run: |
+                    if git ls-remote --exit-code --heads origin "${RC_BRANCH}" > /dev/null 2>&1; then
+                      echo "::notice::Deleting ${RC_BRANCH}."
+                      git push origin --delete "${RC_BRANCH}"
+                    else
+                      echo "::notice::${RC_BRANCH} already gone - skipping."
+                    fi

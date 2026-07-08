@@ -4,7 +4,11 @@
 * [nl-portal-docker-compose](#nl-portal-docker-compose)
   * [Getting started](#getting-started)
     * [Requirements](#requirements)
-    * [Starting up](#starting-up)
+    * [Compose structure and profiles](#compose-structure-and-profiles)
+    * [Running the application](#running-the-application)
+      * [Local (build from source)](#local-build-from-source)
+      * [Remote (published images)](#remote-published-images)
+    * [Starting up supporting services only](#starting-up-supporting-services-only)
       * [Including all ZGW related services](#including-all-zgw-related-services)
       * [Keycloak and database only](#keycloak-and-database-only)
   * [Maintenance](#maintenance)
@@ -17,8 +21,75 @@
 - [Docker Desktop](https://docs.docker.com/desktop/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-### Starting up
-This repository offers two options for starting up the supporting services for NL Portal:
+### Compose structure and profiles
+The compose file is built up out of sets of containers (profiles) that each enable a piece of
+functionality, so you only start what you need. A service without a profile is a core
+requirement and is always started (even with a bare `docker compose up`). Profiles combine:
+e.g. `--profile zgw` starts the full ZGW suite, while the granular `openzaak` / `objecten` /
+`openklant` / `openproduct` profiles let you start a single component of it.
+
+All ports below are exposed via the `localhost` helper container (the services share its
+network namespace), so from your host every service is reachable on `localhost:<port>`.
+
+| Service                                | Port  | Profile           |
+|----------------------------------------|-------|-------------------|
+| NL Portal Backend (build from source)  | 8080  | local             |
+| NL Portal Frontend (build from source) | 3000  | local             |
+| NL Portal Backend (published image)    | 8080  | remote            |
+| NL Portal Frontend (published image)   | 3000  | remote            |
+| NL Portal Database (postgres)          | 5432 | - (core)          |
+| Keycloak                               | 8082  | - (core)          |
+| Keycloak Database (postgres)           | -     | - (core)          |
+| Open Zaak                              | 8001  | zgw, openzaak     |
+| Open Zaak Database (postgis)           | -     | zgw, openzaak     |
+| OpenKlant 2                            | 8014  | zgw, openklant    |
+| OpenKlant 2 Database (postgres)        | -     | zgw, openklant    |
+| Objecten API                           | 8010  | zgw, objecten     |
+| Objecttypen API                        | 8011  | zgw, objecten     |
+| Open Notificaties                      | 8012  | zgw, objecten     |
+| OpenProduct                            | 8015  | zgw, openproduct  |
+| Redis                                  | -     | zgw (sub-profiles)|
+| Haalcentraal BRP                       | 5010  | haalcentraal      |
+| Haalcentraal Bewoning                  | 5011  | haalcentraal      |
+| Configuration Panel Router             | 3001  | config            |
+| Configuration Panel Backend            | 8090  | config            |
+| Configuration Panel Frontend           | 8091  | config            |
+| Configuration Panel Database (postgres)| -     | config            |
+| ClamAV virus scan                      | 3310  | clamav            |
+
+> **NB!** The `local` and `remote` profiles cannot run at the same time (both bind the app
+> ports 8080/3000). ClamAV is optional: start it with `--profile clamav` and set
+> `NLPORTAL_CONFIG_VIRUSSCAN_CLAMAV_ENABLED=true` in `imports/backend.env`.
+
+### Running the application
+This stack can run the whole NL Portal product (backend + frontend) together with its
+supporting services. NL Portal is now a single monorepo, so the images are named
+`nl-portal-backend` and `nl-portal-frontend` (the old `nl-portal-app-*` names are retired).
+Two profiles run the application:
+
+#### Local (build from source)
+Builds the backend and frontend images straight from this monorepo's `../backend` and
+`../frontend` sources (the frontend builds the app together with its workspace libraries).
+Use this while developing:
+```shell
+docker compose --profile local --profile zgw up -d --build
+```
+
+#### Remote (published images)
+Pulls the released monorepo images `ghcr.io/nl-portal/nl-portal-backend:4.0` and
+`ghcr.io/nl-portal/nl-portal-frontend:4.0` instead of building — useful for evaluating
+the product without a local build:
+```shell
+docker compose --profile remote --profile zgw up -d
+```
+> Note: `4.0` (the current minor line) can be replaced with any available tag from GHCR
+> (`ghcr.io/nl-portal/nl-portal-backend` and `ghcr.io/nl-portal/nl-portal-frontend`),
+> including snapshot tags, provided the `imports/` fixtures and configuration in this
+> stack are compatible with the chosen tag.
+
+### Starting up supporting services only
+To run only the supporting services (e.g. when running the application from your IDE),
+omit the `local`/`remote` profiles. Two options:
 - Including all ZGW related services, like Open Zaak, Open Klant, Objects API and Objecttypes API
 - Keycloak and database only
 
@@ -29,9 +100,10 @@ docker compose --profile zgw up -d
 ```
 
 The following services will be started:
+
 | Service   |      Mapped port      |
 |----------|:-------------:|
-| NL Portal database (postgres) |  54321         |
+| NL Portal database (postgres) |  5432         |
 | Keycloak |  8082         |
 | Keycloak database (postgres) |    -   |
 | Open Zaak | 8001 |
@@ -53,9 +125,10 @@ Execute the following command:
 ```shell
 docker compose up -d
 ```
+
 | Service   |      Mapped port      |
 |----------|:-------------:|
-| NL Portal database (postgres) |  54321         |
+| NL Portal database (postgres) |  5432         |
 | Keycloak |  8082         |
 | Keycloak database (postgres) |    -   |
 

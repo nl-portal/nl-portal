@@ -1,6 +1,12 @@
-import {NavigationItem} from "@nl-portal/nl-portal-user-interface";
-import {ArchiveIcon, CheckCircleIcon, GridIcon, InboxIcon, UserIcon,} from "@gemeente-denhaag/icons";
-import {paths} from "./paths";
+import { NavigationItem } from "@nl-portal/nl-portal-user-interface";
+import {
+  ArchiveIcon,
+  CheckCircleIcon,
+  GridIcon,
+  InboxIcon,
+  UserIcon,
+} from "@gemeente-denhaag/icons";
+import { paths } from "./paths";
 
 export const menuItems: NavigationItem[][] = [
   [

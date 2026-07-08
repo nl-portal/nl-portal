@@ -1,0 +1,52 @@
+# NL Portal
+
+![License EUPL 1.2](https://img.shields.io/badge/License-EUPL%201.2-blue)
+
+NL Portal is an open-source application for communicating with citizens and third parties, built for
+use with the Dutch 'VNG API's voor Zaakgericht Werken' and based on Common Ground principles. Under
+the motto 'create once, use 340 times', any (government) organization can use and improve it freely.
+
+This is the NL Portal **monorepo**: the backend, frontend, local development stack and documentation
+live together and release at a single, shared version.
+
+## What's in here
+
+| Path              | Contents                                                                                          |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| `backend/`        | Kotlin/Spring Boot backend libraries + the shippable backend application. One Gradle build. See [backend/README.md](./backend/README.md). |
+| `frontend/`       | pnpm workspace of `@nl-portal/*` React libraries + the shippable frontend application. See [frontend/README.md](./frontend/README.md). |
+| `docker-compose/` | Local development stack (Keycloak, databases, ZGW services) + fixtures. See [docker-compose/README.md](./docker-compose/README.md). |
+| `documentation/`  | Product documentation, published to https://nl-portal.nl via GitBook.                        |
+
+Helm charts live in a separate repository: [`nl-portal/helm-charts`](https://github.com/nl-portal/helm-charts).
+
+## Running NL Portal
+
+Three ways, by purpose - see [GETTING_STARTED.md](./GETTING_STARTED.md) for the commands:
+
+- **Remote** - run the published images to evaluate the product (no build).
+- **Local** - build and run your changes as they'd ship.
+- **From sources** - run the backend/frontend from your IDE for fast development.
+
+For deployment, see the [documentation](https://nl-portal.nl) and the helm-charts repository.
+
+## Developing
+
+Each stack has its own README with setup, build and run instructions:
+
+- Backend: [backend/README.md](./backend/README.md)
+- Frontend: [frontend/README.md](./frontend/README.md)
+- Local supporting services: [docker-compose/README.md](./docker-compose/README.md)
+
+Branch model, commit conventions and workflow are in [CONTRIBUTING.md](./CONTRIBUTING.md). Please
+also read the [Code of Conduct](./CODE_OF_CONDUCT.md). Report vulnerabilities privately per the
+[Security Policy](./SECURITY.md).
+
+## Documentation
+
+Full product documentation - architecture, configuration, and feature/theme guides - lives at
+https://nl-portal.nl (source in [`documentation/`](./documentation)).
+
+## License
+
+Licensed under the EUPL 1.2 - see [LICENSE.MD](./LICENSE.MD).

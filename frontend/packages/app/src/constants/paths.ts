@@ -9,13 +9,13 @@ export const paths: Paths = {
   task: (id = ":id") => `/taken/taak/${id}`,
   messages: "/berichten",
   message: (id = ":id") => `/berichten/bericht/${id}`,
+  products: "/producten",
   themeOverview: (slug = ":slug") => `/${slug}`,
   themeList: (slug = ":slug", productTypeSlug = ":productTypeSlug") =>
-      `/${slug}/${productTypeSlug}/lijst`,
+    `/${slug}/${productTypeSlug}/lijst`,
   themeDetails: (slug = ":slug", id = ":id") => `/${slug}/${id}`,
   themeHistory: (slug = ":slug", id = ":id") => `/${slug}/${id}/geschiedenis`,
   themeMutate: (slug = ":slug", id = ":id") => `/${slug}/${id}/wijzigen`,
   account: "/account",
-  changeContactInfo: "/account/wijzig/contact",
-  changeNotifications: "/account/wijzig/notificaties",
+  changeContactInfo: (type = ":type") => `/account/wijzig/${type}`,
 };

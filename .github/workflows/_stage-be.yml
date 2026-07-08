@@ -1,0 +1,84 @@
+name: _stage-be
+
+on:
+    workflow_call:
+        inputs:
+            version:
+                description: "The channel-decorated version to stamp."
+                type: string
+                required: true
+            runTests:
+                description: "Run the unit + integration test matrix. Release sets false (the RC already passed it on this commit)."
+                type: boolean
+                default: true
+            generateReports:
+                description: "Produce the license/dependency reports + SBOM (release)."
+                type: boolean
+                default: false
+            javaVersion:
+                type: string
+                default: "21"
+
+permissions:
+    contents: read
+
+jobs:
+    stage:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+            -   name: Set up JDK ${{ inputs.javaVersion }}
+                uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5.5.0
+                with:
+                    java-version: ${{ inputs.javaVersion }}
+                    distribution: temurin
+            -   name: Set up Gradle
+                uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+            -   name: License + dependency reports
+                if: ${{ inputs.generateReports }}
+                working-directory: backend
+                run: ./gradlew checkLicense htmlDependencyReport
+            -   name: Build + stage
+                working-directory: backend
+                env:
+                    VERSION: ${{ inputs.version }}
+                    GRADLE_TASK: ${{ inputs.runTests && 'build' || 'assemble' }}
+                run: ./gradlew "${GRADLE_TASK}" publish -Pversion="${VERSION}" --stacktrace
+            -   name: Generate SBOM
+                if: ${{ inputs.generateReports }}
+                uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+                with:
+                    path: backend
+                    format: cyclonedx-json
+                    output-file: backend/sbom.cyclonedx.json
+                    artifact-name: nl-portal-backend-${{ inputs.version }}-sbom.cyclonedx.json
+                    upload-artifact: false
+                    upload-release-assets: false
+                    dependency-snapshot: false
+            -   name: Package stage bundle
+                working-directory: backend
+                run: |
+                    find . -type d -path '*/build/sonatypeCentralStaging' > stage-paths.txt
+                    echo app/build/libs/app.jar >> stage-paths.txt
+                    tar -cf backend-stage.tar -T stage-paths.txt
+            -   name: Upload stage bundle
+                uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+                with:
+                    name: backend-stage
+                    path: backend/backend-stage.tar
+                    retention-days: 1
+            -   name: Package reports + SBOM
+                if: ${{ inputs.generateReports }}
+                working-directory: backend
+                run: |
+                    tar -cf backend-reports.tar \
+                      sbom.cyclonedx.json \
+                      $(test -f build/reports/dependency-license/index.html && echo build/reports/dependency-license/index.html) \
+                      $(test -d build/reports/project/dependencies && echo build/reports/project/dependencies)
+            -   name: Upload reports + SBOM
+                if: ${{ inputs.generateReports }}
+                uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+                with:
+                    name: backend-reports
+                    path: backend/backend-reports.tar
+                    retention-days: 1
