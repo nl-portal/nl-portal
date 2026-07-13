@@ -1,6 +1,6 @@
-# Zaak informatieobjecten filtering
+# Document filtering
 
-Het is mogelijk om te bepalen welke Documenten een gebruiker te zien krijgt op een zaak pagina. Zaak Informatieobjecten worden gefilterd voor dat ze geretourneerd worden.
+Het is mogelijk om te bepalen welke Documenten een gebruiker te zien krijgt. Documenten worden gefilterd voor dat ze geretourneerd worden.
 
 ## Configuratie
 
@@ -8,8 +8,8 @@ Deze functionalitiet maakt gebruik van twee whitelists in de spring properties v
 hebben zijn eigen [opties en standaardwaardes](#opties). Standaardwaardes worden gebruikt als deze properties niet 
 configureerd zijn.
 
-1. `nl-portal.zgw.zakenapi.zaak-documenten.status-whitelist`
-2. `nl-portal.zgw.zakenapi.zaak-documenten.vertrouwelijkheidsaanduiding-whitelist`
+1. `nl-portal.config.documentenapis.properties.status-whitelist`
+2. `nl-portal.config.documentenapis.properties.vertrouwelijkheidsaanduiding-whitelist`
 
 ### Opties
 
@@ -39,21 +39,20 @@ Documenten API specificatie.
 De volgende spring properties zorgen ervoor dat alle Informatieobjecten die bij jouw Zaak horen worden geretourneerd.
 ```yaml
 nl-portal:
-    zgw:
-        zakenapi:
-            zaak-documenten:
-                vertrouwelijkheidsaanduiding-whitelist:
-                    - openbaar
-                    - beperkt_openbaar
-                    - intern
-                    - vertrouwelijk
-                    - zaakvertrouwelijk
-                    - confidentieel
-                    - geheim
-                    - zeer_geheim
-                status-whitelist:
-                    - ter_vaststelling
-                    - in_bewerking
-                    - definitief
-                    - gearchiveerd
+    config:
+        documentenapis:
+            vertrouwelijkheidsaanduiding-whitelist:
+                - openbaar
+                - beperkt_openbaar
+                - intern
+                - vertrouwelijk
+                - zaakvertrouwelijk
+                - confidentieel
+                - geheim
+                - zeer_geheim
+            status-whitelist:
+                - ter_vaststelling
+                - in_bewerking
+                - definitief
+                - gearchiveerd
 ```

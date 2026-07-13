@@ -16,7 +16,7 @@
         * [Externe Taak](fundamentals/architectuur/patronen/externe-taak.md)
     * [Authentication en authorization](fundamentals/architectuur/authentication-en-authorization.md)
 * [Features](features/features.md)
-* [Object filtering](features/zaakinformatieobjecten-filtering/zaakinformatie-object-filtering.md)
+* [Document filtering](features/document-filtering/document-filtering.md)
 * [Open source](fundamentals/open-source.md)
 
 ## Configuratie
