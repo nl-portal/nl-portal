@@ -1,6 +1,6 @@
 {
   "name": "@nl-portal/nl-portal-user-interface",
-  "version": "3.1.0-next-minor-202607021426-b9ba9ecf-SNAPSHOT",
+  "version": "0.0.0",
   "author": "Ritense",
   "license": "EUPL-1.2",
   "type": "module",
@@ -95,8 +95,8 @@
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
     "jsdom": "^27.3.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-intl": "^7.1.14",
     "react-router": "^7.10.1",
     "rimraf": "^6.1.2",
@@ -112,8 +112,8 @@
     "@nl-portal/nl-portal-api": "workspace:*",
     "@nl-portal/nl-portal-authentication": "workspace:*",
     "@nl-portal/nl-portal-localization": "workspace:*",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-intl": "^7.1.14",
     "react-router": "^7.10.1"
   }

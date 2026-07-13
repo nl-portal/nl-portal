@@ -1,0 +1,54 @@
+name: Dependency check
+
+on:
+    schedule:
+        -   cron: "0 8 * * 1"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: dependency-check-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    dependency-check:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: backend
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+            -   name: Setup Java
+                uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5.5.0
+                with:
+                    distribution: temurin
+                    java-version: 21
+            -   name: Set up Gradle
+                uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+            -   name: Build project
+                run: ./gradlew build -x test -x integrationTest -x spotlessCheck
+            -   name: Dependency check
+                uses: dependency-check/Dependency-Check_Action@1e54355a8b4c8abaa8cc7d0b70aa655a3bb15a6c # main
+                env:
+                    JAVA_HOME: /opt/jdk
+                with:
+                    project: 'nl-portal'
+                    path: 'backend'
+                    format: 'HTML'
+                    out: 'backend/dependency-check'
+                    args: >
+                        --failOnCVSS 8
+                        --format HTML
+                        --format JSON
+                        --enableRetired
+                        --suppression cve-exclusions.xml
+            -   name: Upload results
+                if: always()
+                uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+                with:
+                    name: dependency-check-result
+                    path: backend/dependency-check
+                    retention-days: 7

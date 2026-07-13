@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     kotlin("jvm")
-}
-
-dockerCompose {
-    setProjectName("$name-test")
-    isRequiredBy(tasks.getByName("integrationTest"))
-    useComposeFiles.addAll("../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
 }
 
 dependencies {
@@ -45,6 +41,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.postgresql:postgresql")
 
+    // Silences the netty macOS DNS resolver stacktrace on Apple Silicon at startup.
+    // developmentOnly = bootRun classpath only, never packaged into the bootJar.
+    if (Os.isFamily(Os.FAMILY_MAC) && Os.isArch("aarch64")) {
+        developmentOnly("io.netty:netty-resolver-dns-native-macos::osx-aarch_64")
+    }
+
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.postgresql)
     testImplementation(TestDependencies.springBootTest)
@@ -58,13 +60,56 @@ dependencies {
     testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
-tasks.withType<Jar>().configureEach {
+// This module is the shipped application: produce a runnable Spring Boot fat jar,
+// disable the plain jar, and never publish it to Maven.
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    enabled = true
+    archiveFileName.set("app.jar")
+    mainClass.set("nl.nlportal.app.NlPortalApplicationKt")
+}
+
+tasks.named<Jar>("jar") {
     enabled = false
 }
 
 tasks.withType<PublishToMavenRepository>().configureEach {
     enabled = false
 }
+
 tasks.withType<PublishToMavenLocal>().configureEach {
     enabled = false
+}
+
+dockerCompose {
+    setProjectName("$name-test")
+    isRequiredBy(tasks.getByName("integrationTest"))
+    useComposeFiles.addAll("../docker-resources/docker-compose-base-test.yml", "docker-compose-override.yml")
+}
+
+// Local development config for a from-source run. `.env.properties` is the ONLY
+// config source (gitignored; copy it from .env.properties.example). It is
+// independent of docker-compose/imports/backend.env, which configures the
+// containerised backend under the compose local/remote profiles.
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    val envFile = project.file(".env.properties")
+
+    if (envFile.exists() && envFile.isFile) {
+        environment.putAll(
+            envFile
+                .readLines()
+                .filterNot { it.startsWith("#") || it.startsWith("//") || it.isBlank() }
+                .associate { line ->
+                    val entry = line.split("=", limit = 2)
+                    entry.first().trim() to entry.last().trim()
+                },
+        )
+    } else {
+        doFirst {
+            throw GradleException(
+                "backend/app/.env.properties not found. Copy .env.properties.example to " +
+                    ".env.properties (it is gitignored) and adjust it for your local stack " +
+                    "before running :app:bootRun.",
+            )
+        }
+    }
 }

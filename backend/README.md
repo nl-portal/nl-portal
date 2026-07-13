@@ -1,50 +1,71 @@
-# NL Portal Backend Libraries #
+# NL Portal Backend
 
-![Version 3.0.3](https://img.shields.io/badge/Version-3.0.3-blue)  
 ![Java 21](https://img.shields.io/badge/Java-21-green)
-![Kotlin 2.2.21](https://img.shields.io/badge/Kotlin-2.2.21-green)
-![Spring boot 3.5.9](https://img.shields.io/badge/Spring%20boot-3.5.9-green)
 
-## NL Portal
+The backend stack of the [NL Portal monorepo](../README.md). It is a single Kotlin/Spring Boot
+multi-module Gradle project containing:
 
-NL Portal is an application for communicating with citizens and third parties. It is built for use with the Dutch 
-'VNG API’s for Zaakgericht Werken' - though not required. The development is based on Common Ground principles. Under 
-the motto 'create once, use 340 times', the NL Portal has been built open source, so any (government) organization can 
-use and improve it without restrictions.
+- the **backend libraries** - the backend-for-frontend (BFF) that the NL Portal frontend talks to,
+  published as `nl.nl-portal:*` Maven artifacts; and
+- **`app/`** - the shippable backend application that assembles those modules into a runnable
+  service and is packaged as the `nl-portal-backend` image (see [app/README.md](./app/README.md)).
 
-Starting principles are:
-- Open standards, open source under EUPL 1.2;
-- Frontend UI based on NL Design System;
-- Independent of process- or case management systems;
-- Horizontal scalable;
-- A-sync communication with other services.
+The backend is independent of process- or case-management systems and communicates a-sync with
+supporting (ZGW) services.
 
-## What is nl-portal backend libraries
-This project is the backend, or backend for frontend (BFF), of the NL Portal.
+## Requirements
 
-## Contributing
-Contributions are welcome! To get you in the right direction consult the [NL Portal documentation](https://docs.nl-portal.nl/readme/contributing) for guidelines on how to contribute.
+- Java 21
+- Docker (integration tests and the local supporting-services stack rely on it)
 
-## License
-The source files in this repo are licensed to you under the EUPL 1.2. You can download the license in 23 languages: https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12. If you have any questions about the use of this codebase in a larger work: just ask us.
+## Building
 
-## More information about NL Portal
-For more information check the following links.
-- Documentation: https://docs.nl-portal.nl
+From `backend/`:
 
-## Getting started
-* Before starting this project you need to clone `https://github.com/nl-portal/nl-portal-docker-compose` and run the following command in that repository: `docker compose up -d`.
-    * When supporting ZGW services are needed, like Open Zaak, Objects API and Objecttypes API, the following command should be used: `docker compose --profile zgw up -d`
-* Then run the Gradle `bootRun` task: `./gradlew app:bootRun` in the nl-portal-backend-libraries project
+```shell
+./gradlew build
+```
 
+Integration tests auto-provision a PostgreSQL container through the docker-compose Gradle plugin, so
+Docker must be running. To build only the application jar:
+
+```shell
+./gradlew :app:bootJar
+```
+
+## Running locally
+
+Start the supporting services from the monorepo's [`docker-compose/`](../docker-compose/README.md)
+stack, then run the app:
+
+```shell
+cd ../docker-compose && docker compose --profile zgw up -d
+cd ../backend && ./gradlew :app:bootRun
+```
+
+See [app/README.md](./app/README.md) for configuration details.
+
+## Project layout
+
+- `app/` - the shippable backend application (`bootJar`; Dockerfile at [`backend/Dockerfile`](./Dockerfile)).
+- `core/`, `graphql/`, `case/`, `form/`, `zgw/`, ... - library modules, consumed by the app via
+  `project(":…")` references.
+
+Modules are configured centrally (`build.gradle.kts` + `buildSrc/`); shared dependency versions live
+in `buildSrc`.
 
 ## Known issues
-Intellij on MacOs has a known issue in which docker containers for testing fail to startup and subsequently those tests fail.
-``
-Cannot run program "docker" (in directory "/Users/user/Documents/nl-portal/nl-portal-backend-libraries/case"): error=2, 
-No such file or directory
-``
-This occurs when starting intellij from the JetBrains toolbox or using the MacOs UI and subsequently starting the build using the build in GradleWrapper 
-As a workaround start intellij from the terminal for example by using the command
-``open -a "IntelliJ IDEA Ultimate"``
-or run the gradle command from terminal
+
+**IntelliJ on macOS** may fail to start the Docker containers used by tests:
+
+```
+Cannot run program "docker" ... error=2, No such file or directory
+```
+
+This happens when IntelliJ is launched from the JetBrains Toolbox or the macOS UI. Work around it by
+starting IntelliJ from the terminal (`open -a "IntelliJ IDEA Ultimate"`) or running the Gradle
+command from the terminal.
+
+## More information
+
+See the [monorepo README](../README.md) and the [documentation](https://nl-portal.nl).

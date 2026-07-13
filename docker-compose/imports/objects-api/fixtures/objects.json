@@ -67,8 +67,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.partnerID"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.bankafschriftenAfgelopenMaand",
@@ -82,8 +81,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bankafschriftenAfgelopenMaand"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "informatieverzoek.specifiekeBankrekeningNummers",
@@ -111,8 +109,7 @@
                                 "show": true,
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.specifiekeBankafschriftenAfgelopenMaand"
                             },
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "informatieverzoek.bankrekeningNummersSpecifiekePeriode",
@@ -141,8 +138,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.specifiekeBankafschriftenPerPeriode"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.bankafschriftenZakelijkeRekeningen",
@@ -156,8 +152,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bankafschriftenZakelijkeRekeningen"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.bankafschriftenZakelijkeRekeningenPartner",
@@ -171,8 +166,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bankafschriftenZakelijkeRekeningenPartner"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.laatsteInkomstenSpecificatie",
@@ -186,8 +180,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.laatsteInkomstenSpecificatie"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.laatsteInkomstenSpecificatiePartner",
@@ -201,8 +194,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.laatsteInkomstenSpecificatiePartner"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.specificatiePensioen",
@@ -216,8 +208,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.specificatiePensioen"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.belastingaangifte",
@@ -231,8 +222,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.belastingaangifteAfgelopenJaar"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.belastingaanslag",
@@ -246,8 +236,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.belastingaanslagAfgelopenJaar"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.jaarrekening",
@@ -261,8 +250,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.jaarrekening"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "bestanden.balansrekening",
@@ -276,8 +264,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.balansrekening"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "informatieverzoek.opleidingVolgendePersonen",
@@ -306,8 +293,7 @@
                                 "when": "informatieverzoek.opTeVragenBenodigdeInformatie.bewijsVanInschrijving"
                             },
                             "defaultValue": [],
-                            "multipleFiles": true,
-                            "informatieobjecttype": "http://host.docker.internal:8001/catalogi/api/v1/informatieobjecttypen/5df12b73-7ee3-4bcc-8898-8adf12db9e8b"
+                            "multipleFiles": true
                         },
                         {
                             "key": "documenten",
@@ -377,7 +363,7 @@
                 },
                 "koppeling": {
                     "registratie": "zaak",
-                    "value": "703af290-abe0-418c-b9c3-10a65e662788"
+                    "value": "729a9bdf-ea81-4a8d-b0ec-9b516ba26cc5"
                 },
                 "ogonebetaling": {
                     "bedrag": 147.43,
@@ -410,36 +396,39 @@
             "object": 4,
             "version": 1,
             "data": {
-                "titel": "Check loan",
-                "status": "open",
+                "url": {
+                    "uri": "https://google.com"
+                },
                 "soort": "portaalformulier",
+                "titel": "Ontbrekende documenten uploaden",
+                "status": "open",
+                "eigenaar": "gzac-sd",
+                "koppeling": {
+                    "value": "729a9bdf-ea81-4a8d-b0ec-9b516ba26cc5",
+                    "registratie": "zaak"
+                },
                 "verloopdatum": "2025-09-20T18:25:43.524Z",
                 "identificatie": {
                     "type": "bsn",
                     "value": "999993847"
                 },
-                "koppeling": {
-                    "registratie": "zaak",
-                    "value": "703af290-abe0-418c-b9c3-10a65e662788"
-                },
-                "url": {
-                    "uri": "https://google.com"
-                },
                 "portaalformulier": {
+                    "data": {
+                        "informatieverzoek": {
+                            "deadline": "2026-06-10",
+                            "toelichting": "Graag het identiteitsbewijs van uw partner uploaden",
+                            "opTeVragenBenodigdeInformatie": {
+                                "partnerID": true
+                            }
+                        }
+                    },
                     "formulier": {
                         "soort": "url",
                         "value": "http://localhost:8010/api/v2/objects/c0021527-7af0-48be-b38d-d8ba9ce8e2b6"
                     },
-                    "data": {
-                        "voornaam": "Jan",
-                        "achternaam": "Smit",
-                        "toestemming": true,
-                        "geboortedatum": "01-01-1970"
-                    },
                     "verzonden_data": {}
                 },
-                "verwerker_taak_id": "18af0b6a-967b-4f81-bb8e-a44988e0c2f0",
-                "eigenaar": "gzac-sd"
+                "verwerker_taak_id": "18af0b6a-967b-4f81-bb8e-a44988e0c2f0"
             },
             "start_at": "2024-07-18",
             "end_at": null,
@@ -548,7 +537,7 @@
                 },
                 "koppeling": {
                     "registratie": "zaak",
-                    "value": "703af290-abe0-418c-b9c3-10a65e662788"
+                    "value": "729a9bdf-ea81-4a8d-b0ec-9b516ba26cc5"
                 },
                 "url": {
                     "uri": "https://wetten.overheid.nl/"
@@ -650,7 +639,6 @@
             "object": 9,
             "version": 1,
             "data": {
-
                 "naam": "milieuzoneOldtimerBrommerSnorfiets",
                 "subtypes": {
                     "3wiel": "Ontheffing 3-wielige brom- en snorfietsen",
@@ -662,8 +650,7 @@
                     "actief": "Actief",
                     "verlopen": "Verlopen"
                 },
-                "zaaktypen": [
-                ],
+                "zaaktypen": [],
                 "omschrijving": "Ontheffing om in een periode met een soort brommer en snorfiets door de milieuzone te rijden.",
                 "eigenschappen": {
                     "bron": "Bron",
@@ -718,8 +705,6 @@
                         }
                     }
                 }
-
-
             },
             "start_at": "2026-01-07",
             "registration_at": "2026-01-07"
@@ -741,7 +726,6 @@
             "object": 10,
             "version": 1,
             "data": {
-
                 "naam": "belastingzaken",
                 "statussen": {
                     "actief": "Actief",
@@ -792,8 +776,6 @@
                         }
                     }
                 }
-
-
             },
             "start_at": "2026-01-07",
             "registration_at": "2026-01-07"
@@ -815,14 +797,12 @@
             "object": 11,
             "version": 1,
             "data": {
-
                 "naam": "WetToeristischeVerhuur",
                 "statussen": {
                     "actief": "Actief",
                     "verlopen": "Verlopen"
                 },
-                "zaaktypen": [
-                ],
+                "zaaktypen": [],
                 "omschrijving": "Jaarlijks afgegeven vergunning voor het verhuren van woningen binnen de wet toeristische verhuur.",
                 "eigenschappen": {
                     "toegestaneDagdelen": "Toegestane dagdelen"
@@ -860,8 +840,6 @@
                         }
                     }
                 }
-
-
             },
             "start_at": "2026-01-07",
             "registration_at": "2026-01-07"

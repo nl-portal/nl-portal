@@ -1,80 +1,57 @@
-###GZAC
+# NL Portal Backend Application
 
-This is a GZAC Portal edition for local development.
-Includes an array of additional services for OpenZaak/OpenFormulieren/OpenKlant
+The shippable backend application of NL Portal. It assembles the backend library modules (`core`,
+`graphql`, `case`, `form`, `zgw`, ...) into a single runnable Spring Boot service and is packaged as
+the `nl-portal-backend` image (Dockerfile at [`backend/Dockerfile`](../Dockerfile)).
 
-####1 Docker-compose up
+## Running locally
 
-Clone external git repo https://github.com/nl-portal/nl-portal-docker-compose
+Start the supporting services in `sources` mode (which frees the app ports `8080`/`8000`/`3000`
+for an IDE/Gradle run), create your local config, then run the app:
 
-Run in terminal:
 ```shell
-cd gzac-platform
-docker-compose up -d
+cd ../../docker-compose && RUN_MODE=sources docker compose --profile zgw up -d
+cd ../backend/app && cp .env.properties.example .env.properties
+cd .. && ./gradlew :app:bootRun
 ```
 
-####2 Run Spring-boot-application
+The GraphQL endpoint is served at `/graphql`. Keycloak, databases and ZGW service URLs (and the test
+users to log in with) are provided by the `docker-compose/` stack - see its
+[README](../../docker-compose/README.md) for service ports and credentials.
 
-Run Gradle task in IntelliJ:
-```nl-portal-backend-libraries -> app -> gzac -> Tasks -> application -> bootRun```
+## Configuration
 
-Run in terminal:
+The app has a single config surface: **`src/main/resources/config/application.yml`** - the
+base/production config, fully externalized via `${ENV}` variables and prod-safe (GraphQL
+introspection is off). There is no Spring `dev` profile; every run (container or from-source) uses
+this same config and supplies differences purely through environment variables.
+
+### Local development (`bootRun`)
+
+`./gradlew :app:bootRun` loads its environment from **`.env.properties`** in this directory. This is
+the *only* config source for a from-source run - it is independent of
+[`docker-compose/imports/backend.env`](../../docker-compose/imports/backend.env), which configures
+the *containerised* backend under the compose `local`/`remote` profiles.
+
+`.env.properties` is **gitignored** (it may hold local secrets). Copy the tracked template and adjust
+it for your machine:
+
 ```shell
-cd app/gzac
-../../gradlew bootRun
+cp .env.properties.example .env.properties
 ```
 
----
+`bootRun` fails with a clear message if the file is missing. The template assumes the supporting
+stack runs via `RUN_MODE=sources docker compose --profile zgw up -d`, so every service is reachable
+on `localhost:<published-port>` from the host. It differs from the containerised
+`backend.env` in a few ways:
 
-## Keycloak - Test users
-
-Keycloak management can be accessed on http://localhost:8093 with the default credentials of:
->Username: admin  
->Password: admin
-
-Keycloak comes preconfigured with the following users. 
-
-| Name | Property | Username | Password | 
+| Setting | Container (`backend.env`) | Host (`.env.properties`) | Why |
 |---|---|---|---|
-| Jan Jansen | bsn: 569312863 | burger | burger |
-| Bedrijf A | kvk: 14127293 | bedrijf | bedrijf |
+| `LOGLEVEL` | `INFO` | `DEBUG` | verbose inner dev loop |
+| `SPRING_GRAPHQL_SCHEMA_INTROSPECTION_ENABLED` | unset (off) | `true` | serve an introspectable schema for frontend codegen (never on in the shipped image) |
+| `CONFIGURATION_PANEL_URI`, `..._PREFILL_..._TYPEURL` | `host.docker.internal:<port>` | `localhost:<port>` | the host reaches these services on `localhost`, not `host.docker.internal` |
 
-### Objects API 
+To use the optional ClamAV virus scan, start the `clamav` compose profile and set
+`NLPORTAL_CONFIG_VIRUSSCAN_CLAMAV_ENABLED=true` in `.env.properties`.
 
-Admin can be accessed on http://localhost:8000.
-
-To create superuser and to add demo data. Terminal:
-```shell
-docker-compose exec objects-api src/manage.py createsuperuser
-docker-compose exec objects-api src/manage.py loaddata demodata
-```
-
-Create a token for the access under Home › API authorizations > Token authorizations and use this in the connector config
-
-
-### ObjectTypes API
-
-Admin can be accessed on http://localhost:8010.
-
-To create superuser and to add demo data. Terminal:
-```shell
-docker-compose exec objecttypes-api src/manage.py createsuperuser
-docker-compose exec objecttypes-api src/manage.py loaddata demodata
-```
-
-Create a token for the access under Home › API authorizations > Token authorizations and use this in the connector config
-
-
-### Open Notificaties
-
-Admin can be accessed on http://localhost:8002.
-
-By default, an admin user is created with the following credentials
->Username: admin  
->Password: admin
-
-### Haal Centraal BRP
-Uses a public test server at https://www.haalcentraal.nl/haalcentraal/api/brp.
-This server is only accessible with a valid apiKey, use the [haal centraal documentation](https://vng-realisatie.github.io/Haal-Centraal-BRP-bevragen//getting-started) to find out how to get your apiKey
-
-Once you have received an apiKey you can set this in the application.yml at nl-portal.haalcentraal.apiKey, or you can set an environment variable named NLPORTAL_HAALCENTRAAL_APIKEY
+When running as a container, supply configuration through environment variables instead.

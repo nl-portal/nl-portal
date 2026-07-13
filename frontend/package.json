@@ -1,5 +1,5 @@
 {
-  "name": "nl-portal-frontend-libraries",
+  "name": "nl-portal-frontend",
   "private": true,
   "packages": [
     "packages/*"
@@ -24,7 +24,7 @@
     "update-patch": "npm-check-updates --configFilePath .ncurc.patch.js",
     "update-minor": "npm-check-updates --configFilePath .ncurc.minor.js",
     "update-major": "npm-check-updates --configFilePath .ncurc.major.js",
-    "postinstall": "husky",
+    "postinstall": "cd .. && husky frontend/.husky",
     "preview": "pnpm run --recursive preview"
   },
   "devDependencies": {
@@ -51,7 +51,7 @@
     "vitest": "^4.0.16"
   },
   "engines": {
-    "node": "^22",
-    "pnpm": "^11"
+    "node": ">=24.0.0",
+    "pnpm": ">=11.0.0 <12"
   }
 }

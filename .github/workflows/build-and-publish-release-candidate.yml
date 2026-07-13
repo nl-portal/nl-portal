@@ -1,0 +1,105 @@
+name: Build and Publish Release Candidate
+
+on:
+    workflow_dispatch:
+        inputs:
+            rc_number:
+                description: "The RC iteration number N (produces <base>-RC-N-SNAPSHOT)."
+                type: string
+                required: true
+
+concurrency:
+    group: rc-${{ github.ref }}-${{ inputs.rc_number }}
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+    packages: write
+    id-token: write
+
+jobs:
+    prepare:
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.v.outputs.version }}
+        steps:
+            -   uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+            -   name: Guard branch
+                run: |
+                    case "${GITHUB_REF_NAME}" in
+                      rc/*) : ;;
+                      *) echo "::error::build-and-publish-release-candidate.yml must be dispatched from an rc/* branch (got ${GITHUB_REF_NAME})."; exit 1 ;;
+                    esac
+            -   name: Compute RC version
+                id: v
+                env:
+                    RC_NUMBER: ${{ inputs.rc_number }}
+                run: |
+                    base=$(cat version.txt)
+                    version="${base}-RC-${RC_NUMBER}-SNAPSHOT"
+                    echo "version=${version}" >> "$GITHUB_OUTPUT"
+                    echo "::notice::RC version ${version}"
+
+    stage-be:
+        needs: prepare
+        uses: ./.github/workflows/_stage-be.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+
+    stage-fe:
+        needs: prepare
+        uses: ./.github/workflows/_stage-fe.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+
+    image-be:
+        needs: [prepare, stage-be]
+        uses: ./.github/workflows/_build-app-image.yml
+        with:
+            stack: backend
+            push: true
+            primaryTag: ghcr.io/nl-portal/nl-portal-backend:${{ needs.prepare.outputs.version }}
+            tags: |
+                ghcr.io/nl-portal/nl-portal-backend:${{ needs.prepare.outputs.version }}
+        secrets: inherit
+
+    image-fe:
+        needs: [prepare, stage-fe]
+        uses: ./.github/workflows/_build-app-image.yml
+        with:
+            stack: frontend
+            push: true
+            primaryTag: ghcr.io/nl-portal/nl-portal-frontend:${{ needs.prepare.outputs.version }}
+            tags: |
+                ghcr.io/nl-portal/nl-portal-frontend:${{ needs.prepare.outputs.version }}
+        secrets: inherit
+
+    publish-be-s3:
+        needs: [prepare, stage-be]
+        uses: ./.github/workflows/_publish-be-s3.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+        secrets: inherit
+
+    publish-fe-s3:
+        needs: [prepare, stage-fe]
+        uses: ./.github/workflows/_publish-fe-s3.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+        secrets: inherit
+
+    publish-be-native:
+        needs: [prepare, stage-be]
+        uses: ./.github/workflows/_publish-be-native.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+            deployer: sonatype-snapshots
+        secrets: inherit
+
+    publish-fe-npm:
+        needs: [prepare, stage-fe]
+        uses: ./.github/workflows/_publish-fe-npm.yml
+        with:
+            version: ${{ needs.prepare.outputs.version }}
+            distTag: rc
+        secrets: inherit

@@ -1,4 +1,4 @@
-rootProject.name = "nl-portal-backend-libraries"
+rootProject.name = "nl-portal-backend"
 
 pluginManagement {
     val kotlinVersion: String by settings

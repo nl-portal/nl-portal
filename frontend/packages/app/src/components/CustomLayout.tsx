@@ -6,7 +6,7 @@ import {
 import { paths } from "../constants/paths";
 import { useIntl } from "react-intl";
 import { useContext } from "react";
-import {HeaderLogo} from "./HeaderLogo.tsx";
+import { HeaderLogo } from "./HeaderLogo.tsx";
 
 const CustomLayout = () => {
   const intl = useIntl();

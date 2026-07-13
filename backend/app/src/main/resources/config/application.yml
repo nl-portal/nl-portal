@@ -3,71 +3,47 @@ server:
 
 management:
     endpoint:
-        restart:
-            access: unrestricted
+        health:
+            access: read_only
+            probes:
+                enabled: true
         refresh:
             access: unrestricted
-        health:
-            probes:
-                enabled: false
-            access: read_only
+        restart:
+            access: unrestricted
     endpoints:
+        access:
+            default: none
         web:
             exposure:
                 include: health, refresh, restart
-        access:
-            default: none
 
 spring:
-    profiles:
-        default: dev
     application:
-        name: nl-portal-backend-libraries
-    graphql:
-        graphiql:
-            enabled: false
-        schema:
-            introspection:
-                enabled: false
-            locations: classpath*:graphql/**/
-            inspection:
-                enabled: true
+        name: nl-portal-app
     security:
         oauth2:
             resourceserver:
                 jwt:
-                    issuer-uri: http://localhost:8082/auth/realms/nlportal
+                    jwk-set-uri: ${JWKS_URI}
     liquibase:
         enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:54321/nl-portal
-        username: nlportal
-        password: password
-        name: nl-portal-database
-        hikari:
-            auto-commit: false
-            poolName: "gzac-portal-pool"
+        url: ${DATABASE_URL}
+        name: nl-portal-app
+        username: ${DATABASE_USERNAME}
+        password: ${DATABASE_PASSWORD}
     jpa:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
-        database: postgresql
-        show_sql: false
-        open-in-view: false
-        properties:
-            hibernate:
-                hbm2ddl.auto: none
-                generate_statistics: false
-                naming-strategy: org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy
-                cache:
-                    use_second_level_cache: false
-                    use_query_cache: false
-                    region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
-                format_sql: true
-                jdbc:
-                    time_zone: UTC
-                connection:
-                    provider_disables_autocommit: true
+    graphql:
+        graphiql:
+            enabled: false
+        schema:
+            locations: classpath*:graphql/**/
+            introspection:
+                enabled: false
 
 graphql:
     packages:
@@ -75,17 +51,18 @@ graphql:
 
 logging:
     level:
-        root: INFO
+        root: ${LOGLEVEL:INFO}
+        liquibase: WARN
 
 nl-portal:
     authentication:
         keycloak:
-            resource: gzac-portal-m2m
-            audience: gzac-portal-token-exchange
+            resource: ${KEYCLOAK_CLIENT_ID}
+            audience: ${KEYCLOAK_TOKEN_EXCHANGE_AUDIENCE}
             credentials:
-                secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
+                secret: ${KEYCLOAK_CLIENT_SECRET}
         machtingsdienst:
-            resource-url: # classpath:machtigingsdiensten.json
+            resource-url: # classpath:example-machtigingsdiensten.json
     security:
         cors:
             -   path: "/**"
@@ -95,186 +72,3 @@ nl-portal:
                     allowedMethods: "*"
         endpoints:
             unsecured: /api/public/**
-    config:
-        besluitenapi:
-            enabled: true
-            properties:
-                url: http://localhost:8001
-                clientId: valtimo_client
-                secret: e09b8bc5-5831-4618-ab28-41411304309d
-        catalogiapi:
-            enabled: true
-            properties:
-                url: http://localhost:8001
-                clientId: valtimo_client
-                secret: e09b8bc5-5831-4618-ab28-41411304309d
-        documentenapis:
-            enabled: true
-            properties:
-                default-document-api: openzaak
-                vertrouwelijkheidsaanduiding-whitelist:
-                    - openbaar
-                    - beperkt_openbaar
-                    - intern
-                    - zaakvertrouwelijk
-                    - vertrouwelijk
-                    - confidentieel
-                    - geheim
-                    - zeer_geheim
-                status-whitelist:
-                    - ter_vaststelling
-                    - in_bewerking
-                    - definitief
-                    - gearchiveerd
-                configurations:
-                    openzaak:
-                        url: http://localhost:8001/documenten/api/v1
-                        clientId: valtimo_client
-                        secret: e09b8bc5-5831-4618-ab28-41411304309d
-                        rsin: "051845623"
-                        documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/efc332f2-be3b-4bad-9e3c-49a6219c92ad
-                    dummydoc:
-                        url: http://localhost:8002/documenten/api/v1
-                        clientId: docdoc
-                        secret: e09b8bc5-5831-4618-ab28-41411304309d
-        virusscan:
-            clamav:
-                enabled: false
-                properties:
-                    hostName: localhost
-        zakenapi:
-            enabled: true
-            properties:
-                url: http://localhost:8001
-                clientId: valtimo_client
-                secret: e09b8bc5-5831-4618-ab28-41411304309d
-        objectenapi:
-            enabled: true
-            properties:
-                url: http://localhost:8010
-                token: 182c13e2209161852c53cef53a879f7a2f923430
-        openklant2:
-            enabled: true
-            properties:
-                klantinteracties-api-url: http://localhost:8007/klantinteracties/api/v1
-                token: ac045222c9e7cde8120b48735560f9b920bb58cd
-        haalcentraal2:
-            enabled: true
-            properties:
-                brp-api-url: http://localhost:5010/haalcentraal/api/brp/
-                bewoning-api-url: http://localhost:5011/haalcentraal/api/bewoning/
-        haalcentraal:
-            hr:
-                enabled: true
-                properties:
-                    url: http://localhost:8080
-                    apiKey:
-                    ssl:
-                        enabled: false
-                        key:
-                            key:
-                            certChain:
-                            keyPassword:
-                        trustedCertificate:
-        taak:
-            enabled: true
-            properties:
-                object-type-url: http://host.docker.internal:8011/api/v2/objecttypes/b4a617af-6969-45e8-9afd-d51e170716d5
-        berichten:
-            enabled: true
-            properties:
-                bericht-object-type-url: http://host.docker.internal:8011/api/v2/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
-        openproduct:
-            enabled: true
-            properties:
-                token: ac045222c9e7cde8120b48735560f9b920bb58cd
-                product-api-url: http://localhost:8070/producten/api/v1
-                product-type-api-url: http://localhost:8070/producttypen/api/v1
-
-        product:
-            enabled: true
-            properties:
-                product-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/972e92ce-b964-4ca8-ad4d-ddc43dd7b244"
-                product-instantie-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
-                product-details-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36"
-                product-verbruiks-object-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37"
-        dmn:
-            enabled: true
-            properties:
-                url: "http://localhost:9000"
-        prefill:
-            enabled: true
-            properties:
-                type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37"
-        payment:
-            direct:
-                enabled: true
-                properties:
-                    url: https://payment.preprod.direct.worldline-solutions.com
-                    sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
-                    configurations:
-                        belastingzaken:
-                            pspId: TAX
-                            language: "nl_NL"
-                            returnUrl: http://localhost:3000
-                            apiKey: dummy
-                            apiSecret: dummy
-                            webhookApiKey: dummy
-                            webhookApiSecret: dummy
-            ogone:
-                enabled: true
-                properties:
-                    url: https://secure.ogone.com/ncol/test/orderstandard.asp
-                    sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
-                    configurations:
-                        belastingzaken:
-                            pspId: TAX
-                            title: Belastingzaken
-                            shaInKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
-                            shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
-                            failureUrl: http://localhost:3000
-                            successUrl: http://localhost:3000
-        theme:
-            logo:
-            style:
-        features:
-            properties:
-                my-address-research-url: http://www.google.com
-                my-address-research-more-info-url: http://www.google.com
-                my-address-change-url: http://www.google.com
-                my-brp-change-url: http://www.google.com
-                my-name-change-url: http://www.google.com
-                my-brp-confidentially-change-url: http://www.google.com
-                my-gender-change-url: http://www.google.com
-                theme-class: "test"
-                message-count-polling-interval: 10000
-                overview-maintenance-alert-text-en: alert text
-                overview-maintenance-alert-text-nl: waarschuwings tekst
-                overview-maintenance-alert-title-en: alert title
-                overview-maintenance-alert-title-nl: waarschuwings onderwerp
-                custom: '{
-    "pwikProSiteId": "f25a2e8a-bae1-423c-8478-fee59040da63",
-    "pwikProAccountAddress": "http://pwikpro.com",
-    "enableKtoDiv": true,
-    "emandateActive": true,
-    "arcgisUrlWithPlaceholder": "arcgis url",
-    "enableMessages": true,
-    "otelEnvironment": "DEV",
-    "otelEnabled": true
-}'
-            toggles:
-                theme-api-enabled: true
-                message-count-enabled: true
-                cases-partial-search-enabled: true
-                cases-result-explanation-enabled: true
-                open-product-enabled: true
-                legacy-payment-enabled: false
-                my-inhabitant-count-enabled: false
-                cases-contact-moments-enabled: true
-                overview-intro-enabled: true
-                overview-maintenance-alert-enabled: false
-        verificatie:
-            enabled: false
-            properties:
-                url: http://localhost:8088
-                types-need-verification: email

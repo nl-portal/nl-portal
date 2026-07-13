@@ -1,85 +1,150 @@
+name: nl-portal-docker-compose
+
+include:
+    - path: "compose.localhost-${RUN_MODE:-full}.yaml"
+
 services:
-    #keycloak
+
+    localhost:
+        container_name: localhost
+        image: alpine:latest
+        command: sleep infinity
+        ports:
+            - "5432:5432" # NL Portal Database port
+            - "8082:8082" # Keycloak port
+            - "8001:8001" # OpenZaak
+            - "8010:8010" # Objecten API
+            - "8011:8011" # Objecttypen API
+            - "8012:8012" # Open Notificaties
+            - "8014:8014" # OpenKlant 2
+            - "8015:8015" # OpenProduct
+            - "5010:5010" # Haalcentraal BRP
+            - "5011:5011" # Haalcentraal Bewoning
+            - "3310:3310" # ClamAV virus scan
+
+    nl-portal-backend-local:
+        container_name: nl-portal-backend
+        profiles:
+            - local
+        build: ../backend
+        network_mode: "service:localhost"
+        env_file: imports/backend.env
+
+    nl-portal-frontend-local:
+        profiles:
+            - local
+        container_name: nl-portal-frontend
+        build: ../frontend
+        network_mode: "service:localhost"
+        env_file: imports/frontend.env
+
+    nl-portal-database:
+        container_name: nl-portal-database
+        image: postgres:15
+        network_mode: "service:localhost"
+        volumes:
+            - nl-portal-database-data:/var/lib/postgres
+        environment:
+            POSTGRES_USER: nlportal
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: nl-portal
+
+    nl-portal-backend-remote:
+        image: ghcr.io/nl-portal/nl-portal-backend:4.0
+        profiles:
+            - remote
+        container_name: nl-portal-backend
+        network_mode: "service:localhost"
+        env_file: imports/backend.env
+
+    nl-portal-frontend-remote:
+        image: ghcr.io/nl-portal/nl-portal-frontend:4.0
+        profiles:
+            - remote
+        container_name: nl-portal-frontend
+        network_mode: "service:localhost"
+        env_file: imports/frontend.env
 
     nl-portal-keycloak:
         container_name: nl-portal-keycloak
         depends_on:
             - nl-portal-keycloak-database
-        image: quay.io/keycloak/keycloak:24.0.1
-        ports:
-            - "127.0.0.1:8082:8080"
+        image: quay.io/keycloak/keycloak:26.3
+        network_mode: "service:localhost"
         environment:
-            KEYCLOAK_ADMIN: admin
-            KEYCLOAK_ADMIN_PASSWORD: admin
             KC_DB: postgres
             KC_DB_URL: jdbc:postgresql://nl-portal-keycloak-database/keycloak
             KC_DB_USERNAME: keycloak
             KC_DB_PASSWORD: keycloak
-            KC_FEATURES: token-exchange,admin-fine-grained-authz
+            KC_FEATURES: token-exchange:v1,admin-fine-grained-authz:v1
             KC_HTTP_RELATIVE_PATH: /auth
         volumes:
             - ./imports/keycloak:/opt/keycloak/data/import
-        command: "start-dev --import-realm"
+        command: "start-dev --import-realm --http-port=8082"
 
     nl-portal-keycloak-database:
-        image: postgres:15
         container_name: nl-portal-keycloak-database
+        image: postgres:15
         environment:
             POSTGRES_USER: keycloak
             POSTGRES_PASSWORD: keycloak
 
-    #nl portal database
-    nl-portal-database:
-        container_name: nl-portal-database
-        image: postgres:15
-        ports:
-            - "54321:5432"
-        environment:
-            POSTGRES_USER: nlportal
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: nl-portal
-        volumes:
-            - nl-portal-database-data:/var/lib/postgres # persist data even if container shuts down
-
-    #zgw
-    openzaak:
+    nl-portal-openzaak:
         image: openzaak/open-zaak:1.22.0
-        container_name: openzaak
+        container_name: nl-portal-openzaak
         platform: linux/amd64
         profiles:
             - zgw
             - openzaak
-        environment:
-            - DB_HOST=openzaak-database
+        network_mode: "service:localhost"
+        environment: &openzaak-env
+            - UWSGI_PORT=8001
+            - DB_HOST=nl-portal-openzaak-database
+            - DB_PORT=5432
             - SECRET_KEY=veryRestrictedSecretKey
             - DB_USER=openzaak
             - DB_PASSWORD=openzaak
             - DB_NAME=openzaak
-            - CACHE_DEFAULT=zgw-redis:6379/0
-            - CACHE_AXES=zgw-redis:6379/0
+            - CACHE_DEFAULT=nl-portal-redis:6379/0
+            - CACHE_AXES=nl-portal-redis:6379/0
             - DEBUG=true
-            - ALLOWED_HOSTS=localhost,host.docker.internal,172.17.0.1,openzaak
+            - ALLOWED_HOSTS=localhost,host.docker.internal,172.17.0.1,openzaak,example.com
             - OPENZAAK_SUPERUSER_USERNAME=admin
             - OPENZAAK_SUPERUSER_EMAIL=admin@example.org
-            - CELERY_BROKER_URL=redis://zgw-redis:6379/1
-            - CELERY_RESULT_BACKEND=redis://zgw-redis:6379/1
+            - CELERY_BROKER_URL=redis://nl-portal-redis:6379/1
+            - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/1
             - DJANGO_SUPERUSER_PASSWORD=admin
             - SENDFILE_BACKEND=django_sendfile.backends.simple
             - DISABLE_2FA=true
-        ports:
-            - "8001:8000"
         depends_on:
-            - openzaak-database
-            - zgw-redis
+            - nl-portal-openzaak-database
+            - nl-portal-redis
         volumes:
-            - openzaak-private-media:/app/private-media # persist data even if container shuts down
+            - ./imports/openzaak/private-media:/app/private-media
 
-    openzaak-database:
-        image: postgis/postgis:15-3.5
-        container_name: openzaak-database
+    nl-portal-openzaak-import:
+        image: openzaak/open-zaak:1.22.0
+        container_name: nl-portal-openzaak-import
         platform: linux/amd64
-        ports:
-            - "8091:5432"
+        profiles:
+            - zgw
+            - openzaak
+        environment: *openzaak-env
+        network_mode: "service:localhost"
+        command: sh init/init.sh
+        volumes:
+            - ./imports/openzaak/fixtures:/app/src/openzaak/fixtures
+            - ./imports/openzaak/private-media:/app/private-media
+            - ./imports/openzaak/init:/app/init
+        depends_on:
+            - nl-portal-openzaak
+            - nl-portal-openzaak-database
+            - nl-portal-redis
+
+    nl-portal-openzaak-database:
+        image: postgis/postgis:15-3.5
+        container_name: nl-portal-openzaak-database
+        platform: linux/amd64
         profiles:
             - zgw
             - openzaak
@@ -87,48 +152,42 @@ services:
             - POSTGRES_USER=openzaak
             - POSTGRES_PASSWORD=openzaak
             - POSTGRES_DB=openzaak
-        volumes:
-            - ./imports/open-zaak:/docker-entrypoint-initdb.d
 
-    openklant-2:
-        image: maykinmedia/open-klant:2.16.0
-        build: .
-        container_name: openklant-2
+    nl-portal-openklant-2:
+        image: maykinmedia/open-klant:2.12.1
+        container_name: nl-portal-openklant-2
         profiles:
             - zgw
             - openklant
-        ports:
-            - 8007:8000
         depends_on:
-            - openklant-2-db
-            - zgw-redis
+            - nl-portal-openklant-2-db
+            - nl-portal-redis
+        network_mode: "service:localhost"
         environment:
+            - UWSGI_PORT=8014
             - DJANGO_SETTINGS_MODULE=openklant.conf.docker
             - IS_HTTPS=no
             - DB_NAME=openklant
             - DB_USER=openklant
             - DB_PASSWORD=openklant
-            - DB_HOST=openklant-2-db
+            - DB_HOST=nl-portal-openklant-2-db
             - ALLOWED_HOSTS=*
-            - CACHE_DEFAULT=zgw-redis:6379/0
-            - CACHE_AXES=zgw-redis:6379/0
+            - CACHE_DEFAULT=nl-portal-redis:6379/2
+            - CACHE_AXES=nl-portal-redis:6379/2
             - SUBPATH=${SUBPATH:-/}
             - SECRET_KEY=${SECRET_KEY:-django-insecure-f8s@b*ds4t84-q_2#c0j0506@!l2q6r5_pq5e!vm^_9c*#^66b}
-            - CELERY_BROKER_URL=redis://zgw-redis:6379/1
-            - CELERY_RESULT_BACKEND=redis://zgw-redis:6379/1
+            - CELERY_BROKER_URL=redis://nl-portal-redis:6379/3
+            - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/3
             - DISABLE_2FA=true
             - RUN_SETUP_CONFIG=true
-            - OTEL_SDK_DISABLED=true
         volumes:
             - ./imports/openklant-2/init/data.yaml:/app/data.yaml
             - ./imports/openklant-2/init:/app/init
         command: sh /app/init/init.sh
 
-    openklant-2-db:
-        image: postgres:18
-        container_name: openklant-2-db
-        #ports:
-        #    - "54329:5432"
+    nl-portal-openklant-2-db:
+        image: postgres:15
+        container_name: nl-portal-openklant-2-db
         profiles:
             - zgw
             - openklant
@@ -139,52 +198,53 @@ services:
         volumes:
             - ./imports/openklant-2/database:/docker-entrypoint-initdb.d/
 
-    objecten-api:
+    nl-portal-objecten-api:
         image: maykinmedia/objects-api:3.2.0
-        container_name: objecten-api
+        container_name: nl-portal-objecten-api
         platform: linux/amd64
+        network_mode: "service:localhost"
         profiles:
             - zgw
             - objecten
-        ports:
-            - "8010:8000"
         environment: &objects-env
+            - UWSGI_PORT=8010
             - CORS_ALLOW_ALL_ORIGINS=true
             - SECRET_KEY=${SECRET_KEY:-1(@f(-6s_u(5fd&1sg^uvu2s(c-9sapw)1era8q&)g)h@cwxxg}
             - DJANGO_SETTINGS_MODULE=objects.conf.docker
-            - DB_HOST=objecten-api-database
+            - DB_HOST=nl-portal-objecten-api-database
             - DEBUG=true
             - TWO_FACTOR_FORCE_OTP_ADMIN=False
             - TWO_FACTOR_PATCH_ADMIN=False
             - DISABLE_2FA=true
-            - CACHE_AXES=zgw-redis:6379/0
-            - CACHE_DEFAULT=zgw-redis:6379/0
+            - CACHE_AXES=nl-portal-redis:6379/4
+            - CACHE_DEFAULT=nl-portal-redis:6379/4
             - ALLOWED_HOSTS=localhost,host.docker.internal,172.17.0.1
-            - CELERY_BROKER_URL=redis://zgw-redis:6379/1
+            - CELERY_BROKER_URL=redis://nl-portal-redis:6379/5
             - CELERY_RESULT_EXPIRES=3600
-            - CELERY_RESULT_BACKEND=redis://zgw-redis:6379/1
+            - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/5
             - CELERY_LOGLEVEL=DEBUG
         depends_on:
-            - objecten-api-database
-            - zgw-redis
+            - nl-portal-objecten-api-database
+            - nl-portal-redis
 
-    objecten-api-celery:
+    nl-portal-objecten-api-celery:
         image: maykinmedia/objects-api:3.2.0
-        container_name: objecten-api-celery
+        container_name: nl-portal-objecten-api-celery
         platform: linux/amd64
+        network_mode: "service:localhost"
         profiles:
             - zgw
             - objecten
         depends_on:
-            - objecten-api
-            - objecten-api-database
-            - zgw-redis
+            - nl-portal-objecten-api
+            - nl-portal-objecten-api-database
+            - nl-portal-redis
         command: /celery_worker.sh
         environment: *objects-env
 
-    objecten-api-database:
+    nl-portal-objecten-api-database:
         image: postgis/postgis:15-3.5
-        container_name: objecten-api-database
+        container_name: nl-portal-objecten-api-database
         platform: linux/amd64
         profiles:
             - zgw
@@ -194,104 +254,102 @@ services:
             - POSTGRES_PASSWORD=objects
             - POSTGRES_DB=objects
 
-    objecten-api-import:
+    nl-portal-objecten-api-import:
         image: maykinmedia/objects-api:3.2.0
-        container_name: objecten-api-import
+        container_name: nl-portal-objects-api-import
         platform: linux/amd64
         profiles:
             - zgw
             - objecten
         environment: *objects-env
+        network_mode: "service:localhost"
         command: sh init/init.sh
         volumes:
             - ./imports/objects-api/fixtures:/app/src/objects/fixtures
             - ./imports/objects-api/init:/app/init
         depends_on:
-            - objecten-api
-            - objecten-api-database
+            - nl-portal-objecten-api
+            - nl-portal-objecten-api-database
 
-    objecttypen-api:
+    nl-portal-objecttypen-api:
         image: maykinmedia/objecttypes-api:2.3.0
-        container_name: objecttypen-api
+        container_name: nl-portal-objecttypen-api
         platform: linux/amd64
         profiles:
             - zgw
             - objecten
-        ports:
-            - "8011:8000"
+        network_mode: "service:localhost"
         environment: &objecttypes-env
+            - UWSGI_PORT=8011
             - CORS_ALLOW_ALL_ORIGINS=true
             - SECRET_KEY=${SECRET_KEY:-fgv=c0hz&tl*8*3m3893@m+1pstrvidc9e^5@fpspmg%cy$$15d}
             - DJANGO_SETTINGS_MODULE=objecttypes.conf.docker
-            - DB_HOST=objecttypen-api-database
+            - DB_HOST=nl-portal-objecttypen-api-database
             - DB_USER=objecttypes
             - DB_PASSWORD=objecttypes
-            - CACHE_AXES=zgw-redis:6379/0
-            - CACHE_DEFAULT=zgw-redis:6379/0
+            - CACHE_AXES=nl-portal-redis:6379/6
+            - CACHE_DEFAULT=nl-portal-redis:6379/6
             - ALLOWED_HOSTS=localhost,host.docker.internal,172.17.0.1
-            - DEBUG=true
-            - TWO_FACTOR_FORCE_OTP_ADMIN=False # this is not available yet in this version
+            - TWO_FACTOR_FORCE_OTP_ADMIN=False
             - TWO_FACTOR_PATCH_ADMIN=False
             - DISABLE_2FA=true
+            - DEBUG=true
         depends_on:
-            - objecttypen-api-database
-            - zgw-redis
+            - nl-portal-objecttypen-api-database
+            - nl-portal-redis
 
-    objecttypen-api-database:
+    nl-portal-objecttypen-api-database:
         image: postgres:15
-        container_name: objecttypen-api-database
+        container_name: nl-portal-objecttypen-api-database
         profiles:
             - zgw
             - objecten
         environment:
             - POSTGRES_USER=objecttypes
             - POSTGRES_PASSWORD=objecttypes
+            - POSTGRES_DB=objecttypes
 
-    objecttypen-api-import:
+    nl-portal-objecttypen-api-import:
         image: maykinmedia/objecttypes-api:2.3.0
-        container_name: objecttypen-api-import
+        container_name: nl-portal-objecttypen-api-import
         platform: linux/amd64
         profiles:
             - zgw
             - objecten
         environment: *objecttypes-env
+        network_mode: "service:localhost"
         command: sh init/init.sh
         volumes:
             - ./imports/objecttypes-api/fixtures:/app/src/objecttypes/fixtures
             - ./imports/objecttypes-api/init:/app/init
         depends_on:
-            - objecttypen-api
-            - objecttypen-api-database
+            - nl-portal-objecttypen-api
+            - nl-portal-objecttypen-api-database
 
-    # Open Notificaties
-    open-notificaties:
+    nl-portal-open-notificaties:
         image: openzaak/open-notificaties:1.13.0
-        container_name: open-notificaties
+        container_name: nl-portal-open-notificaties
         platform: linux/amd64
+        network_mode: "service:localhost"
         profiles:
             - zgw
             - objecten
-        ports:
-            - "8002:8000"
-        depends_on:
-            - open-notificaties-database
-            - open-notificaties-rabbitmq
-            - zgw-redis
         environment: &notificaties-env
+            - UWSGI_PORT=8012
             - DJANGO_SETTINGS_MODULE=nrc.conf.docker
             - SECRET_KEY=${SECRET_KEY:-4wHY2Cp5`4(q%)]cuWxPQJRp5kN?g+`.Xah>%6Fsq6+)R>p_}
             - ALLOWED_HOSTS=*
-            - CACHE_DEFAULT=zgw-redis:6379/0
-            - CACHE_AXES=zgw-redis:6379/0
+            - CACHE_DEFAULT=nl-portal-redis:6379/7
+            - CACHE_AXES=nl-portal-redis:6379/7
             - DB_PORT=5432
-            - DB_HOST=open-notificaties-database
+            - DB_HOST=nl-portal-open-notificaties-database
             - DB_NAME=notifications
             - DB_USER=notifications
             - DB_PASSWORD=notifications
             - RABBITMQ_HOST=open-notificaties-rabbitmq
-            - PUBLISH_BROKER_URL=amqp://guest:guest@open-notificaties-rabbitmq:5672/%2F
-            - CELERY_BROKER_URL=amqp://guest:guest@open-notificaties-rabbitmq:5672//
-            - CELERY_RESULT_BACKEND=redis://zgw-redis:6379/1
+            - PUBLISH_BROKER_URL=amqp://guest:guest@nl-portal-open-notificaties-rabbitmq:5672//
+            - CELERY_BROKER_URL=amqp://guest:guest@nl-portal-open-notificaties-rabbitmq:5672//
+            - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/8
             - CELERY_LOGLEVEL=DEBUG
             - CELERY_WORKER_CONCURRENCY=${CELERY_WORKER_CONCURRENCY:-4}
             - OPENNOTIFICATIES_SUPERUSER_USERNAME=admin
@@ -300,10 +358,11 @@ services:
             - LOG_NOTIFICATIONS_IN_DB=yes
             - DISABLE_2FA=true
 
-    open-notificaties-import:
+    nl-portal-open-notificaties-import:
         image: openzaak/open-notificaties:1.13.0
-        container_name: open-notificaties-import
+        container_name: nl-portal-open-notificaties-import
         platform: linux/amd64
+        network_mode: "service:localhost"
         profiles:
             - zgw
             - objecten
@@ -312,14 +371,18 @@ services:
             - ./imports/open-notificaties/fixtures:/app/src/nrc/fixtures
             - ./imports/open-notificaties/init:/app/init
         depends_on:
-            - open-notificaties
-            - open-notificaties-database
+            - nl-portal-open-notificaties
+            - nl-portal-open-notificaties-database
         environment: *notificaties-env
 
-    open-notificaties-celery:
+    nl-portal-open-notificaties-celery:
         image: openzaak/open-notificaties:1.13.0
-        container_name: open-notificaties-celery
+        container_name: nl-portal-open-notificaties-celery
         platform: linux/amd64
+        network_mode: "service:localhost"
+        profiles:
+            - zgw
+            - objecten
         command: /celery_worker.sh
         healthcheck:
             test: [ "CMD", "python", "/app/bin/check_celery_worker_liveness.py" ]
@@ -329,99 +392,169 @@ services:
             start_period: 10s
         environment: *notificaties-env
 
-    open-notificaties-database:
+    nl-portal-open-notificaties-database:
         image: postgis/postgis:15-3.5
-        container_name: open-notificaties-database
+        container_name: nl-portal-open-notificaties-database
+        profiles:
+            - zgw
+            - objecten
         environment:
-            - POSTGRES_USER=${DB_USER:-notifications}
-            - POSTGRES_PASSWORD=${DB_PASSWORD:-notifications}
+            - POSTGRES_USER=notifications
+            - POSTGRES_PASSWORD=notifications
             - POSTGRES_DB=notifications
             - POSTGRES_HOST_AUTH_METHOD=trust
 
-    open-notificaties-rabbitmq:
+    nl-portal-open-notificaties-rabbitmq:
         image: rabbitmq:3.9-management
-        container_name: open-notificaties-rabbitmq
-
-    # HaalCentraal
-
-    haalcentraal-personen:
-        container_name: haalcentraal-personen
+        container_name: nl-portal-open-notificaties-rabbitmq
         profiles:
-            - zgw
-            - haalcentraal
-        image: ghcr.io/brp-api/personen-mock:2.2.1
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Release
-            - ASPNETCORE_URLS=http://+:5010
-        ports:
-            - "5010:5010"
+            -   objecten
 
-    haalcentraal-bewoningen:
-        container_name: haalcentraal-bewoningen
-        profiles:
-            - zgw
-            - haalcentraal
-        image: ghcr.io/brp-api/haal-centraal-bewoning-bevragen-mock:2.0.1
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Release
-            - ASPNETCORE_URLS=http://+:5010
-        ports:
-            - "5011:5010"
-
-    openproduct:
-        image: maykinmedia/open-product:1.7.1
-        container_name: openproduct
+    nl-portal-openproduct:
+        image: maykinmedia/open-product:1.3.0
+        container_name: nl-portal-openproduct
         profiles:
             - zgw
             - openproduct
         platform: linux/amd64
-        ports:
-            - "8070:8000"
+        depends_on:
+            - nl-portal-openproduct-database
+            - nl-portal-redis
+        volumes:
+            - ./imports/openproduct/init:/app/init
+        command: sh /app/init/init.sh
         environment: &open-product-env
             - DJANGO_SETTINGS_MODULE=openproduct.conf.docker
             - SECRET_KEY=${SECRET_KEY:-django-insecure-@4wj9(+*bu7*v&%on7+e_8!d1ckl%r=6+sz#d2!pw^@lb0+=}
             - DB_NAME=openproduct
             - DB_USER=openproduct
             - DB_PASSWORD=openproduct
-            - DB_HOST=openproduct-database
-            - PORT=5432
-            - CACHE_DEFAULT=zgw-redis:6379/0
-            - CELERY_BROKER_URL=zgw-redis:6379/1
-            - CELERY_RESULT_BACKEND=zgw-redis:6379/1
-            # Only allow all hosts for development/testing purposes!
+            - DB_HOST=nl-portal-openproduct-database
+            - DB_PORT=5432
+            - CACHE_DEFAULT=redis://nl-portal-redis:6379/9
+            - CELERY_BROKER_URL=redis://nl-portal-redis:6379/10
+            - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/10
             - ALLOWED_HOSTS=*
             - DISABLE_2FA=true
-        depends_on:
-            - openproduct-database
-            - zgw-redis
-        volumes:
-            - ./imports/openproduct/init:/app/init
-        command: sh /app/init/init.sh
 
-    openproduct-database:
-        image: postgres:17
-        container_name: openproduct-database
+    nl-portal-openproduct-celery:
+        image: maykinmedia/open-product:1.3.0
+        container_name: nl-portal-openproduct-celery
+        platform: linux/amd64
+        network_mode: "service:localhost"
         profiles:
             - zgw
             - openproduct
-        ports:
-            - "54310:5432"
+        command: /celery_worker.sh
+        environment: *open-product-env
+
+    nl-portal-openproduct-database:
+        image: postgres:17
+        container_name: nl-portal-openproduct-database
+        profiles:
+            - zgw
+            - openproduct
         environment:
             - POSTGRES_USER=${DB_USER:-openproduct}
             - POSTGRES_PASSWORD=${DB_PASSWORD:-openproduct}
             - POSTGRES_DB=openproduct
         volumes:
             - ./imports/openproduct/database:/docker-entrypoint-initdb.d/
-            - ./imports/openproduct/database/sql:/docker-entrypoint-initdb.d/sql
 
-    zgw-redis:
-        image: redis:7
-        container_name: zgw-redis
+    nl-portal-redis:
+        image: redis:6.2.6
+        container_name: nl-portal-redis
         profiles:
             - zgw
+            - openzaak
             - objecten
             - openproduct
+            - openklant
+
+    nl-portal-haalcentraal-personen:
+        container_name: nl-portal-haalcentraal-personen
+        profiles:
+            - haalcentraal
+        image: ghcr.io/brp-api/personen-mock:2.2.1
+        network_mode: "service:localhost"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Release
+            - ASPNETCORE_URLS=http://+:5010
+
+    nl-portal-haalcentraal-bewoningen:
+        container_name: nl-portal-haalcentraal-bewoningen
+        profiles:
+            - haalcentraal
+        image: ghcr.io/brp-api/haal-centraal-bewoning-bevragen-mock:2.0.1
+        network_mode: "service:localhost"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Release
+            - ASPNETCORE_URLS=http://+:5011
+
+    nl-portal-clamav:
+        container_name: nl-portal-clamav
+        image: clamav/clamav:latest
+        profiles:
+            - clamav
+        network_mode: "service:localhost"
+        healthcheck:
+            test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 120s
+
+    nl-portal-configuration-panel-router:
+        container_name: nl-portal-configuration-panel-router
+        image: nginx:stable-alpine-slim
+        profiles:
+            - config
+        ports:
+            - "3001:8080"
+        volumes:
+            - "./imports/configuration-panel/router/conf.d/:/etc/nginx/conf.d/"
+            - "./imports/configuration-panel/router/templates/:/etc/nginx/templates/"
+        environment:
+            CONFIG_PANEL_BACKEND_HOST: http://host.docker.internal:8090
+            CONFIG_PANEL_FRONTEND_HOST: http://host.docker.internal:8091
+
+    nl-portal-configuration-panel-backend:
+        container_name: nl-portal-configuration-panel-backend
+        image: ghcr.io/nl-portal/configuration-panel-backend
+        profiles:
+            - config
+        depends_on:
+            - nl-portal-configuration-panel-database
+            - nl-portal-keycloak
+        ports:
+            - "8090:8080"
+        env_file: imports/configuration-panel/env/backend.env
+
+    nl-portal-configuration-panel-frontend:
+        container_name: nl-portal-configuration-panel-frontend
+        profiles:
+            - config
+        image: ghcr.io/nl-portal/configuration-panel-frontend
+        depends_on:
+            - nl-portal-configuration-panel-backend
+            - nl-portal-keycloak
+        ports:
+            - "8091:8080"
+        env_file: imports/configuration-panel/env/frontend.env
+
+    nl-portal-configuration-panel-database:
+        container_name: nl-portal-configuration-panel-database
+        image: postgres:15
+        profiles:
+            - config
+        environment:
+            POSTGRES_USER: config
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: nl-portal-config
+        volumes:
+            - nl-portal-configuration-panel-database-data:/var/lib/postgres # persist data even if container shuts down
 
 volumes:
     nl-portal-database-data:
-    openzaak-private-media:
+    nl-portal-configuration-panel-database-data:
+    nl-portal-openzaak-private-media:
