@@ -1,0 +1,18 @@
+services:
+    localhost:
+        ports:
+            - "8080:8080"
+            - "8000:8000"
+            - "3000:8081"
+
+    nl-portal-backend:
+        image: ghcr.io/nl-portal/nl-portal-backend:4.0
+        container_name: nl-portal-backend
+        network_mode: "service:localhost"
+        env_file: imports/backend.env
+
+    nl-portal-frontend:
+        image: ghcr.io/nl-portal/nl-portal-frontend:4.0
+        container_name: nl-portal-frontend
+        network_mode: "service:localhost"
+        env_file: imports/frontend.env

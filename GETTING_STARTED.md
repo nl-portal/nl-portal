@@ -10,7 +10,7 @@ Pull the published images and run them; no build. For demos and evaluation.
 
 ```shell
 cd docker-compose
-docker compose --profile remote --profile zgw up -d
+RUN_MODE=remote docker compose --profile zgw --profile haalcentraal up -d
 ```
 
 The portal is at http://localhost:3000. See
@@ -25,7 +25,7 @@ such as theme, logo or feature toggles.
 
 ```shell
 cd docker-compose
-docker compose --profile local --profile zgw up -d --build
+RUN_MODE=local docker compose --profile zgw --profile haalcentraal up -d --build
 ```
 
 See [docker-compose/README.md](./docker-compose/README.md#local-build-from-source).
@@ -33,13 +33,13 @@ See [docker-compose/README.md](./docker-compose/README.md#local-build-from-sourc
 ## 3. From sources — active development (fast inner loop)
 
 Run only the supporting services in compose, and run the backend and frontend yourself for fast
-reload. `RUN_MODE=sources` frees the app ports (`8080`/`8000`/`3000`) so your locally-run app can
-bind them.
+reload. `sources` is the default `RUN_MODE`, so the supporting stack leaves the app ports
+(`8080`/`8000`/`3000`) free for your locally-run app; no `RUN_MODE` needs to be set.
 
 ```shell
 # supporting services only (app ports left free)
 cd docker-compose
-RUN_MODE=sources docker compose --profile zgw up -d
+docker compose --profile zgw up -d
 
 # backend (from backend/)
 ./gradlew :app:bootRun
@@ -54,7 +54,7 @@ full workflow, `bootRun` configuration (`.env.properties`), GraphQL codegen and 
 `RUN_MODE` caveats see:
 
 - [docker-compose/README.md](./docker-compose/README.md#from-sources-active-development-fast-inner-loop)
-  — `RUN_MODE=sources` and Windows caveats
+  — sources default and the Windows `RUN_MODE` caveat
 - [backend/app/README.md](./backend/app/README.md#local-development-bootrun) — `bootRun` config
 - [frontend/README.md](./frontend/README.md) — `pnpm dev` and GraphQL codegen
 
