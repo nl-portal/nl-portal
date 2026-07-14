@@ -8,6 +8,7 @@
     * [Running the application](#running-the-application)
       * [Local (build from source)](#local-build-from-source)
       * [Remote (published images)](#remote-published-images)
+      * [From sources (active development, fast inner loop)](#from-sources-active-development-fast-inner-loop)
     * [Starting up supporting services only](#starting-up-supporting-services-only)
       * [Including all ZGW related services](#including-all-zgw-related-services)
       * [Keycloak and database only](#keycloak-and-database-only)
@@ -86,6 +87,34 @@ docker compose --profile remote --profile zgw up -d
 > (`ghcr.io/nl-portal/nl-portal-backend` and `ghcr.io/nl-portal/nl-portal-frontend`),
 > including snapshot tags, provided the `imports/` fixtures and configuration in this
 > stack are compatible with the chosen tag.
+
+#### From sources (active development, fast inner loop)
+Run only the supporting services in compose and run the backend and frontend yourself for fast
+reload. Set `RUN_MODE=sources` so the stack does **not** publish the app ports (`8080`/`8000`/`3000`),
+leaving them free for your locally-run app:
+```shell
+# supporting services only (app ports left free)
+RUN_MODE=sources docker compose --profile zgw up -d
+
+# backend (from ../backend) — see backend/app/README.md for .env.properties setup
+cd ../backend && ./gradlew :app:bootRun
+
+# frontend (from ../frontend) — libraries in watch + the app's vite dev server on :3000
+cd ../frontend && pnpm install && pnpm dev
+```
+Backend GraphQL is at http://localhost:8080/graphql, frontend at http://localhost:3000. `pnpm dev`
+builds the `@nl-portal/*` libraries in watch mode and serves the app; changing a library rebuilds it
+and the app hot-reloads. Full config details:
+[`backend/app/README.md`](../backend/app/README.md#local-development-bootrun) and
+[`frontend/README.md`](../frontend/README.md).
+
+> **Setting `RUN_MODE` on Windows.** `RUN_MODE=sources docker compose ...` is POSIX-shell syntax
+> and does **not** work in PowerShell or CMD (the variable is silently ignored, the stack falls back
+> to `full`, and the app ports get published, defeating sources mode). Set it separately instead:
+> - **PowerShell:** `$env:RUN_MODE="sources"; docker compose --profile zgw up -d`
+> - **CMD:** `set "RUN_MODE=sources" && docker compose --profile zgw up -d`
+> - **Any shell:** add `RUN_MODE=sources` to a `.env` file in this directory (Compose reads it
+>   automatically). This persists across runs, so remove it to go back to `full`.
 
 ### Starting up supporting services only
 To run only the supporting services (e.g. when running the application from your IDE),
