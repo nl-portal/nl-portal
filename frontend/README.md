@@ -60,6 +60,21 @@ Only `packages/api` runs codegen (`pnpm codegen`), generating typed hooks from t
 generated output is committed, so consumers reuse it without regenerating. Regeneration requires the
 GraphQL endpoint (the backend) to be reachable.
 
+## Consuming snapshot builds
+
+Every push to `main` publishes the libraries as **snapshot** tarballs to a public S3 bucket.
+(Tagged releases are published to the npm registry as `@nl-portal/*`; that is the primary channel
+and installs with plain `pnpm add @nl-portal/nl-portal-<pkg>`.) Snapshots are not on a registry, so
+install them by URL, pinning the exact build:
+
+```shell
+pnpm add https://nl-portal-frontend-snapshots.s3.eu-central-1.amazonaws.com/<version>-SNAPSHOT/nl-portal-nl-portal-user-interface.tgz
+```
+
+The `@nl-portal/` scope is stripped in the tarball filename (`nl-portal-nl-portal-<pkg>.tgz`, where
+`<pkg>` is `api`, `authentication`, `localization` or `user-interface`). The bucket is public-read;
+no credentials are needed. Each build publishes a unique version, so there is no floating `latest`.
+
 ## Configuration
 
 The app reads its runtime configuration from `window.*` globals, set by
