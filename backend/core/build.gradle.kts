@@ -43,7 +43,6 @@ dependencies {
     api(Dependencies.commonsCodec)
 
     // Liquibase
-    //api("org.liquibase:liquibase-core")
     api("org.springframework.boot:spring-boot-starter-liquibase")
 
     // Apache Commons
@@ -53,7 +52,6 @@ dependencies {
     // Logging for Kotlin
     api(Dependencies.kotlinLogging)
     testImplementation(TestDependencies.springBootTest)
-    /*testImplementation(TestDependencies.springBootWebClientTest)*/
     testImplementation(TestDependencies.springBootTestWebClient)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
