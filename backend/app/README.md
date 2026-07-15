@@ -6,11 +6,11 @@ the `nl-portal-backend` image (Dockerfile at [`backend/Dockerfile`](../Dockerfil
 
 ## Running locally
 
-Start the supporting services in `sources` mode (which frees the app ports `8080`/`8000`/`3000`
-for an IDE/Gradle run), create your local config, then run the app:
+Start the supporting services (the default `sources` mode leaves the app ports `8080`/`8000`/`3000`
+free for an IDE/Gradle run), create your local config, then run the app:
 
 ```shell
-cd ../../docker-compose && RUN_MODE=sources docker compose --profile zgw up -d
+cd ../../docker-compose && docker compose --profile zgw up -d
 cd ../backend/app && cp .env.properties.example .env.properties
 cd .. && ./gradlew :app:bootRun
 ```
@@ -31,7 +31,7 @@ this same config and supplies differences purely through environment variables.
 `./gradlew :app:bootRun` loads its environment from **`.env.properties`** in this directory. This is
 the *only* config source for a from-source run - it is independent of
 [`docker-compose/imports/backend.env`](../../docker-compose/imports/backend.env), which configures
-the *containerised* backend under the compose `local`/`remote` profiles.
+the *containerised* backend under `RUN_MODE=local`/`remote`.
 
 `.env.properties` is **gitignored** (it may hold local secrets). Copy the tracked template and adjust
 it for your machine:
@@ -41,7 +41,7 @@ cp .env.properties.example .env.properties
 ```
 
 `bootRun` fails with a clear message if the file is missing. The template assumes the supporting
-stack runs via `RUN_MODE=sources docker compose --profile zgw up -d`, so every service is reachable
+stack runs via `docker compose --profile zgw up -d` (default `sources` mode), so every service is reachable
 on `localhost:<published-port>` from the host. It differs from the containerised
 `backend.env` in a few ways:
 

@@ -178,7 +178,7 @@ subprojects {
 
 sonar {
     properties {
-        property("sonar.projectKey", "nl-portal_nl-portal-backend-libraries")
+        property("sonar.projectKey", "nl-portal_nl-portal-backend")
         property("sonar.organization", "nl-portal")
         property("sonar.token", System.getenv("SONAR_TOKEN"))
     }
