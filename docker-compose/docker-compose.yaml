@@ -1,7 +1,7 @@
 name: nl-portal-docker-compose
 
 include:
-    - path: "compose.localhost-${RUN_MODE:-full}.yaml"
+    - path: "compose.localhost-${RUN_MODE:-sources}.yaml"
 
 services:
 
@@ -22,22 +22,6 @@ services:
             - "5011:5011" # Haalcentraal Bewoning
             - "3310:3310" # ClamAV virus scan
 
-    nl-portal-backend-local:
-        container_name: nl-portal-backend
-        profiles:
-            - local
-        build: ../backend
-        network_mode: "service:localhost"
-        env_file: imports/backend.env
-
-    nl-portal-frontend-local:
-        profiles:
-            - local
-        container_name: nl-portal-frontend
-        build: ../frontend
-        network_mode: "service:localhost"
-        env_file: imports/frontend.env
-
     nl-portal-database:
         container_name: nl-portal-database
         image: postgres:15
@@ -48,22 +32,6 @@ services:
             POSTGRES_USER: nlportal
             POSTGRES_PASSWORD: password
             POSTGRES_DB: nl-portal
-
-    nl-portal-backend-remote:
-        image: ghcr.io/nl-portal/nl-portal-backend:4.0
-        profiles:
-            - remote
-        container_name: nl-portal-backend
-        network_mode: "service:localhost"
-        env_file: imports/backend.env
-
-    nl-portal-frontend-remote:
-        image: ghcr.io/nl-portal/nl-portal-frontend:4.0
-        profiles:
-            - remote
-        container_name: nl-portal-frontend
-        network_mode: "service:localhost"
-        env_file: imports/frontend.env
 
     nl-portal-keycloak:
         container_name: nl-portal-keycloak

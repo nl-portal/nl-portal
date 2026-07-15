@@ -1,0 +1,65 @@
+name: SonarCloud
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pull-requests: read
+
+concurrency:
+    group: sonarcloud-${{ github.ref }}
+    cancel-in-progress: true
+
+env:
+    SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+
+jobs:
+    backend:
+        name: Backend analysis
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+                with:
+                    fetch-depth: 0
+            -   name: Setup Java
+                uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5.5.0
+                with:
+                    distribution: temurin
+                    java-version: 21
+            -   name: Set up Gradle
+                uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+            -   name: Run tests and SonarCloud analysis
+                working-directory: backend
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: ./gradlew test jacocoTestReport sonar --no-daemon
+
+    frontend:
+        name: Frontend analysis
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+                with:
+                    fetch-depth: 0
+            -   name: Set up Node.js
+                uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+                with:
+                    node-version: "24"
+            -   name: Install
+                working-directory: frontend
+                run: npm install -g pnpm@11 && pnpm install
+            -   name: Build
+                working-directory: frontend
+                run: pnpm -r build
+            -   name: Test with coverage
+                working-directory: frontend
+                run: pnpm test:coverage
+            -   name: SonarCloud scan
+                uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9 # v7
+                with:
+                    projectBaseDir: frontend
