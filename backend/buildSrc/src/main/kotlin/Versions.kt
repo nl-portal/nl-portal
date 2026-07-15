@@ -27,6 +27,7 @@ object Versions {
     const val graphqlJavaScalars ="24.0"
     const val kotlinLogging = "7.0.13"
     const val springCloud = "5.0.2"
+    const val httpCore5 = "5.4.3" // override Boot 4.1.0 BOM (5.4.2), CVE-2026-54399/-54428 fix
 
     //Test versions
     const val hamcrest = "3.0"
