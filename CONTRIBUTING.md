@@ -4,9 +4,9 @@ Thank you for your interest in contributing to NL Portal. This repository is a m
 the backend libraries + application, the frontend libraries + application, the local development
 stack and the documentation. Backend and frontend release at a single, shared version.
 
-When contributing, please first discuss the change you wish to make with the maintainers via a
-[Request For Change](https://github.com/nl-portal/nl-portal-issues) (larger features) or an
-[issue](https://github.com/nl-portal/nl-portal/issues) (smaller tasks and bugs).
+When contributing, please first discuss the change you wish to make with the maintainers by creating 
+a Request for Change or Bug report in the 
+[NL Portal Issues](https://github.com/nl-portal/nl-portal-issues/issues) repository.
 
 ## Ownership
 

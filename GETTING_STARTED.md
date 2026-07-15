@@ -2,7 +2,7 @@
 
 NL Portal can be run three ways, each for a different purpose. All of them use the
 [`docker-compose/`](./docker-compose/README.md) stack for the supporting services (Keycloak,
-databases, ZGW). Pick the mode that matches what you are doing.
+databases, ZGW). Pick the mode that matches what you are doing; each links to the fuller docs.
 
 ## 1. Remote — evaluate the released product
 
@@ -10,11 +10,12 @@ Pull the published images and run them; no build. For demos and evaluation.
 
 ```shell
 cd docker-compose
-docker compose --profile remote --profile zgw up -d
+RUN_MODE=remote docker compose --profile zgw --profile haalcentraal up -d
 ```
 
-The portal is at http://localhost:3000. See [docker-compose/README.md](./docker-compose/README.md)
-for profiles, image tags and test-user credentials.
+The portal is at http://localhost:3000. See
+[docker-compose/README.md](./docker-compose/README.md#remote-published-images) for profiles, image
+tags and test-user credentials.
 
 ## 2. Local — run your changes as they'd ship
 
@@ -24,19 +25,21 @@ such as theme, logo or feature toggles.
 
 ```shell
 cd docker-compose
-docker compose --profile local --profile zgw up -d --build
+RUN_MODE=local docker compose --profile zgw --profile haalcentraal up -d --build
 ```
+
+See [docker-compose/README.md](./docker-compose/README.md#local-build-from-source).
 
 ## 3. From sources — active development (fast inner loop)
 
 Run only the supporting services in compose, and run the backend and frontend yourself for fast
-reload. Set `RUN_MODE=sources`<sup>[1](#windows-caveats)</sup> so the stack does **not** publish the
-app ports (`8080`/`8000`/`3000`), leaving them free for your locally-run app:
+reload. `sources` is the default `RUN_MODE`, so the supporting stack leaves the app ports
+(`8080`/`8000`/`3000`) free for your locally-run app; no `RUN_MODE` needs to be set.
 
 ```shell
 # supporting services only (app ports left free)
 cd docker-compose
-RUN_MODE=sources docker compose --profile zgw up -d
+docker compose --profile zgw up -d
 
 # backend (from backend/)
 ./gradlew :app:bootRun
@@ -46,55 +49,14 @@ pnpm install   # first time only
 pnpm dev
 ```
 
-Backend GraphQL is at http://localhost:8080/graphql, frontend at http://localhost:3000. `pnpm dev`
-builds the `@nl-portal/*` libraries in watch mode and serves the app; changing a library rebuilds it
-and the app hot-reloads.
+Backend GraphQL is at http://localhost:8080/graphql, frontend at http://localhost:3000. For the
+full workflow, `bootRun` configuration (`.env.properties`), GraphQL codegen and the Windows
+`RUN_MODE` caveats see:
 
-### How `bootRun` differs from the containerized runs
-
-Modes 1 and 2 run the backend as a **container** using the production-shaped configuration
-(`backend/app/src/main/resources/config/application.yml`, fully env-driven) fed by
-`docker-compose/imports/backend.env` — exactly what ships.
-
-`bootRun` runs that **same** base config — no separate "dev" Spring profile to drift from
-production — but sources its environment from an app-owned `backend/app/.env.properties`
-(gitignored; copy it from `.env.properties.example`), independent of the containerised
-`backend.env`. That file supplies the dev-only differences: `LOGLEVEL=DEBUG`, GraphQL
-introspection enabled (for codegen, see below), and `localhost` URLs for services the
-container reaches via `host.docker.internal`. See
-[`backend/app/README.md`](backend/app/README.md#local-development-bootrun) for the details.
-
-So local development dogfoods the production configuration and differs only by environment
-variables.
-
-## GraphQL codegen
-
-Regenerating the frontend GraphQL types introspects a running backend at
-http://localhost:8080/graphql:
-
-```shell
-cd frontend
-pnpm codegen
-```
-
-Introspection is disabled in the shipped configuration and enabled only by the `bootRun` overlay, so
-run codegen against a `bootRun` backend (mode 3). Container images never expose introspection.
-
-## Windows caveats
-
-**<sup>1</sup> Setting `RUN_MODE` on Windows.** The `RUN_MODE=sources docker compose ...` form is
-POSIX-shell syntax and does **not** work in PowerShell or CMD — the variable is silently ignored, the
-stack falls back to `full`, and the app ports get published (defeating sources mode). Set it
-separately instead:
-
-- **PowerShell:** `$env:RUN_MODE="sources"; docker compose --profile zgw up -d`
-- **CMD:** `set "RUN_MODE=sources" && docker compose --profile zgw up -d`
-- **Any shell:** add `RUN_MODE=sources` to a `.env` file in `docker-compose/` (Compose reads it
-  automatically). This persists across runs, so remove it to go back to `full`.
-
-**Line endings.** The `docker-compose/imports/**` shell scripts must keep LF line endings; if git or
-your editor rewrites them to CRLF the containers fail to run them. See
-[docker-compose/README.md](./docker-compose/README.md) for the fix.
+- [docker-compose/README.md](./docker-compose/README.md#from-sources-active-development-fast-inner-loop)
+  — sources default and the Windows `RUN_MODE` caveat
+- [backend/app/README.md](./backend/app/README.md#local-development-bootrun) — `bootRun` config
+- [frontend/README.md](./frontend/README.md) — `pnpm dev` and GraphQL codegen
 
 ## More detail
 

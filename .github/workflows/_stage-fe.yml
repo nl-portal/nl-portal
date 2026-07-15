@@ -29,12 +29,13 @@ jobs:
                     node-version: ${{ inputs.nodeVersion }}
             -   name: Install
                 working-directory: frontend
-                run: npm install -g pnpm@11 lerna@9 && pnpm install
+                run: npm install -g pnpm@11 && pnpm install
             -   name: Stamp version in place
                 working-directory: frontend
                 env:
                     VERSION: ${{ inputs.version }}
-                run: lerna version "${VERSION}" --no-git-tag-version --no-changelog --no-private --yes
+                run: |
+                    sed -i 's/"version": "0.0.0"/"version": "'"${VERSION}"'"/' packages/*/package.json
             -   name: Build
                 working-directory: frontend
                 run: pnpm -r build
@@ -44,7 +45,7 @@ jobs:
                 run: pnpm test
             -   name: Package stage bundle
                 working-directory: frontend
-                run: tar -cf frontend-stage.tar packages/*/dist packages/app/build packages/*/package.json lerna.json
+                run: tar -cf frontend-stage.tar packages/*/dist packages/app/build packages/*/package.json
             -   name: Upload stage bundle
                 uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
                 with:

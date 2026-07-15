@@ -6,6 +6,7 @@
 # staging path to both stagingRepositories lists below.
 
 project:
+  name: nl-portal
   languages:
     java:
       groupId: nl.nl-portal
