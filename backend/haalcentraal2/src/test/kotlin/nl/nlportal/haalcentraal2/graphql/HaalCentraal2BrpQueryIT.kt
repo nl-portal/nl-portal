@@ -47,6 +47,14 @@ internal class HaalCentraal2BrpQueryIT(
     @Autowired private val haalCentraal2ModuleConfiguration: HaalCentraal2ModuleConfiguration,
 ) {
     companion object {
+        private val passThroughHeaders =
+            mapOf(
+                "x-origin-oin" to "test-origin-oin",
+                "x-doelbinding" to "test-doelbinding",
+                "x-verwerking" to "test-verwerking",
+                "x-gebruiker" to "test-gebruiker",
+            )
+
         @JvmStatic
         var server: MockWebServer? = null
 
@@ -61,6 +69,9 @@ internal class HaalCentraal2BrpQueryIT(
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.haalcentraal2.properties.brp-api-url") { url }
             propsRegistry.add("nl-portal.config.haalcentraal2.properties.bewoning-api-url") { url2 }
+            passThroughHeaders.forEach { (name, value) ->
+                propsRegistry.add("nl-portal.config.haalcentraal2.properties.additional-headers.$name") { value }
+            }
         }
 
         @JvmStatic

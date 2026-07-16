@@ -15,14 +15,12 @@
  */
 package nl.nlportal.form.service
 
-import io.github.oshai.kotlinlogging.KotlinLogging
-import io.github.oshai.kotlinlogging.KotlinLogging.logger
+import java.util.UUID
 import nl.nlportal.form.domain.FormDefinitionId
 import nl.nlportal.form.domain.FormIoFormDefinition
 import nl.nlportal.form.domain.request.CreateFormDefinitionRequest
 import nl.nlportal.form.repository.FormIoFormDefinitionRepository
 import org.springframework.transaction.annotation.Transactional
-import java.util.UUID
 
 @Transactional
 class FormIoFormDefinitionService(
@@ -45,18 +43,7 @@ class FormIoFormDefinitionService(
 
     fun findAllFormDefinitions(): List<FormIoFormDefinition> = formIoFormDefinitionRepository.findAll()
 
-    fun findFormIoFormDefinitionByName(name: String): FormIoFormDefinition? {
-        // try {
-        return formIoFormDefinitionRepository.findByName(name)
-        // } catch (e: Exception) {
-        //    logger.debug { e.message }
-        // }
-        // return null
-    }
+    fun findFormIoFormDefinitionByName(name: String): FormIoFormDefinition? = formIoFormDefinitionRepository.findByName(name)
 
     fun modify(form: FormIoFormDefinition): FormIoFormDefinition = formIoFormDefinitionRepository.saveAndFlush(form)
-
-    companion object {
-        private val logger = KotlinLogging.logger {}
-    }
 }

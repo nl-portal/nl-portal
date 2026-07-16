@@ -16,6 +16,8 @@
 package nl.nlportal.core.util
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.json.JsonMapper
@@ -24,7 +26,7 @@ import tools.jackson.module.kotlin.KotlinModule
 
 object Mapper {
     private val mapper: JsonMapper
-    private const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
     private val jacksonConfigurationModule =
         KotlinModule
@@ -51,6 +53,7 @@ object Mapper {
                 ).enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
                 .findAndAddModules()
                 .addModule(jacksonConfigurationModule)
+                .defaultDateFormat(SimpleDateFormat(DATE_TIME_FORMAT))
                 .build()
     }
 }

@@ -15,6 +15,9 @@
  */
 package nl.nlportal.core.autoconfiguration
 
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
 import nl.nlportal.core.frontend.service.FrontendFeaturesConfigurationService
@@ -25,7 +28,15 @@ import nl.nlportal.core.util.Mapper
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.jackson.JacksonComponent
 import org.springframework.context.annotation.Bean
+import tools.jackson.core.JacksonException
+import tools.jackson.core.JsonGenerator
+import tools.jackson.core.JsonParser
+import tools.jackson.databind.DeserializationContext
+import tools.jackson.databind.SerializationContext
+import tools.jackson.databind.ValueDeserializer
+import tools.jackson.databind.ValueSerializer
 import tools.jackson.databind.json.JsonMapper
 
 @AutoConfiguration
