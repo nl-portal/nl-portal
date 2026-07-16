@@ -16,7 +16,6 @@
 package nl.nlportal.core.util
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.SerializationFeature

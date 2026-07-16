@@ -76,7 +76,7 @@ class CaseDefinitionService(
                                 resource.inputStream,
                                 StandardCharsets.UTF_8,
                             ),
-                            JsonNode::class.java,
+                            ObjectNode::class.java,
                         ),
                         Mapper.get().readValue(
                             StreamUtils.copyToString(
