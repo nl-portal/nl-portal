@@ -2,7 +2,6 @@
   "name": "nl-portal-app",
   "version": "0.0.0",
   "author": "Ritense",
-  "packageManager": "pnpm",
   "license": "EUPL-1.2",
   "type": "module",
   "engines": {
@@ -12,7 +11,7 @@
   "scripts": {
     "dev": "pnpm wait && vite --port 3000 --mode development",
     "wait": "wait-on ../api/dist/index.js && wait-on ../authentication/dist/index.js && wait-on ../localization/dist/index.js && wait-on ../user-interface/dist/index.js",
-    "build": "tsc && vite build",
+    "build": "pnpm wait && tsc && vite build",
     "preinstall": "npx only-allow pnpm",
     "preview": "vite preview --port 3000",
     "generate-pwa-assets": "pwa-asset-generator ./src/assets/pwa-logo.svg ./public/pwa --favicon --mstile --opaque  false --maskable true --index  index.html --manifest ./public/manifest.json --path-override '../pwa'",
