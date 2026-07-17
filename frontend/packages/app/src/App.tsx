@@ -22,7 +22,7 @@ const authenticationMethods = {
 
 const App = () => {
   return (
-    <div className={config.THEME_CLASS}>
+    <div>
       <LocalizationProvider customMessages={CUSTOM_MESSAGES}>
         <OidcProvider
           url={config.OIDC_URL}

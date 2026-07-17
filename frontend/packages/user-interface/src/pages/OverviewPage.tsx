@@ -24,20 +24,19 @@ import ProductsList from "../components/ProductsList";
 interface OverviewPageProps {
   showNoEmailAlert?: boolean;
   fetchTasksLength?: number;
-  fetchCasesLength?: number;
-  fetchProductsLength?: number;
   children?: ReactNode;
 }
 
 const OverviewPage = ({
   showNoEmailAlert = false,
   fetchTasksLength = 5,
-  fetchCasesLength = 4,
-  fetchProductsLength = 5,
   children,
 }: OverviewPageProps) => {
   const intl = useIntl();
   const { features } = useContext(AppContext);
+  const fetchCasesLength =
+    features?.properties.overviewCurrentCasesPreviewLength ?? 4;
+  const fetchProductsLength = features?.toggles.openProductEnabled ? 5 : 0;
   const { username, usernameVolmacht, isVolmacht, contact } =
     useContext(UserContext);
   const {

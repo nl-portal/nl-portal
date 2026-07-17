@@ -31,13 +31,16 @@ interface Features {
     myBrpConfidentiallyChangeUrl: string;
     myGenderChangeUrl: string;
     myNameChangeUrl: string;
+    overviewCurrentCasesPreviewLength: number;
     overviewMaintenanceAlertTextEn: string;
     overviewMaintenanceAlertTextNl: string;
     overviewMaintenanceAlertTitleEn: string;
     overviewMaintenanceAlertTitleNl: string;
+    themeClass: string;
   };
   toggles: {
     custom: Record<string, boolean>;
+    casesContactMomentsEnabled: boolean;
     casesPartialSearchEnabled: boolean;
     casesResultExplanationEnabled: boolean;
     legacyPaymentEnabled: boolean;
@@ -49,44 +52,6 @@ interface Features {
     themeApiEnabled: boolean;
   };
 }
-
-// Deprecated: remove window variables below in next major version
-const deprecatedFeatures: Features = {
-  properties: {
-    custom: {},
-    messageCountPollingInterval: window.MESSAGE_COUNT_POLLING_INTERVAL || 30000,
-    myAddressChangeUrl: window.REPORT_CHANGE_OF_ADDRESS_URL || "",
-    myAddressResearchMoreInfoUrl: window.ADDRESS_RESEARCH_MORE_INFO_URL || "",
-    myAddressResearchUrl: window.ADDRESS_RESEARCH_URL || "",
-    myBrpChangeUrl: window.REQUEST_FOR_CHANGE_BRP_INFO_URL || "",
-    myBrpConfidentiallyChangeUrl:
-      window.REQUEST_CONFIDENTIALITY_OF_DATA_URL || "",
-    myGenderChangeUrl: window.CHANGE_REGISTERED_GENDER_URL || "",
-    myNameChangeUrl: window.CHANGE_IN_USE_OF_SURNAME_URL || "",
-    overviewMaintenanceAlertTextEn:
-      window.OVERVIEW_MAINTENANCE_ALERT_TEXT_EN || "",
-    overviewMaintenanceAlertTextNl:
-      window.OVERVIEW_MAINTENANCE_ALERT_TEXT_NL || "",
-    overviewMaintenanceAlertTitleEn:
-      window.OVERVIEW_MAINTENANCE_ALERT_TITLE_EN || "",
-    overviewMaintenanceAlertTitleNl:
-      window.OVERVIEW_MAINTENANCE_ALERT_TITLE_NL || "",
-  },
-  toggles: {
-    custom: {},
-    casesPartialSearchEnabled: window.CASES_PARTIAL_SEARCH === "true",
-    casesResultExplanationEnabled:
-      window.SHOW_CASE_RESULT_EXPLANATION === "true",
-    legacyPaymentEnabled: window.USE_LEGACY_OGONE_PAYMENT === "true",
-    messageCountEnabled: window.MESSAGE_COUNT_ENABLE === "true",
-    myInhabitantCountEnabled: window.SHOW_INHABITANT_AMOUNT === "true",
-    openProductEnabled: window.OPEN_PRODUCTEN === "true",
-    overviewIntroEnabled: window.OVERVIEW_INTRO_ENABLED === "true",
-    overviewMaintenanceAlertEnabled:
-      window.OVERVIEW_MAINTENANCE_ALERT_ENABLED === "true",
-    themeApiEnabled: window.USE_THEME_API === "true",
-  },
-};
 
 type Themes =
   GetOpenProductHoofdThemasByProductenQuery["getOpenProductHoofdThemasByProducten"];
@@ -156,12 +121,19 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
         json.properties.custom = JSON.parse(json.properties.custom || "{}");
         json.toggles.custom = JSON.parse(json.toggles.custom || "{}");
 
-        setFeatures({ ...deprecatedFeatures, ...json });
+        setFeatures(json);
       } catch (err) {
         console.error("Failed to load features:", err);
       }
     });
   }, [restUri, startTransition]);
+
+  useEffect(() => {
+    const themeClass = features?.properties.themeClass;
+    if (!themeClass) return;
+    document.documentElement.classList.add(themeClass);
+    return () => document.documentElement.classList.remove(themeClass);
+  }, [features]);
 
   useEffect(() => {
     if (!features?.toggles.themeApiEnabled) return;

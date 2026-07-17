@@ -12,23 +12,13 @@ import {
 } from "@nl-portal/nl-portal-user-interface";
 import { OidcCallbackPage } from "@nl-portal/nl-portal-authentication";
 import { paths } from "./paths";
-import { config } from "./config";
 import { Navigate } from "react-router";
 
 export const routes = [
   {
     path: paths.overview,
     handle: { label: "breadcrumb.overview" },
-    element: (
-      <OverviewPage
-        fetchCasesLength={
-          config.OVERVIEW_CURRENT_CASES_PREVIEW_LENGTH
-            ? Number(config.OVERVIEW_CURRENT_CASES_PREVIEW_LENGTH)
-            : 4
-        }
-        fetchProductsLength={config.OPEN_PRODUCTEN === "true" ? 5 : 0}
-      />
-    ),
+    element: <OverviewPage />,
   },
   {
     path: paths.cases,

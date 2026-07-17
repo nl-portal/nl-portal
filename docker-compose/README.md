@@ -150,16 +150,16 @@ The following services will be started:
 | Keycloak database (postgres) |    -   |
 | Open Zaak | 8001 |
 | Open Zaak database (postgis) | - |
-| Open Klant | 8006 |
-| Open Klant database (postgis) | - |
 | Objecten API | 8010 |
 | Objecten API database (postgis) | - |
 | Objecttypen API | 8011 |
 | Objecttypen API database (postgres) | - |
-| Open Klant 2 | 8007 |
-| Open Klant database (postgres) | - |
-| Open Product | 8070 |
-| Open Product database (postgres) | - |
+| Open Notificaties | 8012 |
+| Open Notificaties database (postgres) | - |
+| OpenKlant 2 | 8014 |
+| OpenKlant 2 database (postgres) | - |
+| OpenProduct | 8015 |
+| OpenProduct database (postgres) | - |
 | Redis | - |
 
 #### Keycloak and database only
