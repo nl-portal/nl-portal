@@ -1,16 +1,24 @@
 rootProject.name = "nl-portal-backend"
 
 pluginManagement {
-    val kotlinVersion: String by settings
-    val springBootVersion: String by settings
-    val springDependencyManagementVersion: String by settings
-    val benManesVersionsVersion: String by settings
-    val spotlessVersion: String by settings
-    val gradleDockerComposeVersion: String by settings
-    val sonarqubeVersion: String by settings
-    val dependencyLicenseVersion: String by settings
-    val owaspDependencyCheckVersion: String by settings
-    val foojayResolverConventionVersion: String by settings
+    val kotlinVersion: String =
+        providers.gradleProperty("kotlinVersion").get()
+    val springBootVersion: String =
+        providers.gradleProperty("springBootVersion").get()
+    val springDependencyManagementVersion: String =
+        providers.gradleProperty("springDependencyManagementVersion").get()
+    val benManesVersionsVersion: String =
+        providers.gradleProperty("benManesVersionsVersion").get()
+    val spotlessVersion: String =
+        providers.gradleProperty("spotlessVersion").get()
+    val gradleDockerComposeVersion: String =
+        providers.gradleProperty("gradleDockerComposeVersion").get()
+    val sonarqubeVersion: String =
+        providers.gradleProperty("sonarqubeVersion").get()
+    val dependencyLicenseVersion: String =
+        providers.gradleProperty("dependencyLicenseVersion").get()
+    val foojayResolverConventionVersion: String =
+        providers.gradleProperty("foojayResolverConventionVersion").get()
 
     plugins {
         kotlin("jvm") version kotlinVersion apply false
@@ -25,14 +33,12 @@ pluginManagement {
         id("com.avast.gradle.docker-compose") version gradleDockerComposeVersion apply false
         id("org.sonarqube") version sonarqubeVersion apply false
         id("com.github.jk1.dependency-license-report") version dependencyLicenseVersion apply false
-        id("org.owasp.dependencycheck") version owaspDependencyCheckVersion apply false
         id("org.gradle.toolchains.foojay-resolver-convention") version foojayResolverConventionVersion apply false
     }
 }
 include(
     "app",
     "core",
-    "gradle:cve-report",
     "gradle:license-report",
     "graphql",
     "portal-authentication",

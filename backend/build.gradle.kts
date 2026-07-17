@@ -5,9 +5,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.net.URI
 import kotlin.io.encoding.Base64.Default.decode
-import kotlin.io.encoding.ExperimentalEncodingApi
 
-val sonatypeCentralStagingDir: String by project
+val sonatypeCentralStagingDir: String = project.property("sonatypeCentralStagingDir").toString()
 
 plugins {
     java
@@ -45,8 +44,6 @@ plugins {
 
     id("com.github.jk1.dependency-license-report")
 
-    id("org.owasp.dependencycheck")
-
     id("org.sonarqube")
 
     `maven-publish`
@@ -83,7 +80,7 @@ subprojects {
         apply(plugin = "signing")
     }
 
-    if (project.properties.containsKey("isLib") || project.properties.containsKey("isApp")) {
+    if (project.findProperty("isLib") != null || project.findProperty("isApp") != null) {
         configure<com.diffplug.gradle.spotless.SpotlessExtension> {
             kotlin {
                 ktlint()
@@ -107,6 +104,17 @@ subprojects {
 
         println("Enabling Spring Boot Dependency Management in project ${project.name}...")
         apply(plugin = "io.spring.dependency-management")
+
+        configure<DependencyManagementExtension> {
+            dependencies {
+                // Security overrides on top of the Spring Boot 4.1.0 BOM.
+                dependency("org.postgresql:postgresql:${Versions.postgresql}")
+                dependency("org.apache.httpcomponents.core5:httpcore5:${Versions.httpCore5}")
+                dependency("org.apache.httpcomponents.core5:httpcore5-h2:${Versions.httpCore5}")
+                dependency("org.apache.logging.log4j:log4j-api:${Versions.log4j2}")
+                dependency("org.apache.logging.log4j:log4j-to-slf4j:${Versions.log4j2}")
+            }
+        }
     }
 
     println("Enabling Kotlin Spring plugin in project ${project.name}...")
@@ -184,7 +192,7 @@ sonar {
     }
 }
 
-listOf(":app", ":gradle:cve-report", ":gradle:license-report").forEach { modulePath ->
+listOf(":app", ":gradle:license-report").forEach { modulePath ->
     project(modulePath) {
         sonar {
             isSkipProject = true
@@ -203,7 +211,6 @@ tasks.bootJar {
     enabled = false
 }
 
-@OptIn(ExperimentalEncodingApi::class)
 fun getSigningKey(signingKeyBase64: String): ByteArray {
     return decode(signingKeyBase64.subSequence(0, signingKeyBase64.length))
 }
