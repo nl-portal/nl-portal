@@ -35,6 +35,9 @@ dependencies {
     implementation("org.springframework.data:spring-data-commons")
 
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springGraphQLTest)
     testImplementation(TestDependencies.h2)
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.okHttpMockWebserver)

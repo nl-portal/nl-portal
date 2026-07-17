@@ -77,7 +77,7 @@ class HaalCentraal2BrpClient(
                         logger.debug { "Additional default headers were set for client: ${haalCentraal2ConfigurationProperties.additionalHeaders.keys}" }
                     }
                     if (!haalCentraal2ConfigurationProperties.apiKey.isNullOrBlank()) {
-                        it.defaultHeader("X-API-KEY", haalCentraal2ConfigurationProperties.apiKey)
+                        it.defaultHeader("X-API-KEY", haalCentraal2ConfigurationProperties.apiKey!!)
                         logger.debug { "X-API-KEY was set for client" }
                     }
                 }.build()

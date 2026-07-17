@@ -25,17 +25,15 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":haalcentraal-hr"))
 
-    // jjwt
-    implementation(Dependencies.jsonWebTokensApi)
-    implementation(Dependencies.jsonWebTokensImpl)
-    implementation(Dependencies.jsonWebTokensJackson)
-
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
     implementation("org.springframework.data:spring-data-commons")
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springGraphQLTest)
     testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
@@ -49,7 +47,6 @@ dependencies {
     testImplementation(TestDependencies.okHttp)
     testImplementation(TestDependencies.okHttpTls)
     testImplementation(TestDependencies.hamcrest)
-    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

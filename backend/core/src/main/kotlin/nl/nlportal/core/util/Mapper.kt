@@ -15,22 +15,18 @@
  */
 package nl.nlportal.core.util
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
-import com.fasterxml.jackson.module.kotlin.KotlinFeature
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
-import java.time.format.DateTimeFormatter
+import com.fasterxml.jackson.annotation.JsonInclude
+import java.text.SimpleDateFormat
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.SerializationFeature
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.KotlinFeature
+import tools.jackson.module.kotlin.KotlinModule
 
 object Mapper {
-    private var mapper: ObjectMapper
-    private const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-    private val jacksonBuilderCustomizer =
-        Jackson2ObjectMapperBuilderCustomizer { builder ->
-            builder.simpleDateFormat(DATE_TIME_FORMAT)
-            builder.serializers(LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)))
-        }
+    private val mapper: JsonMapper
+    const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+
     private val jacksonConfigurationModule =
         KotlinModule
             .Builder()
@@ -42,17 +38,21 @@ object Mapper {
             .configure(KotlinFeature.StrictNullChecks, false)
             .build()
 
-    fun get(): ObjectMapper = mapper
+    fun get(): JsonMapper = mapper
 
     init {
-        val builder = Jackson2ObjectMapperBuilder()
-        jacksonBuilderCustomizer.customize(builder)
-
         mapper =
-            builder
-                .build<ObjectMapper>()
-                .apply {
-                    registerModule(jacksonConfigurationModule)
-                }
+            JsonMapper
+                .builder()
+                .changeDefaultPropertyInclusion({ include -> include.withValueInclusion(JsonInclude.Include.NON_NULL) })
+                .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+                .disable(
+                    DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+                    DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES,
+                ).enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+                .findAndAddModules()
+                .addModule(jacksonConfigurationModule)
+                .defaultDateFormat(SimpleDateFormat(DATE_TIME_FORMAT))
+                .build()
     }
 }

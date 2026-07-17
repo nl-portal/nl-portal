@@ -15,7 +15,7 @@
  */
 package nl.nlportal.product.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBedrijfUser
@@ -33,14 +33,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import java.net.URI
 import nl.nlportal.core.util.Mapper
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
@@ -114,8 +114,8 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/content/0/id")?.textValue())
-        assertEquals("erfpacht", responseBody.requiredAt("/content/0/naam")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/content/0/id")?.stringValue())
+        assertEquals("erfpacht", responseBody.requiredAt("/content/0/naam")?.stringValue())
     }
 
     @Test
@@ -131,11 +131,11 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("erfpacht", responseBody.requiredAt("/naam")?.textValue())
-        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c202", responseBody.requiredAt("/zaken/0/uuid")?.textValue())
-        assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.textValue())
-        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/taken/0/titel")?.textValue())
-        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c500", responseBody.requiredAt("/productDetails/id")?.textValue())
+        assertEquals("erfpacht", responseBody.requiredAt("/naam")?.stringValue())
+        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c202", responseBody.requiredAt("/zaken/0/uuid")?.stringValue())
+        assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.stringValue())
+        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/taken/0/titel")?.stringValue())
+        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c500", responseBody.requiredAt("/productDetails/id")?.stringValue())
     }
 
     @Test
@@ -151,7 +151,7 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.textValue())
+        assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.stringValue())
     }
 
     @Test
@@ -170,7 +170,7 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.textValue())
+        assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.stringValue())
     }
 
     @Test
@@ -186,8 +186,8 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/0/id")?.textValue())
-        assertEquals("test verbruiksobject", responseBody.requiredAt("/0/soort")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/0/id")?.stringValue())
+        assertEquals("test verbruiksobject", responseBody.requiredAt("/0/soort")?.stringValue())
     }
 
     @Test
@@ -203,8 +203,8 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c200", responseBody.requiredAt("/id")?.textValue())
-        assertEquals("erfpacht", responseBody.requiredAt("/naam")?.textValue())
+        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c200", responseBody.requiredAt("/id")?.stringValue())
+        assertEquals("erfpacht", responseBody.requiredAt("/naam")?.stringValue())
     }
 
     @Test
@@ -221,8 +221,8 @@ internal class ProductQueryIT(
                 .get()
 
         assertEquals(1, responseBody.size())
-        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c200", responseBody.requiredAt("/0/id")?.textValue())
-        assertEquals("erfpacht", responseBody.requiredAt("/0/naam")?.textValue())
+        assertEquals("7d9cd6c2-8147-46f2-9ae9-c67e8213c200", responseBody.requiredAt("/0/id")?.stringValue())
+        assertEquals("erfpacht", responseBody.requiredAt("/0/naam")?.stringValue())
     }
 
     @Test
@@ -260,8 +260,8 @@ internal class ProductQueryIT(
                 .get()
 
         assertEquals(2, responseBody.size())
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.textValue())
-        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.stringValue())
+        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.stringValue())
     }
 
     @Test
@@ -281,8 +281,8 @@ internal class ProductQueryIT(
                 .get()
 
         assertEquals(2, responseBody.size())
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.textValue())
-        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5ac2d", responseBody.requiredAt("/0/id")?.stringValue())
+        assertEquals("Taak linked to Zaak", responseBody.requiredAt("/0/titel")?.stringValue())
     }
 
     @Test
@@ -314,7 +314,7 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx", responseBody.requiredAt("/0/action/value")?.textValue())
+        assertEquals("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx", responseBody.requiredAt("/0/action/value")?.stringValue())
     }
 
     @Test
@@ -330,7 +330,7 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx", responseBody.requiredAt("/0/action/value")?.textValue())
+        assertEquals("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx", responseBody.requiredAt("/0/action/value")?.stringValue())
     }
 
     @Test
@@ -346,8 +346,8 @@ internal class ProductQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("f9d7f166-bcea-4448-a984-4e717e558458", responseBody.requiredAt("/objectId")?.textValue())
-        assertEquals("http://localhost:8080/formuliernaam", responseBody.requiredAt("/formulierUrl")?.textValue())
+        assertEquals("f9d7f166-bcea-4448-a984-4e717e558458", responseBody.requiredAt("/objectId")?.stringValue())
+        assertEquals("http://localhost:8080/formuliernaam", responseBody.requiredAt("/formulierUrl")?.stringValue())
     }
 
     fun setupMockServer() {

@@ -15,19 +15,19 @@
  */
 package nl.nlportal.form.service
 
+import java.util.UUID
 import nl.nlportal.form.domain.FormDefinitionId
 import nl.nlportal.form.domain.FormIoFormDefinition
 import nl.nlportal.form.domain.request.CreateFormDefinitionRequest
 import nl.nlportal.form.repository.FormIoFormDefinitionRepository
 import org.springframework.transaction.annotation.Transactional
-import java.util.UUID
 
 @Transactional
 class FormIoFormDefinitionService(
     private val formIoFormDefinitionRepository: FormIoFormDefinitionRepository,
 ) {
-    fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition =
-        formIoFormDefinitionRepository.saveAndFlush(
+    fun createFormDefinition(request: CreateFormDefinitionRequest): FormIoFormDefinition {
+        val formIoFormDefinition =
             FormIoFormDefinition(
                 FormDefinitionId.newId(
                     UUID.randomUUID(),
@@ -35,8 +35,11 @@ class FormIoFormDefinitionService(
                 request.getName(),
                 request.getFormDefinition(),
                 request.isReadOnly(),
-            ),
+            )
+        return formIoFormDefinitionRepository.saveAndFlush(
+            formIoFormDefinition,
         )
+    }
 
     fun findAllFormDefinitions(): List<FormIoFormDefinition> = formIoFormDefinitionRepository.findAll()
 

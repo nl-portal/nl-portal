@@ -25,13 +25,16 @@ dependencies {
     api(project(":zgw:taak"))
 
     implementation(Dependencies.jsonPath)
-    api("com.github.wnameless.json:json-flattener:0.18.1")
+    api("com.github.wnameless.json:json-flattener:0.18.2")
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
     implementation("org.springframework.data:spring-data-commons")
 
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springGraphQLTest)
     testImplementation(TestDependencies.h2)
     testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.mockitoKotlin)

@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zgw.taak.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.TestHelper
@@ -32,9 +32,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
@@ -66,7 +66,7 @@ internal class TaakFormQueryIT(
     fun `returns form definition for task with formulier soort=url`() {
         val formDefinition = executeForTask("58fad5ab-dc2f-11ec-9075-f22a405ce707")
 
-        assertEquals("form", formDefinition.requiredAt("/formDefinition/display").textValue())
+        assertEquals("form", formDefinition.requiredAt("/formDefinition/display").stringValue())
     }
 
     @Test
@@ -74,7 +74,7 @@ internal class TaakFormQueryIT(
     fun `returns form definition for task with formulier soort=id`() {
         val formDefinition = executeForTask("44444444-4444-4444-4444-444444444444")
 
-        assertEquals("form", formDefinition.requiredAt("/formDefinition/display").textValue())
+        assertEquals("form", formDefinition.requiredAt("/formDefinition/display").stringValue())
     }
 
     @Test

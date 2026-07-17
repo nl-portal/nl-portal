@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zakenapi.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.besluiten.client.BesluitenApiConfig
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
@@ -35,8 +35,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -143,17 +143,17 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
 
     }
@@ -208,17 +208,17 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
     }
 
@@ -255,10 +255,10 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2024-0000000001", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2024-0000000001", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
     }
 
     @Test
@@ -292,10 +292,10 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
     }
 
     @Test
@@ -329,10 +329,10 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
     }
 
     @Test
@@ -384,17 +384,17 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
     }
 
@@ -450,17 +450,17 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
     }
 
@@ -517,17 +517,17 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
     }
 
@@ -580,17 +580,17 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.requiredAt("/content/0/uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.requiredAt("/content/0/identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.requiredAt("/content/0/omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.requiredAt("/content/0/startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/content/0/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/content/0/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
     }
 
@@ -685,26 +685,26 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.get("uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.get("identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.get("omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.get("startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.get("uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.get("identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.get("omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.get("startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
-        assertEquals("omschrijving substatus", responseBody.requiredAt("/statusGeschiedenis/0/substatussen/0/omschrijving")?.textValue())
-        assertEquals("2019-07-24T14:15:22Z", responseBody.requiredAt("/statusGeschiedenis/0/substatussen/0/tijdstip")?.textValue())
-        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/documenten/0/uuid")?.textValue())
-        assertEquals("Een titel", responseBody.requiredAt("/documenten/0/titel")?.textValue())
-        assertEquals(".pdf", responseBody.requiredAt("/documenten/0/formaat")?.textValue())
-        assertEquals("Eerste status", responseBody.requiredAt("/statussen/0/omschrijving")?.textValue())
-        assertEquals("Derde status", responseBody.requiredAt("/statussen/2/omschrijving")?.textValue())
-        assertEquals("klantportaal", responseBody.requiredAt("/besluiten/0/identificatie")?.textValue())
+        assertEquals("omschrijving substatus", responseBody.requiredAt("/statusGeschiedenis/0/substatussen/0/omschrijving")?.stringValue())
+        assertEquals("2019-07-24T14:15:22Z", responseBody.requiredAt("/statusGeschiedenis/0/substatussen/0/tijdstip")?.stringValue())
+        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/documenten/0/uuid")?.stringValue())
+        assertEquals("Een titel", responseBody.requiredAt("/documenten/0/titel")?.stringValue())
+        assertEquals(".pdf", responseBody.requiredAt("/documenten/0/formaat")?.stringValue())
+        assertEquals("Eerste status", responseBody.requiredAt("/statussen/0/omschrijving")?.stringValue())
+        assertEquals("Derde status", responseBody.requiredAt("/statussen/2/omschrijving")?.stringValue())
+        assertEquals("klantportaal", responseBody.requiredAt("/besluiten/0/identificatie")?.stringValue())
 
     }
 
@@ -774,24 +774,24 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.get("uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.get("identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.get("omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.get("startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.get("uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.get("identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.get("omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.get("startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
-        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/documenten/0/uuid")?.textValue())
-        assertEquals("Een titel", responseBody.requiredAt("/documenten/0/titel")?.textValue())
-        assertEquals(".pdf", responseBody.requiredAt("/documenten/0/formaat")?.textValue())
-        assertEquals("Eerste status", responseBody.requiredAt("/statussen/0/omschrijving")?.textValue())
-        assertEquals("Derde status", responseBody.requiredAt("/statussen/2/omschrijving")?.textValue())
-        assertEquals("klantportaal", responseBody.requiredAt("/besluiten/0/identificatie")?.textValue())
+        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/documenten/0/uuid")?.stringValue())
+        assertEquals("Een titel", responseBody.requiredAt("/documenten/0/titel")?.stringValue())
+        assertEquals(".pdf", responseBody.requiredAt("/documenten/0/formaat")?.stringValue())
+        assertEquals("Eerste status", responseBody.requiredAt("/statussen/0/omschrijving")?.stringValue())
+        assertEquals("Derde status", responseBody.requiredAt("/statussen/2/omschrijving")?.stringValue())
+        assertEquals("klantportaal", responseBody.requiredAt("/besluiten/0/identificatie")?.stringValue())
     }
 
     @Test
@@ -860,24 +860,24 @@ internal class ZaakQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.get("uuid")?.textValue())
-        assertEquals("ZAAK-2021-0000000003", responseBody.get("identificatie")?.textValue())
-        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.get("omschrijving")?.textValue())
-        assertEquals("2021-09-16", responseBody.get("startdatum")?.textValue())
-        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/zaaktype/identificatie")?.textValue())
-        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/zaaktype/omschrijving")?.textValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/status/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/status/statustype/omschrijving")?.textValue())
+        assertEquals("5d479908-fbb7-49c2-98c9-9afecf8de79a", responseBody.get("uuid")?.stringValue())
+        assertEquals("ZAAK-2021-0000000003", responseBody.get("identificatie")?.stringValue())
+        assertEquals("Voorbeeld afgesloten zaak 1", responseBody.get("omschrijving")?.stringValue())
+        assertEquals("2021-09-16", responseBody.get("startdatum")?.stringValue())
+        assertEquals("bezwaar-behandelen", responseBody.requiredAt("/zaaktype/identificatie")?.stringValue())
+        assertEquals("Bezwaar behandelen", responseBody.requiredAt("/zaaktype/omschrijving")?.stringValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/status/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/status/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/status/statustype/isEindstatus")?.booleanValue())
-        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/statusGeschiedenis/0/datumStatusGezet")?.textValue())
-        assertEquals("Zaak afgerond", responseBody.requiredAt("/statusGeschiedenis/0/statustype/omschrijving")?.textValue())
+        assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
+        assertEquals("Zaak afgerond", responseBody.requiredAt("/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
-        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/documenten/0/uuid")?.textValue())
-        assertEquals("Een titel", responseBody.requiredAt("/documenten/0/titel")?.textValue())
-        assertEquals(".pdf", responseBody.requiredAt("/documenten/0/formaat")?.textValue())
-        assertEquals("Eerste status", responseBody.requiredAt("/statussen/0/omschrijving")?.textValue())
-        assertEquals("Derde status", responseBody.requiredAt("/statussen/2/omschrijving")?.textValue())
-        assertEquals("klantportaal", responseBody.requiredAt("/besluiten/0/identificatie")?.textValue())
+        assertEquals("095be615-a8ad-4c33-8e9c-c7612fbf6c9f", responseBody.requiredAt("/documenten/0/uuid")?.stringValue())
+        assertEquals("Een titel", responseBody.requiredAt("/documenten/0/titel")?.stringValue())
+        assertEquals(".pdf", responseBody.requiredAt("/documenten/0/formaat")?.stringValue())
+        assertEquals("Eerste status", responseBody.requiredAt("/statussen/0/omschrijving")?.stringValue())
+        assertEquals("Derde status", responseBody.requiredAt("/statussen/2/omschrijving")?.stringValue())
+        assertEquals("klantportaal", responseBody.requiredAt("/besluiten/0/identificatie")?.stringValue())
     }
 
     fun setupMockOpenZaakServer() {

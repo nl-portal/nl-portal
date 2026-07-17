@@ -15,7 +15,7 @@
  */
 package nl.nlportal.berichten.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.berichten.TestHelper
@@ -33,8 +33,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 
@@ -76,9 +76,9 @@ class BerichtenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("NOTIFICATIE", responseBody.requiredAt("/content/0/berichtType")?.textValue())
+        assertEquals("NOTIFICATIE", responseBody.requiredAt("/content/0/berichtType")?.stringValue())
         assertEquals(false, responseBody.requiredAt("/content/0/geopend")?.booleanValue())
-        assertEquals("2024-07-18T18:25:43.524", responseBody.requiredAt("/content/0/publicatiedatum")?.textValue())
+        assertEquals("2024-07-18T18:25:43.524", responseBody.requiredAt("/content/0/publicatiedatum")?.stringValue())
     }
 
     @WithBurgerUser("999990755")
@@ -94,7 +94,7 @@ class BerichtenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").stringValue())
         assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 
@@ -111,7 +111,7 @@ class BerichtenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").stringValue())
         assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 
@@ -128,7 +128,7 @@ class BerichtenQueryIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("NOTIFICATIE", responseBody.get("berichtType").textValue())
+        assertEquals("NOTIFICATIE", responseBody.get("berichtType").stringValue())
         assertEquals(true, responseBody.get("geopend").booleanValue())
     }
 

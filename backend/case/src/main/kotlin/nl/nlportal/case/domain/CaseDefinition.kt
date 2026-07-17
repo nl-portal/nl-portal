@@ -15,7 +15,7 @@
  */
 package nl.nlportal.case.domain
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import jakarta.persistence.Column
 import jakarta.persistence.Embedded
 import jakarta.persistence.EmbeddedId
@@ -27,6 +27,7 @@ import nl.nlportal.data.domain.DomainEvent
 import org.hibernate.validator.constraints.Length
 import org.springframework.data.domain.Persistable
 import java.time.LocalDateTime
+import tools.jackson.databind.JsonNode
 
 @Entity
 @Table(name = "case_definition")
@@ -52,7 +53,7 @@ data class CaseDefinition(
 
     override fun isNew(): Boolean = caseDefinitionId.isNew()
 
-    fun modify(schema: ObjectNode) {
+    fun modify(schema: JsonNode) {
         this.schema = Schema(schema)
     }
 }

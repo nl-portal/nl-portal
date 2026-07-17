@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
@@ -30,14 +30,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import java.net.URI
 import nl.nlportal.openproduct.TestHelper.readFileAsString
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 
 @SpringBootTest
@@ -98,8 +98,8 @@ class OpenProductContactQueryIT(
                     .get()
 
             assertEquals(1, responseBody.get("number")?.intValue())
-            assertEquals("Vincent van Beek", responseBody.requiredAt("/content/0/naam")?.textValue())
-            assertEquals("Ritense", responseBody.requiredAt("/content/0/organisatie/naam")?.textValue())
+            assertEquals("Vincent van Beek", responseBody.requiredAt("/content/0/naam")?.stringValue())
+            assertEquals("Ritense", responseBody.requiredAt("/content/0/organisatie/naam")?.stringValue())
         }
 
     @Test
@@ -116,7 +116,7 @@ class OpenProductContactQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("Vincent van Beek", responseBody.requiredAt("/naam")?.textValue())
+            assertEquals("Vincent van Beek", responseBody.requiredAt("/naam")?.stringValue())
         }
 
     private fun setupMockServer() {

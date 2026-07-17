@@ -15,8 +15,8 @@
  */
 package nl.nlportal.case.service
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.case.domain.Case
 import nl.nlportal.case.domain.CaseDefinition
@@ -148,7 +148,7 @@ class CaseService(
             json.forEach { node -> getKeys(node, keys) }
         }
         if (json.isValueNode) {
-            keys.add(json.asText())
+            keys.add(json.asString())
         }
         return keys
     }

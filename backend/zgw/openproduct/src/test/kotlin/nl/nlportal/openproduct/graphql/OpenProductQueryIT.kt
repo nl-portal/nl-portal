@@ -15,7 +15,6 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -37,12 +36,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import tools.jackson.databind.JsonNode
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
@@ -114,9 +114,9 @@ class OpenProductQueryIT(
                     .get()
 
             assertEquals(4, responseBody.get("totalElements")?.intValue())
-            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/content/0/url")?.textValue())
-            assertEquals("2025-04-30", responseBody.requiredAt("/content/0/startDatum")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/producttype/code")?.textValue())
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/content/0/url")?.stringValue())
+            assertEquals("2025-04-30", responseBody.requiredAt("/content/0/startDatum")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/producttype/code")?.stringValue())
             assertEquals(30, responseBody.requiredAt("/content/0/verbruiksobject/uren")?.intValue())
         }
 
@@ -134,12 +134,12 @@ class OpenProductQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/url")?.textValue())
-            assertEquals("2025-04-30", responseBody.requiredAt("/startDatum")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.textValue())
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/url")?.stringValue())
+            assertEquals("2025-04-30", responseBody.requiredAt("/startDatum")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.stringValue())
             assertEquals(30, responseBody.requiredAt("/verbruiksobject/uren")?.intValue())
-            assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.textValue())
-            assertEquals("Very important task", responseBody.requiredAt("/taken/0/titel")?.textValue())
+            assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.stringValue())
+            assertEquals("Very important task", responseBody.requiredAt("/taken/0/titel")?.stringValue())
         }
 
     @Test
@@ -157,9 +157,9 @@ class OpenProductQueryIT(
                     .get()
 
             assertEquals(5, responseBody.size())
-            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/0/url")?.textValue())
-            assertEquals("2025-04-30", responseBody.requiredAt("/0/startDatum")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/0/producttype/code")?.textValue())
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/0/url")?.stringValue())
+            assertEquals("2025-04-30", responseBody.requiredAt("/0/startDatum")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/0/producttype/code")?.stringValue())
             assertEquals(30, responseBody.requiredAt("/0/verbruiksobject/uren")?.intValue())
         }
 

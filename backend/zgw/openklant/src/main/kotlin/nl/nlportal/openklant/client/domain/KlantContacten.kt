@@ -17,7 +17,7 @@ package nl.nlportal.openklant.client.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonValue
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 
 data class HadKlantcontact(
     val gingOverOnderwerpobjecten: List<OpenKlant2ForeignKey>,

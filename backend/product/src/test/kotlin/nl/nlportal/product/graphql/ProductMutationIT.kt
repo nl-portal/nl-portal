@@ -15,7 +15,7 @@
  */
 package nl.nlportal.product.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.product.TestHelper
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
@@ -29,8 +29,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 
@@ -84,7 +84,7 @@ internal class ProductMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.stringValue())
     }
 
     fun setupMockOpenZaakServer() {

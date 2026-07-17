@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openklant.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openklant.TestHelper
@@ -29,8 +29,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean
@@ -61,7 +61,7 @@ class OpenKlant2KlantContactQueryIT(
                     .get()
 
             assertNotNull(responseBody)
-            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.textValue())
+            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.stringValue())
         }
 
     @Test
@@ -79,7 +79,7 @@ class OpenKlant2KlantContactQueryIT(
                     .get()
 
             assertNotNull(responseBody)
-            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.textValue())
+            assertEquals("E-mail", responseBody.get(0)?.get("kanaal")?.stringValue())
         }
 
     @Test
@@ -99,6 +99,6 @@ class OpenKlant2KlantContactQueryIT(
             verify(openKlant2Service, times(1)).findKlantContact(any())
 
             assertNotNull(responseBody)
-            assertEquals("E-mail", responseBody.get("kanaal")?.textValue())
+            assertEquals("E-mail", responseBody.get("kanaal")?.stringValue())
         }
 }

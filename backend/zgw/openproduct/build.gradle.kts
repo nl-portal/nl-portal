@@ -27,7 +27,7 @@ dependencies {
     api(project(":zgw:documenten-api"))
 
     implementation(Dependencies.jsonPath)
-    api("com.github.wnameless.json:json-flattener:0.18.1")
+    api("com.github.wnameless.json:json-flattener:0.18.2")
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)
     implementation("org.springframework.data:spring-data-commons")
@@ -36,12 +36,14 @@ dependencies {
     testImplementation(TestDependencies.postgresql)
     testImplementation(TestDependencies.h2)
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springGraphQLTest)
     testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
-    testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
 val jar: Jar by tasks

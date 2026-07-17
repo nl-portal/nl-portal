@@ -22,7 +22,8 @@ plugins {
 
 dependencies {
     implementation(project(":zgw:openklant"))
-    implementation(project(":form"))
+    //implementation(project(":form"))
+    implementation(project(":case"))
     implementation(project(":haalcentraal-hr"))
     implementation(project(":haalcentraal2"))
     implementation(project(":zgw:taak"))
@@ -49,7 +50,10 @@ dependencies {
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.postgresql)
     testImplementation(TestDependencies.springBootTest)
-    testImplementation(TestDependencies.springSecurityTest)
+    //testImplementation(TestDependencies.springSecurityTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springGraphQLTest)
     testImplementation(TestDependencies.assertJCore)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.okHttpMockWebserver)

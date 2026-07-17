@@ -15,7 +15,7 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBurgerUser
@@ -34,8 +34,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -102,8 +102,8 @@ class OpenProductMutationIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.get("url")?.textValue())
-            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.textValue())
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.get("url")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.stringValue())
             assertEquals(30, responseBody.requiredAt("/verbruiksobject/uren")?.intValue())
         }
 

@@ -15,7 +15,7 @@
  */
 package nl.nlportal.case.service
 
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.case.BaseIntegrationTest
 import nl.nlportal.core.util.Mapper
 import org.assertj.core.api.Assertions.assertThat
@@ -85,7 +85,7 @@ class CaseServiceIntTest : BaseIntegrationTest() {
         assertThat(
             case.submission.value
                 .path("firstName")
-                .textValue(),
+                .stringValue(),
         ).isEqualTo("myName")
         assertThat(case.submission.value.contains(extraProperty)).isFalse
     }

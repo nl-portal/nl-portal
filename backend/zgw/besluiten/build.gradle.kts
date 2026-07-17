@@ -33,6 +33,9 @@ dependencies {
     implementation("org.springframework.data:spring-data-commons")
 
     testImplementation(TestDependencies.springBootTest)
+    testImplementation(TestDependencies.springBootWebClientTest)
+    testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springGraphQLTest)
     testImplementation(TestDependencies.springSecurityTest)
 
     testImplementation(TestDependencies.kotlinCoroutines)
