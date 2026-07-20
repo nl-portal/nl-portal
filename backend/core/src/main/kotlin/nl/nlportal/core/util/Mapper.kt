@@ -17,9 +17,13 @@ package nl.nlportal.core.util
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.SerializationFeature
+import tools.jackson.databind.ext.javatime.ser.LocalDateTimeSerializer
 import tools.jackson.databind.json.JsonMapper
+import tools.jackson.databind.module.SimpleModule
 import tools.jackson.module.kotlin.KotlinFeature
 import tools.jackson.module.kotlin.KotlinModule
 
@@ -52,7 +56,16 @@ object Mapper {
                 ).enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
                 .findAndAddModules()
                 .addModule(jacksonConfigurationModule)
-                .defaultDateFormat(SimpleDateFormat(DATE_TIME_FORMAT))
+                .addModule(
+                    SimpleModule().addSerializer(
+                        LocalDateTime::class.java,
+                        LocalDateTimeSerializer(
+                            DateTimeFormatter.ofPattern(
+                                DATE_TIME_FORMAT,
+                            ),
+                        ),
+                    ),
+                ).defaultDateFormat(SimpleDateFormat(DATE_TIME_FORMAT))
                 .build()
     }
 }
