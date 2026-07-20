@@ -9,32 +9,30 @@ Om de NL Portal lokaal op te zetten is enige basiskennis van de CLI (command-lin
 
 #### Waar kan ik de code vinden
 
-Alle code en informatie is opensource en kan gevonden worden op [github.com](https://github.com/nl-portal). De NL Portal is opgesplitst in meerdere repositories. Hieronder een korte beschrijving van elk.
+Alle code en informatie is opensource en kan gevonden worden op [github.com](https://github.com/nl-portal). De backend, frontend, docker-compose stack en documentatie leven samen in één monorepo.
 
-| Repository                                                                       | Beschrijving                                                                                                                                            |
-| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Documentatie](https://github.com/nl-portal/documentation)                       | Documentatie over de NL Portal                                                                                                                          |
-| [NL Portal App](https://github.com/nl-portal/nl-portal-app)                      | Referentie-implementatie van de NL Portal backend en frontend apps, inclusief een docker-compose demo-omgeving. Het startpunt voor een eigen portaal.   |
-| [Frontend Libraries](https://github.com/nl-portal/nl-portal-frontend-libraries)  | Libraries voor de frontend die gebruikt worden in de NL Portal App                                                                                      |
-| [Backend Libraries](https://github.com/nl-portal/nl-portal-backend-libraries)    | Libraries voor de backend die gebruikt worden in de NL Portal App                                                                                       |
-| [Docker Compose](https://github.com/nl-portal/nl-portal-docker-compose)          | Een docker compose setup om het ZGW landschap op te zetten                                                                                              |
-| [Helm Charts](https://github.com/nl-portal/helm-charts)                          | Kubernetes Helm charts voor het deployen van een NL Portal omgeving                                                                                     |
+| Onderdeel                                                                         | Beschrijving                                                                                                    |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [nl-portal/nl-portal](https://github.com/nl-portal/nl-portal)                     | De monorepo: backend (`backend/`), frontend (`frontend/`), docker-compose demo (`docker-compose/`) en docs.    |
+| [Helm Charts](https://github.com/nl-portal/helm-charts)                           | Kubernetes Helm charts voor het deployen van een NL Portal omgeving.                                           |
 
-**Let op:** de eerdere frontend en backend template repositories zijn vervangen door de [NL Portal App](https://github.com/nl-portal/nl-portal-app) repository. Gebruik deze als startpunt voor een eigen portaal.
+Voor de meeste implementaties gebruik je de gepubliceerde images (zie Route 1). Voor maatwerk dienen de app-directories (`backend/app`, `frontend/packages/app`) als startpunt.
 
 ### Route 1: De prebuilt images draaien
 
-De snelste manier om de NL Portal te bekijken is via de kant-en-klare demo-omgeving in de [NL Portal App](https://github.com/nl-portal/nl-portal-app) repository. De docker-compose file in deze repository bevat alles wat nodig is:
+De snelste manier om de NL Portal te bekijken is via de kant-en-klare demo-omgeving in de `docker-compose/` map van de monorepo. Die bevat alles wat nodig is:
 
-* De prebuilt NL Portal backend en frontend images (`ghcr.io/nl-portal/nl-portal-app-backend` en `ghcr.io/nl-portal/nl-portal-app-frontend`).
+* De prebuilt NL Portal backend en frontend images (`ghcr.io/nl-portal/nl-portal-backend` en `ghcr.io/nl-portal/nl-portal-frontend`).
 * De benodigde ZGW componenten (Open Zaak, Objecten API, OpenKlant, OpenProduct) en Haal Centraal mocks, opgedeeld in docker-compose profielen zodat je zelf kiest welke onderdelen je start.
 * Een voorgeconfigureerde Keycloak met token exchange v1 (zie ook de [Keycloak configuratie](keycloak.md) pagina).
 
-Clone de repository en start de demo-omgeving met:
+Clone de monorepo op de gewenste `release/*` branch of release-tag en start de demo-omgeving vanuit `docker-compose/`:
 
 ```shell
-docker compose --profile remote --profile zgw --profile haalcentraal up -d
+RUN_MODE=remote docker compose --profile zgw --profile haalcentraal up -d
 ```
+
+**Let op:** Route 1 draait de gepubliceerde stable image met de bijbehorende demo-imports; image en imports horen als één release bij elkaar. Gebruik daarom een `release/*` branch of een release-tag. Op andere branches bestaat die image (nog) niet — bouw daar lokaal met Route 2.
 
 De NL Portal is daarna bereikbaar op `http://localhost:3000`. Je kunt inloggen met de volgende testgebruikers:
 
@@ -43,52 +41,47 @@ De NL Portal is daarna bereikbaar op `http://localhost:3000`. Je kunt inloggen m
 | burger         | burger     | 999993847               |
 | bedrijf        | bedrijf    | 14127293                |
 
-**Let op:** het opstarten van alle ZGW componenten kan enkele minuten duren. De profielen `remote` en `local` kunnen niet tegelijk draaien omdat ze dezelfde poorten gebruiken.
+**Let op:** het opstarten van alle ZGW componenten kan enkele minuten duren. De `RUN_MODE`-waarden `remote` en `local` kunnen niet tegelijk draaien omdat ze dezelfde poorten gebruiken.
 
-De volledige tabel met services, poorten en profielen vind je in de README.md van de NL Portal App repository.
+De volledige tabel met services, poorten en profielen vind je in `docker-compose/README.md` in de monorepo.
 
-### Route 2: Configureren via het Configuration Panel
+### Route 2: Zelf bouwen (local)
 
-De aanbevolen manier om de NL Portal aan te passen is via het [Configuration Panel](configuration-panel.md). Hiermee kun je zonder code aan te passen:
-
-* Alle backend modules configureren (ZGW APIs, HaalCentraal, OpenKlant, etc.)
-* Een eigen logo uploaden
-* De huisstijl aanpassen via design tokens
-
-Start het Configuration Panel mee in de demo-omgeving:
+Draai je eigen wijzigingen zoals ze verscheept zouden worden, of zit je op een branch zonder gepubliceerde images? Bouw de images uit je checkout. Dit werkt op elke branch. Start vanuit `docker-compose/` met:
 
 ```shell
-docker compose --profile remote --profile zgw --profile haalcentraal --profile config up -d
+RUN_MODE=local docker compose --profile zgw --profile haalcentraal up -d --build
 ```
 
-Het Configuration Panel is bereikbaar op `http://localhost:3001` met gebruikersnaam **admin** en wachtwoord **admin**.
+De NL Portal is bereikbaar op `http://localhost:3000` met dezelfde testgebruikers als hierboven.
 
-Zie de [Configuration Panel](configuration-panel.md) pagina voor uitgebreide documentatie over het aansluiten van een bestaande NL Portal instantie.
+### Route 3: Vanuit broncode (sources)
 
-### Route 3: Fork de repository (geavanceerd)
-
-Wil je de NL Portal uitbreiden met eigen componenten of functionaliteit die niet via configuratie mogelijk is? Fork dan de [NL Portal App](https://github.com/nl-portal/nl-portal-app) repository en bouw je eigen images:
-
-1. Fork de repository op GitHub en clone je fork lokaal.
-2. Pas de frontend en/of backend aan naar wens.
-3. Bouw en start je eigen images met:
+Voor actieve ontwikkeling draai je alleen de ondersteunende services in compose en start je de backend en frontend zelf (snelle reload). Start vanuit `docker-compose/` met:
 
 ```shell
-docker compose --profile local --profile zgw --profile haalcentraal up -d --build
+docker compose --profile zgw up -d
 ```
 
-Ook nu is de NL Portal bereikbaar op `http://localhost:3000` met dezelfde testgebruikers als hierboven.
+Start daarna de backend (`./gradlew :app:bootRun` vanuit `backend/`; vereist een `.env.properties`, zie `backend/app/README.md`) en de frontend (`pnpm install && pnpm dev` vanuit `frontend/`). Zie [`GETTING_STARTED.md`](https://github.com/nl-portal/nl-portal/blob/main/GETTING_STARTED.md) en `docker-compose/README.md` voor de details.
 
-**Wanneer forken?** Alleen nodig voor:
-* Eigen frontend componenten of pagina's
-* Eigen backend plugins of modules
-* Aanpassingen aan de authenticatiemethoden (zie [Keycloak configuratie](keycloak.md))
+### Configureren via het Configuration Panel
 
-Voor configuratie van API-koppelingen en huisstijl is forken niet nodig — gebruik hiervoor het [Configuration Panel](configuration-panel.md).
+Het [Configuration Panel](configuration-panel.md) laat je backend modules, logo en huisstijl configureren zonder code en zonder eigen images te bouwen. Voeg het `config`-profiel toe aan de route die je draait, bijvoorbeeld:
+
+```shell
+RUN_MODE=remote docker compose --profile zgw --profile haalcentraal --profile config up -d
+```
+
+Het Configuration Panel is bereikbaar op `http://localhost:3001` met gebruikersnaam **admin** en wachtwoord **admin**. Zie de [Configuration Panel](configuration-panel.md) pagina voor het aansluiten van een bestaande NL Portal instantie.
+
+### Maatwerk
+
+Voor uitbreidingen die niet via configuratie mogelijk zijn (eigen componenten, plugins of authenticatiemethoden) dienen de app-directories `backend/app` en `frontend/packages/app` als startpunt. Bouw en draai zoals in Route 2.
 
 ### Configuratie via environment variabelen
 
-De NL Portal app images kunnen ook volledig geconfigureerd worden via environment variabelen. De volledige referentie met inline documentatie vind je in de NL Portal App repository, in de bestanden `imports/backend.env` en `imports/frontend.env`. Zie de [Deployment guide](deployment-guide.md) voor de naamconventie, de module-configuratie en het deployen met Helm.
+De NL Portal images kunnen ook volledig geconfigureerd worden via environment variabelen. De volledige referentie met inline documentatie vind je in de monorepo, in de bestanden `docker-compose/imports/backend.env` en `docker-compose/imports/frontend.env`. Zie de [Deployment guide](deployment-guide.md) voor de naamconventie, de module-configuratie en het deployen met Helm.
 
 ### Vervolgstappen
 

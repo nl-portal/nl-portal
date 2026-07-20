@@ -1,6 +1,8 @@
 # Features
 
-NL Portal heeft veel functionaliteiten out of the box, en is volledig modulair uitbreidbaar. Alle functionaliteiten zijn optioneel en kunnen aan of uitgezet worden. 
+NL Portal heeft veel functionaliteiten out of the box, en is volledig modulair uitbreidbaar. Alle functionaliteiten zijn optioneel en kunnen aan of uitgezet worden.
+
+Frontend-features worden op de backend geconfigureerd onder `nl-portal.config.features` (env: `NLPORTAL_CONFIG_FEATURES_*`) en door de frontend opgehaald via `GET /api/public/features`. Zie de [Deployment guide](../configuratie/deployment-guide.md#frontend-features) voor de toggles en eigenschappen.
 
 
 ### Beveiligde omgeving

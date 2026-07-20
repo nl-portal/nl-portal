@@ -7,7 +7,7 @@ description: >-
 
 # Deployment guide
 
-De NL Portal app images (`ghcr.io/nl-portal/nl-portal-app-backend` en `ghcr.io/nl-portal/nl-portal-app-frontend`) worden volledig geconfigureerd via environment variabelen. De complete, versie-specifieke referentie met inline documentatie vind je in de NL Portal App repository, in de bestanden `imports/backend.env` en `imports/frontend.env`. Raadpleeg altijd het bestand dat hoort bij de release die je deployt.
+De NL Portal images (`ghcr.io/nl-portal/nl-portal-backend` en `ghcr.io/nl-portal/nl-portal-frontend`) worden volledig geconfigureerd via environment variabelen. De complete, versie-specifieke referentie met inline documentatie vind je in de monorepo, in de bestanden `docker-compose/imports/backend.env` en `docker-compose/imports/frontend.env`. Raadpleeg altijd het bestand dat hoort bij de release die je deployt.
 
 De backend variabelen volgen de Spring Boot relaxed binding naamconventie: de property `nl-portal.config.zakenapi.properties.url` wordt de environment variabele `NLPORTAL_CONFIG_ZAKENAPI_PROPERTIES_URL`.
 
@@ -22,7 +22,7 @@ helm repo update
 
 ### Backend: module-configuratie
 
-De functionele modules van de backend (onder andere Zaken API, Catalogi API, Documenten APIs, Objecten API, OpenKlant 2, HaalCentraal, Berichten, Taak, Prefill, DMN, OpenProduct, betalingen en virusscan) worden per module aangezet met een enable-vlag. Alle modules staan standaard uit.
+De functionele modules van de backend (onder andere Zaken API, Catalogi API, Documenten APIs, Objecten API, OpenKlant 2, HaalCentraal BRP (`haalcentraal2`) en Handelsregister (`haalcentraal_hr`), Berichten, Taak, Prefill, DMN, OpenProduct, betalingen en virusscan) worden per module aangezet met een enable-vlag. Alle modules staan standaard uit.
 
 Elke module heeft daarnaast eigen properties die met hetzelfde patroon worden gezet: `NLPORTAL_CONFIG_<MODULE>_PROPERTIES_<PROPERTY>`. Bijvoorbeeld voor de Zaken API:
 
@@ -35,6 +35,23 @@ NLPORTAL_CONFIG_ZAKENAPI_PROPERTIES_SECRET=<secret>
 
 **Let op:** de zaken-functionaliteit vereist dat de Zaken API, Catalogi API én Objecten API modules alle drie enabled zijn.
 
-Alle module properties, inclusief de optionele, zijn met inline documentatie te vinden in `imports/backend.env` in de NL Portal App repository.
+Alle module properties, inclusief de optionele, zijn met inline documentatie te vinden in `docker-compose/imports/backend.env` in de monorepo.
+
+### Frontend features
+
+De frontend haalt zijn feature-toggles en -eigenschappen op via `GET /api/public/features`, gevuld vanuit `nl-portal.config.features` op de backend. Deze volgen dezelfde relaxed-binding naamconventie, bijvoorbeeld `NLPORTAL_CONFIG_FEATURES_TOGGLES_OVERVIEWMAINTENANCEALERTENABLED=true`.
+
+* `nl-portal.config.features.toggles.*` — booleans, zoals `messageCountEnabled`, `casesPartialSearchEnabled`, `openProductEnabled`, `legacyPaymentEnabled`, `themeApiEnabled`, `casesResultExplanationEnabled`, `myInhabitantCountEnabled`, `casesContactMomentsEnabled`, `overviewIntroEnabled`, `overviewMaintenanceAlertEnabled`.
+* `nl-portal.config.features.properties.*` — waarden, zoals `messageCountPollingInterval`, `overviewCurrentCasesPreviewLength`, `themeClass`, de `overviewMaintenanceAlert{Title,Text}{Nl,En}` teksten en de BRP/adres-URL's.
+
+De onderhoudsmelding op de overzichtspagina zet je bijvoorbeeld aan met:
+
+```shell
+NLPORTAL_CONFIG_FEATURES_TOGGLES_OVERVIEWMAINTENANCEALERTENABLED=true
+NLPORTAL_CONFIG_FEATURES_PROPERTIES_OVERVIEWMAINTENANCEALERTTITLENL=Onderhoud
+NLPORTAL_CONFIG_FEATURES_PROPERTIES_OVERVIEWMAINTENANCEALERTTEXTNL=Deze omgeving is tijdelijk in onderhoud.
+```
+
+Zie [Eigen vormgeving](eigen-vormgeving.md) voor `themeClass` en theming.
 
 Zie de [Keycloak configuratie](keycloak.md) pagina voor het instellen van de bijbehorende clients in Keycloak.

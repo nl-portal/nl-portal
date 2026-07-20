@@ -77,10 +77,16 @@ no credentials are needed. Each build publishes a unique version, so there is no
 
 ## Configuration
 
-The app reads its runtime configuration from `window.*` globals, set by
-`packages/app/public/config.js` (local development defaults) and, in a container,
-`config.template.js` (populated from environment variables at startup). These values flow into the
-UI through the `user-interface` app context.
+Runtime configuration comes from two places:
+
+- **Feature toggles and properties** are served by the backend at `GET /api/public/features` (from
+  `nl-portal.config.features.*`) and read by the `user-interface` app context. `window.*` no longer
+  carries feature config.
+- **OIDC and API URLs** are the only `window.*` globals left, set by `packages/app/public/config.js`
+  (local dev defaults) and, in a container, `config.template.js` (populated from environment
+  variables at startup via nginx `envsubst`).
+
+See the [documentation](https://nl-portal.nl) for the feature and theming configuration.
 
 ## More information
 
