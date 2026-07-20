@@ -182,14 +182,14 @@ const CaseDetailsPage = () => {
   };
 
   React.useEffect(() => {
-    if (!caseData) return;
+    if (!caseData || !features?.toggles.casesContactMomentsEnabled) return;
     getMomenten({
       variables: {
         identificatorType: OnderwerpObjectIndentificatorType.Zaak,
         identificatorId: caseData.getZaak.uuid,
       },
     });
-  }, [caseData]);
+  }, [caseData, features]);
 
   if (caseError) {
     return (
@@ -255,19 +255,22 @@ const CaseDetailsPage = () => {
           `${restUri}/zakenapi/zaakdocument/${doc.identificatie}/content`
         }
       />
-      {contactItems.length > 0 && (
-        <section>
-          <SectionHeader
-            title={intl.formatMessage({ id: "caseDetails.contactHeader" })}
-          />
-          <ContactTimeline
-            items={contactItems}
-            collapsible={contactItems.some((item) => Boolean(item.description))}
-            labels={contactLabels}
-            locale={currentLocale}
-          />
-        </section>
-      )}
+      {features?.toggles.casesContactMomentsEnabled &&
+        contactItems.length > 0 && (
+          <section>
+            <SectionHeader
+              title={intl.formatMessage({ id: "caseDetails.contactHeader" })}
+            />
+            <ContactTimeline
+              items={contactItems}
+              collapsible={contactItems.some((item) =>
+                Boolean(item.description),
+              )}
+              labels={contactLabels}
+              locale={currentLocale}
+            />
+          </section>
+        )}
       <TasksList
         loading={loading}
         showEmpty={false}

@@ -29,6 +29,8 @@ In het realm van de NL Portal zijn drie clients nodig:
 | `nl-portal-m2m`          | confidential, service accounts, met secret | Voert de token exchange uit namens de backend.                        |
 | `nl-portal-token-exchange` | public, geen flows                       | Doelclient (audience) van de token exchange. Bevat de `aanvrager.bsn`/`aanvrager.kvk` mappers. |
 
+De redirect-URI van de `nl-portal` (frontend) client moet overeenkomen met de frontend-variabele `OIDC_REDIRECT_URI`. De SPA plaatst zijn OIDC-callback automatisch op dat pad, dus elk pad op je eigen origin werkt; registreer die redirect-URI op de client.
+
 De clients koppel je aan de backend via de volgende environment variabelen van de app image (zie ook de [Deployment guide](deployment-guide.md)):
 
 | Variabele                          | Keycloak client                          |
@@ -125,7 +127,7 @@ Voor generieke gebruikers werkt een deel van de portal functionaliteit:
 
 ## De middel claim
 
-De frontend leest de claim `middel` uit het access token van de **frontend client** en bepaalt daarmee welke features actief zijn. De standaard app image is geconfigureerd met de volgende authenticatiemethoden (aanpasbaar in een fork, zie `frontend/src/App.tsx` in de NL Portal App repository):
+De frontend leest de claim `middel` uit het access token van de **frontend client** en bepaalt daarmee welke features actief zijn. De standaard app image is geconfigureerd met de volgende authenticatiemethoden (aanpasbaar in `frontend/packages/app/src/App.tsx` in de monorepo):
 
 | Categorie | Waarden van `middel`           | Gedrag                                                |
 | --------- | ------------------------------ | ----------------------------------------------------- |
@@ -146,11 +148,11 @@ De attributen `bsn` en `authenticationMethod` zijn **user attributes op de Keycl
 
 ## Referentieconfiguratie
 
-De docker-compose demo-omgeving in de NL Portal App repository bevat een volledig werkend voorbeeld van alle bovenstaande configuratie. Gebruik deze als referentie bij het inrichten van een eigen Keycloak:
+De docker-compose demo-omgeving in de monorepo bevat een volledig werkend voorbeeld van alle bovenstaande configuratie. Gebruik deze als referentie bij het inrichten van een eigen Keycloak:
 
-* `docker-compose.yaml` — de Keycloak service met de juiste `KC_FEATURES` waarde.
-* `imports/keycloak/nlportal-realm.json` — een volledig realm met de drie clients, de token exchange permission, de protocol mappers voor `aanvrager.bsn`, `aanvrager.kvk` en `middel`, en testgebruikers (`burger` met BSN attribuut en `authenticationMethod` `digid`, `bedrijf` met KVK attribuut en `authenticationMethod` `eherkenning`).
+* `docker-compose/docker-compose.yaml` — de Keycloak service met de juiste `KC_FEATURES` waarde.
+* `docker-compose/imports/keycloak/nlportal-realm.json` — een volledig realm met de drie clients, de token exchange permission, de protocol mappers voor `aanvrager.bsn`, `aanvrager.kvk` en `middel`, en testgebruikers (`burger` met BSN attribuut en `authenticationMethod` `digid`, `bedrijf` met KVK attribuut en `authenticationMethod` `eherkenning`).
 
 ## Overige flows
 
-Naast de burger flow en de generieke gebruikersflow ondersteunt de NL Portal ook bedrijven (KVK / eHerkenning) en machtigingsflows (`machtigen`, `bewindvoering`). Deze flows zijn niet in deze documentatie uitgewerkt. Raadpleeg hiervoor de broncode (de module `zgw/common-ground-authentication` in de Backend Libraries repository en de frontend van de NL Portal App repository) of neem contact op via [Community en support](../support-en-resources/community-en-support.md).
+Naast de burger flow en de generieke gebruikersflow ondersteunt de NL Portal ook bedrijven (KVK / eHerkenning) en machtigingsflows (`machtigen`, `bewindvoering`). Deze flows zijn niet in deze documentatie uitgewerkt. Raadpleeg hiervoor de broncode (de `common-ground-authentication`-module onder `backend/` en de frontend-app onder `frontend/packages/app` in de monorepo) of neem contact op via [Community en support](../support-en-resources/community-en-support.md).

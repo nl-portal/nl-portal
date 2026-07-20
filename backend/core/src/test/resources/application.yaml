@@ -21,6 +21,7 @@ nl-portal:
         overview-maintenance-alert-text-nl: waarschuwings tekst
         overview-maintenance-alert-title-en: alert title
         overview-maintenance-alert-title-nl: waarschuwings onderwerp
+        overview-current-cases-preview-length: 4
         custom: '{
     "pwikProSiteId": "f25a2e8a-bae1-423c-8478-fee59040da63",
     "pwikProAccountAddress": "http://pwikpro.com",

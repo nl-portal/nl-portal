@@ -23,6 +23,12 @@ Hiermee wordt de kleur van de header bar ingesteld op #03801f.
 
 Zie de [Configuration Panel](configuration-panel.md) pagina voor het opzetten van het Configuration Panel.
 
+## Een thema activeren met een theme class
+
+Een NL Design System-thema wordt geactiveerd met een class op het root-element. Zet de feature-eigenschap `nl-portal.config.features.properties.theme-class` (env: `NLPORTAL_CONFIG_FEATURES_PROPERTIES_THEMECLASS`) op de naam van je thema, bijvoorbeeld `denhaag-theme`. De frontend plaatst die class op het `<html>`-element, conform de [NL Design System-richtlijn](https://nldesignsystem.nl/handboek/developer/thema-maken/) dat de theme class op `<html>` (of `<body>`) hoort, zodat de token-overrides in het hele document doorwerken.
+
+Dit staat los van de CSS-editor hierboven: die injecteert je token-overrides rechtstreeks. Schrijf die overrides op `:root` als je geen benoemd thema gebruikt; `theme-class` is alleen nodig wanneer je CSS onder een thema-class is gescoped.
+
 ## Design tokens vinden
 
 De makkelijkste manier om te achterhalen met welk design token je een bepaald component kunt instellen is door in de [developer toolbar](https://developer.chrome.com/docs/devtools/overview) met de inspector te kijken.
@@ -33,8 +39,8 @@ In het voorbeeld hierboven is een knop geselecteerd. In het omcirkelde deel is z
 
 ## Geavanceerd: eigen vormgeving via code
 
-Als je de vormgeving wilt beheren in versiebeheer of meer controle nodig hebt, kun je de design tokens ook aanpassen in een fork van de [NL Portal App](https://github.com/nl-portal/nl-portal-app) repository.
+Als je de vormgeving wilt beheren in versiebeheer of meer controle nodig hebt, kun je de design tokens ook aanpassen in een fork van de [NL Portal monorepo](https://github.com/nl-portal/nl-portal).
 
-Ga naar het bestand `frontend/src/styles/nl-portal-design-tokens.css` en voeg je eigen designtokens toe die de standaard waardes overschrijven. Bouw vervolgens je eigen images met `docker compose --profile local up -d --build`.
+Ga naar het bestand `frontend/packages/app/src/styles/nl-portal-design-tokens.css` en voeg je eigen designtokens toe die de standaard waardes overschrijven. Bouw vervolgens je eigen images met `RUN_MODE=local docker compose --profile zgw --profile haalcentraal up -d --build`.
 
 Zie [Opzetten NL Portal](opzetten-nl-portal.md) voor meer informatie over het forken en bouwen van eigen images.

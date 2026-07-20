@@ -2,7 +2,7 @@
 
 Overzicht van welke NL Portal modules geconfigureerd moeten zijn per feature.
 
-> **Let op:** Dit overzicht is gebaseerd op de laatst beschikbare major/minor release en geldt voor de standaard nl-portal-app configuratie. Eigen implementaties kunnen andere frontend-vereisten hebben, maar backend module-afhankelijkheden (zoals taak → objectenapi) blijven van toepassing.
+> **Let op:** Dit overzicht is gebaseerd op de laatst beschikbare major/minor release en geldt voor de standaard NL Portal app-configuratie. Eigen implementaties kunnen andere frontend-vereisten hebben, maar backend module-afhankelijkheden (zoals taak → objectenapi) blijven van toepassing.
 
 ## Afhankelijkheidsgrafiek
 

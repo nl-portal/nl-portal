@@ -40,10 +40,10 @@ Zie [Eigen vormgeving](eigen-vormgeving.md) voor meer informatie over design tok
 
 ## Uitproberen via de demo-omgeving
 
-De eenvoudigste manier om het Configuration Panel te gebruiken is via de [NL Portal App](https://github.com/nl-portal/nl-portal-app) demo-omgeving. Start het `config` profiel mee:
+De eenvoudigste manier om het Configuration Panel te gebruiken is via de docker-compose demo-omgeving in de monorepo. Start het `config` profiel mee:
 
 ```shell
-docker compose --profile remote --profile zgw --profile haalcentraal --profile config up -d
+RUN_MODE=remote docker compose --profile zgw --profile haalcentraal --profile config up -d
 ```
 
 Het Configuration Panel is daarna bereikbaar op `http://localhost:3001` met gebruikersnaam **admin** en wachtwoord **admin**.
