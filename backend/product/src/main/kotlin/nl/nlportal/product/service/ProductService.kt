@@ -30,8 +30,8 @@ import nl.nlportal.product.domain.ProductRol
 import nl.nlportal.product.domain.ProductType
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.graphql.ProductPage
-import nl.nlportal.zakenapi.client.ZakenApiClient
-import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zaken.client.ZakenClient
+import nl.nlportal.zaken.domain.Zaak
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -49,7 +49,7 @@ class ProductService(
     val productConfigProperties: ProductConfigProperties,
     val objectsApiTaskConfig: TaakConfigProperties,
     val objectsApiClient: ObjectsApiClient,
-    val zakenApiClient: ZakenApiClient,
+    val zakenClient: ZakenClient,
     val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getProduct(
@@ -160,7 +160,7 @@ class ProductService(
 
         val zaakTypes = productType.zaaktypen
         val request =
-            zakenApiClient
+            zakenClient
                 .zoeken()
                 .search()
                 .page(pageNumber)
@@ -405,7 +405,7 @@ class ProductService(
             ordering = "-record__startAt",
         )
 
-    suspend fun getZaak(zaakUUID: UUID): Zaak = zakenApiClient.zaken().get(zaakUUID).retrieve()
+    suspend fun getZaak(zaakUUID: UUID): Zaak = zakenClient.zaken().get(zaakUUID).retrieve()
 
     private fun isAuthorized(
         authentication: CommonGroundAuthentication,

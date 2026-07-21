@@ -21,24 +21,24 @@ import kotlinx.coroutines.test.runTest
 import nl.nlportal.besluiten.service.BesluitenService
 import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.zakenapi.service.ZakenApiService
+import nl.nlportal.zaken.service.ZakenService
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
 internal class ZaakQueryTest {
-    var zakenApiService: ZakenApiService = mock()
+    var zakenService: ZakenService = mock()
     var besluitenService: BesluitenService = mock()
     var catalogiApiService: CatalogiApiService = mock()
     var authentication: CommonGroundAuthentication = mock()
-    var zaakQuery = ZaakQuery(zakenApiService, besluitenService, catalogiApiService)
+    var zaakQuery = ZaakQuery(zakenService, besluitenService, catalogiApiService)
 
     @Test
     fun getZaken() =
         runTest {
             zaakQuery.getZaken(authentication, 3)
-            verify(zakenApiService).getZaken(
+            verify(zakenService).getZaken(
                 page = 3,
                 authentication = authentication,
             )
@@ -48,7 +48,7 @@ internal class ZaakQueryTest {
     fun `getZaken no page`() =
         runTest {
             zaakQuery.getZaken(authentication)
-            verify(zakenApiService).getZaken(
+            verify(zakenService).getZaken(
                 page = 1,
                 authentication = authentication,
             )
@@ -60,6 +60,6 @@ internal class ZaakQueryTest {
             val zaakId = UUID.randomUUID()
 
             zaakQuery.getZaak(zaakId, authentication)
-            verify(zakenApiService).getZaak(zaakId, authentication)
+            verify(zakenService).getZaak(zaakId, authentication)
         }
 }

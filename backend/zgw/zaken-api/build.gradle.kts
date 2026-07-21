@@ -22,14 +22,8 @@ val isLib = true
 
 dependencies {
 
-    api(project(":core"))
     api(project(":graphql"))
-    api(project(":zgw:catalogi-api"))
-    api(project(":zgw:common-ground-authentication"))
-    api(project(":zgw:documenten-api"))
-    api(project(":zgw:idtoken-authentication"))
-    api(project(":zgw:objectenapi"))
-    api(project(":zgw:besluiten"))
+    api(project(":zgw:zaken"))
 
     implementation(Dependencies.springBootStarter)
     implementation(Dependencies.kotlinCoroutines)

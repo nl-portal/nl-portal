@@ -22,7 +22,7 @@ import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
-import nl.nlportal.zakenapi.client.ZakenApiConfig
+import nl.nlportal.zaken.client.ZakenConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -50,7 +50,7 @@ class OpenProductThemaQueryIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
-    @Autowired private val zakenApiConfig: ZakenApiConfig,
+    @Autowired private val zakenConfig: ZakenConfig,
 ) {
     companion object {
         @JvmStatic
@@ -64,7 +64,7 @@ class OpenProductThemaQueryIT(
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.openproduct.properties.product-type-api-url") { url }
             propsRegistry.add("nl-portal.config.openproduct.properties.product-api-url") { url }
-            propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
+            propsRegistry.add("nl-portal.config.zaken.properties.url") { url }
             propsRegistry.add("nl-portal.config.objectenapi.properties.url") { url }
         }
 
@@ -90,7 +90,7 @@ class OpenProductThemaQueryIT(
         openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
         openProductModuleConfiguration.properties.productApiUrl = URI(url)
         objectsApiClientConfig.properties.url = URI(url)
-        zakenApiConfig.properties.url = url
+        zakenConfig.properties.url = url
     }
 
     @Test

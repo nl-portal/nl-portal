@@ -25,8 +25,7 @@ import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.security.config.ProductDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
-import nl.nlportal.zakenapi.client.ZakenApiClient
-import nl.nlportal.zakenapi.security.config.ZaakDocumentResourceHttpSecurityConfigurer
+import nl.nlportal.zaken.client.ZakenClient
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,7 +41,7 @@ import org.springframework.web.reactive.function.client.WebClient
     OpenProductModuleConfiguration::class,
     TaakConfig::class,
 )
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openproduct.enabled", "objectenapi.enabled", "taak.enabled", "zakenapi.enabled", "documentenapis.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openproduct.enabled", "objectenapi.enabled", "taak.enabled", "zaken.enabled", "documentenapis.enabled"], havingValue = "true")
 class OpenProductAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenProductClient::class)
@@ -63,7 +62,7 @@ class OpenProductAutoConfiguration {
     fun openProductService(
         openProductClient: OpenProductClient,
         openProductTypeClient: OpenProductTypeClient,
-        zakenApiClient: ZakenApiClient,
+        zakenClient: ZakenClient,
         objectsApiClient: ObjectsApiClient,
         taakObjectConfig: TaakConfig,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
@@ -73,7 +72,7 @@ class OpenProductAutoConfiguration {
             openProductClient = openProductClient,
             openProductTypeClient = openProductTypeClient,
             objectsApiTaskConfigProperties = taakObjectConfig.properties,
-            zakenApiClient = zakenApiClient,
+            zakenClient = zakenClient,
             objectsApiClient = objectsApiClient,
             authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
             documentenApiService = documentenApiService,

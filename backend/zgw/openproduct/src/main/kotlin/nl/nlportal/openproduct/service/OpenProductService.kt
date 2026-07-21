@@ -67,8 +67,8 @@ import nl.nlportal.openproduct.client.path.Producten
 import nl.nlportal.openproduct.client.path.Schemas
 import nl.nlportal.openproduct.client.path.Themas
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
-import nl.nlportal.zakenapi.client.ZakenApiClient
-import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zaken.client.ZakenClient
+import nl.nlportal.zaken.domain.Zaak
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -87,7 +87,7 @@ class OpenProductService(
     private val openProductTypeClient: OpenProductTypeClient,
     private val objectsApiTaskConfigProperties: TaakConfigProperties,
     private val objectsApiClient: ObjectsApiClient,
-    private val zakenApiClient: ZakenApiClient,
+    private val zakenClient: ZakenClient,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     private val documentenApiService: DocumentenApiService,
 ) {
@@ -977,7 +977,7 @@ class OpenProductService(
 
         // 3. get Zaken with filters
         val request =
-            zakenApiClient
+            zakenClient
                 .zoeken()
                 .search()
                 .page(1)
@@ -1074,7 +1074,7 @@ class OpenProductService(
         val zaakList = mutableListOf<Zaak>()
         zaken.forEach {
             try {
-                zaakList.add(zakenApiClient.zaken().get(CoreUtils.extractId(it.url!!)).retrieve())
+                zaakList.add(zakenClient.zaken().get(CoreUtils.extractId(it.url!!)).retrieve())
             } catch (e: Exception) {
                 logger.error(e) { "Error while fetching product zaken: " + e.message }
             }

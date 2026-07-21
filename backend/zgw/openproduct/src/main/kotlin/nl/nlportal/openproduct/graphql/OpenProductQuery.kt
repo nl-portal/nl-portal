@@ -26,7 +26,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
-import nl.nlportal.zakenapi.domain.Zaak
+import nl.nlportal.zaken.domain.Zaak
 import nl.nlportal.zgw.taak.domain.TaakV2
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping

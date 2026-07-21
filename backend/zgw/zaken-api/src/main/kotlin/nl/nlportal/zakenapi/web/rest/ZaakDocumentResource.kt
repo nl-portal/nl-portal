@@ -19,7 +19,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.flow.Flow
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.util.FilenameSanitizer
-import nl.nlportal.zakenapi.service.ZakenApiService
+import nl.nlportal.zaken.service.ZakenService
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -34,7 +34,7 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping(value = ["/api"])
 class ZaakDocumentResource(
-    private val zakenApiService: ZakenApiService,
+    private val zakenService: ZakenService,
 ) {
     @GetMapping(value = ["/zakenapi/zaakdocument/{zaakDocumentId}/content"])
     suspend fun getContentStreaming(
@@ -42,7 +42,7 @@ class ZaakDocumentResource(
         authentication: CommonGroundAuthentication,
     ): ResponseEntity<Flow<DataBuffer>> {
         val (document, content) =
-            zakenApiService
+            zakenService
                 .getZaakDocumentContent(
                     zaakDocumentId = zaakDocumentId,
                     commonGroundAuthentication = authentication,

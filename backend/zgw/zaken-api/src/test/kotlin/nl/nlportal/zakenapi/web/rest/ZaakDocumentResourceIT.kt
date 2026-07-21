@@ -3,7 +3,7 @@ package nl.nlportal.zakenapi.web.rest
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.zakenapi.TestHelper
-import nl.nlportal.zakenapi.client.ZakenApiConfig
+import nl.nlportal.zaken.client.ZakenConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterAll
@@ -21,7 +21,7 @@ import kotlin.test.assertEquals
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ZaakDocumentResourceIT(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val zakenApiConfig: ZakenApiConfig,
+    @Autowired private val zakenConfig: ZakenConfig,
 ) {
     lateinit var mockZakenApi: MockWebServer
 
@@ -29,7 +29,7 @@ class ZaakDocumentResourceIT(
     fun setUp() {
         mockZakenApi = MockWebServer()
         mockZakenApi.start(8001)
-        zakenApiConfig.properties.url = mockZakenApi.url("/").toString()
+        zakenConfig.properties.url = mockZakenApi.url("/").toString()
     }
 
     @AfterAll

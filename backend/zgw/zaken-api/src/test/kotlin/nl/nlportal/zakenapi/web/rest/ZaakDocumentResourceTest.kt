@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.runBlocking
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.zakenapi.service.ZakenApiService
+import nl.nlportal.zaken.service.ZakenService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -28,9 +28,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 
 class ZaakDocumentResourceTest {
-    private val zakenApiService: ZakenApiService = mock()
+    private val zakenService: ZakenService = mock()
     private val authentication: CommonGroundAuthentication = mock()
-    private val resource = ZaakDocumentResource(zakenApiService)
+    private val resource = ZaakDocumentResource(zakenService)
 
     @Test
     fun `Content-Disposition header is safely encoded when filename contains CRLF`() {
@@ -47,7 +47,7 @@ class ZaakDocumentResourceTest {
                 vertrouwelijkheidaanduiding = null,
             )
         runBlocking {
-            whenever(zakenApiService.getZaakDocumentContent("id", authentication))
+            whenever(zakenService.getZaakDocumentContent("id", authentication))
                 .thenReturn(document to emptyFlow())
         }
 

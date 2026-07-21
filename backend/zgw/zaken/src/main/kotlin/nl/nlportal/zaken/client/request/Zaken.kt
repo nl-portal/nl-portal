@@ -1,0 +1,30 @@
+package nl.nlportal.zaken.client.request
+
+import nl.nlportal.zaken.domain.Zaak
+import java.util.UUID
+
+interface Zaken {
+    fun search(): SearchZaken
+
+    fun get(id: UUID): GetZaak
+}
+
+interface SearchZaken : PagedRetrieve<SearchZaken, Zaak>, AuthenticationFilter<SearchZaken> {
+    fun ofZaakType(zaakType: String): SearchZaken
+
+    fun ofZaakTypes(zaakTypeIds: List<UUID>): SearchZaken
+
+    fun notInZaakTypes(zaakTypeIds: List<UUID>): SearchZaken
+
+    fun isOpen(open: Boolean): SearchZaken
+
+    fun ofIdentificatie(identificatie: String): SearchZaken
+
+    fun withRolOmschrijvingGeneriek(): SearchZaken
+
+    fun ofOmschrijving(omschrijving: String): SearchZaken
+
+    fun ofIdenfitifactieContains(identificatie: String): SearchZaken
+}
+
+interface GetZaak : Retrieve<Zaak>

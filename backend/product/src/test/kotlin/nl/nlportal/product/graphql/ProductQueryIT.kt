@@ -15,33 +15,30 @@
  */
 package nl.nlportal.product.graphql
 
-import tools.jackson.databind.JsonNode
-import io.github.oshai.kotlinlogging.KLogger
-import io.github.oshai.kotlinlogging.KotlinLogging
+import java.net.URI
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.product.TestHelper
-import nl.nlportal.zakenapi.client.ZakenApiConfig
+import nl.nlportal.zaken.client.ZakenConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
+import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import java.net.URI
-import nl.nlportal.core.util.Mapper
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.graphql.test.tester.HttpGraphQlTester
+import tools.jackson.databind.JsonNode
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
@@ -50,7 +47,7 @@ import org.springframework.graphql.test.tester.HttpGraphQlTester
 internal class ProductQueryIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
-    @Autowired private val zakenApiConfig: ZakenApiConfig,
+    @Autowired private val zakenConfig: ZakenConfig,
     @Autowired private val graphqlGetProduct: String,
     @Autowired private val graphqlGetProducten: String,
     @Autowired private val graphqlGetProductZaken: String,
@@ -74,7 +71,7 @@ internal class ProductQueryIT(
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
-            propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
+            propsRegistry.add("nl-portal.config.zaken.properties.url") { url }
             propsRegistry.add("nl-portal.config.dmn.properties.url") { url }
         }
 
@@ -98,7 +95,7 @@ internal class ProductQueryIT(
         setupMockServer()
         url = server?.url("/").toString()
         objectsApiClientConfig.properties.url = URI(url)
-        zakenApiConfig.properties.url = url
+        zakenConfig.properties.url = url
     }
 
     @Test

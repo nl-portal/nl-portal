@@ -17,25 +17,21 @@ package nl.nlportal.zakenapi.graphql
 
 import java.util.UUID
 import nl.nlportal.besluiten.domain.Besluit
-import nl.nlportal.besluiten.domain.BesluitAuditTrail
-import nl.nlportal.besluiten.domain.BesluitDocument
 import nl.nlportal.besluiten.service.BesluitenService
-import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.domain.ResultaatType
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.zakenapi.domain.Zaak
-import nl.nlportal.zakenapi.domain.ZaakDetails
-import nl.nlportal.zakenapi.domain.ZaakResultaat
-import nl.nlportal.zakenapi.domain.ZaakStatus
-import nl.nlportal.zakenapi.domain.ZaakSubStatus
-import nl.nlportal.zakenapi.service.ZakenApiService
-import org.springframework.beans.factory.annotation.Autowired
+import nl.nlportal.zaken.domain.Zaak
+import nl.nlportal.zaken.domain.ZaakDetails
+import nl.nlportal.zaken.domain.ZaakPage
+import nl.nlportal.zaken.domain.ZaakResultaat
+import nl.nlportal.zaken.domain.ZaakStatus
+import nl.nlportal.zaken.domain.ZaakSubStatus
+import nl.nlportal.zaken.service.ZakenService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.method.annotation.SchemaMapping
@@ -43,7 +39,7 @@ import org.springframework.stereotype.Controller
 
 @Controller
 open class ZaakQuery(
-    val zakenApiService: ZakenApiService,
+    val zakenService: ZakenService,
     val besluitenService: BesluitenService,
     val catalogiApiService: CatalogiApiService,
 ) {
@@ -58,7 +54,7 @@ open class ZaakQuery(
         @Argument omschrijving: String? = null,
         @Argument identificatieContains: String? = null,
     ): ZaakPage {
-        return zakenApiService.getZaken(
+        return zakenService.getZaken(
             page = page ?: 1,
             pageSize = pageSize,
             authentication = authentication,
@@ -75,7 +71,7 @@ open class ZaakQuery(
         @Argument id: UUID,
         authentication: CommonGroundAuthentication,
     ): Zaak {
-        return zakenApiService.getZaak(
+        return zakenService.getZaak(
             id = id,
             authentication = authentication
         )
@@ -85,21 +81,21 @@ open class ZaakQuery(
     suspend fun status(
         zaak: Zaak,
     ): ZaakStatus? {
-        return zaak.status?.let { zakenApiService.getZaakStatus(it) }
+        return zaak.status?.let { zakenService.getZaakStatus(it) }
     }
 
     @SchemaMapping(typeName = "Zaak", field = "statusGeschiedenis")
     suspend fun statusGeschiedenis(
         zaak: Zaak,
     ): List<ZaakStatus> {
-        return zakenApiService.getZaakStatusHistory(zaak.uuid)
+        return zakenService.getZaakStatusHistory(zaak.uuid)
     }
 
     @SchemaMapping(typeName = "Zaak", field = "documenten")
     suspend fun documenten(
         zaak: Zaak,
     ): List<Document> {
-        return zakenApiService.getDocumenten(zaak.url)
+        return zakenService.getDocumenten(zaak.url)
     }
 
     @SchemaMapping(typeName = "Zaak", field = "statussen")
@@ -120,7 +116,7 @@ open class ZaakQuery(
     suspend fun zaakdetails(
         zaak: Zaak,
     ): ZaakDetails {
-        return zakenApiService.getZaakDetails(zaak.url)
+        return zakenService.getZaakDetails(zaak.url)
     }
 
     @SchemaMapping(typeName = "Zaak", field = "besluiten")
@@ -137,7 +133,7 @@ open class ZaakQuery(
         zaak: Zaak,
     ): ZaakResultaat? {
         return zaak.resultaat?.let {
-            zakenApiService.getZaakResultaat(it)
+            zakenService.getZaakResultaat(it)
         }
     }
 
@@ -161,7 +157,7 @@ open class ZaakQuery(
     suspend fun substatussen(
         zaakStatus: ZaakStatus
     ): List<ZaakSubStatus> {
-        return zakenApiService.getZaakSubStatussen(
+        return zakenService.getZaakSubStatussen(
             zaakUrl = zaakStatus.zaak,
             statusUrl = zaakStatus.url
         )

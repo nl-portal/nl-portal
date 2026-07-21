@@ -22,7 +22,7 @@ dependencies {
     api(project(":graphql"))
     api(project(":portal-authentication"))
     api(project(":zgw:common-ground-authentication"))
-    api(project(":zgw:zaken-api"))
+    api(project(":zgw:zaken"))
     api(project(":zgw:taak"))
     api(project(":zgw:documenten-api"))
 

@@ -1,0 +1,147 @@
+/*
+ * Copyright 2015-2023 Ritense BV, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package nl.nlportal.zaken.client
+
+import io.netty.handler.logging.LogLevel
+import nl.nlportal.catalogiapi.client.CatalogiApiConfig.CatalogiApiConfigProperties
+import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
+import nl.nlportal.zaken.client.request.ZaakInformatieobjecten
+import nl.nlportal.zaken.client.request.ZaakObjecten
+import nl.nlportal.zaken.client.request.ZaakObjectenImpl
+import nl.nlportal.zaken.client.request.ZaakResultaten
+import nl.nlportal.zaken.client.request.ZaakResultatenImpl
+import nl.nlportal.zaken.client.request.ZaakRollen
+import nl.nlportal.zaken.client.request.ZaakRollenImpl
+import nl.nlportal.zaken.client.request.ZaakStatussen
+import nl.nlportal.zaken.client.request.ZaakStatussenImpl
+import nl.nlportal.zaken.client.request.ZaakSubStatussen
+import nl.nlportal.zaken.client.request.ZaakSubStatussenImpl
+import nl.nlportal.zaken.client.request.Zaken
+import nl.nlportal.zaken.client.request.ZakenImpl
+import nl.nlportal.zaken.client.request.ZakenInformatieobjectenImpl
+import nl.nlportal.zaken.client.request.ZoekenImpl
+import org.springframework.http.HttpStatus
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
+import org.springframework.web.reactive.function.client.ClientRequest
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.server.ResponseStatusException
+import reactor.core.publisher.Mono
+import reactor.netty.http.client.HttpClient
+import reactor.netty.transport.logging.AdvancedByteBufFormat
+import java.util.UUID
+import nl.nlportal.zaken.client.ZakenConfig.ZakenConfigProperties
+
+class ZakenClient(
+    private val zakenConfig: ZakenConfigProperties,
+    private val catalogiApiConfig: CatalogiApiConfigProperties,
+    webClientBuilder: WebClient.Builder,
+) {
+    val webClient: WebClient
+
+    init {
+        this.webClient =
+            webClientBuilder
+                .clone()
+                .baseUrl(zakenConfig.url)
+                .clientConnector(
+                    ReactorClientHttpConnector(
+                        HttpClient.create().wiretap(
+                            "reactor.netty.http.client.HttpClient",
+                            LogLevel.TRACE, AdvancedByteBufFormat.TEXTUAL,
+                        ),
+                    ),
+                )
+                .filter(
+                    ExchangeFilterFunction.ofRequestProcessor {
+                        Mono.just(
+                            ClientRequest.from(it).header("Authorization", "Bearer ${getToken()}").build(),
+                        )
+                    },
+                )
+                .defaultHeader("Accept-Crs", "EPSG:4326")
+                .defaultHeader("Content-Crs", "EPSG:4326")
+                .build()
+    }
+
+    private fun getToken(): String {
+        return IdTokenGenerator().generateToken(
+            zakenConfig.secret,
+            zakenConfig.clientId,
+        )
+    }
+
+    fun getZaakUrl(zaakId: Any): String {
+        return "${zakenConfig.url}/zaken/api/v1/zaken/$zaakId"
+    }
+
+    fun getZaakTypeUrl(zaakTypeId: UUID): String {
+        return "${catalogiApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId"
+    }
+
+    fun zaken(): Zaken {
+        return ZakenImpl(this)
+    }
+
+    fun zoeken(): Zaken {
+        return ZoekenImpl(this)
+    }
+
+    fun zaakRollen(): ZaakRollen {
+        return ZaakRollenImpl(this)
+    }
+
+    fun zaakObjecten(): ZaakObjecten {
+        return ZaakObjectenImpl(this)
+    }
+
+    fun zaakInformatieobjecten(): ZaakInformatieobjecten {
+        return ZakenInformatieobjectenImpl(this)
+    }
+
+    fun zaakStatussen(): ZaakStatussen {
+        return ZaakStatussenImpl(this)
+    }
+
+    fun zaakResultaten(): ZaakResultaten {
+        return ZaakResultatenImpl(this)
+    }
+
+    fun zaakSubStatussen(): ZaakSubStatussen {
+        return ZaakSubStatussenImpl(this)
+    }
+
+    fun useNnpKvkQueryIdentificators(): Boolean {
+        return zakenConfig.useNnpKvkQueryIdentificators
+    }
+}
+
+fun WebClient.ResponseSpec.handleStatus() =
+    this
+        .onStatus(
+            { httpStatus -> HttpStatus.NOT_FOUND == httpStatus },
+            { throw ResponseStatusException(HttpStatus.NOT_FOUND) },
+        )
+        .onStatus(
+            { httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus },
+            { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) },
+        )
+        .onStatus(
+            { httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus },
+            {
+                throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
+            },
+        )

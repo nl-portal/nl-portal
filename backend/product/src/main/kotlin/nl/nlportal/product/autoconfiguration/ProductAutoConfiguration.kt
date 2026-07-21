@@ -26,7 +26,7 @@ import nl.nlportal.product.graphql.ProductQuery
 import nl.nlportal.product.service.DmnService
 import nl.nlportal.product.service.PrefillService
 import nl.nlportal.product.service.ProductService
-import nl.nlportal.zakenapi.client.ZakenApiClient
+import nl.nlportal.zaken.client.ZakenClient
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -56,13 +56,13 @@ class ProductAutoConfiguration {
     @Bean
     @ConditionalOnProperty(
         prefix = "nl-portal.config",
-        name = ["product.enabled", "objectenapi.enabled", "zakenapi.enabled"],
+        name = ["product.enabled", "objectenapi.enabled", "zaken.enabled"],
         havingValue = "true",
     )
     fun productService(
         productConfig: ProductConfig,
         objectsApiClient: ObjectsApiClient,
-        zakenApiClient: ZakenApiClient,
+        zakenClient: ZakenClient,
         taakObjectConfig: TaakConfig,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     ): ProductService =
@@ -70,7 +70,7 @@ class ProductAutoConfiguration {
             productConfig.properties,
             taakObjectConfig.properties,
             objectsApiClient,
-            zakenApiClient,
+            zakenClient,
             authenticationMachtigingsDienstService,
         )
 
