@@ -13,10 +13,12 @@ flowchart TB
         taken["Taken"]
         berichten["Berichten"]
         account["Account"]
+        product["Product"]
     end
 
     subgraph modules["Modules"]
         zakenapi["zakenapi"]
+        zaken-mod["zaken"]
         catalogiapi["catalogiapi"]
         documentenapis["documentenapis"]
         objectenapi["objectenapi"]
@@ -24,13 +26,16 @@ flowchart TB
         berichtenmod["berichten"]
         openklant2["openklant2"]
         haalcentraal2["haalcentraal2"]
+        openproduct["openproduct"]
+        besluiten["besluiten"]
     end
 
-    zaken --> zakenapi
+    zaken --> zakenapi --> zaken-mod
     zaken --> catalogiapi
-    zaken --> documentenapis
+    zaken --> zakenapi --> zaken-mod --> documentenapis
     zaken --> objectenapi
     zaken --> taak
+    zaken --> besluiten
     zaken -.->|"showContactTimeline"| openklant2
     
     taken --> objectenapi
@@ -40,6 +45,10 @@ flowchart TB
     berichten --> objectenapi
     berichten --> berichtenmod
     berichten --> documentenapis
+    
+    product --> openproduct --> zaken-mod
+    product --> openproduct --> taak
+    product --> openproduct --> documentenapis
     
     account --> haalcentraal2
     account --> openklant2
