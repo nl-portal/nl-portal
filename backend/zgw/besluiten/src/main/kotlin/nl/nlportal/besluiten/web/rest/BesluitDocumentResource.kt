@@ -44,6 +44,7 @@ class BesluitDocumentResource(
     ): ResponseEntity<Flow<DataBuffer>> {
         val (document, content) =
             besluitenService.getBesluitDocumentContent(
+                authentication = authentication,
                 besluitId = besluitId,
                 documentId = documentId
             )

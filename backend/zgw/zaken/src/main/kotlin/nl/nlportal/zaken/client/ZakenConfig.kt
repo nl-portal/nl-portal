@@ -20,7 +20,6 @@ import java.util.UUID
 
 @ConfigurationProperties(prefix = "nl-portal.config.zaken")
 class ZakenConfig {
-
     var enabled: Boolean = false
     var properties: ZakenConfigProperties = ZakenConfigProperties()
 

@@ -9,6 +9,7 @@ import nl.nlportal.besluiten.web.rest.BesluitDocumentResource
 import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.zaken.service.ZakenService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -18,7 +19,7 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
 @EnableConfigurationProperties(BesluitenApiConfig::class)
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["besluitenapi.enabled", "documentenapis.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["besluitenapi.enabled", "documentenapis.enabled", "zaken.enabled"], havingValue = "true")
 class BesluitenAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(BesluitenApiClient::class)
@@ -34,10 +35,12 @@ class BesluitenAutoConfiguration {
     fun besluitenService(
         besluitenApiClient: BesluitenApiClient,
         documentenApiService: DocumentenApiService,
+        zakenService: ZakenService
     ): BesluitenService {
         return BesluitenService(
             besluitenApiClient = besluitenApiClient,
-            documentenApiService = documentenApiService
+            documentenApiService = documentenApiService,
+            zakenService = zakenService
         )
     }
 

@@ -28,7 +28,6 @@ dependencies {
     api(project(":zgw:documenten-api"))
     api(project(":zgw:idtoken-authentication"))
     api(project(":zgw:objectenapi"))
-    api(project(":zgw:besluiten"))
 
     implementation(Dependencies.springBootStarter)
     implementation(Dependencies.kotlinCoroutines)

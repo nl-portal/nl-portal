@@ -7,9 +7,11 @@ import nl.nlportal.besluiten.domain.BesluitDocument
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.zaken.service.ZakenService
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -17,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException
 class BesluitenService(
     private val besluitenApiClient: BesluitenApiClient,
     private val documentenApiService: DocumentenApiService,
+    private val zakenService: ZakenService,
 ) {
     suspend fun getBesluiten(
         besluitType: String? = null,
@@ -60,12 +63,19 @@ class BesluitenService(
     }
 
     suspend fun getBesluitDocumentContent(
+        authentication: CommonGroundAuthentication,
         besluitId: UUID,
         documentId: UUID,
     ): Pair<Document, Flow<DataBuffer>> {
         val besluit = besluitenApiClient.getBesluit(
             besluitId = besluitId,
         )
+        //get the zaak to check if authenticated user is authorized for zaak
+        zakenService.getZaak(
+            authentication = authentication,
+            id = extractId(besluit.zaak)
+        )
+
         val besluitDocument = besluitenApiClient.getBesluitDocument(documentId)
         if(besluitDocument.besluit != besluit.url) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Besluit document is not related to besluit")

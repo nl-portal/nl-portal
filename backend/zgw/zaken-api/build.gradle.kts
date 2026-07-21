@@ -24,6 +24,7 @@ dependencies {
 
     api(project(":graphql"))
     api(project(":zgw:zaken"))
+    api(project(":zgw:besluiten"))
 
     implementation(Dependencies.springBootStarter)
     implementation(Dependencies.kotlinCoroutines)
