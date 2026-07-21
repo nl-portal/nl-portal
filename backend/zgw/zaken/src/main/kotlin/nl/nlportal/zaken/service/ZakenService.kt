@@ -26,11 +26,11 @@ import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zaken.client.ZakenClient
 import nl.nlportal.zaken.client.ZakenConfig.ZakenConfigProperties
+import nl.nlportal.zaken.domain.ResultPage
 import nl.nlportal.zaken.domain.Zaak
 import nl.nlportal.zaken.domain.ZaakDetails
 import nl.nlportal.zaken.domain.ZaakDetailsObject
 import nl.nlportal.zaken.domain.ZaakDocument
-import nl.nlportal.zaken.domain.ZaakPage
 import nl.nlportal.zaken.domain.ZaakResultaat
 import nl.nlportal.zaken.domain.ZaakRol
 import nl.nlportal.zaken.domain.ZaakStatus
@@ -58,7 +58,7 @@ class ZakenService(
         identificatie: String? = null,
         omschrijving: String? = null,
         identificatieContains: String? = null,
-    ): ZaakPage {
+    ): ResultPage<Zaak> {
         val request =
             zakenApiClient.zoeken()
                 .search()
@@ -91,10 +91,7 @@ class ZakenService(
         if(zakenApiConfigProperties.zaakTypesIdsExcluded.isNotEmpty()) {
             request.notInZaakTypes(zakenApiConfigProperties.zaakTypesIdsExcluded)
         }
-
-        return request.retrieve().let {
-            ZaakPage.fromResultPage(page, pageSize ?: 20, it)
-        }
+        return request.retrieve()
     }
 
     suspend fun getZaak(

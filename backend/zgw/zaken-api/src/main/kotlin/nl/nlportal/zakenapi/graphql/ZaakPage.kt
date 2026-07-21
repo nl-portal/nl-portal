@@ -1,6 +1,8 @@
-package nl.nlportal.zaken.domain
+package nl.nlportal.zakenapi.graphql
 
 import nl.nlportal.graphql.Page
+import nl.nlportal.zaken.domain.ResultPage
+import nl.nlportal.zaken.domain.Zaak
 
 class ZaakPage(
     number: Int,
