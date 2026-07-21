@@ -217,8 +217,13 @@ class ProductQuery(
 
     @SchemaMapping(typeName = "Product", field = "zaken")
     suspend fun zaken(
+        authentication: CommonGroundAuthentication,
         product: Product,
-    ): List<Zaak> = product.zaken.map { productService.getZaak(it) }
+    ): List<Zaak> =
+        productService.getZaken(
+            authentication = authentication,
+            zaakUUIDs = product.zaken,
+        )
 
     @SchemaMapping(typeName = "Product", field = "taken")
     suspend fun taken(

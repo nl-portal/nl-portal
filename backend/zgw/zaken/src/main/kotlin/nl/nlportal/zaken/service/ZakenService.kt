@@ -36,6 +36,7 @@ import nl.nlportal.zaken.domain.ZaakRol
 import nl.nlportal.zaken.domain.ZaakStatus
 import nl.nlportal.zaken.domain.ZaakSubStatus
 import nl.nlportal.zaken.domain.ZaakSubStatusDoelgroep
+import nl.nlportal.zaken.domain.ZaakType
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import org.springframework.core.io.buffer.DataBuffer
@@ -58,6 +59,7 @@ class ZakenService(
         identificatie: String? = null,
         omschrijving: String? = null,
         identificatieContains: String? = null,
+        zaakTypeUUIDs: List<UUID> = emptyList(),
     ): ResultPage<Zaak> {
         val request =
             zakenApiClient.zoeken()
@@ -90,6 +92,10 @@ class ZakenService(
 
         if(zakenApiConfigProperties.zaakTypesIdsExcluded.isNotEmpty()) {
             request.notInZaakTypes(zakenApiConfigProperties.zaakTypesIdsExcluded)
+        }
+
+        if (zaakTypeUUIDs.isNotEmpty()) {
+            request.ofZaakTypes(zaakTypeUUIDs.toList())
         }
         return request.retrieve()
     }

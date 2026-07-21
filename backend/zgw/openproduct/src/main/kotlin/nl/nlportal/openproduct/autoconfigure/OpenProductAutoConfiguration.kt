@@ -26,6 +26,7 @@ import nl.nlportal.openproduct.security.config.ProductDocumentResourceHttpSecuri
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
 import nl.nlportal.zaken.client.ZakenClient
+import nl.nlportal.zaken.service.ZakenService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -62,7 +63,7 @@ class OpenProductAutoConfiguration {
     fun openProductService(
         openProductClient: OpenProductClient,
         openProductTypeClient: OpenProductTypeClient,
-        zakenClient: ZakenClient,
+        zakenService: ZakenService,
         objectsApiClient: ObjectsApiClient,
         taakObjectConfig: TaakConfig,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
@@ -72,7 +73,7 @@ class OpenProductAutoConfiguration {
             openProductClient = openProductClient,
             openProductTypeClient = openProductTypeClient,
             objectsApiTaskConfigProperties = taakObjectConfig.properties,
-            zakenClient = zakenClient,
+            zakenService = zakenService,
             objectsApiClient = objectsApiClient,
             authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
             documentenApiService = documentenApiService,

@@ -22,6 +22,7 @@ import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstSe
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.ProductConfig.ProductConfigProperties
 import nl.nlportal.product.domain.Product
@@ -32,6 +33,7 @@ import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.graphql.ProductPage
 import nl.nlportal.zaken.client.ZakenClient
 import nl.nlportal.zaken.domain.Zaak
+import nl.nlportal.zaken.service.ZakenService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -49,7 +51,7 @@ class ProductService(
     val productConfigProperties: ProductConfigProperties,
     val objectsApiTaskConfig: TaakConfigProperties,
     val objectsApiClient: ObjectsApiClient,
-    val zakenClient: ZakenClient,
+    val zakenService: ZakenService,
     val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getProduct(
@@ -159,29 +161,18 @@ class ProductService(
         }
 
         val zaakTypes = productType.zaaktypen
-        val request =
-            zakenClient
-                .zoeken()
-                .search()
-                .page(pageNumber)
-                .withAuthentication(authentication)
-        pageSize?.let { request.pageSize(it) }
-        isOpen?.let {
-            request.isOpen(isOpen)
-        }
 
-        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
+        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
             return emptyList()
         }
-
-        if (zaakTypes.isNotEmpty()) {
-            request.ofZaakTypes(zaakTypes.toList())
-        }
-
-        return request
-            .retrieve()
-            .results
-            .sortedBy { it.startdatum }
+        return zakenService
+            .getZaken(
+                authentication = authentication,
+                page = pageNumber,
+                pageSize = pageSize,
+                isOpen = isOpen,
+                zaakTypeUUIDs = zaakTypes.toList(),
+            ).results
     }
 
     suspend fun getProductTaken(
@@ -405,7 +396,25 @@ class ProductService(
             ordering = "-record__startAt",
         )
 
-    suspend fun getZaak(zaakUUID: UUID): Zaak = zakenClient.zaken().get(zaakUUID).retrieve()
+    suspend fun getZaken(
+        authentication: CommonGroundAuthentication,
+        zaakUUIDs: List<UUID>,
+    ): List<Zaak> {
+        val zaakList = mutableListOf<Zaak>()
+        zaakUUIDs.forEach {
+            try {
+                zaakList.add(
+                    zakenService.getZaak(
+                        authentication = authentication,
+                        id = it,
+                    ),
+                )
+            } catch (e: Exception) {
+                logger.error(e) { "Error while fetching product zaken: " + e.message }
+            }
+        }
+        return zaakList
+    }
 
     private fun isAuthorized(
         authentication: CommonGroundAuthentication,

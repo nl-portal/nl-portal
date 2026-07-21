@@ -69,6 +69,7 @@ import nl.nlportal.openproduct.client.path.Themas
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
 import nl.nlportal.zaken.client.ZakenClient
 import nl.nlportal.zaken.domain.Zaak
+import nl.nlportal.zaken.service.ZakenService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
@@ -87,7 +88,7 @@ class OpenProductService(
     private val openProductTypeClient: OpenProductTypeClient,
     private val objectsApiTaskConfigProperties: TaakConfigProperties,
     private val objectsApiClient: ObjectsApiClient,
-    private val zakenClient: ZakenClient,
+    private val zakenService: ZakenService,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     private val documentenApiService: DocumentenApiService,
 ) {
@@ -976,28 +977,17 @@ class OpenProductService(
         }
 
         // 3. get Zaken with filters
-        val request =
-            zakenClient
-                .zoeken()
-                .search()
-                .page(1)
-                .pageSize(pageSize ?: 999)
-                .withAuthentication(authentication)
-        isOpen?.let {
-            request.isOpen(isOpen)
-        }
-
         if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
             return emptyList()
         }
-
-        if (zaakTypes.isNotEmpty()) {
-            request.ofZaakTypes(zaakTypes.toList())
-        }
-
-        return request
-            .retrieve()
-            .results
+        return zakenService
+            .getZaken(
+                authentication = authentication,
+                page = 1,
+                pageSize = pageSize,
+                isOpen = isOpen,
+                zaakTypeUUIDs = zaakTypes.toList(),
+            ).results
     }
 
     /**
@@ -1070,11 +1060,19 @@ class OpenProductService(
      * @param: zaken, list of zaken
      * @return: list of zaken
      */
-    suspend fun getProductZaken(zaken: List<OpenProductUrl>): List<Zaak> {
+    suspend fun getProductZaken(
+        authentication: CommonGroundAuthentication,
+        zaken: List<OpenProductUrl>,
+    ): List<Zaak> {
         val zaakList = mutableListOf<Zaak>()
         zaken.forEach {
             try {
-                zaakList.add(zakenClient.zaken().get(CoreUtils.extractId(it.url!!)).retrieve())
+                zaakList.add(
+                    zakenService.getZaak(
+                        authentication = authentication,
+                        id = extractId(it.url!!),
+                    ),
+                )
             } catch (e: Exception) {
                 logger.error(e) { "Error while fetching product zaken: " + e.message }
             }

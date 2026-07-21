@@ -27,6 +27,7 @@ import nl.nlportal.product.service.DmnService
 import nl.nlportal.product.service.PrefillService
 import nl.nlportal.product.service.ProductService
 import nl.nlportal.zaken.client.ZakenClient
+import nl.nlportal.zaken.service.ZakenService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.beans.factory.annotation.Autowired
@@ -62,7 +63,7 @@ class ProductAutoConfiguration {
     fun productService(
         productConfig: ProductConfig,
         objectsApiClient: ObjectsApiClient,
-        zakenClient: ZakenClient,
+        zakenService: ZakenService,
         taakObjectConfig: TaakConfig,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     ): ProductService =
@@ -70,7 +71,7 @@ class ProductAutoConfiguration {
             productConfig.properties,
             taakObjectConfig.properties,
             objectsApiClient,
-            zakenClient,
+            zakenService = zakenService,
             authenticationMachtigingsDienstService,
         )
 
