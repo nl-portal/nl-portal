@@ -47,12 +47,12 @@ VALUES (1, '104dd54c-4464-45f2-9781-9df2c59a35ed', '999993847', '', '', '', 1),
        (5, 'e64b095d-d06f-490a-83b5-3fa0d8442e63', '999993847', '', '', '', 5);
 
 /* add zaken */
-INSERT INTO public.producten_zaak(id, uuid, product_id)
-VALUES (1, '729a9bdf-ea81-4a8d-b0ec-9b516ba26cc5', 1);
+INSERT INTO public.producten_zaak(id, product_id)
+VALUES (1, 1);
 
 /* add taken */
-INSERT INTO public.producten_taak(id, uuid, product_id)
-VALUES (1, '4b5f4fba-0746-11ed-b939-0242ac120023', 1);
+INSERT INTO public.producten_taak(id, product_id)
+VALUES (1, 1);
 
 /*set sequences */
 SELECT pg_catalog.setval('public.producten_product_id_seq', 4, true);
@@ -67,8 +67,7 @@ SELECT pg_catalog.setval('public.producten_taak_id_seq', 1, true);
 /* ============================================================================
    Merged from nl-portal-docker-compose: additional products for producttypes
    4 (STADSPAS_INTERN), 5 (ERFPACHT), 6 (WOONWAGENSTANDPLAATS).
-   Adapted to this schema (open-product 1.3.0): 'aanvraag_zaak_url' dropped;
-   producten_zaak/producten_taak rows omitted (incompatible url/urn schema).
+   Adapted to open-product 1.7.1 schema.
    Owners use demo BSN 999993847 (keycloak nlportal user).
    ============================================================================ */
 
