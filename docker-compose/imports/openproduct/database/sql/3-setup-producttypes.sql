@@ -134,21 +134,21 @@ VALUES (1, 'parkeervergunning-verbruiksobject', '{
 }');
 
 /* add producttype*/
-INSERT INTO public.producttypen_producttype(id, uuid, gepubliceerd, aanmaak_datum, update_datum, code,
+INSERT INTO public.producttypen_producttype(id, uuid, aanmaak_datum, update_datum, code,
                                             toegestane_statussen, keywords, interne_opmerkingen, dataobject_schema_id,
-                                            uniforme_product_naam_id, verbruiksobject_schema_id)
-VALUES (1, 'dee273e9-2aa8-40ae-84b7-cb7da3c075ba', true, now(), now(), 'PARKEREN', '{gereed}', '{parkeren, ibs}', '', 2,
-        793, 1),
-       (2, '43633c6c-2d9a-46c8-9051-112418102254', true, now(), now(), 'STADSPAS', '{gereed}', '{ooievaarspas, gzac}',
-        'Stadspas Den Haag', 3, 941, null),
-       (3, 'cf89c88d-8310-41d4-9776-786ae13235c8', true, now(), now(), 'BELASTINGZAKEN', '{gereed}',
-        '{belastingzaken, ibs}', 'Belastingzaken', 4, 433, 5);
+                                            uniforme_product_naam_id, verbruiksobject_schema_id, doelgroep, publicatie_start_datum)
+VALUES (1, 'dee273e9-2aa8-40ae-84b7-cb7da3c075ba', now(), now(), 'PARKEREN', '{gereed}', '{parkeren, ibs}', '', 2,
+        793, 1, 'burgers', now()::date),
+       (2, '43633c6c-2d9a-46c8-9051-112418102254', now(), now(), 'STADSPAS', '{gereed}', '{ooievaarspas, gzac}',
+        'Stadspas Den Haag', 3, 941, null, 'burgers', now()::date),
+       (3, 'cf89c88d-8310-41d4-9776-786ae13235c8', now(), now(), 'BELASTINGZAKEN', '{gereed}',
+        '{belastingzaken, ibs}', 'Belastingzaken', 4, 433, 5, 'burgers', now()::date);
 
 
 /* add zaaktype */
-INSERT INTO public.producttypen_zaaktype(id, uuid, producttype_id)
-VALUES (1, '744ca059-f412-49d4-8963-5800e4afd486', 1),
-       (2, '0f71d469-782a-4e65-8101-c1e70c272c13', 2);
+INSERT INTO public.producttypen_zaaktype(id, producttype_id)
+VALUES (1, 1),
+       (2, 2);
 
 /* add externe code */
 INSERT INTO public.producttypen_externecode(id, uuid, naam, code, producttype_id)
@@ -165,7 +165,7 @@ VALUES (1, 'nl', 'Parkeren', 'samenvatting translatie', 1),
        (6, 'en', 'Taxes', 'samenvatting translatie', 3);
 
 /* add actie*/
-INSERT INTO public.producttypen_actie(id, uuid, naam, dmn_tabel_id, dmn_config_id, producttype_id, mapping)
+INSERT INTO public.producttypen_actie(id, uuid, naam, dmn_tabel_id, dmn_config_id, producttype_id, mapping, direct_url)
 VALUES (1, '082d143f-6a53-4e08-bc3c-0488b3b490e4', 'watkanikregelen-parkeren', 'alg-parkeren', 1, 1, '{
   "product": [
     {
@@ -191,7 +191,7 @@ VALUES (1, '082d143f-6a53-4e08-bc3c-0488b3b490e4', 'watkanikregelen-parkeren', '
       "value": "https://openformulieren-zgw.test.denhaag.nl"
     }
   ]
-}'),
+}', ''),
        (2, '2435b986-7742-4cef-91f2-e1162c2f19c9', 'watkanikregelen-belastingen', 'alg-belastingen', 1, 1, '{
          "product": [
            {
@@ -217,7 +217,7 @@ VALUES (1, '082d143f-6a53-4e08-bc3c-0488b3b490e4', 'watkanikregelen-parkeren', '
              "value": "https://openformulieren-zgw.test.denhaag.nl"
            }
          ]
-       }');
+       }', '');
 
 /* add parameter */
 INSERT INTO public.producttypen_parameter(id, uuid, naam, waarde, producttype_id)
@@ -232,9 +232,9 @@ INSERT INTO public.producttypen_contentlabel(id, uuid, naam)
 VALUES (1, '6d9cab7b-311e-44b7-828e-eabbdf139724', 'naam');
 
 /* add contentelementtranslation */
-INSERT INTO public.producttypen_contentelementtranslation(id, language_code, content, master_id)
-VALUES (1, 'nl', 'test data', 1),
-       (2, 'en', 'test data English', 1);
+INSERT INTO public.producttypen_contentelementtranslation(id, language_code, content, master_id, aanvullende_informatie)
+VALUES (1, 'nl', 'test data', 1, ''),
+       (2, 'en', 'test data English', 1, '');
 
 /* add contentelement_labels */
 INSERT INTO public.producttypen_contentelement_labels(contentelement_id, contentlabel_id)
@@ -348,9 +348,10 @@ SELECT pg_catalog.setval('public.locaties_contact_id_seq', 1, true);
 
 /* ============================================================================
    Merged from nl-portal-docker-compose: additional producttypes.
-   Adapted to this schema (open-product 1.3.0): 'gepubliceerd' re-added,
-   'publicatie_*'/'doelgroep' dropped, producttype 4 re-coded STADSPAS->STADSPAS_INTERN
-   to avoid colliding with the existing STADSPAS producttype (id 2).
+   Adapted to open-product 1.7.1 schema: 'gepubliceerd' is now a computed
+   property (set via 'publicatie_start_datum'), 'doelgroep' is required,
+   producttype 4 re-coded STADSPAS->STADSPAS_INTERN to avoid colliding with
+   the existing STADSPAS producttype (id 2).
    ============================================================================ */
 
 /* add thema */
@@ -439,15 +440,15 @@ VALUES (6, 'woonwagenstandplaatsdata', '{
        );
 
 /* add producttype */
-INSERT INTO public.producttypen_producttype(id, uuid, gepubliceerd, aanmaak_datum, update_datum, code,
+INSERT INTO public.producttypen_producttype(id, uuid, aanmaak_datum, update_datum, code,
                                             toegestane_statussen, keywords, interne_opmerkingen, dataobject_schema_id,
-                                            uniforme_product_naam_id, verbruiksobject_schema_id)
-VALUES (4, '894c9dd1-5917-4955-b56c-04b576fb7f17', true, now(), now(), 'STADSPAS_INTERN', '{gereed,actief,ingetrokken,geweigerd,verlopen}',
-        '{intern,testen}', 'intern', 6, 1, null),
-       (5, '6492ab26-38ab-42d5-91f5-7a76db178d52', true, now(), now(), 'ERFPACHT', '{gereed,actief,ingetrokken,geweigerd,verlopen}',
-        '{intern,testen}', 'intern', 7, 308, null),
-       (6, '2e412f7f-feb3-4a04-bcbd-2cdab45a8ef9', true, now(), now(), 'WOONWAGENSTANDPLAATS', '{gereed,actief,ingetrokken,geweigerd, verlopen}',
-        '{woonwagenstandplaats,testen}', 'woonwagenstandplaats', 6, 1178, null);
+                                            uniforme_product_naam_id, verbruiksobject_schema_id, doelgroep, publicatie_start_datum)
+VALUES (4, '894c9dd1-5917-4955-b56c-04b576fb7f17', now(), now(), 'STADSPAS_INTERN', '{gereed,actief,ingetrokken,geweigerd,verlopen}',
+        '{intern,testen}', 'intern', 6, 1, null, 'burgers', now()::date),
+       (5, '6492ab26-38ab-42d5-91f5-7a76db178d52', now(), now(), 'ERFPACHT', '{gereed,actief,ingetrokken,geweigerd,verlopen}',
+        '{intern,testen}', 'intern', 7, 308, null, 'burgers', now()::date),
+       (6, '2e412f7f-feb3-4a04-bcbd-2cdab45a8ef9', now(), now(), 'WOONWAGENSTANDPLAATS', '{gereed,actief,ingetrokken,geweigerd, verlopen}',
+        '{woonwagenstandplaats,testen}', 'woonwagenstandplaats', 6, 1178, null, 'burgers', now()::date);
 
 /* add producttype translation */
 INSERT INTO public.producttypen_producttypetranslation(id, language_code, naam, samenvatting, master_id)
