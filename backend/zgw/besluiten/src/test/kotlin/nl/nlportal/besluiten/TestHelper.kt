@@ -49,7 +49,28 @@ object TestHelper {
           "identificatie": "klantportaal",
           "verantwoordelijkeOrganisatie": "klantportaal",
           "besluittype": "http://localhost:8000/catalogi/api/v1/besluittypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
-          "zaak": "http://localhost:8001/zaken/api/v1/zaken/496f51fd-ccdb-406e-805a-e7602ae78a2x",
+          "zaak": "http://localhost:8001/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+          "datum": "2019-08-24",
+          "toelichting": "toelichting",
+          "bestuursorgaan": "klant",
+          "ingangsdatum": "2019-08-24",
+          "vervaldatum": "2019-08-24",
+          "vervalreden": "tijdelijk",
+          "vervalredenWeergave": "string",
+          "publicatiedatum": "2019-08-24",
+          "verzenddatum": "2019-08-24",
+          "uiterlijkeReactiedatum": "2019-08-24"
+        }
+        """.trimIndent()
+
+    val handleBesluitRequestUnauthorizedZaak =
+        """
+        {
+          "url": "http://localhost:8001/besluiten/api/v1/besluiten/7721129b-7bb9-49d0-9a84-0eb34b18320e",
+          "identificatie": "klantportaal",
+          "verantwoordelijkeOrganisatie": "klantportaal",
+          "besluittype": "http://localhost:8000/catalogi/api/v1/besluittypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
+          "zaak": "http://localhost:8001/zaken/api/v1/zaken/953ea2c4-09c4-47a1-a7c8-7a7b2783f852",
           "datum": "2019-08-24",
           "toelichting": "toelichting",
           "bestuursorgaan": "klant",
@@ -127,4 +148,86 @@ object TestHelper {
            ]
          }
         """.trimIndent()
+
+    val handleZaakResponse =
+        """
+            {
+                "url": "http://localhost:8001/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+                "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
+                "identificatie": "ZAAK-2021-0000000003",
+                "bronorganisatie": "051845623",
+                "omschrijving": "Voorbeeld afgesloten zaak 1",
+                "toelichting": "",
+                "zaaktype": "http://localhost:8000/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
+                "registratiedatum": "2021-09-16",
+                "verantwoordelijkeOrganisatie": "051845623",
+                "startdatum": "2021-09-16",
+                "einddatum": null,
+                "einddatumGepland": null,
+                "uiterlijkeEinddatumAfdoening": null,
+                "publicatiedatum": null,
+                "communicatiekanaal": "",
+                "productenOfDiensten": [],
+                "vertrouwelijkheidaanduiding": "zaakvertrouwelijk",
+                "betalingsindicatie": "",
+                "betalingsindicatieWeergave": "",
+                "laatsteBetaaldatum": null,
+                "zaakgeometrie": null,
+                "verlenging": {
+                    "reden": "",
+                    "duur": null
+                },
+                "opschorting": {
+                    "indicatie": false,
+                    "reden": ""
+                },
+                "selectielijstklasse": "",
+                "hoofdzaak": null,
+                "deelzaken": [],
+                "relevanteAndereZaken": [],
+                "eigenschappen": [],
+                "status": "http://localhost:8000/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6",
+                "kenmerken": [],
+                "archiefnominatie": null,
+                "archiefstatus": "nog_te_archiveren",
+                "archiefactiedatum": null,
+                "resultaat": "http://localhost:8001/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+            }
+            """.trimIndent()
+
+    val handleZaakRollenResponse =
+        """
+        {
+               "count": 1,
+               "next": null,
+               "previous": null,
+               "results": [
+                 {
+                   "url": "http://example.com",
+                   "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                   "zaak": "http://example.com",
+                   "betrokkene": "http://example.com",
+                   "betrokkeneType": "natuurlijk_persoon",
+                   "roltype": "http://example.com",
+                   "omschrijving": "string",
+                   "omschrijvingGeneriek": "string",
+                   "roltoelichting": "string",
+                   "registratiedatum": "2019-08-24T14:15:22Z",
+                   "indicatieMachtiging": "gemachtigde"
+                 }
+               ]
+             }    
+        """.trimIndent()
+
+    val handleZaakRollenResponseEmpty =
+        """
+        {
+               "count": 1,
+               "next": null,
+               "previous": null,
+               "results": []
+             }    
+        """.trimIndent()
+
+
 }

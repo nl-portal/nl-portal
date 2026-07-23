@@ -25,6 +25,7 @@ dependencies {
     api(project(":graphql"))
     api(project(":zgw:catalogi-api"))
     api(project(":zgw:documenten-api"))
+    api(project(":zgw:zaken-api"))
 
     implementation(Dependencies.springBootStarter)
 

@@ -20,6 +20,7 @@ import nl.nlportal.besluiten.TestHelper
 import nl.nlportal.besluiten.client.BesluitenApiConfig
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.documentenapi.client.DocumentApisConfig
+import nl.nlportal.zakenapi.client.ZakenApiConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -43,11 +44,13 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class BesluitDocumentResourceIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val documentApisConfig: DocumentApisConfig,
-    @Autowired private val besluitenApiConfig: BesluitenApiConfig
+    @Autowired private val besluitenApiConfig: BesluitenApiConfig,
+    @Autowired private val zakenApiConfig: ZakenApiConfig,
 ) {
     companion object {
         private const val KNOWN_DOC_ID = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
         private const val BESLUIT_ID = "8863ab83-3496-4f40-9cad-f9d9526597c8"
+        private const val BESLUITUNAUTHORIZEDZAAK_URL = "7721129b-7bb9-49d0-9a84-0eb34b18320e"
         private const val UNKNOWN_BESLUIT_ID = "2a27bc3c-6a4c-432a-a9cb-5c31004e7769"
         private const val UNRELATED_DOC_ID = "00000000-0000-0000-0000-0000000000ff"
         private val logger = KotlinLogging.logger {}
@@ -62,6 +65,7 @@ class BesluitDocumentResourceIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.besluitenapi.properties.url") { url }
+            propsRegistry.add("nl-portal.config.zakenapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -85,6 +89,7 @@ class BesluitDocumentResourceIT(
         url = server?.url("/").toString()
         besluitenApiConfig.properties.url = url
         documentApisConfig.properties.getConfig("openzaak").url = server?.url("/").toString()
+        zakenApiConfig.properties.url = url
     }
 
     @Test
@@ -100,6 +105,17 @@ class BesluitDocumentResourceIT(
             .exists("Content-Disposition")
             .expectHeader()
             .valueMatches("Content-Disposition", "attachment; filename=\".*\"")
+    }
+
+    @Test
+    @WithBurgerUser("999990755")
+    fun `should return 401 when user is not authorized for zaak`() {
+        webTestClient
+            .get()
+            .uri("/api/besluiten/$BESLUITUNAUTHORIZEDZAAK_URL/document/$KNOWN_DOC_ID/content")
+            .exchange()
+            .expectStatus()
+            .isUnauthorized
     }
 
     @Test
@@ -129,10 +145,15 @@ class BesluitDocumentResourceIT(
             object : Dispatcher() {
                 @Throws(InterruptedException::class)
                 override fun dispatch(request: RecordedRequest): MockResponse {
+                    val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
                     val path = request.path?.substringBefore('?')
                     return when (request.method + " " + path) {
                         "GET /besluiten/api/v1/besluiten/$BESLUIT_ID" -> {
                             TestHelper.mockResponse(TestHelper.handleBesluitRequest)
+                        }
+
+                        "GET /besluiten/api/v1/besluiten/$BESLUITUNAUTHORIZEDZAAK_URL" -> {
+                            TestHelper.mockResponse(TestHelper.handleBesluitRequestUnauthorizedZaak)
                         }
 
                         "GET /besluiten/api/v1/besluitinformatieobjecten/$KNOWN_DOC_ID" -> {
@@ -153,6 +174,16 @@ class BesluitDocumentResourceIT(
                                 .setHeader("Content-Type", "application/octet-stream")
                                 .setBody("file-bytes")
                         }
+
+                        "GET /zaken/api/v1/rollen" -> {
+                            if (queryParams.any { it.contains("zaak=http://localhost:10001//zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a") }) {
+                                TestHelper.mockResponse(TestHelper.handleZaakRollenResponse)
+                            } else {
+                                TestHelper.mockResponse(TestHelper.handleZaakRollenResponseEmpty)
+                            }
+                        }
+
+                        "GET /zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> TestHelper.mockResponse(TestHelper.handleZaakResponse)
 
                         else -> {
                             MockResponse().setResponseCode(404)
