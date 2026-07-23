@@ -90,7 +90,7 @@ nl-portal:
         virusscan:
             clamav:
                 enabled: false
-        zakenapi:
+        zaken:
             enabled: true
             properties:
                 url: http://localhost:56789
