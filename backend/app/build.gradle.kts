@@ -32,7 +32,7 @@ dependencies {
     implementation(project(":zgw:besluiten"))
     implementation(project(":payment"))
     implementation(project(":payment-direct"))
-    implementation(project(":zgw:zaken-api"))
+    implementation(project(":zgw:zaken"))
     implementation(project(":zgw:openproduct"))
     implementation(project(":product"))
     implementation(project(":zgw:verificatie"))

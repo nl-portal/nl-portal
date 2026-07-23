@@ -64,4 +64,5 @@ include(
     "zgw:openproduct",
     "zgw:verificatie",
     "product",
+    "zgw:zaken",
 )

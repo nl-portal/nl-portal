@@ -15,18 +15,12 @@
  */
 package nl.nlportal.zakenapi.autoconfigure
 
-import nl.nlportal.besluiten.service.BesluitenService
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
-import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
-import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.client.ZakenApiConfig
-import nl.nlportal.zakenapi.graphql.ZaakQuery
-import nl.nlportal.zakenapi.security.config.ZaakDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.zakenapi.service.ZakenApiService
-import nl.nlportal.zakenapi.web.rest.ZaakDocumentResource
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -71,31 +65,5 @@ class ZakenApiAutoConfiguration {
         webClientBuilder: WebClient.Builder,
     ): ZakenApiClient {
         return ZakenApiClient(zakenApiConfig.properties, catalogiApiConfig.properties, webClientBuilder)
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(ZaakQuery::class)
-    fun zaakQuery(
-        zakenApiService: ZakenApiService,
-        besluitenService: BesluitenService,
-        catalogiApiService: CatalogiApiService,
-    ): ZaakQuery {
-        return ZaakQuery(
-            zakenApiService = zakenApiService,
-            besluitenService = besluitenService,
-            catalogiApiService = catalogiApiService
-        )
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(ZaakDocumentResource::class)
-    fun zaakDocumentResource(zakenApiService: ZakenApiService): ZaakDocumentResource {
-        return ZaakDocumentResource(zakenApiService)
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(ZaakDocumentResourceHttpSecurityConfigurer::class)
-    fun zaakDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer {
-        return ZaakDocumentResourceHttpSecurityConfigurer()
     }
 }

@@ -26,7 +26,6 @@ import nl.nlportal.openproduct.security.config.ProductDocumentResourceHttpSecuri
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
-import nl.nlportal.zakenapi.security.config.ZaakDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
 import org.springframework.beans.factory.annotation.Autowired

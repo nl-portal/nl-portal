@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zakenapi.graphql
+package nl.nlportal.zaken.graphql
 
 import tools.jackson.databind.JsonNode
-import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.besluiten.client.BesluitenApiConfig
 import nl.nlportal.catalogiapi.client.CatalogiApiConfig
 import nl.nlportal.commonground.authentication.WithBedrijfUser
