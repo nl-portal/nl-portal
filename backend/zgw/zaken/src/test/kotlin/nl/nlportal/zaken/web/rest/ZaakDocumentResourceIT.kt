@@ -1,8 +1,8 @@
-package nl.nlportal.zakenapi.web.rest
+package nl.nlportal.zaken.web.rest
 
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.zakenapi.TestHelper
+import nl.nlportal.zaken.TestHelper
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

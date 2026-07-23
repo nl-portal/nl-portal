@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zakenapi.graphql
+package nl.nlportal.zaken.graphql
 
 import java.util.UUID
 import nl.nlportal.besluiten.domain.Besluit
-import nl.nlportal.besluiten.domain.BesluitAuditTrail
-import nl.nlportal.besluiten.domain.BesluitDocument
 import nl.nlportal.besluiten.service.BesluitenService
-import nl.nlportal.catalogiapi.domain.BesluitType
 import nl.nlportal.catalogiapi.domain.ResultaatType
 import nl.nlportal.catalogiapi.domain.StatusType
 import nl.nlportal.catalogiapi.domain.ZaakStatusType
 import nl.nlportal.catalogiapi.domain.ZaakType
 import nl.nlportal.catalogiapi.service.CatalogiApiService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.domain.ZaakDetails
@@ -35,7 +31,6 @@ import nl.nlportal.zakenapi.domain.ZaakResultaat
 import nl.nlportal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zakenapi.domain.ZaakSubStatus
 import nl.nlportal.zakenapi.service.ZakenApiService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.method.annotation.SchemaMapping
@@ -58,15 +53,19 @@ open class ZaakQuery(
         @Argument omschrijving: String? = null,
         @Argument identificatieContains: String? = null,
     ): ZaakPage {
-        return zakenApiService.getZaken(
-            page = page ?: 1,
-            pageSize = pageSize,
-            authentication = authentication,
-            zaakTypeUrl = zaakTypeUrl,
-            isOpen = isOpen,
-            identificatie = identificatie,
-            omschrijving = omschrijving,
-            identificatieContains = identificatieContains,
+        return ZaakPage.fromResultPage(
+            pageNumber = page ?: 1,
+            pageSize = pageSize?: 20,
+            resultPage = zakenApiService.getZaken(
+                page = page ?: 1,
+                pageSize = pageSize,
+                authentication = authentication,
+                zaakTypeUrl = zaakTypeUrl,
+                isOpen = isOpen,
+                identificatie = identificatie,
+                omschrijving = omschrijving,
+                identificatieContains = identificatieContains,
+            )
         )
     }
 

@@ -19,8 +19,8 @@ pluginManager.withPlugin("maven-publish") {
         publications {
             withType(MavenPublication::class.java) {
                 pom {
-                    getName().set("Zaken API module")
-                    getDescription().set("This module facilitates working with a Zaken API compliant microservice")
+                    getName().set("Zaken module")
+                    getDescription().set("This module facilitates working with a Zaken compliant microservice")
                     developers {
                         developer {
                             getId().set("team-nl-portal")

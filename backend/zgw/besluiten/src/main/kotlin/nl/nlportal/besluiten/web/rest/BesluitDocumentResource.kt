@@ -22,14 +22,12 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.util.FilenameSanitizer
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping(value = ["/api/besluiten"])
@@ -44,6 +42,7 @@ class BesluitDocumentResource(
     ): ResponseEntity<Flow<DataBuffer>> {
         val (document, content) =
             besluitenService.getBesluitDocumentContent(
+                authentication = authentication,
                 besluitId = besluitId,
                 documentId = documentId
             )
