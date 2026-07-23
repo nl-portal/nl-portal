@@ -206,6 +206,10 @@ class OpenProductQueryIT(
                                 TestHelper.mockResponse(TestHelper.handleDocumentResponse)
                             }
 
+                            "GET /zaken/api/v1/rollen" -> {
+                                TestHelper.mockResponse(TestHelper.handleZaakRollenResponse)
+                            }
+
                             else -> {
                                 MockResponse().setResponseCode(404)
                             }

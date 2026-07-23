@@ -417,6 +417,10 @@ internal class ProductQueryIT(
                                 TestHelper.mockResponseFromFile("/product/data/get-zaken.json")
                             }
 
+                            "GET /zaken/api/v1/rollen" -> {
+                                TestHelper.mockResponseFromFile("/product/data/get-zaak-rollen.json")
+                            }
+
                             "POST /api/v2/objects" -> {
                                 TestHelper.mockResponseFromFile("/product/data/get-prefill-object.json")
                             }

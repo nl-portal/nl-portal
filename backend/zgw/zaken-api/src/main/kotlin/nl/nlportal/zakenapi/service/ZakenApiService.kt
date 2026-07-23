@@ -58,6 +58,7 @@ class ZakenApiService(
         identificatie: String? = null,
         omschrijving: String? = null,
         identificatieContains: String? = null,
+        zaakTypeUUIDs: List<UUID> = emptyList(),
     ): ResultPage<Zaak> {
         val request =
             zakenApiClient.zoeken()
@@ -90,6 +91,10 @@ class ZakenApiService(
 
         if(zakenApiConfigProperties.zaakTypesIdsExcluded.isNotEmpty()) {
             request.notInZaakTypes(zakenApiConfigProperties.zaakTypesIdsExcluded)
+        }
+
+        if (zaakTypeUUIDs.isNotEmpty()) {
+            request.ofZaakTypes(zaakTypeUUIDs.toList())
         }
 
         return request.retrieve()
