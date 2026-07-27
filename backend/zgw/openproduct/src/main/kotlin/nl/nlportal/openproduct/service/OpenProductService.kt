@@ -988,7 +988,7 @@ class OpenProductService(
                 pageSize = pageSize,
                 isOpen = isOpen,
                 zaakTypeUUIDs = zaakTypes.toList(),
-            ).results
+            ).content
     }
 
     /**
