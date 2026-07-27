@@ -370,12 +370,16 @@ VALUES (6, 'woonwagenstandplaatsdata', '{
     {
       "status": "ingeschreven",
       "inschrijfdatum": "2025-10-23T00:00:00+02:00",
-      "uitschrijfdatum": "2025-10-23T00:00:00+02:00"
+      "uitschrijfdatum": "2025-10-23T00:00:00+02:00",
+      "eersteVoorkeurslocatie": "Standplaats De Wieken",
+      "tweedeVoorkeurslocatie": "Standplaats Het Anker",
+      "derdeVoorkeurslocatie": "Standplaats De Vaart"
     }
   ],
   "required": [
     "status",
-    "inschrijfdatum"
+    "inschrijfdatum",
+    "eersteVoorkeurslocatie"
   ],
   "properties": {
     "status": {
@@ -395,6 +399,18 @@ VALUES (6, 'woonwagenstandplaatsdata', '{
       "type": "string",
       "format": "date-time",
       "description": "Uitschrijfdatum voor de wachtlijst"
+    },
+    "eersteVoorkeurslocatie": {
+      "type": "string",
+      "description": "Eerste voorkeurslocatie voor een woonwagenstandplaats"
+    },
+    "tweedeVoorkeurslocatie": {
+      "type": "string",
+      "description": "Tweede voorkeurslocatie voor een woonwagenstandplaats"
+    },
+    "derdeVoorkeurslocatie": {
+      "type": "string",
+      "description": "Derde voorkeurslocatie voor een woonwagenstandplaats"
     }
   },
   "description": "Schema voor het opslaan van woonwagen data",

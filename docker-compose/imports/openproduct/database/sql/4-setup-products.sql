@@ -75,7 +75,7 @@ SELECT pg_catalog.setval('public.producten_taak_id_seq', 1, true);
 INSERT INTO public.producten_product(id, uuid, naam, gepubliceerd, aanmaak_datum, update_datum, start_datum, eind_datum, status, prijs, frequentie, verbruiksobject, dataobject, producttype_id)
 VALUES (6, '8e820244-f1eb-45d2-b1bd-0a194e93bb33', 'Product voor testautomatisering', true, now(), now()- INTERVAL '1 DAYS', now(), now()+ INTERVAL '365 DAYS', 'actief', '666.99', 'jaarlijks', null, null, 4),
        (7, '94670b32-354b-48ec-8f7e-8ce0c6c936ec', 'Eerst product voor Erfpacht', true, now(), now(), now(), now()+ INTERVAL '365 DAYS', 'actief', '1599.00', 'jaarlijks', null, null, 5),
-       (8, '8c22ad39-7907-4b1a-b0e0-b96ea8aeef61', 'Wachtlijst woonwagen', true, now(), now(), now(), now()+ INTERVAL '365 DAYS', 'actief', '1599.00', 'jaarlijks', null, null, 6);
+       (8, '8c22ad39-7907-4b1a-b0e0-b96ea8aeef61', 'Wachtlijst woonwagen', true, now(), now(), now(), now()+ INTERVAL '365 DAYS', 'actief', '1599.00', 'jaarlijks', null, '{"status": "ingeschreven", "inschrijfdatum": "2025-10-23T00:00:00+02:00", "eersteVoorkeurslocatie": "Standplaats De Wieken", "tweedeVoorkeurslocatie": "Standplaats Het Anker", "derdeVoorkeurslocatie": "Standplaats De Vaart"}', 6);
 
 /* add eigenaar */
 INSERT INTO public.producten_eigenaar(id, uuid, bsn, kvk_nummer, vestigingsnummer, klantnummer, product_id)

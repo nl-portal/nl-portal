@@ -1,6 +1,7 @@
 #!/bin/bash
 
 echo ">>>>  Waiting until Open Product has initialized the database <<<<"
+sleep 5
 while true
 do
     initiated=$(psql -U openproduct -d openproduct -t -A -c "SELECT EXISTS (SELECT table_name FROM information_schema.tables WHERE table_name = 'authtoken_token');")
