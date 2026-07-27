@@ -171,7 +171,7 @@ class ProductService(
                 pageSize = pageSize,
                 isOpen = isOpen,
                 zaakTypeUUIDs = zaakTypes.toList(),
-            ).results
+            ).content
     }
 
     suspend fun getProductTaken(
