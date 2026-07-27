@@ -1,0 +1,17 @@
+[
+  {
+    "model": "token.tokenauth",
+    "pk": 10,
+    "fields": {
+      "identifier": "test_token",
+      "token": "ac045222c9e7cde8120b48735560f9b920bb58cd",
+      "contact_person": "Admin",
+      "email": "admin@example.com",
+      "organization": "",
+      "last_modified": "2024-09-06T07:26:53.703Z",
+      "created": "2024-09-06T07:26:53.703Z",
+      "application": "",
+      "administration": ""
+    }
+  }
+]

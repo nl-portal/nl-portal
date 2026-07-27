@@ -131,7 +131,7 @@ services:
             - nl-portal-openklant-2-db
             - nl-portal-redis
         network_mode: "service:localhost"
-        environment:
+        environment: &openklant-2-env
             - UWSGI_PORT=8014
             - DJANGO_SETTINGS_MODULE=openklant.conf.docker
             - IS_HTTPS=no
@@ -147,11 +147,25 @@ services:
             - CELERY_BROKER_URL=redis://nl-portal-redis:6379/3
             - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/3
             - DISABLE_2FA=true
-            - RUN_SETUP_CONFIG=true
         volumes:
-            - ./imports/openklant-2/init/data.yaml:/app/data.yaml
+            - ./imports/openklant-2/fixtures:/app/src/openklant/fixtures
+
+    nl-portal-openklant-2-import:
+        image: maykinmedia/open-klant:2.12.1
+        container_name: nl-portal-openklant-2-import
+        profiles:
+            - zgw
+            - openklant
+        environment: *openklant-2-env
+        network_mode: "service:localhost"
+        command: sh init/init.sh
+        volumes:
+            - ./imports/openklant-2/fixtures:/app/src/openklant/fixtures
             - ./imports/openklant-2/init:/app/init
-        command: sh /app/init/init.sh
+        depends_on:
+            - nl-portal-openklant-2
+            - nl-portal-openklant-2-db
+            - nl-portal-redis
 
     nl-portal-openklant-2-db:
         image: postgres:15
@@ -163,8 +177,6 @@ services:
             - POSTGRES_USER=openklant
             - POSTGRES_PASSWORD=openklant
             - POSTGRES_DB=openklant
-        volumes:
-            - ./imports/openklant-2/database:/docker-entrypoint-initdb.d/
 
     nl-portal-objecten-api:
         image: maykinmedia/objects-api:3.2.0
@@ -391,7 +403,7 @@ services:
             - nl-portal-redis
         volumes:
             - ./imports/openproduct/init:/app/init
-        command: sh /app/init/init.sh
+        command: sh /app/init/start.sh
         environment: &open-product-env
             - UWSGI_PORT=8015
             - OTEL_SDK_DISABLED=true
@@ -409,8 +421,26 @@ services:
             - ALLOWED_HOSTS=*
             - DISABLE_2FA=true
 
+    nl-portal-openproduct-import:
+        image: maykinmedia/open-product:1.7.1
+        container_name: nl-portal-openproduct-import
+        platform: linux/amd64
+        profiles:
+            - zgw
+            - openproduct
+        environment: *open-product-env
+        network_mode: "service:localhost"
+        command: sh init/import.sh
+        volumes:
+            - ./imports/openproduct/fixtures:/app/src/openproduct/fixtures
+            - ./imports/openproduct/init:/app/init
+        depends_on:
+            - nl-portal-openproduct
+            - nl-portal-openproduct-database
+            - nl-portal-redis
+
     nl-portal-openproduct-celery:
-        image: maykinmedia/open-product:1.3.0
+        image: maykinmedia/open-product:1.7.1
         container_name: nl-portal-openproduct-celery
         platform: linux/amd64
         network_mode: "service:localhost"
@@ -430,8 +460,6 @@ services:
             - POSTGRES_USER=${DB_USER:-openproduct}
             - POSTGRES_PASSWORD=${DB_PASSWORD:-openproduct}
             - POSTGRES_DB=openproduct
-        volumes:
-            - ./imports/openproduct/database:/docker-entrypoint-initdb.d/
 
     nl-portal-redis:
         image: redis:6.2.6

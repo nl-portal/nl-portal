@@ -4,9 +4,7 @@ echo ">>>>  NL Portal init script: Objecttypes API <<<<"
 sleep 2
 while true
 do
-    # Checking whether last table is created
-    initiated=$(pg_isready -h $DB_HOST -q && psql postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/postgres -t -A -c "SELECT EXISTS (SELECT table_name FROM information_schema.tables WHERE table_name = 'token_tokenauth');" || "false")
-    if [ "t" = "${initiated}" ]
+    if pg_isready -h $DB_HOST -q && python /app/src/manage.py migrate --check >/dev/null 2>&1
         then
             echo "Database ready."
             echo "Attempting to create admin user:"
