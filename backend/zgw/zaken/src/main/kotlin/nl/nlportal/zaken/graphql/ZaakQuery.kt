@@ -27,6 +27,7 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.domain.ZaakDetails
+import nl.nlportal.zakenapi.domain.ZaakPage
 import nl.nlportal.zakenapi.domain.ZaakResultaat
 import nl.nlportal.zakenapi.domain.ZaakStatus
 import nl.nlportal.zakenapi.domain.ZaakSubStatus
@@ -52,22 +53,16 @@ open class ZaakQuery(
         @Argument identificatie: String? = null,
         @Argument omschrijving: String? = null,
         @Argument identificatieContains: String? = null,
-    ): ZaakPage {
-        return ZaakPage.fromResultPage(
-            pageNumber = page ?: 1,
-            pageSize = pageSize?: 20,
-            resultPage = zakenApiService.getZaken(
-                page = page ?: 1,
-                pageSize = pageSize,
-                authentication = authentication,
-                zaakTypeUrl = zaakTypeUrl,
-                isOpen = isOpen,
-                identificatie = identificatie,
-                omschrijving = omschrijving,
-                identificatieContains = identificatieContains,
-            )
-        )
-    }
+    ): ZaakPage = zakenApiService.getZaken(
+        page = page ?: 1,
+        pageSize = pageSize,
+        authentication = authentication,
+        zaakTypeUrl = zaakTypeUrl,
+        isOpen = isOpen,
+        identificatie = identificatie,
+        omschrijving = omschrijving,
+        identificatieContains = identificatieContains,
+    )
 
     @QueryMapping
     open suspend fun getZaak(
