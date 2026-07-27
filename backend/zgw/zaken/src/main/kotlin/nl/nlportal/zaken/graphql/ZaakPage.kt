@@ -1,4 +1,4 @@
-package nl.nlportal.zakenapi.graphql
+package nl.nlportal.zaken.graphql
 
 import nl.nlportal.graphql.Page
 import nl.nlportal.zakenapi.domain.ResultPage

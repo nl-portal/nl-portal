@@ -87,11 +87,13 @@ class OpenProductQuery(
 
     @SchemaMapping(typeName = "OpenProductProduct", field = "zaken")
     suspend fun zaken(
+        authentication: CommonGroundAuthentication,
         openProductProduct: OpenProductProduct,
     ): List<Zaak>? =
         openProductProduct.zaken?.let {
             openProductService.getProductZaken(
-                it,
+                authentication = authentication,
+                zaken = it,
             )
         }
 

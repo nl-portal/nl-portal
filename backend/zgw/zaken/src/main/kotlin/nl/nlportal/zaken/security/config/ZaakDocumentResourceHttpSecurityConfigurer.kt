@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zakenapi.security.config
+package nl.nlportal.zaken.security.config
 
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import org.springframework.context.annotation.Configuration

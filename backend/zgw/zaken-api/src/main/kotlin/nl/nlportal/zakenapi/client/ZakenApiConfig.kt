@@ -15,14 +15,6 @@
  */
 package nl.nlportal.zakenapi.client
 
-import nl.nlportal.documentenapi.domain.DocumentStatus
-import nl.nlportal.documentenapi.domain.DocumentStatus.DEFINITIEF
-import nl.nlportal.documentenapi.domain.DocumentStatus.GEARCHIVEERD
-import nl.nlportal.documentenapi.domain.Vertrouwelijkheid
-import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.BEPERKT_OPENBAAR
-import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.INTERN
-import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
-import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.ZAAKVERTROUWELIJK
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.util.UUID
 

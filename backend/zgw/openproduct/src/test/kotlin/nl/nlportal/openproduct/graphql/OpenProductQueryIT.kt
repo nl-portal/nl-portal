@@ -22,7 +22,6 @@ import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
-import nl.nlportal.openproduct.web.rest.ProductDocumentResourceIT
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
@@ -205,6 +204,10 @@ class OpenProductQueryIT(
 
                             "GET /enkelvoudiginformatieobjecten/${KNOWN_DOC_ID}" -> {
                                 TestHelper.mockResponse(TestHelper.handleDocumentResponse)
+                            }
+
+                            "GET /zaken/api/v1/rollen" -> {
+                                TestHelper.mockResponse(TestHelper.handleZaakRollenResponse)
                             }
 
                             else -> {
