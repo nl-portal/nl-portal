@@ -23,9 +23,9 @@
     "test": "pnpm run --recursive --parallel test",
     "test:coverage": "pnpm run --recursive --parallel --filter '!./packages/app' --filter '!./packages/app-dev' test:coverage",
     "typecheck": "pnpm run --recursive --parallel typecheck",
-    "update-patch": "npm-check-updates --configFilePath .ncurc.patch.js",
-    "update-minor": "npm-check-updates --configFilePath .ncurc.minor.js",
-    "update-major": "npm-check-updates --configFilePath .ncurc.major.js",
+    "update-patch": "npm-check-updates --configFileName .ncurc.patch.js",
+    "update-minor": "npm-check-updates --configFileName .ncurc.minor.js",
+    "update-major": "npm-check-updates --configFileName .ncurc.major.js",
     "postinstall": "cd .. && husky frontend/.husky"
   },
   "devDependencies": {
