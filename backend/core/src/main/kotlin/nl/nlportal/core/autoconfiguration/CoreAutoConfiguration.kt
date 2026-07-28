@@ -16,6 +16,7 @@
 package nl.nlportal.core.autoconfiguration
 
 import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendModuleFeaturesConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
 import nl.nlportal.core.frontend.service.FrontendFeaturesConfigurationService
 import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
@@ -32,6 +33,7 @@ import tools.jackson.databind.json.JsonMapper
 @EnableConfigurationProperties(
     FrontendThemeConfigurationProperties::class,
     FrontendFeaturesConfigurationProperties::class,
+    FrontendModuleFeaturesConfigurationProperties::class,
 )
 class CoreAutoConfiguration {
     @Bean("objectMapper")
@@ -54,7 +56,12 @@ class CoreAutoConfiguration {
     @ConditionalOnMissingBean(FrontendFeaturesConfigurationService::class)
     fun frontendFeaturesConfigurationService(
         frontendFeaturesConfigurationProperties: FrontendFeaturesConfigurationProperties,
-    ): FrontendFeaturesConfigurationService = FrontendFeaturesConfigurationService(frontendFeaturesConfigurationProperties)
+        frontendModuleFeaturesConfigurationProperties: FrontendModuleFeaturesConfigurationProperties,
+    ): FrontendFeaturesConfigurationService =
+        FrontendFeaturesConfigurationService(
+            frontendFeaturesConfigurationProperties = frontendFeaturesConfigurationProperties,
+            frontendModuleFeaturesConfigurationProperties = frontendModuleFeaturesConfigurationProperties,
+        )
 
     @Bean
     @ConditionalOnMissingBean(FrontendFeaturesConfigurationResource::class)

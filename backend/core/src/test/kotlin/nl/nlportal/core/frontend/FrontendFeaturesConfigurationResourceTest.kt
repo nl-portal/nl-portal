@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.reactive.server.WebTestClient
 import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendModuleFeaturesConfigurationProperties
 import nl.nlportal.core.util.Mapper
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 
@@ -31,6 +32,7 @@ import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTest
 class FrontendFeaturesConfigurationResourceTest(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val frontendFeaturesConfigurationProperties: FrontendFeaturesConfigurationProperties,
+    @Autowired private val frontendModuleFeaturesConfigurationProperties: FrontendModuleFeaturesConfigurationProperties,
 ) {
     @Test
     fun `get features`() {
@@ -55,6 +57,31 @@ class FrontendFeaturesConfigurationResourceTest(
         assertEquals(
             frontendFeaturesConfigurationProperties.toggles.casesContactMomentsEnabled,
             responseJson.requiredAt("/toggles/casesContactMomentsEnabled").booleanValue(),
+        )
+    }
+
+    @Test
+    fun `get features enabled`() {
+        val responseBodyContent =
+            webTestClient
+                .get()
+                .uri("/api/public/features/enabled")
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBody()
+                .returnResult()
+                .responseBody
+
+        val responseJson = Mapper.get().readTree(responseBodyContent)
+
+        assertEquals(
+            true,
+            responseJson.requiredAt("/taak/enabled").booleanValue(),
+        )
+        assertEquals(
+            false,
+            responseJson.requiredAt("/besluiten/enabled").booleanValue(),
         )
     }
 }

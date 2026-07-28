@@ -15,10 +15,25 @@
  */
 package nl.nlportal.core.frontend.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendModuleFeaturesConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendModuleFeaturesConfigurationProperties.FrontendModuleFeaturesProperties
 
 class FrontendFeaturesConfigurationService(
     private var frontendFeaturesConfigurationProperties: FrontendFeaturesConfigurationProperties,
+    private var frontendModuleFeaturesConfigurationProperties: FrontendModuleFeaturesConfigurationProperties,
 ) {
     fun getFeatures(): FrontendFeaturesConfigurationProperties = frontendFeaturesConfigurationProperties
+
+    fun getFeatureModulesEnabled(): Map<String, FrontendModuleFeaturesProperties> {
+        val excludedModules = frontendModuleFeaturesConfigurationProperties.excludedModules
+        return frontendModuleFeaturesConfigurationProperties.config
+            .filterKeys { it !in excludedModules }
+            .mapKeys { (key, _) -> key.replace("api", "") }
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger {}
+    }
 }

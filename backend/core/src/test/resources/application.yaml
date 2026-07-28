@@ -1,5 +1,10 @@
 nl-portal:
   config:
+    taak:
+      enabled: true
+    besluiten:
+      enabled: false
+
     theme:
       style: '{
     "primaryColor": "#fdfdff",
