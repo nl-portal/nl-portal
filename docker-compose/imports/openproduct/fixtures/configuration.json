@@ -1,0 +1,67 @@
+[
+{
+  "model": "authtoken.token",
+  "pk": "ac045222c9e7cde8120b48735560f9b920bb58cd",
+  "fields": {
+    "user": 1,
+    "created": "2026-07-27T16:00:13.698Z"
+  }
+},
+{
+  "model": "zgw_consumers.service",
+  "pk": 1,
+  "fields": {
+    "label": "Notification API",
+    "uuid": "415042b2-c740-4532-be88-38ac5f8c9060",
+    "slug": "httplocalhost8001catalogiapiv1",
+    "api_type": "nrc",
+    "api_root": "http://localhost:8002/api/v1/",
+    "api_connection_check_path": "",
+    "auth_type": "zgw",
+    "client_id": "valtimo_client",
+    "secret": "e09b8bc5-5831-4618-ab28-41411304309d",
+    "oauth2_token_url": "",
+    "oauth2_scope": "",
+    "jwt_valid_for": 43200,
+    "header_key": "",
+    "header_value": "",
+    "nlx": "",
+    "user_id": "",
+    "user_representation": "",
+    "client_certificate": null,
+    "server_certificate": null,
+    "timeout": 10
+  }
+},
+{
+  "model": "notifications_api_common.notificationsconfig",
+  "pk": 1,
+  "fields": {
+    "notifications_api_service": null,
+    "notification_delivery_max_retries": 5,
+    "notification_delivery_retry_backoff": 3,
+    "notification_delivery_retry_backoff_max": 48,
+    "notification_delivery_base_factor": 4
+  }
+},
+{
+  "model": "notifications_api_common.notificationsconfig",
+  "pk": 2,
+  "fields": {
+    "notifications_api_service": 1,
+    "notification_delivery_max_retries": 5,
+    "notification_delivery_retry_backoff": 3,
+    "notification_delivery_retry_backoff_max": 48,
+    "notification_delivery_base_factor": 4
+  }
+},
+{
+  "model": "producttypen.dmnconfig",
+  "pk": 1,
+  "fields": {
+    "uuid": "3bc964a5-108d-430c-b7fb-6797bb17b6fd",
+    "naam": "watkanikregelen-parkeren",
+    "tabel_endpoint": "http://localhost:9000/engine-rest/decision-definition/key"
+  }
+}
+]

@@ -1,0 +1,175 @@
+[
+  {
+    "model": "klantinteracties.klantcontact",
+    "pk": 400,
+    "fields": {
+      "uuid": "482a8529-0ebd-4424-83a9-b9f88335673d",
+      "nummer": "0000000333",
+      "kanaal": "E-mail",
+      "onderwerp": "Vraag over status Bezwaar",
+      "inhoud": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit.",
+      "indicatie_contact_gelukt": true,
+      "taal": "nld",
+      "vertrouwelijk": true,
+      "plaatsgevonden_op": "2025-03-06T11:02:24Z"
+    }
+  },
+  {
+    "model": "klantinteracties.klantcontact",
+    "pk": 401,
+    "fields": {
+      "uuid": "652167f2-56cb-4ed4-8e33-91241081aa44",
+      "nummer": "0000000334",
+      "kanaal": "Telefoon",
+      "onderwerp": "Klacht",
+      "inhoud": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit.",
+      "indicatie_contact_gelukt": true,
+      "taal": "nld",
+      "vertrouwelijk": true,
+      "plaatsgevonden_op": "2025-10-29T11:02:24Z"
+    }
+  },
+  {
+    "model": "klantinteracties.onderwerpobject",
+    "pk": 600,
+    "fields": {
+      "uuid": "33489b0e-5954-4fc7-a3fd-d91f00ec0aa3",
+      "klantcontact": 400,
+      "was_klantcontact": null,
+      "onderwerpobjectidentificator_object_id": "729a9bdf-ea81-4a8d-b0ec-9b516ba26cc5",
+      "onderwerpobjectidentificator_code_objecttype": "zaak",
+      "onderwerpobjectidentificator_code_register": "open-zaak",
+      "onderwerpobjectidentificator_code_soort_object_id": "uuid"
+    }
+  },
+  {
+    "model": "klantinteracties.onderwerpobject",
+    "pk": 601,
+    "fields": {
+      "uuid": "4356aed6-1f11-4f18-9c94-30c36222c7aa",
+      "klantcontact": 401,
+      "was_klantcontact": null,
+      "onderwerpobjectidentificator_object_id": "727a510b-68cb-48d7-a6a5-f24bf1acecbe",
+      "onderwerpobjectidentificator_code_objecttype": "zaak",
+      "onderwerpobjectidentificator_code_register": "open-zaak",
+      "onderwerpobjectidentificator_code_soort_object_id": "uuid"
+    }
+  },
+  {
+    "model": "klantinteracties.betrokkene",
+    "pk": 300,
+    "fields": {
+      "bezoekadres_nummeraanduiding_id": "0000000000000001",
+      "bezoekadres_straatnaam": "",
+      "bezoekadres_huisnummer": 1,
+      "bezoekadres_huisnummertoevoeging": "",
+      "bezoekadres_postcode": "",
+      "bezoekadres_stad": "",
+      "bezoekadres_adresregel1": "King Olivereiland 64, 2551JV 's-Gravenhage",
+      "bezoekadres_adresregel2": "",
+      "bezoekadres_adresregel3": "",
+      "bezoekadres_land": "nl",
+      "correspondentieadres_nummeraanduiding_id": "0000000000000001",
+      "correspondentieadres_straatnaam": "",
+      "correspondentieadres_huisnummer": 1,
+      "correspondentieadres_huisnummertoevoeging": "",
+      "correspondentieadres_postcode": "",
+      "correspondentieadres_stad": "",
+      "correspondentieadres_adresregel1": "King Olivereiland 64, 2551JV 's-Gravenhage",
+      "correspondentieadres_adresregel2": "",
+      "correspondentieadres_adresregel3": "",
+      "correspondentieadres_land": "nl",
+      "contactnaam_voorletters": "D",
+      "contactnaam_voornaam": "Merel",
+      "contactnaam_voorvoegsel_achternaam": "",
+      "contactnaam_achternaam": "Kooyman",
+      "uuid": "7694c26b-8118-43a0-b0c1-37673f0f46e4",
+      "partij": 100,
+      "klantcontact": 400,
+      "rol": "klant",
+      "organisatienaam": "",
+      "initiator": true
+    }
+  },
+  {
+    "model": "klantinteracties.betrokkene",
+    "pk": 301,
+    "fields": {
+      "bezoekadres_nummeraanduiding_id": "22222",
+      "bezoekadres_straatnaam": "",
+      "bezoekadres_huisnummer": 1,
+      "bezoekadres_huisnummertoevoeging": "",
+      "bezoekadres_postcode": "",
+      "bezoekadres_stad": "",
+      "bezoekadres_adresregel1": "King Olivereiland 64, 2551JV 's-Gravenhage",
+      "bezoekadres_adresregel2": "",
+      "bezoekadres_adresregel3": "",
+      "bezoekadres_land": "nl",
+      "correspondentieadres_nummeraanduiding_id": "22222",
+      "correspondentieadres_straatnaam": "",
+      "correspondentieadres_huisnummer": 1,
+      "correspondentieadres_huisnummertoevoeging": "",
+      "correspondentieadres_postcode": "",
+      "correspondentieadres_stad": "",
+      "correspondentieadres_adresregel1": "King Olivereiland 64, 2551JV 's-Gravenhage",
+      "correspondentieadres_adresregel2": "",
+      "correspondentieadres_adresregel3": "",
+      "correspondentieadres_land": "nl",
+      "contactnaam_voorletters": "D",
+      "contactnaam_voornaam": "Merel",
+      "contactnaam_voorvoegsel_achternaam": "",
+      "contactnaam_achternaam": "Kooyman",
+      "uuid": "0af24036-2172-4d49-9be9-8368d5f97045",
+      "partij": 101,
+      "klantcontact": 401,
+      "rol": "klant",
+      "organisatienaam": "",
+      "initiator": true
+    }
+  },
+  {
+    "model": "klantinteracties.digitaaladres",
+    "pk": 500,
+    "fields": {
+      "uuid": "a5f323d8-8c87-43c2-990b-eae03d721adf",
+      "partij": 100,
+      "betrokkene": 300,
+      "soort_digitaal_adres": "email",
+      "is_standaard_adres": false,
+      "adres": "m.kooyman@example.com",
+      "omschrijving": "",
+      "referentie": "portaal",
+      "verificatie_datum": "2025-08-06"
+    }
+  },
+  {
+    "model": "klantinteracties.digitaaladres",
+    "pk": 501,
+    "fields": {
+      "uuid": "3b006b45-afa9-44ed-a690-32c545924a28",
+      "partij": 100,
+      "betrokkene": 300,
+      "soort_digitaal_adres": "telefoonnummer",
+      "is_standaard_adres": false,
+      "adres": "0701234567",
+      "omschrijving": "",
+      "referentie": "",
+      "verificatie_datum": null
+    }
+  },
+  {
+    "model": "klantinteracties.digitaaladres",
+    "pk": 502,
+    "fields": {
+      "uuid": "da80dc1c-bf9b-449f-80e6-2906e66db0a7",
+      "partij": 101,
+      "betrokkene": 300,
+      "soort_digitaal_adres": "telefoonnummer",
+      "is_standaard_adres": false,
+      "adres": "0701234567",
+      "omschrijving": "",
+      "referentie": "portaal",
+      "verificatie_datum": null
+    }
+  }
+]
