@@ -16,6 +16,7 @@
 package nl.nlportal.core.frontend.web.rest
 
 import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendModuleFeaturesConfigurationProperties.FrontendModuleFeaturesProperties
 import nl.nlportal.core.frontend.service.FrontendFeaturesConfigurationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,4 +30,7 @@ class FrontendFeaturesConfigurationResource(
 ) {
     @GetMapping(value = ["/features"])
     fun features(): ResponseEntity<FrontendFeaturesConfigurationProperties> = ResponseEntity.ok().header("Content-Type", "application/json").body(frontendFeaturesConfigurationService.getFeatures())
+
+    @GetMapping(value = ["/features/enabled"])
+    fun featuresModulesEnabled(): ResponseEntity<Map<String, FrontendModuleFeaturesProperties>> = ResponseEntity.ok().header("Content-Type", "application/json").body(frontendFeaturesConfigurationService.getFeatureModulesEnabled())
 }
