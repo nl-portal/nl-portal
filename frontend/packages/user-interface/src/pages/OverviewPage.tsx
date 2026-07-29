@@ -20,6 +20,7 @@ import { RouterOutletContext } from "../interfaces/router-outlet-context";
 import { useNavigate, useOutletContext } from "react-router";
 import AppContext from "../contexts/AppContext";
 import ProductsList from "../components/ProductsList";
+import { DEFAULT_LOCALES } from "@nl-portal/nl-portal-localization";
 
 interface OverviewPageProps {
   showNoEmailAlert?: boolean;
@@ -82,15 +83,15 @@ const OverviewPage = ({
         <Alert
           variant="warning"
           title={
-            intl.locale === "nl"
-              ? features.properties.overviewMaintenanceAlertTitleNl
-              : features.properties.overviewMaintenanceAlertTitleEn
+            intl.locale === DEFAULT_LOCALES.ENGLISH
+              ? features.properties.overviewMaintenanceAlertTitleEn
+              : features.properties.overviewMaintenanceAlertTitleNl
           }
           text={
             <Paragraph>
-              {intl.locale === "nl"
-                ? features.properties.overviewMaintenanceAlertTextNl
-                : features.properties.overviewMaintenanceAlertTextEn}
+              {intl.locale === DEFAULT_LOCALES.ENGLISH
+                ? features.properties.overviewMaintenanceAlertTextEn
+                : features.properties.overviewMaintenanceAlertTextNl}
             </Paragraph>
           }
         />
