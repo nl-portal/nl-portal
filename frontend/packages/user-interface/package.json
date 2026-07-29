@@ -98,7 +98,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-intl": "^7.1.14",
-    "react-router": "^7.10.1",
+    "react-router": "^7.18.2",
     "rimraf": "^6.1.2",
     "sass": "^1.97.0",
     "typescript": "^5.9.3",
@@ -115,6 +115,6 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-intl": "^7.1.14",
-    "react-router": "^7.10.1"
+    "react-router": "^7.18.2"
   }
 }
