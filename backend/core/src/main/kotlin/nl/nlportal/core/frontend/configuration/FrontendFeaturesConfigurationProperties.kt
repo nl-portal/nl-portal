@@ -15,12 +15,14 @@
  */
 package nl.nlportal.core.frontend.configuration
 
+import nl.nlportal.core.frontend.configuration.FrontendModuleFeaturesConfigurationProperties.FrontendModuleFeaturesProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.features", ignoreUnknownFields = true)
 class FrontendFeaturesConfigurationProperties {
     var properties: FrontendFeaturesProperties = FrontendFeaturesProperties()
     var toggles: FrontendFeaturesToggles = FrontendFeaturesToggles()
+    var config: Map<String, FrontendModuleFeaturesProperties>? = emptyMap()
 
     class FrontendFeaturesProperties {
         var myAddressResearchUrl: String = ""
