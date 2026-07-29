@@ -24,7 +24,11 @@ class FrontendFeaturesConfigurationService(
     private var frontendFeaturesConfigurationProperties: FrontendFeaturesConfigurationProperties,
     private var frontendModuleFeaturesConfigurationProperties: FrontendModuleFeaturesConfigurationProperties,
 ) {
-    fun getFeatures(): FrontendFeaturesConfigurationProperties = frontendFeaturesConfigurationProperties
+    fun getFeatures(): FrontendFeaturesConfigurationProperties {
+        val features = frontendFeaturesConfigurationProperties
+        features.config = getFeatureModulesEnabled()
+        return frontendFeaturesConfigurationProperties
+    }
 
     fun getFeatureModulesEnabled(): Map<String, FrontendModuleFeaturesProperties> {
         val excludedModules = frontendModuleFeaturesConfigurationProperties.excludedModules
