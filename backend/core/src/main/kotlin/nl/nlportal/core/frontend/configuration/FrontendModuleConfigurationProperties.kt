@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2025 Den Haag, Ritense, the Netherlands.
+ * Copyright 2026 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,11 @@ package nl.nlportal.core.frontend.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.config.theme", ignoreUnknownFields = true)
-class FrontendThemeConfigurationProperties {
-    var style: String? = null
-    var logo: String? = null
+@ConfigurationProperties(prefix = "nl-portal", ignoreUnknownFields = true)
+class FrontendModuleConfigurationProperties {
+    var config: Map<String, FrontendModuleProperties> = emptyMap()
+
+    class FrontendModuleProperties {
+        var enabled: Boolean = false
+    }
 }

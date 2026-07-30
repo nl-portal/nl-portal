@@ -72,9 +72,7 @@ nl-portal:
                     allowedMethods: "*"
         endpoints:
             unsecured: /api/public/**
-    excluded-modules:
-        - dmn
-        - documentenapis
-        - prefill
-        - objectenapi
-        - catalogiapi
+    frontend:
+        modules-whitelist:
+            - zakenapi
+            - berichten

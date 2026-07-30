@@ -15,17 +15,22 @@
  */
 package nl.nlportal.core.frontend.web.rest
 
-import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
+import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
+import nl.nlportal.core.frontend.domain.FrontendData
+import nl.nlportal.core.frontend.service.FrontendConfigurationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(value = ["/api/public"])
-class FrontendThemeConfigurationResource(
-    private val frontendConfigurationService: FrontendThemeConfigurationService,
+@RequestMapping(value = ["/api/public/frontend"])
+class FrontendConfigurationResource(
+    private val frontendConfigurationService: FrontendConfigurationService,
 ) {
+    @GetMapping(value = [""])
+    fun features(): ResponseEntity<FrontendData> = ResponseEntity.ok().header("Content-Type", "application/json").body(frontendConfigurationService.getFrontendData())
+
     @GetMapping(value = ["/theme/style"])
     fun style(): ResponseEntity<String> =
         when (val style = frontendConfigurationService.getStyle()) {
