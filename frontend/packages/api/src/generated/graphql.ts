@@ -69,7 +69,7 @@ export type Bericht = {
   identificatie: BerichtIdentificatie;
   onderwerp: Scalars['String']['output'];
   publicatiedatum: Scalars['ZonedDateTime']['output'];
-  referentie: Scalars['String']['output'];
+  referentie?: Maybe<Scalars['String']['output']>;
 };
 
 export enum BerichtHandelingsperspectief {
@@ -109,7 +109,7 @@ export type BerichtenPage = {
 
 export type Besluit = {
   __typename?: 'Besluit';
-  auditTrails: Array<BesluitAuditTrail>;
+  audittrails: Array<BesluitAuditTrail>;
   besluittype: BesluitType;
   bestuursorgaan?: Maybe<Scalars['String']['output']>;
   datum: Scalars['Date']['output'];
@@ -886,7 +886,7 @@ export type MaatschappelijkeActiviteit = {
   materieleRegistratie?: Maybe<MaterieleRegistratie>;
   naam: Scalars['String']['output'];
   sbiActiviteiten?: Maybe<Array<Maybe<SbiActiviteit>>>;
-  statutaireNaam: Scalars['String']['output'];
+  statutaireNaam?: Maybe<Scalars['String']['output']>;
   totaalWerkzamePersonen?: Maybe<Scalars['Int']['output']>;
 };
 
@@ -956,7 +956,7 @@ export type MutationGenerateOgonePaymentArgs = {
 export type MutationProcessSubmissionArgs = {
   caseDefinitionId: Scalars['String']['input'];
   initialStatus?: InputMaybe<Scalars['String']['input']>;
-  submission?: InputMaybe<Scalars['JSON']['input']>;
+  submission: Scalars['JSON']['input'];
 };
 
 
@@ -1571,9 +1571,10 @@ export type OpenProductEmbeddedThema = {
 };
 
 export enum OpenProductFrequentie {
-  Actief = 'ACTIEF',
-  Gereed = 'GEREED',
-  Ingetrokken = 'INGETROKKEN'
+  Eenmalig = 'EENMALIG',
+  Geen = 'GEEN',
+  Jaarlijks = 'JAARLIJKS',
+  Maandelijks = 'MAANDELIJKS'
 }
 
 export type OpenProductLink = {
@@ -1795,7 +1796,8 @@ export enum OpenProductToegestaneStatus {
 
 export type OpenProductUrl = {
   __typename?: 'OpenProductUrl';
-  url: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
+  urn?: Maybe<Scalars['String']['output']>;
 };
 
 export type OrganisatieIdentificatie = {
@@ -2127,7 +2129,7 @@ export type QueryGetBerichtenArgs = {
 
 
 export type QueryGetCaseInstanceArgs = {
-  id?: InputMaybe<Scalars['UUID']['input']>;
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -2757,7 +2759,7 @@ export type GetBerichtQueryVariables = Exact<{
 }>;
 
 
-export type GetBerichtQuery = { __typename?: 'Query', getBericht?: { __typename?: 'Bericht', id?: any | null, berichtTekst: string, berichtType: BerichtType, einddatumHandelingstermijn: any, geopend: boolean, handelingsperspectief: BerichtHandelingsperspectief, onderwerp: string, publicatiedatum: any, referentie: string, identificatie: { __typename?: 'BerichtIdentificatie', type: string, value: string }, documenten: Array<{ __typename?: 'Document', uuid: any, documentapi: string, identificatie?: string | null, creatiedatum?: string | null, titel?: string | null, formaat?: string | null, bestandsnaam?: string | null, bestandsomvang?: number | null }> } | null };
+export type GetBerichtQuery = { __typename?: 'Query', getBericht?: { __typename?: 'Bericht', id?: any | null, berichtTekst: string, berichtType: BerichtType, einddatumHandelingstermijn: any, geopend: boolean, handelingsperspectief: BerichtHandelingsperspectief, onderwerp: string, publicatiedatum: any, referentie?: string | null, identificatie: { __typename?: 'BerichtIdentificatie', type: string, value: string }, documenten: Array<{ __typename?: 'Document', uuid: any, documentapi: string, identificatie?: string | null, creatiedatum?: string | null, titel?: string | null, formaat?: string | null, bestandsnaam?: string | null, bestandsomvang?: number | null }> } | null };
 
 export type GetBerichtenQueryVariables = Exact<{
   pageNumber?: InputMaybe<Scalars['Int']['input']>;
