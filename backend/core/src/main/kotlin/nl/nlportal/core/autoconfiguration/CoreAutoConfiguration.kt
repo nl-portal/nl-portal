@@ -15,13 +15,10 @@
  */
 package nl.nlportal.core.autoconfiguration
 
-import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
-import nl.nlportal.core.frontend.configuration.FrontendModuleFeaturesConfigurationProperties
-import nl.nlportal.core.frontend.configuration.FrontendThemeConfigurationProperties
-import nl.nlportal.core.frontend.service.FrontendFeaturesConfigurationService
-import nl.nlportal.core.frontend.service.FrontendThemeConfigurationService
-import nl.nlportal.core.frontend.web.rest.FrontendFeaturesConfigurationResource
-import nl.nlportal.core.frontend.web.rest.FrontendThemeConfigurationResource
+import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
+import nl.nlportal.core.frontend.service.FrontendConfigurationService
+import nl.nlportal.core.frontend.web.rest.FrontendConfigurationResource
 import nl.nlportal.core.util.Mapper
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -31,9 +28,8 @@ import tools.jackson.databind.json.JsonMapper
 
 @AutoConfiguration
 @EnableConfigurationProperties(
-    FrontendThemeConfigurationProperties::class,
-    FrontendFeaturesConfigurationProperties::class,
-    FrontendModuleFeaturesConfigurationProperties::class,
+    FrontendModuleConfigurationProperties::class,
+    FrontendConfigurationProperties::class,
 )
 class CoreAutoConfiguration {
     @Bean("objectMapper")
@@ -41,31 +37,18 @@ class CoreAutoConfiguration {
     fun objectMapper(): JsonMapper = Mapper.get()
 
     @Bean
-    @ConditionalOnMissingBean(FrontendThemeConfigurationService::class)
-    fun frontendThemeConfigurationService(
-        coreThemeConfigurationProperties: FrontendThemeConfigurationProperties,
-    ): FrontendThemeConfigurationService = FrontendThemeConfigurationService(coreThemeConfigurationProperties)
+    @ConditionalOnMissingBean(FrontendConfigurationService::class)
+    fun frontendConfigurationService(
+        frontendConfigurationProperties: FrontendConfigurationProperties,
+        frontendModuleConfigurationProperties: FrontendModuleConfigurationProperties,
+    ) = FrontendConfigurationService(
+        frontendConfigurationProperties = frontendConfigurationProperties,
+        frontendModuleConfigurationProperties = frontendModuleConfigurationProperties,
+    )
 
     @Bean
-    @ConditionalOnMissingBean(FrontendThemeConfigurationResource::class)
-    fun frontendThemeConfigurationResource(
-        frontendConfigurationService: FrontendThemeConfigurationService,
-    ): FrontendThemeConfigurationResource = FrontendThemeConfigurationResource(frontendConfigurationService)
-
-    @Bean
-    @ConditionalOnMissingBean(FrontendFeaturesConfigurationService::class)
-    fun frontendFeaturesConfigurationService(
-        frontendFeaturesConfigurationProperties: FrontendFeaturesConfigurationProperties,
-        frontendModuleFeaturesConfigurationProperties: FrontendModuleFeaturesConfigurationProperties,
-    ): FrontendFeaturesConfigurationService =
-        FrontendFeaturesConfigurationService(
-            frontendFeaturesConfigurationProperties = frontendFeaturesConfigurationProperties,
-            frontendModuleFeaturesConfigurationProperties = frontendModuleFeaturesConfigurationProperties,
-        )
-
-    @Bean
-    @ConditionalOnMissingBean(FrontendFeaturesConfigurationResource::class)
-    fun frontendFeaturesConfigurationResource(
-        frontendFeaturesConfigurationService: FrontendFeaturesConfigurationService,
-    ): FrontendFeaturesConfigurationResource = FrontendFeaturesConfigurationResource(frontendFeaturesConfigurationService)
+    @ConditionalOnMissingBean(FrontendConfigurationResource::class)
+    fun frontendConfigurationResource(
+        frontendConfigurationService: FrontendConfigurationService,
+    ) = FrontendConfigurationResource(frontendConfigurationService)
 }
