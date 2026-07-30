@@ -12,6 +12,7 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 ## Bugfixes
 
 * De applicatiebeveiliging is verbeterd.
+* Fixed an issue where the toegestane status (in_aanvraag) of a product would break at de-/serialization
 
 ## Breaking changes
 
