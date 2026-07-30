@@ -11,7 +11,12 @@
     "minimumReleaseAge": "1 day",
     "packageRules": [
         {
-            "description": "Batch all non-major updates into a single weekly PR to reduce notification noise; majors stay separate for individual review.",
+            "description": "Only allow minor, patch and digest updates; major upgrades are handled manually.",
+            "matchUpdateTypes": ["major"],
+            "enabled": false
+        },
+        {
+            "description": "Batch all non-major updates into a single weekly PR to reduce notification noise.",
             "matchUpdateTypes": ["minor", "patch", "digest"],
             "groupName": "all non-major dependencies",
             "groupSlug": "all-minor-patch"
