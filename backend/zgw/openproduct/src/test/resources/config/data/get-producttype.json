@@ -117,7 +117,8 @@
   "update_datum": "2025-05-06T08:53:00.078716+02:00",
   "code": "PARKEREN",
   "toegestane_statussen": [
-    "gereed"
+    "gereed",
+    "in_aanvraag"
   ],
   "keywords": [
     "parkeren",

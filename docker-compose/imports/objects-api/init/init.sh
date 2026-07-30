@@ -4,9 +4,7 @@ echo ">>>>  NL Portal init script: Objects API <<<<"
 sleep 2
 while true
 do
-    # Checking whether last table is created
-    initiated=$(pg_isready -h $DB_HOST -q && psql postgresql://objects:objects@$DB_HOST -t -A -c "SELECT EXISTS (SELECT table_name FROM information_schema.tables WHERE table_name = 'zgw_consumers_service');" || "false")
-    if [ "t" = "${initiated}" ]
+    if pg_isready -h $DB_HOST -q && python /app/src/manage.py migrate --check >/dev/null 2>&1
         then
             echo "Database ready."
             echo "Attempting to create admin user:"

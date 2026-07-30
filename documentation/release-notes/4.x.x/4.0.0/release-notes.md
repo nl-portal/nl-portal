@@ -12,10 +12,12 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 ## Bugfixes
 
 * De applicatiebeveiliging is verbeterd.
+* Fixed an issue where the toegestane status (in_aanvraag) of a product would break at de-/serialization
 
 ## Breaking changes
 
 **Voor iedereen (ook gebruikers van de Docker-images):**
+* OpenProductFrequentie enum has changed and support also blank value
 
 * **Images verhuisd naar de monorepo.** De backend- en frontend-images worden nu vanuit `nl-portal/nl-portal` gepubliceerd op een gedeeld versienummer (`ghcr.io/nl-portal/nl-portal-backend` / `-frontend`). Wijs je deployment naar de nieuwe images. Zie migratie-instructies.
 * **Frontend feature-configuratie via `window.*` is verwijderd** (`config.js` / `config.template.js`). `window.*` bevat nu alleen nog OIDC- en API-URL-configuratie; alle feature-toggles en -eigenschappen worden nu op de backend gezet. Zie migratie-instructies.

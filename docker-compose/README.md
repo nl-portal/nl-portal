@@ -13,7 +13,8 @@
       * [Including all ZGW related services](#including-all-zgw-related-services)
       * [Keycloak and database only](#keycloak-and-database-only)
   * [Maintenance](#maintenance)
-    * [Updating Openzaak data](#updating-openzaak-data)
+    * [Demo data imports](#demo-data-imports)
+    * [Regenerating fixtures](#regenerating-fixtures)
   * [Known issues](#known-issues)
 <!-- TOC -->
 
@@ -176,13 +177,45 @@ docker compose up -d
 
 ## Maintenance
 
-### Updating Openzaak data
+### Demo data imports
 
-There is a script `./imports/open-zaak/resync/resync.sh` that will automatically create an import script for several tables of 
-OpenZaak. It requires that you install the postgres CLI tool `pg_dump` found in the postgres CLI tools. 
+All demo data is seeded as model-serialized Django fixtures loaded with `manage.py loaddata` after
+`migrate`. There is no raw SQL seeding: nothing is mounted into a service's postgres container at
+`/docker-entrypoint-initdb.d/`.
 
-You should only run this script if you have recently upgraded OpenZaak or added new data in OpenZaak you want to make available 
-after clearing the database.
+Every service uses the same wiring: the app container runs the image's default `/start.sh` (which runs
+`migrate`), and a dedicated `*-import` sidecar reuses the service image, mounts
+`imports/<service>/fixtures` into the image's app package and `imports/<service>/init`, and runs an
+init script that creates the `admin`/`admin` superuser and `loaddata`s the fixtures. This applies to
+`openzaak`, `objecten`, `objecttypen`, `open-notificaties`, `openproduct`, and `openklant-2`. The
+`openproduct` import sidecar additionally loads the UPL reference list via
+`manage.py load_upl --file imports/openproduct/init/UPL-actueel.csv`.
+
+Each import sidecar gates on `python /app/src/manage.py migrate --check` before seeding: it is
+read-only and exits 0 only once every migration in the pinned image is applied, so the load never
+races ahead of migrations and needs no hardcoded per-image sentinel table.
+
+Because fixtures are model-serialized, a minor image bump that only adds nullable columns imports
+without changes.
+
+> **Temporary workaround - `openproduct` app launcher.** The `openproduct` app container does not run
+> the plain default `/start.sh`; it runs `imports/openproduct/init/start.sh`, a thin wrapper that is
+> identical to the image's `/start.sh` except it `unset`s `UWSGI_PORT` before `exec uwsgi` (and does no
+> seeding). This works around a bug in `maykinmedia/open-product`: its `/start.sh` reads `UWSGI_PORT`
+> into a shell variable but leaves it exported, so uwsgi's `--strict` mode aborts on the auto-mapped
+> `port` directive (`[strict-mode] unknown config directive: port`). Once the ability to set
+> `UWSGI_PORT` is fixed upstream (issue to be lodged with Maykin), drop `start.sh` and revert the app
+> container to the default `/start.sh` like the other services.
+
+### Regenerating fixtures
+
+Fixtures are committed artifacts. To regenerate after a demo-data or schema change, seed a container
+with the desired data, then dump the relevant apps/models:
+```shell
+docker compose --profile <profile> up -d
+docker compose exec <service> python /app/src/manage.py dumpdata <apps> --indent 2 -o <fixture.json>
+```
+Copy the resulting JSON into `imports/<service>/fixtures/` and commit it.
 
 ## Known issues
 

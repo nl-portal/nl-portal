@@ -28,7 +28,7 @@ enum class OpenProductToegestaneStatus(
     @JsonValue val status: String,
 ) {
     INITIEEL("initieel"),
-    IN_AANVRAAG("in aanvraag"),
+    IN_AANVRAAG("in_aanvraag"),
     GEREED("gereed"),
     ACTIEF("actief"),
     INGETROKKEN("ingetrokken"),
@@ -48,9 +48,10 @@ enum class OpenProductDoelgroep(
 enum class OpenProductFrequentie(
     @JsonValue val frequentie: String,
 ) {
-    GEREED("eenmalig"),
-    ACTIEF("maandelijks"),
-    INGETROKKEN("jaarlijks"),
+    EENMALIG("eenmalig"),
+    MAANDELIJKS("maandelijks"),
+    JAARLIJKS("jaarlijks"),
+    GEEN(""),
 }
 
 enum class SortList(

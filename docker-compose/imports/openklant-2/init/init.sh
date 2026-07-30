@@ -1,21 +1,23 @@
 #!/bin/bash
 
-# Apply database migrations
->&2 echo "Apply database migrations"
-python src/manage.py migrate
-exists=$(echo "from django.contrib.auth import get_user_model; User = get_user_model(); print(User.objects.filter(username='admin').exists())" | python src/manage.py shell)
-if [ "False" = "${exists}" ]
-then
-  echo "Creating user 'admin'"
-  python src/manage.py createsuperuser --username=admin --email=admin@example.com --noinput
-else
-  echo "User 'admin' already exists"
-fi
-echo "Setting 'admin' password."
-echo "from django.contrib.auth import get_user_model; User = get_user_model(); user = User.objects.get(username='admin'); user.set_password('admin'); user.save()" | python src/manage.py shell
-echo "Loading fixtures"
-python src/manage.py loaddata klantinteracties contactgegevens
-python src/manage.py setup_configuration --yaml-file data.yaml
-echo "Finished setup"
+echo ">>>>  NL Portal init script: Open Klant 2 <<<<"
+sleep 2
+while true
+do
+    if pg_isready -h $DB_HOST -q && python /app/src/manage.py migrate --check >/dev/null 2>&1
+        then
+            echo "Database ready."
+            echo "Attempting to create admin user:"
+            sleep 2
+            DJANGO_SUPERUSER_PASSWORD=admin python /app/src/manage.py createsuperuser --username=admin --email=admin@example.com --noinput || true
+            echo "Loading fixtures:"
+            sleep 2
+            python /app/src/manage.py loaddata configuration partijen klantcontacten
+            break
+        else
+            echo "Database is not ready. Retrying in 10 seconds."
+            sleep 10
+    fi
+done
 
-sh /start.sh
+echo ">>>> Done <<<<"

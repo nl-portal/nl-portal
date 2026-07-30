@@ -17,8 +17,9 @@ class BesluitenQuery(
     val besluitenService: BesluitenService,
     val catalogiApiService: CatalogiApiService
 ) {
-    @SchemaMapping(typeName = "Besluit", field = "auditTrails")
+    @SchemaMapping(typeName = "Besluit", field = "audittrails")
     suspend fun auditTrails(
+        authentication: CommonGroundAuthentication,
         besluit: Besluit
     ): List<BesluitAuditTrail> {
         return besluitenService.getBesluitAuditTrails(CoreUtils.extractId(besluit.url))
@@ -37,6 +38,7 @@ class BesluitenQuery(
 
     @SchemaMapping(typeName = "Besluit", field = "besluittype")
     suspend fun besluittype(
+        authentication: CommonGroundAuthentication,
         besluit: Besluit
     ): BesluitType {
         return catalogiApiService.getBesluitType(
