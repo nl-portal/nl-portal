@@ -48,9 +48,10 @@ enum class OpenProductDoelgroep(
 enum class OpenProductFrequentie(
     @JsonValue val frequentie: String,
 ) {
-    GEREED("eenmalig"),
-    ACTIEF("maandelijks"),
-    INGETROKKEN("jaarlijks"),
+    EENMALIG("eenmalig"),
+    MAANDELIJKS("maandelijks"),
+    JAARLIJKS("jaarlijks"),
+    GEEN(""),
 }
 
 enum class SortList(

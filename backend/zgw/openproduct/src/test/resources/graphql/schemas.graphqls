@@ -165,9 +165,10 @@ type OpenProductContact {
 }
 
 enum OpenProductFrequentie {
-    GEREED
-    ACTIEF
-    INGETROKKEN
+    EENMALIG
+    MAANDELIJKS
+    JAARLIJKS
+    GEEN
 }
 
 type OpenProductLink {
