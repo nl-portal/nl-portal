@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.domain
 
+@Deprecated("Use instead openproduct functionality")
 data class BeslisTabelVariable(
     val name: String,
     val classType: DmnVariableType,

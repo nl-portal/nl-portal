@@ -20,6 +20,7 @@ import okhttp3.mockwebserver.MockResponse
 import org.springframework.test.web.reactive.server.WebTestClient
 import java.util.function.Consumer
 
+@Deprecated("Use instead openproduct functionality")
 object TestHelper {
     val ERRORS_JSON_PATH = "$.errors"
     val EXTENSIONS_JSON_PATH = "$.extensions"

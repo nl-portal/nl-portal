@@ -20,6 +20,7 @@ import nl.nlportal.graphql.Page
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.ResultPage
 
+@Deprecated("Use instead openproduct functionality")
 class ProductPage(
     number: Int,
     size: Int,

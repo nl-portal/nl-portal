@@ -22,6 +22,7 @@ import org.springframework.core.io.Resource
 import org.springframework.util.StreamUtils
 import java.nio.charset.StandardCharsets
 
+@Deprecated("Use instead openproduct functionality")
 @Configuration
 class ProductTestConfiguration {
     @Value("classpath:product/graphql/getProduct.graphql")

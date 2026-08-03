@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.domain
 
+@Deprecated("Use instead openproduct functionality")
 data class ProductCim(
     val productcode: String,
     val productnaam: String,
