@@ -11,8 +11,7 @@ nl-portal:
       - taak
       - berichten
       - besluiten
-    theme:
-      style: '{
+    style: '{
     "primaryColor": "#fdfdff",
     "primary-button-color": "#hhhheh"
 }'

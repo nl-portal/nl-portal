@@ -15,6 +15,7 @@
  */
 package nl.nlportal.core.frontend
 
+import java.nio.charset.Charset
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
 import nl.nlportal.core.util.Mapper
@@ -67,5 +68,39 @@ class FrontendConfigurationResourceTest(
             false,
             responseJson.requiredAt("/modules/besluiten/enabled").booleanValue(),
         )
+    }
+
+    @Test
+    fun `get style`() {
+        val responseBodyContent =
+            webTestClient
+                .get()
+                .uri("/api/public/frontend/theme/style")
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBody()
+                .returnResult()
+                .responseBodyContent
+                ?.toString(Charset.defaultCharset())
+
+        assertEquals(frontendConfigurationProperties.style, responseBodyContent)
+    }
+
+    @Test
+    fun `get logo`() {
+        val responseBodyContent =
+            webTestClient
+                .get()
+                .uri("/api/public/frontend/theme/logo")
+                .exchange()
+                .expectStatus()
+                .isOk
+                .expectBody()
+                .returnResult()
+                .responseBodyContent
+                ?.toString(Charset.defaultCharset())
+
+        assertEquals(frontendConfigurationProperties.logo, responseBodyContent)
     }
 }
