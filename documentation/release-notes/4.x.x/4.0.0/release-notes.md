@@ -31,6 +31,10 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 
 Er zijn geen deprecations.
 
+## Removals
+
+* (Ogone) payment has been removed, use instead the Direct payment.
+
 ## Migratie-instructies
 
 **Frontend-features naar de backend.** Verplaats de voorheen via `window.*` gezette features naar `nl-portal.config.features.*` (of de env-vorm `NLPORTAL_CONFIG_FEATURES_*` met relaxed binding). Mapping oude `window.*` var → nieuwe backend-property:
@@ -65,6 +69,8 @@ Verwijderde variabelen zonder vervanging (werden niet meer gebruikt): `OPEN_KLAN
 Tags zijn beschikbaar per volledige versie (`4.0.0`), minor (`4.0`) en major (`4`).
 
 **Broncode / maatwerk.** Bouw en draai met Java 21; bouw de frontend met Node 24 en pnpm 11. Controleer eigen uitbreidingen op Spring Boot 4- / Spring Security 7-wijzigingen.
+
+Remove the "payment" dependency from the pom.xml or build.gradle file.
 
 ## Bekende problemen
 
