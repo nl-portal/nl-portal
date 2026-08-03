@@ -36,6 +36,7 @@ import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 import tools.jackson.core.type.TypeReference
 
+@Deprecated("Use instead openproduct functionality")
 @Controller
 class ProductQuery(
     private val productService: ProductService,

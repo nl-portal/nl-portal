@@ -18,6 +18,7 @@ package nl.nlportal.product.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+@Deprecated("Use instead openproduct functionality")
 @ConfigurationProperties(prefix = "nl-portal.config.dmn", ignoreUnknownFields = true)
 data class DmnConfig(
     var enabled: Boolean = false,

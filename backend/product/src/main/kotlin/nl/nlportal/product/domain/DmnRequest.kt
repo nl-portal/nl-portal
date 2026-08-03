@@ -17,6 +17,7 @@ package nl.nlportal.product.domain
 
 import com.fasterxml.jackson.annotation.JsonValue
 
+@Deprecated("Use instead openproduct functionality")
 data class DmnRequest(
     val key: String,
     val mapping: DmnRequestMapping,

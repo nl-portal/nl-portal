@@ -45,6 +45,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import tools.jackson.databind.node.ObjectNode
 
+@Deprecated("Use instead openproduct functionality")
 class ProductService(
     val productConfigProperties: ProductConfigProperties,
     val objectsApiTaskConfig: TaakConfigProperties,
