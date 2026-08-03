@@ -1,0 +1,224 @@
+server:
+    port: 8080
+
+management:
+    endpoint:
+        health:
+            access: read_only
+            probes:
+                enabled: true
+        refresh:
+            access: unrestricted
+        restart:
+            access: unrestricted
+    endpoints:
+        access:
+            default: none
+        web:
+            exposure:
+                include: health, refresh, restart
+
+spring:
+    application:
+        name: nl-portal-app-dev
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    jwk-set-uri: http://localhost:8082/auth/realms/nlportal/protocol/openid-connect/certs
+    liquibase:
+        enabled: false
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/nl-portal
+        username: nlportal
+        password: password
+    jpa:
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+    graphql:
+        graphiql:
+            enabled: true
+        schema:
+            locations: classpath*:graphql/**/
+            introspection:
+                enabled: true
+
+graphql:
+    packages:
+        - "nl.nlportal"
+
+logging:
+    level:
+        root: DEBUG
+        liquibase: WARN
+
+nl-portal:
+    authentication:
+        keycloak:
+            resource: nl-portal-m2m
+            audience: nl-portal-token-exchange
+            credentials:
+                secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
+    security:
+        cors:
+            -   path: "/**"
+                config:
+                    allowedHeaders: "*"
+                    allowedOrigins: "*"
+                    allowedMethods: "*"
+        endpoints:
+            unsecured: /api/public/**
+    config:
+        besluitenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: nl-portal
+                secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
+        catalogiapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: nl-portal
+                secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
+        documentenapis:
+            enabled: true
+            properties:
+                default-document-api: openzaak
+                vertrouwelijkheidsaanduiding-whitelist:
+                    - openbaar
+                    - beperkt_openbaar
+                    - intern
+                    - zaakvertrouwelijk
+                    - vertrouwelijk
+                    - confidentieel
+                    - geheim
+                    - zeer_geheim
+                status-whitelist:
+                    - ter_vaststelling
+                    - in_bewerking
+                    - definitief
+                    - gearchiveerd
+                configurations:
+                    openzaak:
+                        url: http://localhost:8001/documenten/api/v1
+                        clientId: nl-portal
+                        secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
+                        rsin: "051845623"
+                        documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/36e40d95-e411-4884-b08f-e5864ec8167f
+        virusscan:
+            clamav:
+                enabled: true
+                properties:
+                    hostname: localhost
+                    port: 3310
+        zakenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8001
+                clientId: nl-portal
+                secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
+        objectenapi:
+            enabled: true
+            properties:
+                url: http://localhost:8010
+                token: 182c13e2209161852c53cef53a879f7a2f923430
+        openklant2:
+            enabled: true
+            properties:
+                contactgegevens-api-url: http://localhost:8014/contactgegevens/api/v1
+                klantinteracties-api-url: http://localhost:8014/klantinteracties/api/v1
+                token: ac045222c9e7cde8120b48735560f9b920bb58cd
+        haalcentraal2:
+            enabled: true
+            properties:
+                brp-api-url: http://localhost:5010/haalcentraal/api/brp/
+                bewoning-api-url: http://localhost:5011/haalcentraal/api/bewoning/
+        haalcentraal:
+            hr:
+                enabled: true
+        taak:
+            enabled: true
+            properties:
+                object-type-url: http://localhost:8011/api/v2/objecttypes/b4a617af-6969-45e8-9afd-d51e170716d5
+        berichten:
+            enabled: true
+            properties:
+                bericht-object-type-url: http://localhost:8011/api/v2/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
+        form:
+            properties:
+                form-definition-object-type-url: http://localhost:8011/api/v2/objecttypes/4b5f4fba-0746-11ed-b939-0242ac120002
+        openproduct:
+            enabled: true
+            properties:
+                token: ac045222c9e7cde8120b48735560f9b920bb58cd
+                product-api-url: http://localhost:8015/producten/api/v1
+                product-type-api-url: http://localhost:8015/producttypen/api/v1
+        product:
+            enabled: true
+            properties:
+                product-type-url: http://localhost:8011/api/v2/objecttypes/10b88cbd-5b9e-4e25-8635-eda8fe5ad227
+                product-instantie-type-url: http://localhost:8011/api/v2/objecttypes/d5ae0ab0-fd6d-40a2-87ae-54d11a85d3d8
+                product-details-type-url: http://localhost:8011/api/v2/objecttypes/7165a692-2632-4a5d-b8ba-e360dafc4bce
+                product-verbruiks-object-type-url: http://localhost:8011/api/v2/objecttypes/41778685-f876-4f74-ab54-b04ff23524b8
+        dmn:
+            enabled: true
+            properties:
+                url: http://localhost:8010
+        prefill:
+            enabled: true
+            properties:
+                type-url: http://localhost:8011/api/v2/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
+        payment:
+            direct:
+                enabled: true
+                properties:
+                    url: https://payment.preprod.direct.worldline-solutions.com
+                    sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
+                    configurations:
+                        belastingzaken:
+                            pspId: TAX
+                            language: "nl_NL"
+                            returnUrl: http://localhost:3000
+                            apiKey: dummy
+                            apiSecret: dummy
+                            webhookApiKey: dummy
+                            webhookApiSecret: dummy
+            ogone:
+                enabled: true
+                properties:
+                    url: https://secure.ogone.com/ncol/test/orderstandard.asp
+                    sha-out-parameters: AAVADDRESS,AAVCHECK,AAVMAIL,AAVNAME,AAVPHONE,AAVZIP,ACCEPTANCE,ALIAS,AMOUNT,BIC,BIN,BRAND,CARDNO,CCCTY,CN,COLLECTOR_BIC,COLLECTOR_IBAN,COMPLUS,CREATION_STATUS,CREDITDEBIT,CURRENCY,CVCCHECK,DCC_COMMPERCENTAGE,DCC_CONVAMOUNT,DCC_CONVCCY,DCC_EXCHRATE,DCC_EXCHRATESOURCE,DCC_EXCHRATETS,DCC_INDICATOR,DCC_MARGINPERCENTAGE,DCC_VALIDHOURS,DIGESTCARDNO,ECI,ED,EMAIL,ENCCARDNO,FXAMOUNT,FXCURRENCY,IP,IPCTY,MANDATEID,MOBILEMODE,NBREMAILUSAGE,NBRIPUSAGE,NBRIPUSAGE_ALLTX,NBRUSAGE,NCERROR,ORDERID,PAYID,PAYIDSUB,PAYMENT_REFERENCE,PM,SCO_CATEGORY,SCORING,SEQUENCETYPE,SIGNDATE,STATUS,SUBBRAND,SUBSCRIPTION_ID,TRXDATE,VC
+                    configurations:
+                        belastingzaken:
+                            pspId: TAX
+                            title: Belastingzaken
+                            shaInKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                            shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
+                            failureUrl: http://localhost:3000
+                            successUrl: http://localhost:3000
+        verificatie:
+            enabled: true
+        theme:
+            logo:
+            style:
+        features:
+            properties:
+                message-count-polling-interval: 10000
+                overview-current-cases-preview-length: 4
+                overview-maintenance-alert-title-nl: Ontwikkelmodus
+                overview-maintenance-alert-title-en: Development mode
+                overview-maintenance-alert-text-nl: Deze omgeving draait in ontwikkelmodus met testgegevens.
+                overview-maintenance-alert-text-en: This environment is running in development mode with test data.
+            toggles:
+                theme-api-enabled: true
+                message-count-enabled: true
+                cases-partial-search-enabled: true
+                my-inhabitant-count-enabled: true
+                open-product-enabled: true
+                cases-result-explanation-enabled: true
+                legacy-payment-enabled: true
+                cases-contact-moments-enabled: true
+                overview-intro-enabled: true
+                overview-maintenance-alert-enabled: true

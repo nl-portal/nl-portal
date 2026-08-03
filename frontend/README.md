@@ -33,12 +33,23 @@ From `frontend/`:
 
 ```shell
 pnpm install   # install all workspace dependencies
-pnpm dev       # build the libraries in watch mode and serve the app on :3000
+pnpm dev       # build the libraries in watch mode and serve the DEV app on :3000
 ```
 
-`pnpm dev` runs every package's dev script in parallel: the libraries build in watch mode (via
-`vite build --watch`) and the app (`nl-portal-app`) waits for them, then starts its vite dev server.
-For a one-off build of everything instead, use `pnpm build`.
+There are two app packages: `nl-portal-app` (the shippable app) and `nl-portal-app-dev` (a
+developer-only sandbox that carries work-in-progress demos and is never published, see
+[packages/app-dev](./packages/app-dev/README.md)). The root scripts default to the dev app; add the
+`app:` prefix for the stable app:
+
+| Dev app (default) | Stable app         |
+| ----------------- | ------------------ |
+| `pnpm dev`        | `pnpm app:dev`     |
+| `pnpm build`      | `pnpm app:build`   |
+| `pnpm preview`    | `pnpm app:preview` |
+
+Each `dev` script runs its package's dependencies' dev scripts in parallel: the libraries build in watch
+mode (via `vite build --watch`) and the app waits for them, then starts its vite dev server. For a
+one-off build of every package instead, use `pnpm -r build` (this is what CI runs).
 
 ## Quality checks
 

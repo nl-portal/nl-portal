@@ -387,6 +387,7 @@ services:
     nl-portal-open-notificaties-database:
         image: postgis/postgis:15-3.5
         container_name: nl-portal-open-notificaties-database
+        platform: linux/amd64
         profiles:
             - zgw
             - objecten

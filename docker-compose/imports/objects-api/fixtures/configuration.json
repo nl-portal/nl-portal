@@ -1,59 +1,77 @@
 [
-    {
-        "model": "token.tokenauth",
-        "pk": 1,
-        "fields": {
-            "identifier": "nlp",
-            "token": "182c13e2209161852c53cef53a879f7a2f923430",
-            "application": "NL Portal",
-            "contact_person": "nl-portal",
-            "email": "nl-portal@example.com",
-            "organization": "NL Portal",
-            "last_modified": "2025-10-01T16:45:19.000Z",
-            "created": "2020-12-22T16:27:00.751Z"
-        }
-    },
-    {
-        "model": "zgw_consumers.service",
-        "pk": 1,
-        "fields": {
-            "label": "Objecttypen API",
-            "api_type": "orc",
-            "api_root": "http://localhost:8011/api/v2/",
-            "client_id": "",
-            "secret": "",
-            "auth_type": "api_key",
-            "header_key": "Authorization",
-            "header_value": "Token cd63e158f3aca276ef284e3033d020a22899c728",
-            "slug": "objects-api",
-            "nlx": "",
-            "user_id": "",
-            "user_representation": ""
-        }
-    },
-    {
-        "model": "zgw_consumers.service",
-        "pk": 2,
-        "fields": {
-            "label": "Notificaties",
-            "api_type": "nrc",
-            "api_root": "http://localhost:8012/api/v1/",
-            "client_id": "objects-api",
-            "secret": "xxoV*EMTKD@n6bFq6Ab*8BvLiB6XC!E3",
-            "auth_type": "zgw",
-            "header_key": "",
-            "header_value": "",
-            "slug": "notificaties-api",
-            "nlx": "",
-            "user_id": "objects-api",
-            "user_representation": "Objects API"
-        }
-    },
-    {
-        "model": "notifications_api_common.notificationsconfig",
-        "pk": 1,
-        "fields": {
-            "notifications_api_service_id": 2
-        }
+{
+    "model": "notifications_api_common.notificationsconfig",
+    "pk": 1,
+    "fields": {
+        "notifications_api_service": 2,
+        "notification_delivery_max_retries": 5,
+        "notification_delivery_retry_backoff": 3,
+        "notification_delivery_retry_backoff_max": 48,
+        "notification_delivery_base_factor": 4
     }
+},
+{
+    "model": "token.tokenauth",
+    "pk": 1,
+    "fields": {
+        "identifier": "nlp",
+        "token": "182c13e2209161852c53cef53a879f7a2f923430",
+        "contact_person": "nl-portal",
+        "email": "nl-portal@example.com",
+        "organization": "NL Portal",
+        "last_modified": "2025-10-01T16:45:19Z",
+        "created": "2020-12-22T16:27:00.751Z",
+        "application": "NL Portal",
+        "administration": "",
+        "is_superuser": false
+    }
+},
+{
+    "model": "zgw_consumers.service",
+    "pk": 1,
+    "fields": {
+        "label": "Objecttypen API",
+        "uuid": "9d39dc09-7cc5-4fd7-854e-c66300e5be85",
+        "slug": "objects-api",
+        "api_type": "orc",
+        "api_root": "http://localhost:8011/api/v2/",
+        "api_connection_check_path": "",
+        "auth_type": "api_key",
+        "client_id": "",
+        "secret": "",
+        "jwt_valid_for": 43200,
+        "header_key": "Authorization",
+        "header_value": "Token cd63e158f3aca276ef284e3033d020a22899c728",
+        "nlx": "",
+        "user_id": "",
+        "user_representation": "",
+        "client_certificate": null,
+        "server_certificate": null,
+        "timeout": 10
+    }
+},
+{
+    "model": "zgw_consumers.service",
+    "pk": 2,
+    "fields": {
+        "label": "Notificaties",
+        "uuid": "88eacb78-c382-40f9-8af1-9a3c5586636c",
+        "slug": "notificaties-api",
+        "api_type": "nrc",
+        "api_root": "http://localhost:8012/api/v1/",
+        "api_connection_check_path": "",
+        "auth_type": "zgw",
+        "client_id": "objects-api",
+        "secret": "xxoV*EMTKD@n6bFq6Ab*8BvLiB6XC!E3",
+        "jwt_valid_for": 43200,
+        "header_key": "",
+        "header_value": "",
+        "nlx": "",
+        "user_id": "objects-api",
+        "user_representation": "Objects API",
+        "client_certificate": null,
+        "server_certificate": null,
+        "timeout": 10
+    }
+}
 ]

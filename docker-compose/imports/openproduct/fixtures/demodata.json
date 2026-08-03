@@ -1,1184 +1,1269 @@
 [
-{
-  "model": "producttypen.jsonschema",
-  "pk": 1,
-  "fields": {
-    "naam": "parkeervergunning-verbruiksobject",
-    "schema": {
-      "type": "object",
-      "title": "PDCverbruiksObject",
-      "$schema": "http://json-schema.org/draft-07/schema",
-      "examples": [
-        {
-          "data": {
-            "mijnExtraData": "abc",
-            "Een genest object": {
-              "nogMeer": "data"
-            }
-          },
-          "soort": "gemeldeVerhuur",
-          "productInstantie": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
-        }
-      ],
-      "required": [
-        "soort",
-        "productInstantie",
-        "data"
-      ],
-      "properties": {
-        "data": {
-          "type": "object",
-          "description": "Vrij veld voor verbruiksobject data"
-        },
-        "soort": {
-          "type": "string",
-          "description": "Soort / type verbruiksobject. Alle verbruiksobjecten van het zelfde soort hebben hetzelfde type"
-        },
-        "productInstantie": {
-          "type": "string",
-          "format": "uuid",
-          "description": "UUID van bijhorend PDCProductInstantie"
-        }
-      },
-      "description": "Product verbruik details van een instantie uit het PDC. Bevat product data die vaak aangepast moet worden. Bijvoorbeeld een log van gebruikte tijdsvakken",
-      "additionalProperties": false
-    }
-  }
-},
-{
-  "model": "producttypen.jsonschema",
-  "pk": 2,
-  "fields": {
-    "naam": "parkeervergunning-dataobject",
-    "schema": {
-      "type": "object",
-      "required": [
-        "uren"
-      ],
-      "properties": {
-        "uren": {
-          "type": "number"
-        }
-      }
-    }
-  }
-},
-{
-  "model": "producttypen.jsonschema",
-  "pk": 3,
-  "fields": {
-    "naam": "ooievaarspas-dataobject",
-    "schema": {
-      "type": "object",
-      "required": [],
-      "properties": {}
-    }
-  }
-},
-{
-  "model": "producttypen.jsonschema",
-  "pk": 4,
-  "fields": {
-    "naam": "belastingzaken-dataobject",
-    "schema": {
-      "type": "object",
-      "required": [
-        "uren"
-      ],
-      "properties": {
-        "uren": {
-          "type": "number"
-        }
-      }
-    }
-  }
-},
-{
-  "model": "producttypen.jsonschema",
-  "pk": 5,
-  "fields": {
-    "naam": "parkeervergunning-verbruiksobjectobject",
-    "schema": {
-      "type": "object",
-      "title": "PDCverbruiksObject",
-      "$schema": "http://json-schema.org/draft-07/schema",
-      "examples": [
-        {
-          "data": {
-            "mijnExtraData": "abc",
-            "Een genest object": {
-              "nogMeer": "data"
-            }
-          },
-          "soort": "gemeldeVerhuur",
-          "productInstantie": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
-        }
-      ],
-      "required": [
-        "soort",
-        "productInstantie",
-        "data"
-      ],
-      "properties": {
-        "data": {
-          "type": "object",
-          "description": "Vrij veld voor verbruiksobject data"
-        },
-        "soort": {
-          "type": "string",
-          "description": "Soort / type verbruiksobject. Alle verbruiksobjecten van het zelfde soort hebben hetzelfde type"
-        },
-        "productInstantie": {
-          "type": "string",
-          "format": "uuid",
-          "description": "UUID van bijhorend PDCProductInstantie"
-        }
-      },
-      "description": "Product verbruik details van een instantie uit het PDC. Bevat product data die vaak aangepast moet worden. Bijvoorbeeld een log van gebruikte tijdsvakken",
-      "additionalProperties": false
-    }
-  }
-},
-{
-  "model": "producttypen.jsonschema",
-  "pk": 6,
-  "fields": {
-    "naam": "woonwagenstandplaatsdata",
-    "schema": {
-      "type": "object",
-      "title": "woonwagenstandplaatsdata",
-      "examples": [
-        {
-          "status": "ingeschreven",
-          "inschrijfdatum": "2025-10-23T00:00:00+02:00",
-          "uitschrijfdatum": "2025-10-23T00:00:00+02:00",
-          "derdeVoorkeurslocatie": "Standplaats De Vaart",
-          "eersteVoorkeurslocatie": "Standplaats De Wieken",
-          "tweedeVoorkeurslocatie": "Standplaats Het Anker"
-        }
-      ],
-      "required": [
-        "status",
-        "inschrijfdatum",
-        "eersteVoorkeurslocatie"
-      ],
-      "properties": {
-        "status": {
-          "enum": [
-            "ingeschreven",
-            "uitgeschreven"
-          ],
-          "type": "string",
-          "description": "Status van de inschrijving."
-        },
-        "inschrijfdatum": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Inschrijfdatum voor de wachtlijst"
-        },
-        "uitschrijfdatum": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Uitschrijfdatum voor de wachtlijst"
-        },
-        "derdeVoorkeurslocatie": {
-          "type": "string",
-          "description": "Derde voorkeurslocatie voor een woonwagenstandplaats"
-        },
-        "eersteVoorkeurslocatie": {
-          "type": "string",
-          "description": "Eerste voorkeurslocatie voor een woonwagenstandplaats"
-        },
-        "tweedeVoorkeurslocatie": {
-          "type": "string",
-          "description": "Tweede voorkeurslocatie voor een woonwagenstandplaats"
-        }
-      },
-      "description": "Schema voor het opslaan van woonwagen data",
-      "additionalProperties": false
-    }
-  }
-},
-{
-  "model": "producttypen.jsonschema",
-  "pk": 7,
-  "fields": {
-    "naam": "erfpachtdata",
-    "schema": {
-      "type": "object",
-      "title": "erfpachtdata",
-      "examples": [
-        {
-          "status": "ingeschreven",
-          "inschrijfdatum": "2026-02-25T00:00:00+02:00",
-          "uitschrijfdatum": "2026-02-24T00:00:00+02:00"
-        }
-      ],
-      "required": [
-        "status",
-        "inschrijfdatum"
-      ],
-      "properties": {
-        "status": {
-          "enum": [
-            "ingeschreven",
-            "uitgeschreven"
-          ],
-          "type": "string",
-          "description": "Status van de inschrijving."
-        },
-        "inschrijfdatum": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Inschrijfdatum voor de wachtlijst"
-        },
-        "uitschrijfdatum": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Uitschrijfdatum voor de wachtlijst"
-        }
-      },
-      "description": "Schema voor het opslaan van erfpacht data",
-      "additionalProperties": false
-    }
-  }
-},
-{
-  "model": "producttypen.thema",
-  "pk": 1,
-  "fields": {
-    "uuid": "1a25f58c-8e7b-425f-b466-7e6f8ca1268b",
-    "aanmaak_datum": "2026-07-27T16:00:13.743Z",
-    "update_datum": "2026-07-27T16:00:13.743Z",
-    "naam": "Hoofdthema",
-    "hoofd_thema": null,
-    "beschrijving": "Hoofdthema thema",
-    "gepubliceerd": true
-  }
-},
-{
-  "model": "producttypen.thema",
-  "pk": 2,
-  "fields": {
-    "uuid": "c00a7724-3e8f-4155-9ae1-2edbc6eaeefe",
-    "aanmaak_datum": "2026-07-27T16:00:13.743Z",
-    "update_datum": "2026-07-27T16:00:13.743Z",
-    "naam": "Subthema",
-    "hoofd_thema": 1,
-    "beschrijving": "Subthema thema",
-    "gepubliceerd": true
-  }
-},
-{
-  "model": "producttypen.thema",
-  "pk": 3,
-  "fields": {
-    "uuid": "b95cfbf6-8578-410b-b108-a42fd20af843",
-    "aanmaak_datum": "2026-07-27T16:00:13.743Z",
-    "update_datum": "2026-07-27T16:00:13.743Z",
-    "naam": "Parkeren",
-    "hoofd_thema": 2,
-    "beschrijving": "Parkeren thema",
-    "gepubliceerd": true
-  }
-},
-{
-  "model": "producttypen.thema",
-  "pk": 4,
-  "fields": {
-    "uuid": "41f71c2e-9e0c-4a1b-8d39-709669b256c2",
-    "aanmaak_datum": "2026-07-27T16:00:13.743Z",
-    "update_datum": "2026-07-27T16:00:13.743Z",
-    "naam": "Belastingzaken",
-    "hoofd_thema": null,
-    "beschrijving": "Belastingzaken thema",
-    "gepubliceerd": true
-  }
-},
-{
-  "model": "producttypen.thema",
-  "pk": 5,
-  "fields": {
-    "uuid": "17d21ea4-7fa7-4532-88cd-081c089000f3",
-    "aanmaak_datum": "2026-07-27T16:00:13.743Z",
-    "update_datum": "2026-07-27T16:00:13.743Z",
-    "naam": "Inkomensondersteuning",
-    "hoofd_thema": null,
-    "beschrijving": "Sociaal domein",
-    "gepubliceerd": true
-  }
-},
-{
-  "model": "producttypen.thema",
-  "pk": 6,
-  "fields": {
-    "uuid": "c79c9cd6-a5dd-459b-a15e-6506149ab9c3",
-    "aanmaak_datum": "2026-07-27T16:00:13.757Z",
-    "update_datum": "2026-07-27T16:00:13.757Z",
-    "naam": "Intern",
-    "hoofd_thema": null,
-    "beschrijving": "Alleen voor T \\\\& A \\\\(Test\\\\) gebruik\\\\. Niet voor klanten",
-    "gepubliceerd": true
-  }
-},
-{
-  "model": "producttypen.thema",
-  "pk": 7,
-  "fields": {
-    "uuid": "16ed55a4-f105-47ba-9a65-2c4442806134",
-    "aanmaak_datum": "2026-07-27T16:00:13.757Z",
-    "update_datum": "2026-07-27T16:00:13.757Z",
-    "naam": "Wonen en bouwen",
-    "hoofd_thema": null,
-    "beschrijving": "",
-    "gepubliceerd": true
-  }
-},
-{
-  "model": "producttypen.thema",
-  "pk": 8,
-  "fields": {
-    "uuid": "86f35f43-75c8-4bd2-969d-457874f84f60",
-    "aanmaak_datum": "2026-07-27T16:00:13.757Z",
-    "update_datum": "2026-07-27T16:00:13.757Z",
-    "naam": "Erfpacht",
-    "hoofd_thema": null,
-    "beschrijving": "",
-    "gepubliceerd": true
-  }
-},
-{
-  "model": "producttypen.producttype",
-  "pk": 1,
-  "fields": {
-    "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
-    "aanmaak_datum": "2026-07-27T16:00:13.744Z",
-    "update_datum": "2026-07-27T16:00:13.744Z",
-    "code": "PARKEREN",
-    "verbruiksobject_schema": 1,
-    "dataobject_schema": 2,
-    "toegestane_statussen": "[\"gereed\"]",
-    "keywords": "[\"parkeren\", \"ibs\"]",
-    "uniforme_product_naam": 793,
-    "doelgroep": "burgers",
-    "eigenaar": null,
-    "interne_opmerkingen": "",
-    "publicatie_start_datum": "2026-07-27",
-    "publicatie_eind_datum": null,
-    "themas": [
-      3
-    ],
-    "organisaties": [
-      1
-    ],
-    "contacten": [
-      1
-    ],
-    "locaties": [
-      1
-    ]
-  }
-},
-{
-  "model": "producttypen.producttype",
-  "pk": 2,
-  "fields": {
-    "uuid": "43633c6c-2d9a-46c8-9051-112418102254",
-    "aanmaak_datum": "2026-07-27T16:00:13.744Z",
-    "update_datum": "2026-07-27T16:00:13.744Z",
-    "code": "STADSPAS",
-    "verbruiksobject_schema": null,
-    "dataobject_schema": 3,
-    "toegestane_statussen": "[\"gereed\"]",
-    "keywords": "[\"ooievaarspas\", \"gzac\"]",
-    "uniforme_product_naam": 941,
-    "doelgroep": "burgers",
-    "eigenaar": null,
-    "interne_opmerkingen": "Stadspas Den Haag",
-    "publicatie_start_datum": "2026-07-27",
-    "publicatie_eind_datum": null,
-    "themas": [
-      5
-    ],
-    "organisaties": [],
-    "contacten": [],
-    "locaties": []
-  }
-},
-{
-  "model": "producttypen.producttype",
-  "pk": 3,
-  "fields": {
-    "uuid": "cf89c88d-8310-41d4-9776-786ae13235c8",
-    "aanmaak_datum": "2026-07-27T16:00:13.744Z",
-    "update_datum": "2026-07-27T16:00:13.744Z",
-    "code": "BELASTINGZAKEN",
-    "verbruiksobject_schema": 5,
-    "dataobject_schema": 4,
-    "toegestane_statussen": "[\"gereed\"]",
-    "keywords": "[\"belastingzaken\", \"ibs\"]",
-    "uniforme_product_naam": 433,
-    "doelgroep": "burgers",
-    "eigenaar": null,
-    "interne_opmerkingen": "Belastingzaken",
-    "publicatie_start_datum": "2026-07-27",
-    "publicatie_eind_datum": null,
-    "themas": [],
-    "organisaties": [],
-    "contacten": [],
-    "locaties": []
-  }
-},
-{
-  "model": "producttypen.producttype",
-  "pk": 4,
-  "fields": {
-    "uuid": "894c9dd1-5917-4955-b56c-04b576fb7f17",
-    "aanmaak_datum": "2026-07-27T16:00:13.757Z",
-    "update_datum": "2026-07-27T16:00:13.757Z",
-    "code": "STADSPAS_INTERN",
-    "verbruiksobject_schema": null,
-    "dataobject_schema": 6,
-    "toegestane_statussen": "[\"gereed\", \"actief\", \"ingetrokken\", \"geweigerd\", \"verlopen\"]",
-    "keywords": "[\"intern\", \"testen\"]",
-    "uniforme_product_naam": 1,
-    "doelgroep": "burgers",
-    "eigenaar": null,
-    "interne_opmerkingen": "intern",
-    "publicatie_start_datum": "2026-07-27",
-    "publicatie_eind_datum": null,
-    "themas": [
-      5
-    ],
-    "organisaties": [],
-    "contacten": [],
-    "locaties": []
-  }
-},
-{
-  "model": "producttypen.producttype",
-  "pk": 5,
-  "fields": {
-    "uuid": "6492ab26-38ab-42d5-91f5-7a76db178d52",
-    "aanmaak_datum": "2026-07-27T16:00:13.757Z",
-    "update_datum": "2026-07-27T16:00:13.757Z",
-    "code": "ERFPACHT",
-    "verbruiksobject_schema": null,
-    "dataobject_schema": 7,
-    "toegestane_statussen": "[\"gereed\", \"actief\", \"ingetrokken\", \"geweigerd\", \"verlopen\"]",
-    "keywords": "[\"intern\", \"testen\"]",
-    "uniforme_product_naam": 308,
-    "doelgroep": "burgers",
-    "eigenaar": null,
-    "interne_opmerkingen": "intern",
-    "publicatie_start_datum": "2026-07-27",
-    "publicatie_eind_datum": null,
-    "themas": [
-      8
-    ],
-    "organisaties": [],
-    "contacten": [],
-    "locaties": []
-  }
-},
-{
-  "model": "producttypen.producttype",
-  "pk": 6,
-  "fields": {
-    "uuid": "2e412f7f-feb3-4a04-bcbd-2cdab45a8ef9",
-    "aanmaak_datum": "2026-07-27T16:00:13.757Z",
-    "update_datum": "2026-07-27T16:00:13.757Z",
-    "code": "WOONWAGENSTANDPLAATS",
-    "verbruiksobject_schema": null,
-    "dataobject_schema": 6,
-    "toegestane_statussen": "[\"gereed\", \"actief\", \"ingetrokken\", \"geweigerd\", \"verlopen\"]",
-    "keywords": "[\"woonwagenstandplaats\", \"testen\"]",
-    "uniforme_product_naam": 1178,
-    "doelgroep": "burgers",
-    "eigenaar": null,
-    "interne_opmerkingen": "woonwagenstandplaats",
-    "publicatie_start_datum": "2026-07-27",
-    "publicatie_eind_datum": null,
-    "themas": [
-      7
-    ],
-    "organisaties": [],
-    "contacten": [],
-    "locaties": []
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 1,
-  "fields": {
-    "language_code": "nl",
-    "master": 1,
-    "naam": "Parkeren",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 2,
-  "fields": {
-    "language_code": "en",
-    "master": 1,
-    "naam": "Parking",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 3,
-  "fields": {
-    "language_code": "nl",
-    "master": 2,
-    "naam": "Stadspas",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 4,
-  "fields": {
-    "language_code": "en",
-    "master": 2,
-    "naam": "CityPass",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 5,
-  "fields": {
-    "language_code": "nl",
-    "master": 3,
-    "naam": "Belastingzaken",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 6,
-  "fields": {
-    "language_code": "en",
-    "master": 3,
-    "naam": "Taxes",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 7,
-  "fields": {
-    "language_code": "nl",
-    "master": 4,
-    "naam": "GeneriekProduct",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 8,
-  "fields": {
-    "language_code": "nl",
-    "master": 5,
-    "naam": "Erfpacht",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.producttypetranslation",
-  "pk": 9,
-  "fields": {
-    "language_code": "nl",
-    "master": 6,
-    "naam": "Woonwagenstandplaats",
-    "samenvatting": "samenvatting translatie"
-  }
-},
-{
-  "model": "producttypen.actie",
-  "pk": 1,
-  "fields": {
-    "uuid": "082d143f-6a53-4e08-bc3c-0488b3b490e4",
-    "naam": "watkanikregelen-parkeren",
-    "producttype": 1,
-    "direct_url": "",
-    "dmn_config": 1,
-    "dmn_tabel_id": "alg-parkeren",
-    "mapping": {
-      "static": [
-        {
-          "name": "formulieren",
-          "value": "https://openformulieren-zgw.test.denhaag.nl",
-          "classType": "String"
-        }
-      ],
-      "product": [
-        {
-          "name": "pid",
-          "regex": "$.uuid",
-          "classType": "String"
-        },
-        {
-          "name": "geldigheideinddatum",
-          "regex": "$.eind_datum",
-          "classType": "String"
-        },
-        {
-          "name": "aantaluren",
-          "regex": "$.verbruiksobject.uren",
-          "classType": "String"
-        }
-      ]
-    }
-  }
-},
-{
-  "model": "producttypen.actie",
-  "pk": 2,
-  "fields": {
-    "uuid": "2435b986-7742-4cef-91f2-e1162c2f19c9",
-    "naam": "watkanikregelen-belastingen",
-    "producttype": 1,
-    "direct_url": "",
-    "dmn_config": 1,
-    "dmn_tabel_id": "alg-belastingen",
-    "mapping": {
-      "static": [
-        {
-          "name": "formulieren",
-          "value": "https://openformulieren-zgw.test.denhaag.nl",
-          "classType": "String"
-        }
-      ],
-      "product": [
-        {
-          "name": "pid",
-          "regex": "$.uuid",
-          "classType": "String"
-        },
-        {
-          "name": "geldigheideinddatum",
-          "regex": "$.eind_datum",
-          "classType": "String"
-        },
-        {
-          "name": "aantaluren",
-          "regex": "$.verbruiksobject.uren",
-          "classType": "String"
-        }
-      ]
-    }
-  }
-},
-{
-  "model": "producttypen.bestand",
-  "pk": 1,
-  "fields": {
-    "uuid": "0a9ff804-d151-477b-81aa-09e16f3064d9",
-    "producttype": 1,
-    "bestand": "https://gemeente.open-product.nl/media/test.txt"
-  }
-},
-{
-  "model": "producttypen.contentlabel",
-  "pk": 1,
-  "fields": {
-    "uuid": "6d9cab7b-311e-44b7-828e-eabbdf139724",
-    "naam": "naam"
-  }
-},
-{
-  "model": "producttypen.contentelement",
-  "pk": 1,
-  "fields": {
-    "order": 1,
-    "uuid": "bcc4ba4e-8022-447f-8ffd-d65781a51d24",
-    "producttype": 1,
-    "thema": null,
-    "labels": [
-      1
-    ]
-  }
-},
-{
-  "model": "producttypen.contentelementtranslation",
-  "pk": 1,
-  "fields": {
-    "language_code": "nl",
-    "master": 1,
-    "content": "test data",
-    "aanvullende_informatie": ""
-  }
-},
-{
-  "model": "producttypen.contentelementtranslation",
-  "pk": 2,
-  "fields": {
-    "language_code": "en",
-    "master": 1,
-    "content": "test data English",
-    "aanvullende_informatie": ""
-  }
-},
-{
-  "model": "producttypen.externecode",
-  "pk": 1,
-  "fields": {
-    "uuid": "418317dc-c5b8-4690-b309-846bdb13e680",
-    "naam": "ISO",
-    "code": "123",
-    "producttype": 1
-  }
-},
-{
-  "model": "producttypen.externecode",
-  "pk": 2,
-  "fields": {
-    "uuid": "3e3bf0f6-a3f5-469e-8693-c7665d97ba05",
-    "naam": "taak_eigenaar",
-    "code": "RMWA",
-    "producttype": 1
-  }
-},
-{
-  "model": "producttypen.link",
-  "pk": 1,
-  "fields": {
-    "uuid": "1a619662-9b0d-4219-81f4-d738fe76850d",
-    "producttype": 1,
-    "naam": "link naar website",
-    "url": "https://www.google.com/"
-  }
-},
-{
-  "model": "producttypen.link",
-  "pk": 2,
-  "fields": {
-    "uuid": "7506562c-9a2a-4931-85cd-2c752cbabaf0",
-    "producttype": 1,
-    "naam": "link naar Ritense website",
-    "url": "https://ritense.com/"
-  }
-},
-{
-  "model": "producttypen.parameter",
-  "pk": 1,
-  "fields": {
-    "uuid": "023ea1f2-8e8c-42d8-9bed-a4ad4edc03c2",
-    "naam": "paymentcategorie",
-    "waarde": "parkeren",
-    "producttype": 1
-  }
-},
-{
-  "model": "producttypen.prijs",
-  "pk": 1,
-  "fields": {
-    "uuid": "317ab929-5cb4-4dde-ae4a-489f4d388699",
-    "producttype": 1,
-    "actief_vanaf": "2026-07-27"
-  }
-},
-{
-  "model": "producttypen.prijsoptie",
-  "pk": 1,
-  "fields": {
-    "uuid": "d1eb87b9-0346-426b-bf7f-a2fb3f47f653",
-    "prijs": 1,
-    "bedrag": "100.00",
-    "beschrijving": "prijs optie regel 1"
-  }
-},
-{
-  "model": "producttypen.prijsregel",
-  "pk": 1,
-  "fields": {
-    "uuid": "830dda6f-d167-4485-ab99-ebb8f3a33bd3",
-    "beschrijving": "prijs optie regel 1",
-    "prijs": 1,
-    "dmn_config": 1,
-    "dmn_tabel_id": "alg-parkeren",
-    "mapping": null
-  }
-},
-{
-  "model": "producttypen.prijsregel",
-  "pk": 2,
-  "fields": {
-    "uuid": "04d0f3ab-c691-408d-b99f-a7e045c82dea",
-    "beschrijving": "prijs optie regel 2",
-    "prijs": 1,
-    "dmn_config": 1,
-    "dmn_tabel_id": "alg-belastingen",
-    "mapping": null
-  }
-},
-{
-  "model": "producttypen.zaaktype",
-  "pk": 1,
-  "fields": {
-    "urn": null,
-    "url": null,
-    "producttype": 1
-  }
-},
-{
-  "model": "producttypen.zaaktype",
-  "pk": 2,
-  "fields": {
-    "urn": null,
-    "url": null,
-    "producttype": 2
-  }
-},
-{
-  "model": "producten.product",
-  "pk": 1,
-  "fields": {
-    "uuid": "694242af-d906-470b-b7e1-eb3527886854",
-    "aanmaak_datum": "2026-07-27T16:00:13.773Z",
-    "update_datum": "2026-07-27T16:00:13.773Z",
-    "gepubliceerd": true,
-    "producttype": 1,
-    "naam": "Parkeren",
-    "start_datum": "2026-07-27",
-    "eind_datum": "2027-07-27",
-    "status": "actief",
-    "prijs": "20.20",
-    "frequentie": "eenmalig",
-    "verbruiksobject": {
-      "data": {
-        "periodes": [
+  {
+    "model": "producttypen.jsonschema",
+    "pk": 1,
+    "fields": {
+      "naam": "parkeervergunning-verbruiksobject",
+      "schema": {
+        "type": "object",
+        "title": "PDCverbruiksObject",
+        "$schema": "http://json-schema.org/draft-07/schema",
+        "examples": [
           {
-            "did": "2ca085e5-6631-60aa-e063-223c0b0a055d",
-            "status": "actief",
-            "kenteken": "DB754K",
-            "datetimeEnd": "2025-01-27T00:00:00.000Z",
-            "datetimeStart": "2025-01-26T12:00:00.000Z"
+            "data": {
+              "mijnExtraData": "abc",
+              "Een genest object": {
+                "nogMeer": "data"
+              }
+            },
+            "soort": "gemeldeVerhuur",
+            "productInstantie": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
           }
         ],
-        "kentekens": [
-          "DB754K"
+        "required": [
+          "soort",
+          "productInstantie",
+          "data"
         ],
-        "beschikbareDagdelen": "39"
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Vrij veld voor verbruiksobject data"
+          },
+          "soort": {
+            "type": "string",
+            "description": "Soort / type verbruiksobject. Alle verbruiksobjecten van het zelfde soort hebben hetzelfde type"
+          },
+          "productInstantie": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID van bijhorend PDCProductInstantie"
+          }
+        },
+        "description": "Product verbruik details van een instantie uit het PDC. Bevat product data die vaak aangepast moet worden. Bijvoorbeeld een log van gebruikte tijdsvakken",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "model": "producttypen.jsonschema",
+    "pk": 2,
+    "fields": {
+      "naam": "parkeervergunning-dataobject",
+      "schema": {
+        "type": "object",
+        "required": [
+          "uren"
+        ],
+        "properties": {
+          "uren": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  {
+    "model": "producttypen.jsonschema",
+    "pk": 3,
+    "fields": {
+      "naam": "ooievaarspas-dataobject",
+      "schema": {
+        "type": "object",
+        "required": [],
+        "properties": {}
+      }
+    }
+  },
+  {
+    "model": "producttypen.jsonschema",
+    "pk": 4,
+    "fields": {
+      "naam": "belastingzaken-dataobject",
+      "schema": {
+        "type": "object",
+        "required": [
+          "uren"
+        ],
+        "properties": {
+          "uren": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  {
+    "model": "producttypen.jsonschema",
+    "pk": 5,
+    "fields": {
+      "naam": "parkeervergunning-verbruiksobjectobject",
+      "schema": {
+        "type": "object",
+        "title": "PDCverbruiksObject",
+        "$schema": "http://json-schema.org/draft-07/schema",
+        "examples": [
+          {
+            "data": {
+              "mijnExtraData": "abc",
+              "Een genest object": {
+                "nogMeer": "data"
+              }
+            },
+            "soort": "gemeldeVerhuur",
+            "productInstantie": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
+          }
+        ],
+        "required": [
+          "soort",
+          "productInstantie",
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Vrij veld voor verbruiksobject data"
+          },
+          "soort": {
+            "type": "string",
+            "description": "Soort / type verbruiksobject. Alle verbruiksobjecten van het zelfde soort hebben hetzelfde type"
+          },
+          "productInstantie": {
+            "type": "string",
+            "format": "uuid",
+            "description": "UUID van bijhorend PDCProductInstantie"
+          }
+        },
+        "description": "Product verbruik details van een instantie uit het PDC. Bevat product data die vaak aangepast moet worden. Bijvoorbeeld een log van gebruikte tijdsvakken",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "model": "producttypen.jsonschema",
+    "pk": 6,
+    "fields": {
+      "naam": "woonwagenstandplaatsdata",
+      "schema": {
+        "type": "object",
+        "title": "woonwagenstandplaatsdata",
+        "examples": [
+          {
+            "status": "ingeschreven",
+            "inschrijfdatum": "2025-10-23T00:00:00+02:00",
+            "uitschrijfdatum": "2025-10-23T00:00:00+02:00",
+            "derdeVoorkeurslocatie": "Standplaats De Vaart",
+            "eersteVoorkeurslocatie": "Standplaats De Wieken",
+            "tweedeVoorkeurslocatie": "Standplaats Het Anker"
+          }
+        ],
+        "required": [
+          "status",
+          "inschrijfdatum",
+          "eersteVoorkeurslocatie"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "ingeschreven",
+              "uitgeschreven"
+            ],
+            "type": "string",
+            "description": "Status van de inschrijving."
+          },
+          "inschrijfdatum": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Inschrijfdatum voor de wachtlijst"
+          },
+          "uitschrijfdatum": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Uitschrijfdatum voor de wachtlijst"
+          },
+          "derdeVoorkeurslocatie": {
+            "type": "string",
+            "description": "Derde voorkeurslocatie voor een woonwagenstandplaats"
+          },
+          "eersteVoorkeurslocatie": {
+            "type": "string",
+            "description": "Eerste voorkeurslocatie voor een woonwagenstandplaats"
+          },
+          "tweedeVoorkeurslocatie": {
+            "type": "string",
+            "description": "Tweede voorkeurslocatie voor een woonwagenstandplaats"
+          }
+        },
+        "description": "Schema voor het opslaan van woonwagen data",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "model": "producttypen.jsonschema",
+    "pk": 7,
+    "fields": {
+      "naam": "erfpachtdata",
+      "schema": {
+        "type": "object",
+        "title": "erfpachtdata",
+        "examples": [
+          {
+            "status": "ingeschreven",
+            "inschrijfdatum": "2026-02-25T00:00:00+02:00",
+            "uitschrijfdatum": "2026-02-24T00:00:00+02:00"
+          }
+        ],
+        "required": [
+          "status",
+          "inschrijfdatum"
+        ],
+        "properties": {
+          "status": {
+            "enum": [
+              "ingeschreven",
+              "uitgeschreven"
+            ],
+            "type": "string",
+            "description": "Status van de inschrijving."
+          },
+          "inschrijfdatum": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Inschrijfdatum voor de wachtlijst"
+          },
+          "uitschrijfdatum": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Uitschrijfdatum voor de wachtlijst"
+          }
+        },
+        "description": "Schema voor het opslaan van erfpacht data",
+        "additionalProperties": false
+      }
+    }
+  },
+  {
+    "model": "producttypen.thema",
+    "pk": 1,
+    "fields": {
+      "uuid": "1a25f58c-8e7b-425f-b466-7e6f8ca1268b",
+      "aanmaak_datum": "2026-07-27T16:00:13.743Z",
+      "update_datum": "2026-07-27T16:00:13.743Z",
+      "naam": "Hoofdthema",
+      "hoofd_thema": null,
+      "beschrijving": "Hoofdthema thema",
+      "gepubliceerd": true
+    }
+  },
+  {
+    "model": "producttypen.thema",
+    "pk": 2,
+    "fields": {
+      "uuid": "c00a7724-3e8f-4155-9ae1-2edbc6eaeefe",
+      "aanmaak_datum": "2026-07-27T16:00:13.743Z",
+      "update_datum": "2026-07-27T16:00:13.743Z",
+      "naam": "Subthema",
+      "hoofd_thema": 1,
+      "beschrijving": "Subthema thema",
+      "gepubliceerd": true
+    }
+  },
+  {
+    "model": "producttypen.thema",
+    "pk": 3,
+    "fields": {
+      "uuid": "b95cfbf6-8578-410b-b108-a42fd20af843",
+      "aanmaak_datum": "2026-07-27T16:00:13.743Z",
+      "update_datum": "2026-07-27T16:00:13.743Z",
+      "naam": "Parkeren",
+      "hoofd_thema": null,
+      "beschrijving": "Parkeren thema",
+      "gepubliceerd": true
+    }
+  },
+  {
+    "model": "producttypen.thema",
+    "pk": 4,
+    "fields": {
+      "uuid": "41f71c2e-9e0c-4a1b-8d39-709669b256c2",
+      "aanmaak_datum": "2026-07-27T16:00:13.743Z",
+      "update_datum": "2026-07-27T16:00:13.743Z",
+      "naam": "Belastingzaken",
+      "hoofd_thema": null,
+      "beschrijving": "Belastingzaken thema",
+      "gepubliceerd": true
+    }
+  },
+  {
+    "model": "producttypen.thema",
+    "pk": 5,
+    "fields": {
+      "uuid": "17d21ea4-7fa7-4532-88cd-081c089000f3",
+      "aanmaak_datum": "2026-07-27T16:00:13.743Z",
+      "update_datum": "2026-07-27T16:00:13.743Z",
+      "naam": "Inkomensondersteuning",
+      "hoofd_thema": null,
+      "beschrijving": "Sociaal domein",
+      "gepubliceerd": true
+    }
+  },
+  {
+    "model": "producttypen.thema",
+    "pk": 6,
+    "fields": {
+      "uuid": "c79c9cd6-a5dd-459b-a15e-6506149ab9c3",
+      "aanmaak_datum": "2026-07-27T16:00:13.757Z",
+      "update_datum": "2026-07-27T16:00:13.757Z",
+      "naam": "Intern",
+      "hoofd_thema": null,
+      "beschrijving": "Alleen voor T \\\\& A \\\\(Test\\\\) gebruik\\\\. Niet voor klanten",
+      "gepubliceerd": true
+    }
+  },
+  {
+    "model": "producttypen.thema",
+    "pk": 7,
+    "fields": {
+      "uuid": "16ed55a4-f105-47ba-9a65-2c4442806134",
+      "aanmaak_datum": "2026-07-27T16:00:13.757Z",
+      "update_datum": "2026-07-27T16:00:13.757Z",
+      "naam": "Wonen en bouwen",
+      "hoofd_thema": null,
+      "beschrijving": "",
+      "gepubliceerd": true
+    }
+  },
+  {
+    "model": "producttypen.thema",
+    "pk": 8,
+    "fields": {
+      "uuid": "86f35f43-75c8-4bd2-969d-457874f84f60",
+      "aanmaak_datum": "2026-07-27T16:00:13.757Z",
+      "update_datum": "2026-07-27T16:00:13.757Z",
+      "naam": "Erfpacht",
+      "hoofd_thema": null,
+      "beschrijving": "",
+      "gepubliceerd": true
+    }
+  },
+  {
+    "model": "producttypen.producttype",
+    "pk": 1,
+    "fields": {
+      "uuid": "dee273e9-2aa8-40ae-84b7-cb7da3c075ba",
+      "aanmaak_datum": "2026-07-27T16:00:13.744Z",
+      "update_datum": "2026-07-27T16:00:13.744Z",
+      "code": "PARKEREN",
+      "verbruiksobject_schema": 1,
+      "dataobject_schema": 2,
+      "toegestane_statussen": "[\"gereed\"]",
+      "keywords": "[\"parkeren\", \"ibs\"]",
+      "uniforme_product_naam": 793,
+      "doelgroep": "burgers",
+      "eigenaar": null,
+      "interne_opmerkingen": "",
+      "publicatie_start_datum": "2026-07-27",
+      "publicatie_eind_datum": null,
+      "themas": [
+        3
+      ],
+      "organisaties": [
+        1
+      ],
+      "contacten": [
+        1
+      ],
+      "locaties": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "producttypen.producttype",
+    "pk": 2,
+    "fields": {
+      "uuid": "43633c6c-2d9a-46c8-9051-112418102254",
+      "aanmaak_datum": "2026-07-27T16:00:13.744Z",
+      "update_datum": "2026-07-27T16:00:13.744Z",
+      "code": "STADSPAS",
+      "verbruiksobject_schema": null,
+      "dataobject_schema": 3,
+      "toegestane_statussen": "[\"gereed\"]",
+      "keywords": "[\"ooievaarspas\", \"gzac\"]",
+      "uniforme_product_naam": 941,
+      "doelgroep": "burgers",
+      "eigenaar": null,
+      "interne_opmerkingen": "Stadspas Den Haag",
+      "publicatie_start_datum": "2026-07-27",
+      "publicatie_eind_datum": null,
+      "themas": [
+        5
+      ],
+      "organisaties": [],
+      "contacten": [],
+      "locaties": []
+    }
+  },
+  {
+    "model": "producttypen.producttype",
+    "pk": 3,
+    "fields": {
+      "uuid": "cf89c88d-8310-41d4-9776-786ae13235c8",
+      "aanmaak_datum": "2026-07-27T16:00:13.744Z",
+      "update_datum": "2026-07-27T16:00:13.744Z",
+      "code": "BELASTINGZAKEN",
+      "verbruiksobject_schema": 5,
+      "dataobject_schema": 4,
+      "toegestane_statussen": "[\"gereed\"]",
+      "keywords": "[\"belastingzaken\", \"ibs\"]",
+      "uniforme_product_naam": 433,
+      "doelgroep": "burgers",
+      "eigenaar": null,
+      "interne_opmerkingen": "Belastingzaken",
+      "publicatie_start_datum": "2026-07-27",
+      "publicatie_eind_datum": null,
+      "themas": [
+        4
+      ],
+      "organisaties": [],
+      "contacten": [],
+      "locaties": []
+    }
+  },
+  {
+    "model": "producttypen.producttype",
+    "pk": 4,
+    "fields": {
+      "uuid": "894c9dd1-5917-4955-b56c-04b576fb7f17",
+      "aanmaak_datum": "2026-07-27T16:00:13.757Z",
+      "update_datum": "2026-07-27T16:00:13.757Z",
+      "code": "STADSPAS_INTERN",
+      "verbruiksobject_schema": null,
+      "dataobject_schema": 6,
+      "toegestane_statussen": "[\"gereed\", \"actief\", \"ingetrokken\", \"geweigerd\", \"verlopen\"]",
+      "keywords": "[\"intern\", \"testen\"]",
+      "uniforme_product_naam": 1,
+      "doelgroep": "burgers",
+      "eigenaar": null,
+      "interne_opmerkingen": "intern",
+      "publicatie_start_datum": "2026-07-27",
+      "publicatie_eind_datum": null,
+      "themas": [
+        5
+      ],
+      "organisaties": [],
+      "contacten": [],
+      "locaties": []
+    }
+  },
+  {
+    "model": "producttypen.producttype",
+    "pk": 5,
+    "fields": {
+      "uuid": "6492ab26-38ab-42d5-91f5-7a76db178d52",
+      "aanmaak_datum": "2026-07-27T16:00:13.757Z",
+      "update_datum": "2026-07-27T16:00:13.757Z",
+      "code": "ERFPACHT",
+      "verbruiksobject_schema": null,
+      "dataobject_schema": 7,
+      "toegestane_statussen": "[\"gereed\", \"actief\", \"ingetrokken\", \"geweigerd\", \"verlopen\"]",
+      "keywords": "[\"intern\", \"testen\"]",
+      "uniforme_product_naam": 308,
+      "doelgroep": "burgers",
+      "eigenaar": null,
+      "interne_opmerkingen": "intern",
+      "publicatie_start_datum": "2026-07-27",
+      "publicatie_eind_datum": null,
+      "themas": [
+        8
+      ],
+      "organisaties": [],
+      "contacten": [],
+      "locaties": []
+    }
+  },
+  {
+    "model": "producttypen.producttype",
+    "pk": 6,
+    "fields": {
+      "uuid": "2e412f7f-feb3-4a04-bcbd-2cdab45a8ef9",
+      "aanmaak_datum": "2026-07-27T16:00:13.757Z",
+      "update_datum": "2026-07-27T16:00:13.757Z",
+      "code": "WOONWAGENSTANDPLAATS",
+      "verbruiksobject_schema": null,
+      "dataobject_schema": 6,
+      "toegestane_statussen": "[\"gereed\", \"actief\", \"ingetrokken\", \"geweigerd\", \"verlopen\"]",
+      "keywords": "[\"woonwagenstandplaats\", \"testen\"]",
+      "uniforme_product_naam": 1178,
+      "doelgroep": "burgers",
+      "eigenaar": null,
+      "interne_opmerkingen": "woonwagenstandplaats",
+      "publicatie_start_datum": "2026-07-27",
+      "publicatie_eind_datum": null,
+      "themas": [
+        7
+      ],
+      "organisaties": [],
+      "contacten": [],
+      "locaties": []
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 1,
+    "fields": {
+      "language_code": "nl",
+      "master": 1,
+      "naam": "Parkeren",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 2,
+    "fields": {
+      "language_code": "en",
+      "master": 1,
+      "naam": "Parking",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 3,
+    "fields": {
+      "language_code": "nl",
+      "master": 2,
+      "naam": "Stadspas",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 4,
+    "fields": {
+      "language_code": "en",
+      "master": 2,
+      "naam": "CityPass",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 5,
+    "fields": {
+      "language_code": "nl",
+      "master": 3,
+      "naam": "Belastingzaken",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 6,
+    "fields": {
+      "language_code": "en",
+      "master": 3,
+      "naam": "Taxes",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 7,
+    "fields": {
+      "language_code": "nl",
+      "master": 4,
+      "naam": "GeneriekProduct",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 8,
+    "fields": {
+      "language_code": "nl",
+      "master": 5,
+      "naam": "Erfpacht",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.producttypetranslation",
+    "pk": 9,
+    "fields": {
+      "language_code": "nl",
+      "master": 6,
+      "naam": "Woonwagenstandplaats",
+      "samenvatting": "samenvatting translatie"
+    }
+  },
+  {
+    "model": "producttypen.actie",
+    "pk": 1,
+    "fields": {
+      "uuid": "082d143f-6a53-4e08-bc3c-0488b3b490e4",
+      "naam": "watkanikregelen-parkeren",
+      "producttype": 1,
+      "direct_url": "",
+      "dmn_config": 1,
+      "dmn_tabel_id": "alg-parkeren",
+      "mapping": {
+        "static": [
+          {
+            "name": "formulieren",
+            "value": "https://openformulieren-zgw.test.denhaag.nl",
+            "classType": "String"
+          }
+        ],
+        "product": [
+          {
+            "name": "pid",
+            "regex": "$.uuid",
+            "classType": "String"
+          },
+          {
+            "name": "geldigheideinddatum",
+            "regex": "$.eind_datum",
+            "classType": "String"
+          },
+          {
+            "name": "aantaluren",
+            "regex": "$.verbruiksobject.uren",
+            "classType": "String"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "model": "producttypen.actie",
+    "pk": 2,
+    "fields": {
+      "uuid": "2435b986-7742-4cef-91f2-e1162c2f19c9",
+      "naam": "watkanikregelen-belastingen",
+      "producttype": 1,
+      "direct_url": "",
+      "dmn_config": 1,
+      "dmn_tabel_id": "alg-belastingen",
+      "mapping": {
+        "static": [
+          {
+            "name": "formulieren",
+            "value": "https://openformulieren-zgw.test.denhaag.nl",
+            "classType": "String"
+          }
+        ],
+        "product": [
+          {
+            "name": "pid",
+            "regex": "$.uuid",
+            "classType": "String"
+          },
+          {
+            "name": "geldigheideinddatum",
+            "regex": "$.eind_datum",
+            "classType": "String"
+          },
+          {
+            "name": "aantaluren",
+            "regex": "$.verbruiksobject.uren",
+            "classType": "String"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "model": "producttypen.bestand",
+    "pk": 1,
+    "fields": {
+      "uuid": "0a9ff804-d151-477b-81aa-09e16f3064d9",
+      "producttype": 1,
+      "bestand": "https://gemeente.open-product.nl/media/test.txt"
+    }
+  },
+  {
+    "model": "producttypen.contentlabel",
+    "pk": 1,
+    "fields": {
+      "uuid": "6d9cab7b-311e-44b7-828e-eabbdf139724",
+      "naam": "naam"
+    }
+  },
+  {
+    "model": "producttypen.contentelement",
+    "pk": 1,
+    "fields": {
+      "order": 1,
+      "uuid": "bcc4ba4e-8022-447f-8ffd-d65781a51d24",
+      "producttype": 1,
+      "thema": null,
+      "labels": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "producttypen.contentelementtranslation",
+    "pk": 1,
+    "fields": {
+      "language_code": "nl",
+      "master": 1,
+      "content": "test data",
+      "aanvullende_informatie": ""
+    }
+  },
+  {
+    "model": "producttypen.contentelementtranslation",
+    "pk": 2,
+    "fields": {
+      "language_code": "en",
+      "master": 1,
+      "content": "test data English",
+      "aanvullende_informatie": ""
+    }
+  },
+  {
+    "model": "producttypen.externecode",
+    "pk": 1,
+    "fields": {
+      "uuid": "418317dc-c5b8-4690-b309-846bdb13e680",
+      "naam": "ISO",
+      "code": "123",
+      "producttype": 1
+    }
+  },
+  {
+    "model": "producttypen.externecode",
+    "pk": 2,
+    "fields": {
+      "uuid": "3e3bf0f6-a3f5-469e-8693-c7665d97ba05",
+      "naam": "taak_eigenaar",
+      "code": "RMWA",
+      "producttype": 1
+    }
+  },
+  {
+    "model": "producttypen.link",
+    "pk": 1,
+    "fields": {
+      "uuid": "1a619662-9b0d-4219-81f4-d738fe76850d",
+      "producttype": 1,
+      "naam": "link naar website",
+      "url": "https://www.google.com/"
+    }
+  },
+  {
+    "model": "producttypen.link",
+    "pk": 2,
+    "fields": {
+      "uuid": "7506562c-9a2a-4931-85cd-2c752cbabaf0",
+      "producttype": 1,
+      "naam": "link naar Ritense website",
+      "url": "https://ritense.com/"
+    }
+  },
+  {
+    "model": "producttypen.parameter",
+    "pk": 1,
+    "fields": {
+      "uuid": "023ea1f2-8e8c-42d8-9bed-a4ad4edc03c2",
+      "naam": "paymentcategorie",
+      "waarde": "parkeren",
+      "producttype": 1
+    }
+  },
+  {
+    "model": "producttypen.prijs",
+    "pk": 1,
+    "fields": {
+      "uuid": "317ab929-5cb4-4dde-ae4a-489f4d388699",
+      "producttype": 1,
+      "actief_vanaf": "2026-07-27"
+    }
+  },
+  {
+    "model": "producttypen.prijsoptie",
+    "pk": 1,
+    "fields": {
+      "uuid": "d1eb87b9-0346-426b-bf7f-a2fb3f47f653",
+      "prijs": 1,
+      "bedrag": "100.00",
+      "beschrijving": "prijs optie regel 1"
+    }
+  },
+  {
+    "model": "producttypen.prijsregel",
+    "pk": 1,
+    "fields": {
+      "uuid": "830dda6f-d167-4485-ab99-ebb8f3a33bd3",
+      "beschrijving": "prijs optie regel 1",
+      "prijs": 1,
+      "dmn_config": 1,
+      "dmn_tabel_id": "alg-parkeren",
+      "mapping": null
+    }
+  },
+  {
+    "model": "producttypen.prijsregel",
+    "pk": 2,
+    "fields": {
+      "uuid": "04d0f3ab-c691-408d-b99f-a7e045c82dea",
+      "beschrijving": "prijs optie regel 2",
+      "prijs": 1,
+      "dmn_config": 1,
+      "dmn_tabel_id": "alg-belastingen",
+      "mapping": null
+    }
+  },
+  {
+    "model": "producttypen.zaaktype",
+    "pk": 1,
+    "fields": {
+      "urn": null,
+      "url": null,
+      "producttype": 1
+    }
+  },
+  {
+    "model": "producttypen.zaaktype",
+    "pk": 2,
+    "fields": {
+      "urn": null,
+      "url": null,
+      "producttype": 2
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 1,
+    "fields": {
+      "uuid": "694242af-d906-470b-b7e1-eb3527886854",
+      "aanmaak_datum": "2026-07-27T16:00:13.773Z",
+      "update_datum": "2026-07-27T16:00:13.773Z",
+      "gepubliceerd": true,
+      "producttype": 1,
+      "naam": "Parkeren",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "20.20",
+      "frequentie": "eenmalig",
+      "verbruiksobject": {
+        "data": {
+          "periodes": [
+            {
+              "did": "2ca085e5-6631-60aa-e063-223c0b0a055d",
+              "status": "actief",
+              "kenteken": "DB754K",
+              "datetimeEnd": "2025-01-27T00:00:00.000Z",
+              "datetimeStart": "2025-01-26T12:00:00.000Z"
+            }
+          ],
+          "kentekens": [
+            "DB754K"
+          ],
+          "beschikbareDagdelen": "39"
+        },
+        "soort": "milieuzoneOldtimerPeriodes",
+        "productInstantie": "62aa1bbb-4055-4df9-91e6-1c6171348044"
       },
-      "soort": "milieuzoneOldtimerPeriodes",
-      "productInstantie": "62aa1bbb-4055-4df9-91e6-1c6171348044"
-    },
-    "dataobject": null,
-    "aanvraag_zaak_urn": null,
-    "aanvraag_zaak_url": null
+      "dataobject": null,
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 2,
+    "fields": {
+      "uuid": "55633677-fef4-4ed2-99a4-13efc3360448",
+      "aanmaak_datum": "2026-07-27T16:00:13.773Z",
+      "update_datum": "2026-07-27T16:00:13.773Z",
+      "gepubliceerd": true,
+      "producttype": 1,
+      "naam": "Parkeren 2",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "20.20",
+      "frequentie": "eenmalig",
+      "verbruiksobject": null,
+      "dataobject": null,
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 3,
+    "fields": {
+      "uuid": "55515634-bf7d-4f2e-8b30-6bbcc0f8bfdc",
+      "aanmaak_datum": "2026-07-27T16:00:13.773Z",
+      "update_datum": "2026-07-27T16:00:13.773Z",
+      "gepubliceerd": true,
+      "producttype": 1,
+      "naam": "Parkeren 3",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "20.20",
+      "frequentie": "eenmalig",
+      "verbruiksobject": null,
+      "dataobject": null,
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 4,
+    "fields": {
+      "uuid": "b4addadd-71df-45a9-8559-fca53fc79339",
+      "aanmaak_datum": "2026-07-27T16:00:13.773Z",
+      "update_datum": "2026-07-27T16:00:13.773Z",
+      "gepubliceerd": true,
+      "producttype": 3,
+      "naam": "Belastingzaken",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "0.20",
+      "frequentie": "eenmalig",
+      "verbruiksobject": null,
+      "dataobject": null,
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 5,
+    "fields": {
+      "uuid": "0f30ac0d-8f53-4326-b384-e1021d262c6c",
+      "aanmaak_datum": "2026-07-27T16:00:13.773Z",
+      "update_datum": "2026-07-27T16:00:13.773Z",
+      "gepubliceerd": true,
+      "producttype": 2,
+      "naam": "Ooievaarpas",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "0.20",
+      "frequentie": "eenmalig",
+      "verbruiksobject": null,
+      "dataobject": null,
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 6,
+    "fields": {
+      "uuid": "8e820244-f1eb-45d2-b1bd-0a194e93bb33",
+      "aanmaak_datum": "2026-07-27T16:00:13.775Z",
+      "update_datum": "2026-07-26T16:00:13.775Z",
+      "gepubliceerd": true,
+      "producttype": 4,
+      "naam": "Product voor testautomatisering",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "666.99",
+      "frequentie": "jaarlijks",
+      "verbruiksobject": null,
+      "dataobject": null,
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 7,
+    "fields": {
+      "uuid": "94670b32-354b-48ec-8f7e-8ce0c6c936ec",
+      "aanmaak_datum": "2026-07-27T16:00:13.775Z",
+      "update_datum": "2026-07-27T16:00:13.775Z",
+      "gepubliceerd": true,
+      "producttype": 5,
+      "naam": "Eerst product voor Erfpacht",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "1599.00",
+      "frequentie": "jaarlijks",
+      "verbruiksobject": null,
+      "dataobject": null,
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 8,
+    "fields": {
+      "uuid": "8c22ad39-7907-4b1a-b0e0-b96ea8aeef61",
+      "aanmaak_datum": "2026-07-27T16:00:13.775Z",
+      "update_datum": "2026-07-27T16:00:13.775Z",
+      "gepubliceerd": true,
+      "producttype": 6,
+      "naam": "Wachtlijst woonwagen",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "1599.00",
+      "frequentie": "jaarlijks",
+      "verbruiksobject": null,
+      "dataobject": {
+        "status": "ingeschreven",
+        "inschrijfdatum": "2025-10-23T00:00:00+02:00",
+        "derdeVoorkeurslocatie": "Standplaats De Vaart",
+        "eersteVoorkeurslocatie": "Standplaats De Wieken",
+        "tweedeVoorkeurslocatie": "Standplaats Het Anker"
+      },
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 1,
+    "fields": {
+      "uuid": "104dd54c-4464-45f2-9781-9df2c59a35ed",
+      "product": 1,
+      "bsn": "999993847",
+      "kvk_nummer": "",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 2,
+    "fields": {
+      "uuid": "bae857cb-c6b0-48f5-88a8-f94e61092a4e",
+      "product": 2,
+      "bsn": "",
+      "kvk_nummer": "14127293",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 3,
+    "fields": {
+      "uuid": "11cca089-5a96-48d7-8fd1-0517a63dbc81",
+      "product": 3,
+      "bsn": "",
+      "kvk_nummer": "14127293",
+      "vestigingsnummer": "000037143557",
+      "klantnummer": ""
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 4,
+    "fields": {
+      "uuid": "2bb3b0d7-817c-4755-844b-f48e52f86007",
+      "product": 4,
+      "bsn": "999993847",
+      "kvk_nummer": "",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 5,
+    "fields": {
+      "uuid": "e64b095d-d06f-490a-83b5-3fa0d8442e63",
+      "product": 5,
+      "bsn": "999993847",
+      "kvk_nummer": "",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 6,
+    "fields": {
+      "uuid": "ddf8f209-3495-45aa-846a-a82f7ae1015e",
+      "product": 6,
+      "bsn": "999993847",
+      "kvk_nummer": "",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 7,
+    "fields": {
+      "uuid": "5ab358c7-a6da-4298-86bc-dc80716e2acc",
+      "product": 7,
+      "bsn": "999993847",
+      "kvk_nummer": "",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 8,
+    "fields": {
+      "uuid": "ad00a6d2-9754-48a6-b2d3-a6313c4821c0",
+      "product": 8,
+      "bsn": "999993847",
+      "kvk_nummer": "",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
+  },
+  {
+    "model": "producten.taak",
+    "pk": 1,
+    "fields": {
+      "urn": null,
+      "url": null,
+      "product": 1
+    }
+  },
+  {
+    "model": "producten.zaak",
+    "pk": 1,
+    "fields": {
+      "urn": null,
+      "url": null,
+      "product": 1
+    }
+  },
+  {
+    "model": "locaties.locatie",
+    "pk": 1,
+    "fields": {
+      "uuid": "ea3069ae-7ec0-4663-91b7-cab404cc450d",
+      "naam": "Ritense",
+      "email": "info@ritsense.nl",
+      "telefoonnummer": "0201234567",
+      "straat": "straat",
+      "huisnummer": "1",
+      "postcode": "1000AB",
+      "stad": "Amsterdam"
+    }
+  },
+  {
+    "model": "locaties.organisatie",
+    "pk": 1,
+    "fields": {
+      "uuid": "ac1ee933-8f9a-414b-bf0c-11adc969ed2c",
+      "naam": "Ritense",
+      "email": "info@ritsense.nl",
+      "telefoonnummer": "0201234567",
+      "straat": "straat",
+      "huisnummer": "1",
+      "postcode": "1000AB",
+      "stad": "Amsterdam",
+      "code": "RIT"
+    }
+  },
+  {
+    "model": "locaties.contact",
+    "pk": 1,
+    "fields": {
+      "uuid": "09cd7326-1bf0-4890-b8d1-0ac3ee22bac0",
+      "organisatie": 1,
+      "naam": "Vincent van Beek",
+      "email": "test@test.nl",
+      "telefoonnummer": "0201234567",
+      "rol": "owner"
+    }
+  },
+  {
+    "model": "producttypen.producttype",
+    "pk": 7,
+    "fields": {
+      "uuid": "bb0e7a3c-1111-422c-9a00-0b2c9a000001",
+      "aanmaak_datum": "2026-07-27T16:00:13.744Z",
+      "update_datum": "2026-07-27T16:00:13.744Z",
+      "code": "BEZOEKERSVERGUNNING",
+      "verbruiksobject_schema": 1,
+      "dataobject_schema": 2,
+      "toegestane_statussen": "[\"gereed\"]",
+      "keywords": "[\"parkeren\", \"bezoekersvergunning\"]",
+      "uniforme_product_naam": 793,
+      "doelgroep": "burgers",
+      "eigenaar": null,
+      "interne_opmerkingen": "Bezoekersvergunning",
+      "publicatie_start_datum": "2026-07-27",
+      "publicatie_eind_datum": null,
+      "themas": [
+        3
+      ],
+      "organisaties": [
+        1
+      ],
+      "contacten": [
+        1
+      ],
+      "locaties": [
+        1
+      ]
+    }
+  },
+  {
+    "model": "producten.product",
+    "pk": 9,
+    "fields": {
+      "uuid": "cc1f8b4d-2222-433d-8b11-1c3d0b000002",
+      "aanmaak_datum": "2026-07-27T16:00:13.773Z",
+      "update_datum": "2026-07-27T16:00:13.773Z",
+      "gepubliceerd": true,
+      "producttype": 7,
+      "naam": "Bezoekersvergunning",
+      "start_datum": "2026-07-27",
+      "eind_datum": "2027-07-27",
+      "status": "actief",
+      "prijs": "10.10",
+      "frequentie": "eenmalig",
+      "verbruiksobject": {
+        "data": {
+          "periodes": [
+            {
+              "did": "ff4c1e70-5555-466a-5e44-4f600e000005",
+              "status": "actief",
+              "kenteken": "ZV123B",
+              "datetimeEnd": "2025-02-27T00:00:00.000Z",
+              "datetimeStart": "2025-02-26T12:00:00.000Z"
+            }
+          ],
+          "kentekens": [
+            "ZV123B"
+          ],
+          "beschikbareDagdelen": "20"
+        },
+        "soort": "milieuzoneOldtimerPeriodes",
+        "productInstantie": "ee3b0d6f-4444-455f-6d33-3e5f0d000004"
+      },
+      "dataobject": null,
+      "aanvraag_zaak_urn": null,
+      "aanvraag_zaak_url": null
+    }
+  },
+  {
+    "model": "producten.eigenaar",
+    "pk": 9,
+    "fields": {
+      "uuid": "dd2a9c5e-3333-444e-7c22-2d4e0c000003",
+      "product": 9,
+      "bsn": "999993847",
+      "kvk_nummer": "",
+      "vestigingsnummer": "",
+      "klantnummer": ""
+    }
   }
-},
-{
-  "model": "producten.product",
-  "pk": 2,
-  "fields": {
-    "uuid": "55633677-fef4-4ed2-99a4-13efc3360448",
-    "aanmaak_datum": "2026-07-27T16:00:13.773Z",
-    "update_datum": "2026-07-27T16:00:13.773Z",
-    "gepubliceerd": true,
-    "producttype": 1,
-    "naam": "Parkeren 2",
-    "start_datum": "2026-07-27",
-    "eind_datum": "2027-07-27",
-    "status": "actief",
-    "prijs": "20.20",
-    "frequentie": "eenmalig",
-    "verbruiksobject": null,
-    "dataobject": null,
-    "aanvraag_zaak_urn": null,
-    "aanvraag_zaak_url": null
-  }
-},
-{
-  "model": "producten.product",
-  "pk": 3,
-  "fields": {
-    "uuid": "55515634-bf7d-4f2e-8b30-6bbcc0f8bfdc",
-    "aanmaak_datum": "2026-07-27T16:00:13.773Z",
-    "update_datum": "2026-07-27T16:00:13.773Z",
-    "gepubliceerd": true,
-    "producttype": 1,
-    "naam": "Parkeren 3",
-    "start_datum": "2026-07-27",
-    "eind_datum": "2027-07-27",
-    "status": "actief",
-    "prijs": "20.20",
-    "frequentie": "eenmalig",
-    "verbruiksobject": null,
-    "dataobject": null,
-    "aanvraag_zaak_urn": null,
-    "aanvraag_zaak_url": null
-  }
-},
-{
-  "model": "producten.product",
-  "pk": 4,
-  "fields": {
-    "uuid": "b4addadd-71df-45a9-8559-fca53fc79339",
-    "aanmaak_datum": "2026-07-27T16:00:13.773Z",
-    "update_datum": "2026-07-27T16:00:13.773Z",
-    "gepubliceerd": true,
-    "producttype": 3,
-    "naam": "Belastingzaken",
-    "start_datum": "2026-07-27",
-    "eind_datum": "2027-07-27",
-    "status": "actief",
-    "prijs": "0.20",
-    "frequentie": "eenmalig",
-    "verbruiksobject": null,
-    "dataobject": null,
-    "aanvraag_zaak_urn": null,
-    "aanvraag_zaak_url": null
-  }
-},
-{
-  "model": "producten.product",
-  "pk": 5,
-  "fields": {
-    "uuid": "0f30ac0d-8f53-4326-b384-e1021d262c6c",
-    "aanmaak_datum": "2026-07-27T16:00:13.773Z",
-    "update_datum": "2026-07-27T16:00:13.773Z",
-    "gepubliceerd": true,
-    "producttype": 2,
-    "naam": "Ooievaarpas",
-    "start_datum": "2026-07-27",
-    "eind_datum": "2027-07-27",
-    "status": "actief",
-    "prijs": "0.20",
-    "frequentie": "eenmalig",
-    "verbruiksobject": null,
-    "dataobject": null,
-    "aanvraag_zaak_urn": null,
-    "aanvraag_zaak_url": null
-  }
-},
-{
-  "model": "producten.product",
-  "pk": 6,
-  "fields": {
-    "uuid": "8e820244-f1eb-45d2-b1bd-0a194e93bb33",
-    "aanmaak_datum": "2026-07-27T16:00:13.775Z",
-    "update_datum": "2026-07-26T16:00:13.775Z",
-    "gepubliceerd": true,
-    "producttype": 4,
-    "naam": "Product voor testautomatisering",
-    "start_datum": "2026-07-27",
-    "eind_datum": "2027-07-27",
-    "status": "actief",
-    "prijs": "666.99",
-    "frequentie": "jaarlijks",
-    "verbruiksobject": null,
-    "dataobject": null,
-    "aanvraag_zaak_urn": null,
-    "aanvraag_zaak_url": null
-  }
-},
-{
-  "model": "producten.product",
-  "pk": 7,
-  "fields": {
-    "uuid": "94670b32-354b-48ec-8f7e-8ce0c6c936ec",
-    "aanmaak_datum": "2026-07-27T16:00:13.775Z",
-    "update_datum": "2026-07-27T16:00:13.775Z",
-    "gepubliceerd": true,
-    "producttype": 5,
-    "naam": "Eerst product voor Erfpacht",
-    "start_datum": "2026-07-27",
-    "eind_datum": "2027-07-27",
-    "status": "actief",
-    "prijs": "1599.00",
-    "frequentie": "jaarlijks",
-    "verbruiksobject": null,
-    "dataobject": null,
-    "aanvraag_zaak_urn": null,
-    "aanvraag_zaak_url": null
-  }
-},
-{
-  "model": "producten.product",
-  "pk": 8,
-  "fields": {
-    "uuid": "8c22ad39-7907-4b1a-b0e0-b96ea8aeef61",
-    "aanmaak_datum": "2026-07-27T16:00:13.775Z",
-    "update_datum": "2026-07-27T16:00:13.775Z",
-    "gepubliceerd": true,
-    "producttype": 6,
-    "naam": "Wachtlijst woonwagen",
-    "start_datum": "2026-07-27",
-    "eind_datum": "2027-07-27",
-    "status": "actief",
-    "prijs": "1599.00",
-    "frequentie": "jaarlijks",
-    "verbruiksobject": null,
-    "dataobject": {
-      "status": "ingeschreven",
-      "inschrijfdatum": "2025-10-23T00:00:00+02:00",
-      "derdeVoorkeurslocatie": "Standplaats De Vaart",
-      "eersteVoorkeurslocatie": "Standplaats De Wieken",
-      "tweedeVoorkeurslocatie": "Standplaats Het Anker"
-    },
-    "aanvraag_zaak_urn": null,
-    "aanvraag_zaak_url": null
-  }
-},
-{
-  "model": "producten.eigenaar",
-  "pk": 1,
-  "fields": {
-    "uuid": "104dd54c-4464-45f2-9781-9df2c59a35ed",
-    "product": 1,
-    "bsn": "999993847",
-    "kvk_nummer": "",
-    "vestigingsnummer": "",
-    "klantnummer": ""
-  }
-},
-{
-  "model": "producten.eigenaar",
-  "pk": 2,
-  "fields": {
-    "uuid": "bae857cb-c6b0-48f5-88a8-f94e61092a4e",
-    "product": 2,
-    "bsn": "",
-    "kvk_nummer": "14127293",
-    "vestigingsnummer": "",
-    "klantnummer": ""
-  }
-},
-{
-  "model": "producten.eigenaar",
-  "pk": 3,
-  "fields": {
-    "uuid": "11cca089-5a96-48d7-8fd1-0517a63dbc81",
-    "product": 3,
-    "bsn": "",
-    "kvk_nummer": "14127293",
-    "vestigingsnummer": "000037143557",
-    "klantnummer": ""
-  }
-},
-{
-  "model": "producten.eigenaar",
-  "pk": 4,
-  "fields": {
-    "uuid": "2bb3b0d7-817c-4755-844b-f48e52f86007",
-    "product": 4,
-    "bsn": "999993847",
-    "kvk_nummer": "",
-    "vestigingsnummer": "",
-    "klantnummer": ""
-  }
-},
-{
-  "model": "producten.eigenaar",
-  "pk": 5,
-  "fields": {
-    "uuid": "e64b095d-d06f-490a-83b5-3fa0d8442e63",
-    "product": 5,
-    "bsn": "999993847",
-    "kvk_nummer": "",
-    "vestigingsnummer": "",
-    "klantnummer": ""
-  }
-},
-{
-  "model": "producten.eigenaar",
-  "pk": 6,
-  "fields": {
-    "uuid": "ddf8f209-3495-45aa-846a-a82f7ae1015e",
-    "product": 6,
-    "bsn": "999993847",
-    "kvk_nummer": "",
-    "vestigingsnummer": "",
-    "klantnummer": ""
-  }
-},
-{
-  "model": "producten.eigenaar",
-  "pk": 7,
-  "fields": {
-    "uuid": "5ab358c7-a6da-4298-86bc-dc80716e2acc",
-    "product": 7,
-    "bsn": "999993847",
-    "kvk_nummer": "",
-    "vestigingsnummer": "",
-    "klantnummer": ""
-  }
-},
-{
-  "model": "producten.eigenaar",
-  "pk": 8,
-  "fields": {
-    "uuid": "ad00a6d2-9754-48a6-b2d3-a6313c4821c0",
-    "product": 8,
-    "bsn": "999993847",
-    "kvk_nummer": "",
-    "vestigingsnummer": "",
-    "klantnummer": ""
-  }
-},
-{
-  "model": "producten.taak",
-  "pk": 1,
-  "fields": {
-    "urn": null,
-    "url": null,
-    "product": 1
-  }
-},
-{
-  "model": "producten.zaak",
-  "pk": 1,
-  "fields": {
-    "urn": null,
-    "url": null,
-    "product": 1
-  }
-},
-{
-  "model": "locaties.locatie",
-  "pk": 1,
-  "fields": {
-    "uuid": "ea3069ae-7ec0-4663-91b7-cab404cc450d",
-    "naam": "Ritense",
-    "email": "info@ritsense.nl",
-    "telefoonnummer": "0201234567",
-    "straat": "straat",
-    "huisnummer": "1",
-    "postcode": "1000AB",
-    "stad": "Amsterdam"
-  }
-},
-{
-  "model": "locaties.organisatie",
-  "pk": 1,
-  "fields": {
-    "uuid": "ac1ee933-8f9a-414b-bf0c-11adc969ed2c",
-    "naam": "Ritense",
-    "email": "info@ritsense.nl",
-    "telefoonnummer": "0201234567",
-    "straat": "straat",
-    "huisnummer": "1",
-    "postcode": "1000AB",
-    "stad": "Amsterdam",
-    "code": "RIT"
-  }
-},
-{
-  "model": "locaties.contact",
-  "pk": 1,
-  "fields": {
-    "uuid": "09cd7326-1bf0-4890-b8d1-0ac3ee22bac0",
-    "organisatie": 1,
-    "naam": "Vincent van Beek",
-    "email": "test@test.nl",
-    "telefoonnummer": "0201234567",
-    "rol": "owner"
-  }
-}
 ]
