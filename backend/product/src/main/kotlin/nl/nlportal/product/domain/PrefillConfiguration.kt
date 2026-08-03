@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.domain
 
+@Deprecated("Use instead openproduct functionality")
 data class PrefillConfiguration(
     val formulierUrl: String,
     val variabelen: Map<String, Map<String, String>>,

@@ -17,6 +17,7 @@ package nl.nlportal.product.domain
 
 import java.util.UUID
 
+@Deprecated("Use instead openproduct functionality")
 data class PrefillResponse(
     val objectId: UUID,
     val hash: String,

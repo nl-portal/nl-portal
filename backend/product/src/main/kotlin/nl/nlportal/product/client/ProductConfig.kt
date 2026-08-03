@@ -17,6 +17,7 @@ package nl.nlportal.product.client
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+@Deprecated("Use instead openproduct functionality")
 @ConfigurationProperties(prefix = "nl-portal.config.product", ignoreUnknownFields = true)
 class ProductConfig(
     var enabled: Boolean = false,
