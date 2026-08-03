@@ -171,14 +171,14 @@ open class DirectPaymentService(
         if (!isValidDirectRequest(httpHeaders, jsonBody)) {
             return "Request is not valid"
         }
-        val ogoneDirectPaymentWebhookRequest =
+        val directPaymentWebhookRequest =
             Mapper.get().readValue(
                 jsonBody,
                 DirectPaymentWebhookRequest::class.java,
             )
-        val orderId = ogoneDirectPaymentWebhookRequest.payment.paymentOutput.references.merchantReference
+        val orderId = directPaymentWebhookRequest.payment.paymentOutput.references.merchantReference
         if (isUUID(orderId)) {
-            val status = ogoneDirectPaymentWebhookRequest.payment.statusOutput.statusCode
+            val status = directPaymentWebhookRequest.payment.statusOutput.statusCode
             if (status != DirectPaymentState.SUCCESS.status &&
                 status != DirectPaymentState.PENDING.status &&
                 status != DirectPaymentState.PENDING1.status &&
