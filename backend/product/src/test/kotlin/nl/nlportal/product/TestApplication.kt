@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
 
+@Deprecated("Use instead openproduct functionality")
 @SpringBootApplication(
     exclude = [
         OauthSecurityAutoConfiguration::class,

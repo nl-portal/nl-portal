@@ -33,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException
 import reactor.netty.http.client.HttpClient
 import reactor.netty.transport.logging.AdvancedByteBufFormat
 
+@Deprecated("Use instead openproduct functionality")
 class DmnClient(
     val dmnConfigProperties: DmnConfigProperties,
     private val clientSslContextResolver: ClientSslContextResolver? = null,

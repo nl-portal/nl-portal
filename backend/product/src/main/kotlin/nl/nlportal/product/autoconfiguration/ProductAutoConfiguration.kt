@@ -38,6 +38,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.web.reactive.function.client.WebClient
 
+@Deprecated("Use instead openproduct functionality")
 @AutoConfiguration
 @EnableConfigurationProperties(ProductConfig::class, DmnConfig::class, PrefillConfig::class)
 class ProductAutoConfiguration {

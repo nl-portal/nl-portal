@@ -35,6 +35,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
+@Deprecated("Use instead openproduct functionality")
 class PrefillService(
     val prefillConfigProperties: PrefillConfigProperties,
     val objectsApiClient: ObjectsApiClient,

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.node.ObjectNode
 import java.util.UUID
 
+@Deprecated("Use instead openproduct functionality")
 data class ProductType(
     var id: UUID?,
     val naam: String,

@@ -17,6 +17,7 @@ package nl.nlportal.product.domain
 
 import tools.jackson.databind.node.ObjectNode
 
+@Deprecated("Use instead openproduct functionality")
 data class PrefillObject(
     val identificatie: String,
     val formulier: String,
