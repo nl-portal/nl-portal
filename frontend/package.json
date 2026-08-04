@@ -26,8 +26,8 @@
     "preview": "pnpm run --recursive preview"
   },
   "devDependencies": {
-    "@commitlint/cli": "20.2.0",
-    "@commitlint/config-conventional": "20.2.0",
+    "@commitlint/cli": "20.5.3",
+    "@commitlint/config-conventional": "20.5.3",
     "@typescript-eslint/eslint-plugin": "^8.50.0",
     "@typescript-eslint/parser": "^8.50.0",
     "eslint": "^9.39.2",
@@ -37,13 +37,13 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^16.5.0",
     "husky": "9.1.7",
-    "lint-staged": "16.2.7",
+    "lint-staged": "16.4.0",
     "npm-check-updates": "^19.2.0",
-    "prettier": "3.7.4",
+    "prettier": "3.9.6",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "stylelint": "16.26.1",
     "stylelint-config-standard-scss": "16.0.0",
-    "stylelint-order": "7.0.0",
+    "stylelint-order": "7.0.1",
     "stylelint-selector-bem-pattern": "4.0.1",
     "typescript": "5.9.3",
     "vitest": "^4.0.16"
@@ -52,5 +52,5 @@
     "node": ">=24.0.0",
     "pnpm": ">=11.0.0 <12"
   },
-  "packageManager": "pnpm@11.15.1+sha512.81350b07e53c9538a02f1f2303b4290fa2d7be04e56e2a970c4cc4b417dc761de196edabd49d55c7dc9580db81007c44143e4e3d7e462b3000d23c255122d065"
+  "packageManager": "pnpm@11.19.0+sha512.7881f3ed590d472c4a955e2b88b2121791116066dcc88cbca3849ec9b60f1bbaa6d2ccb221fa91da4e1c65bef2bcbe379365aea7ac539c7bf86dedc3a1b22dce"
 }

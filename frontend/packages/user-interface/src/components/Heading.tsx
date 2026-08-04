@@ -15,11 +15,7 @@ import classNames from "classnames";
 type Headers = "h1" | "h2" | "h3" | "h4" | "h5";
 
 type HeadingProps =
-  | Heading1Props
-  | Heading2Props
-  | Heading3Props
-  | Heading4Props
-  | Heading5Props;
+  Heading1Props | Heading2Props | Heading3Props | Heading4Props | Heading5Props;
 
 type Props = HeadingProps & {
   as?: Headers;

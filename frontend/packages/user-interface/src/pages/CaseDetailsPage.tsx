@@ -202,8 +202,7 @@ const CaseDetailsPage = () => {
   }
 
   const zaakDetails = caseData?.getZaak.zaakdetails.data as
-    | Details[]
-    | undefined;
+    Details[] | undefined;
 
   return (
     <PageGrid>
