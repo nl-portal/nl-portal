@@ -66,7 +66,8 @@ services:
             - openzaak
         network_mode: "service:localhost"
         environment: &openzaak-env
-            - UWSGI_PORT=8001
+            - OPENZAAK_PORT=8001
+            - OTEL_SDK_DISABLED=true
             - DB_HOST=nl-portal-openzaak-database
             - DB_PORT=5432
             - SECRET_KEY=veryRestrictedSecretKey
@@ -133,6 +134,7 @@ services:
         network_mode: "service:localhost"
         environment: &openklant-2-env
             - UWSGI_PORT=8014
+            - OTEL_SDK_DISABLED=true
             - DJANGO_SETTINGS_MODULE=openklant.conf.docker
             - IS_HTTPS=no
             - DB_NAME=openklant
@@ -149,6 +151,8 @@ services:
             - DISABLE_2FA=true
         volumes:
             - ./imports/openklant-2/fixtures:/app/src/openklant/fixtures
+            - ./imports/openklant-2/init:/app/init
+        command: sh /app/init/start.sh
 
     nl-portal-openklant-2-import:
         image: maykinmedia/open-klant:2.17.1
@@ -188,6 +192,7 @@ services:
             - objecten
         environment: &objects-env
             - UWSGI_PORT=8010
+            - OTEL_SDK_DISABLED=true
             - CORS_ALLOW_ALL_ORIGINS=true
             - SECRET_KEY=${SECRET_KEY:-1(@f(-6s_u(5fd&1sg^uvu2s(c-9sapw)1era8q&)g)h@cwxxg}
             - DJANGO_SETTINGS_MODULE=objects.conf.docker
@@ -206,6 +211,9 @@ services:
         depends_on:
             - nl-portal-objecten-api-database
             - nl-portal-redis
+        volumes:
+            - ./imports/objects-api/init:/app/init
+        command: sh /app/init/start.sh
 
     nl-portal-objecten-api-celery:
         image: maykinmedia/objects-api:3.6.2
@@ -316,6 +324,7 @@ services:
             - objecten
         environment: &notificaties-env
             - UWSGI_PORT=8012
+            - OTEL_SDK_DISABLED=true
             - DJANGO_SETTINGS_MODULE=nrc.conf.docker
             - SECRET_KEY=${SECRET_KEY:-4wHY2Cp5`4(q%)]cuWxPQJRp5kN?g+`.Xah>%6Fsq6+)R>p_}
             - ALLOWED_HOSTS=*
@@ -337,6 +346,9 @@ services:
             - DJANGO_SUPERUSER_PASSWORD=admin
             - LOG_NOTIFICATIONS_IN_DB=yes
             - DISABLE_2FA=true
+        volumes:
+            - ./imports/open-notificaties/init:/app/init
+        command: sh /app/init/start.sh
 
     nl-portal-open-notificaties-import:
         image: openzaak/open-notificaties:1.16.1

@@ -71,8 +71,7 @@ const OverviewPage = ({
   const tasks = tasksData?.getTakenV2.content as TaakV2[] | undefined;
   const cases = casesData?.getZaken.content as Zaak[] | undefined;
   const products = productsData?.getOpenProducten?.content as
-    | OpenProductProduct[]
-    | undefined;
+    OpenProductProduct[] | undefined;
   const emailadres = contact?.getUserDigitaleAdressen?.find(
     (a) => a.type === "EMAIL",
   );

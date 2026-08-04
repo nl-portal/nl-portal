@@ -13,8 +13,7 @@ const ProductsPage = () => {
     variables: { pageSize: 10 },
   });
   const producten = data?.getOpenProducten?.content as
-    | OpenProductProduct[]
-    | undefined;
+    OpenProductProduct[] | undefined;
 
   const onPageChange = (index: number) => {
     try {

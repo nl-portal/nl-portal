@@ -110,8 +110,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         usernameVolmacht,
         persoon: persoonData?.getPersoonV2 as BrpPersoon | undefined,
         bedrijf: bedrijfData?.getBedrijf as
-          | MaatschappelijkeActiviteit
-          | undefined,
+          MaatschappelijkeActiviteit | undefined,
         contact: contactData,
       }}
     >
