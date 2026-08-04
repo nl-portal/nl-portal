@@ -15,6 +15,7 @@
  */
 package nl.nlportal.product.domain
 
+@Deprecated("Use instead openproduct functionality")
 data class DmnResponse(
     val value: String,
     val type: String,

@@ -21,6 +21,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 
+@Deprecated("Use instead openproduct functionality")
 class Product(
     var id: UUID?,
     @JsonProperty("PDCProductType")
