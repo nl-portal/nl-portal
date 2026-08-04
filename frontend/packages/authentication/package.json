@@ -31,7 +31,7 @@
     "@gemeente-denhaag/modal": "^3.1.0",
     "@gemeente-denhaag/typography": "3.0.1",
     "jwt-decode": "^4.0.0",
-    "oidc-client-ts": "3.4.1",
+    "oidc-client-ts": "3.5.0",
     "react-oidc-context": "^3.3.0"
   },
   "devDependencies": {
@@ -40,8 +40,8 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.0.16",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "react-intl": "^7.1.14",
     "react-router": "^7.18.2",
     "rimraf": "^6.1.2",
@@ -51,8 +51,8 @@
     "vitest": "^4.0.16"
   },
   "peerDependencies": {
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "react-intl": "^7.1.14",
     "react-router": "^7.18.2"
   }

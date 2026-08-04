@@ -5,9 +5,7 @@ export type DataObjectPath = `dataobject.${string}`;
 export type DataMappingFn = (product: OpenProductProduct) => React.ReactNode;
 
 export type DataMappingItem =
-  | DataMappingFn
-  | keyof OpenProductProduct
-  | DataObjectPath;
+  DataMappingFn | keyof OpenProductProduct | DataObjectPath;
 
 export interface ProductSettings {
   productTypeSlug?: string;

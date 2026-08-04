@@ -28,7 +28,7 @@ object Versions {
     const val kotlinLogging = "7.0.13"
     const val springCloud = "5.0.2"
     const val httpCore5 = "5.4.3" // override Boot 4.1.0 BOM (5.4.2), CVE-2026-54399/-54428 fix
-    const val log4j2 = "2.25.5" // override Boot 4.1.0 BOM (2.25.4), CVE-2026-49844 fix
+    const val log4j2 = "2.26.1" // override Boot 4.1.0 BOM (2.25.4), CVE-2026-49844 fix
     const val netty = "4.2.16.Final" // override Boot 4.1.0 BOM (4.2.15.Final), CVE-2026-44891/-55831/-55833 fix
 
     //Test versions
