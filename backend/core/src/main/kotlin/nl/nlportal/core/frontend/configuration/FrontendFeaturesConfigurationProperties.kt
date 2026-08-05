@@ -44,7 +44,6 @@ class FrontendFeaturesConfigurationProperties {
         var messageCountEnabled: Boolean = false
         var casesPartialSearchEnabled: Boolean = false
         var openProductEnabled: Boolean = false
-        var legacyPaymentEnabled: Boolean = false
         var themeApiEnabled: Boolean = false
         var casesResultExplanationEnabled: Boolean = false
         var myInhabitantCountEnabled: Boolean = false
