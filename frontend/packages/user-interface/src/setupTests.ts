@@ -32,7 +32,6 @@ const featuresResponse = {
     casesContactMomentsEnabled: true,
     casesPartialSearchEnabled: false,
     casesResultExplanationEnabled: false,
-    legacyPaymentEnabled: false,
     messageCountEnabled: false,
     myInhabitantCountEnabled: false,
     openProductEnabled: false,

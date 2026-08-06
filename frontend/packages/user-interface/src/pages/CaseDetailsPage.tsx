@@ -59,7 +59,7 @@ const CaseDetailsPage = () => {
     },
   );
   const { formatDate } = useDateFormatter();
-  const { paymentStatus, orderId } = useOgonePaymentRegistration(true);
+  const { paymentStatus, orderId } = useOgonePaymentRegistration();
   const loading = caseLoading || taskLoading || momentsLoading;
 
   // Remove task with the orderId to prevent race condition with the payment handling in the backend
