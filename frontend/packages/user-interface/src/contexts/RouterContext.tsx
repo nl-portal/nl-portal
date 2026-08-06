@@ -2,9 +2,9 @@ import React, { ReactNode, useMemo, useState } from "react";
 import {
   createBrowserRouter,
   createMemoryRouter,
-  RouterProvider as ReactRouterProvider,
   RouteObject,
 } from "react-router";
+import { RouterProvider as ReactRouterProvider } from "react-router/dom";
 import { NavigationItem } from "../interfaces/navigation-item";
 
 export interface RouterContextInterface {
