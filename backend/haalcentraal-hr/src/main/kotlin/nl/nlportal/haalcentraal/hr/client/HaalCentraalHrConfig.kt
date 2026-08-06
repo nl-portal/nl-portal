@@ -18,7 +18,7 @@ package nl.nlportal.haalcentraal.hr.client
 import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 
-@ConfigurationProperties(prefix = "nl-portal.config.haalcentraal.hr", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "nl-portal.config.haalcentraalhr", ignoreUnknownFields = true)
 data class HaalCentraalHrConfig(
     var enabled: Boolean = false,
     var properties: HaalCentraalHrConfigProperties = HaalCentraalHrConfigProperties(),
