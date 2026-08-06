@@ -12,7 +12,7 @@ export enum PaymentStatus {
   FAILURE,
 }
 
-const useOgonePaymentRegistration = () => {
+const usePaymentRegistration = () => {
   const [getPaymentStatus] = useLazyQuery(GetDirectPaymentStatusDocument);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>();
   const [orderId, setOrderId] = useState<string | undefined>();
@@ -57,4 +57,4 @@ const useOgonePaymentRegistration = () => {
   return { paymentStatus, orderId };
 };
 
-export default useOgonePaymentRegistration;
+export default usePaymentRegistration;

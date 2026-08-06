@@ -25,9 +25,6 @@ import PageGrid from "../components/PageGrid";
 import PageHeader from "../components/PageHeader";
 import TasksList from "../components/TasksList";
 import SectionHeader from "../components/SectionHeader";
-import useOgonePaymentRegistration, {
-  PaymentStatus,
-} from "../hooks/useOgonePaymentRegistration";
 import DescriptionList from "../components/DescriptionList";
 import { ExtraCaseDetails, Details } from "../components/ExtraCaseDetails";
 import NotificationContext from "../contexts/NotificationContext";
@@ -35,6 +32,9 @@ import { stringToSlug } from "../utils/string-to-slug";
 import { caseResults } from "../constants/case-results";
 import Pre from "../components/Pre";
 import AppContext from "../contexts/AppContext";
+import usePaymentRegistration, {
+  PaymentStatus,
+} from "../hooks/usePaymentRegistration";
 
 const CaseDetailsPage = () => {
   const intl = useIntl();
@@ -59,7 +59,7 @@ const CaseDetailsPage = () => {
     },
   );
   const { formatDate } = useDateFormatter();
-  const { paymentStatus, orderId } = useOgonePaymentRegistration();
+  const { paymentStatus, orderId } = usePaymentRegistration();
   const loading = caseLoading || taskLoading || momentsLoading;
 
   // Remove task with the orderId to prevent race condition with the payment handling in the backend

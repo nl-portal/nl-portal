@@ -20,7 +20,7 @@ interface PaymentRequestPayload {
   returnUrl?: string;
 }
 
-const useOgonePayment = () => {
+const usePayment = () => {
   const [loading, setLoading] = useState(false);
   const [mutateFunction] = useMutation(DoDirectPaymentDocument);
   const { currentLocale } = useContext(LocaleContext);
@@ -54,4 +54,4 @@ const useOgonePayment = () => {
   };
 };
 
-export default useOgonePayment;
+export default usePayment;
