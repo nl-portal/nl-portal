@@ -68,11 +68,12 @@ network namespace), so from your host every service is reachable on `localhost:<
 | Configuration Panel Backend            | 8090  | config            |
 | Configuration Panel Frontend           | 8091  | config            |
 | Configuration Panel Database (postgres)| -     | config            |
-| ClamAV virus scan                      | 3310  | clamav            |
+| ClamAV virus scan                      | 3310  | (default)         |
 
 > **NB!** `RUN_MODE` selects exactly one app-run mode, so `local` and `remote` can never bind the
-> app ports 8080/3000 at the same time. ClamAV is optional: start it with `--profile clamav` and set
-> `NLPORTAL_CONFIG_VIRUSSCAN_CLAMAV_ENABLED=true` in `imports/backend.env`.
+> app ports 8080/3000 at the same time. ClamAV now runs by default (no profile) and virus scanning is
+> enabled in `imports/backend.env`; its image is large and its healthcheck has a ~120s start period
+> (virus-DB download), so the first `up` on a cold cache is slower.
 
 ### Running the application
 This stack can run the whole NL Portal product (backend + frontend) together with its
@@ -108,16 +109,25 @@ reload. `sources` is the default `RUN_MODE`, so the stack does **not** publish t
 ```shell
 # supporting services only (app ports left free)
 docker compose --profile zgw up -d
+```
+There are two app pairs. For **feature work** run the developer-only dev apps (all modules plus GraphQL
+introspection on, the producten/thema demo, never published). This is the default inner loop:
+```shell
+# backend dev app: no .env.properties, configured from its own application.yml
+cd ../backend && ./gradlew :app-dev:bootRun
 
-# backend (from ../backend) — see backend/app/README.md for .env.properties setup
-cd ../backend && ./gradlew :app:bootRun
-
-# frontend (from ../frontend) — libraries in watch + the app's vite dev server on :3000
+# frontend dev app on :3000: libraries in watch plus the dev app's vite dev server
 cd ../frontend && pnpm install && pnpm dev
 ```
+To run the **shippable app** from sources instead (production-shaped: no demo, openproduct off), use the
+`:app` backend and the `app:`-prefixed frontend script:
+```shell
+cd ../backend && ./gradlew :app:bootRun          # needs .env.properties (see backend/app/README.md)
+cd ../frontend && pnpm app:dev
+```
 Backend GraphQL is at http://localhost:8080/graphql, frontend at http://localhost:3000. `pnpm dev`
-builds the `@nl-portal/*` libraries in watch mode and serves the app; changing a library rebuilds it
-and the app hot-reloads. Full config details:
+builds the `@nl-portal/*` libraries in watch mode and serves the dev app (`pnpm app:dev` serves the
+shippable app); changing a library rebuilds it and the app hot-reloads. Full config details:
 [`backend/app/README.md`](../backend/app/README.md#local-development-bootrun) and
 [`frontend/README.md`](../frontend/README.md).
 
