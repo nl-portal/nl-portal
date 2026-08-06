@@ -906,8 +906,6 @@ export type Mutation = {
   deleteUserDigitaleAdres?: Maybe<Scalars['Boolean']['output']>;
   /**  Do Worldline Direct payment */
   doDirectPayment: DirectPaymentResponse;
-  /**  Create Ogone payment with hash and fields */
-  generateOgonePayment: OgonePayment;
   processSubmission?: Maybe<CaseCreated>;
   /**  Submit a task */
   submitTaakV2: TaakV2;
@@ -945,11 +943,6 @@ export type MutationDeleteUserDigitaleAdresArgs = {
 
 export type MutationDoDirectPaymentArgs = {
   paymentRequest: DirectPaymentRequestInput;
-};
-
-
-export type MutationGenerateOgonePaymentArgs = {
-  paymentRequest: OgonePaymentRequestInput;
 };
 
 
@@ -996,23 +989,6 @@ export type OgoneBetaling = {
   bedrag: Scalars['PositiveFloat']['output'];
   betaalkenmerk: Scalars['String']['output'];
   pspid: Scalars['String']['output'];
-};
-
-export type OgonePayment = {
-  __typename?: 'OgonePayment';
-  formAction: Scalars['String']['output'];
-  formFields: Array<PaymentField>;
-};
-
-export type OgonePaymentRequestInput = {
-  amount: Scalars['PositiveFloat']['input'];
-  failureUrl?: InputMaybe<Scalars['String']['input']>;
-  langId?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  pspId: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
-  successUrl?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum OnderwerpObjectIndentificatorType {
@@ -1861,12 +1837,6 @@ export enum PartijType {
   Organisatie = 'ORGANISATIE',
   Persoon = 'PERSOON'
 }
-
-export type PaymentField = {
-  __typename?: 'PaymentField';
-  name: Scalars['String']['output'];
-  value: Scalars['String']['output'];
-};
 
 export type PersoonsIdentificatie = {
   __typename?: 'PersoonsIdentificatie';
@@ -2717,20 +2687,6 @@ export type DoDirectPaymentMutationVariables = Exact<{
 
 export type DoDirectPaymentMutation = { __typename?: 'Mutation', doDirectPayment: { __typename?: 'DirectPaymentResponse', redirectUrl: string } };
 
-export type GenerateOgonePaymentMutationVariables = Exact<{
-  amount: Scalars['PositiveFloat']['input'];
-  failureUrl?: InputMaybe<Scalars['String']['input']>;
-  langId?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  pspId: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
-  successUrl?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type GenerateOgonePaymentMutation = { __typename?: 'Mutation', generateOgonePayment: { __typename?: 'OgonePayment', formAction: string, formFields: Array<{ __typename?: 'PaymentField', name: string, value: string }> } };
-
 export type SubmitTaakV2MutationVariables = Exact<{
   id: Scalars['UUID']['input'];
   submission: Scalars['JSON']['input'];
@@ -2962,7 +2918,6 @@ export const OpenProductFieldsFragmentDoc = {"kind":"Document","definitions":[{"
 export const CreateUserDigitaleAdresDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUserDigitaleAdres"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"digitaleAdresRequest"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DigitaleAdresRequestInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUserDigitaleAdres"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"digitaleAdresRequest"},"value":{"kind":"Variable","name":{"kind":"Name","value":"digitaleAdresRequest"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"waarde"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"omschrijving"}},{"kind":"Field","name":{"kind":"Name","value":"referentie"}},{"kind":"Field","name":{"kind":"Name","value":"verificatieDatum"}},{"kind":"Field","name":{"kind":"Name","value":"verificatieNeeded"}},{"kind":"Field","name":{"kind":"Name","value":"verificatieCodeVerified"}}]}}]}}]} as unknown as DocumentNode<CreateUserDigitaleAdresMutation, CreateUserDigitaleAdresMutationVariables>;
 export const DeleteUserDigitaleAdresDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteUserDigitaleAdres"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"digitaleAdresId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteUserDigitaleAdres"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"digitaleAdresId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"digitaleAdresId"}}}]}]}}]} as unknown as DocumentNode<DeleteUserDigitaleAdresMutation, DeleteUserDigitaleAdresMutationVariables>;
 export const DoDirectPaymentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DoDirectPayment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PositiveFloat"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"identifier"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"langId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"reference"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"returnUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doDirectPayment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"paymentRequest"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"identifier"},"value":{"kind":"Variable","name":{"kind":"Name","value":"identifier"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"langId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"langId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"orderId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"reference"},"value":{"kind":"Variable","name":{"kind":"Name","value":"reference"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"returnUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"returnUrl"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"redirectUrl"}}]}}]}}]} as unknown as DocumentNode<DoDirectPaymentMutation, DoDirectPaymentMutationVariables>;
-export const GenerateOgonePaymentDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"GenerateOgonePayment"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PositiveFloat"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"failureUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"langId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pspId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"reference"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"successUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"generateOgonePayment"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"paymentRequest"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"failureUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"failureUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"langId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"langId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"orderId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orderId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"pspId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pspId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"reference"},"value":{"kind":"Variable","name":{"kind":"Name","value":"reference"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"successUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"successUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formAction"}},{"kind":"Field","name":{"kind":"Name","value":"formFields"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<GenerateOgonePaymentMutation, GenerateOgonePaymentMutationVariables>;
 export const SubmitTaakV2Document = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SubmitTaakV2"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"submission"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"submitTaakV2"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"submission"},"value":{"kind":"Variable","name":{"kind":"Name","value":"submission"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"portaalformulier"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formulier"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"soort"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"data"}}]}},{"kind":"Field","name":{"kind":"Name","value":"titel"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"verloopdatum"}}]}}]}}]} as unknown as DocumentNode<SubmitTaakV2Mutation, SubmitTaakV2MutationVariables>;
 export const UpdateUserDigitaleAdresDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateUserDigitaleAdres"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"digitaleAdresRequest"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DigitaleAdresRequestInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateUserDigitaleAdres"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"digitaleAdresRequest"},"value":{"kind":"Variable","name":{"kind":"Name","value":"digitaleAdresRequest"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"waarde"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"omschrijving"}},{"kind":"Field","name":{"kind":"Name","value":"referentie"}},{"kind":"Field","name":{"kind":"Name","value":"verificatieDatum"}},{"kind":"Field","name":{"kind":"Name","value":"verificatieNeeded"}},{"kind":"Field","name":{"kind":"Name","value":"verificatieCodeVerified"}}]}}]}}]} as unknown as DocumentNode<UpdateUserDigitaleAdresMutation, UpdateUserDigitaleAdresMutationVariables>;
 export const UpdateProductVerbruiksObjectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateProductVerbruiksObject"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"submission"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateProductVerbruiksObject"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"submission"},"value":{"kind":"Variable","name":{"kind":"Name","value":"submission"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"productInstantie"}},{"kind":"Field","name":{"kind":"Name","value":"soort"}}]}}]}}]} as unknown as DocumentNode<UpdateProductVerbruiksObjectMutation, UpdateProductVerbruiksObjectMutationVariables>;

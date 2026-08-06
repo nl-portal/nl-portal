@@ -31,12 +31,12 @@ class DirectPaymentController(
     @PostMapping(value = ["/payment/direct/postsale"])
     suspend fun postSale(
         httpServletRequest: ServerHttpRequest,
-        @RequestBody ogoneDirectPaymentWebhookRequest: String,
+        @RequestBody directPaymentWebhookRequest: String,
     ): ResponseEntity<String> =
         ResponseEntity.ok(
             directPaymentService.handlePostSale(
                 httpServletRequest.headers,
-                ogoneDirectPaymentWebhookRequest,
+                directPaymentWebhookRequest,
             ),
         )
 }
