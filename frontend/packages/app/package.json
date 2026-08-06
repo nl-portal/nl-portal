@@ -30,8 +30,8 @@
     "@nl-portal/nl-portal-user-interface": "workspace:*",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "react-intl": "^7.1.14",
-    "react-router": "^7.18.2"
+    "react-intl": "^10.1.18",
+    "react-router": "^8.3.0"
   },
   "devDependencies": {
     "@types/react": "19.2.18",
@@ -46,7 +46,7 @@
     "eslint-plugin-prettier": "5.5.6",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.1.1",
-    "globals": "16.5.0",
+    "globals": "17.8.0",
     "jsdom": "29.1.1",
     "pwa-asset-generator": "8.1.5",
     "rimraf": "6.1.3",
