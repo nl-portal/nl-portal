@@ -4,6 +4,11 @@ The shippable backend application of NL Portal. It assembles the backend library
 `graphql`, `case`, `form`, `zgw`, ...) into a single runnable Spring Boot service and is packaged as
 the `nl-portal-backend` image (Dockerfile at [`backend/Dockerfile`](../Dockerfile)).
 
+This is the production-shaped app: it carries no producten/thema demo and ships with openproduct off.
+Active feature work and the demo live in the developer-only dev app `:app-dev`
+([backend/app-dev/README.md](../app-dev/README.md)), which is configured entirely from its own
+`application.yml` and is never published or imaged.
+
 ## Running locally
 
 Start the supporting services (the default `sources` mode leaves the app ports `8080`/`8000`/`3000`
@@ -51,7 +56,8 @@ on `localhost:<published-port>` from the host. It differs from the containerised
 | `SPRING_GRAPHQL_SCHEMA_INTROSPECTION_ENABLED` | unset (off) | `true` | serve an introspectable schema for frontend codegen (never on in the shipped image) |
 | `CONFIGURATION_PANEL_URI`, `..._PREFILL_..._TYPEURL` | `host.docker.internal:<port>` | `localhost:<port>` | the host reaches these services on `localhost`, not `host.docker.internal` |
 
-To use the optional ClamAV virus scan, start the `clamav` compose profile and set
-`NLPORTAL_CONFIG_VIRUSSCAN_CLAMAV_ENABLED=true` in `.env.properties`.
+ClamAV virus scanning runs by default: the `clamav` service starts with the compose stack (no profile)
+and `.env.properties.example` already ships `NLPORTAL_CONFIG_VIRUSSCAN_CLAMAV_ENABLED=true`, so a
+from-source run scans uploads out of the box. Set it to `false` in `.env.properties` to opt out.
 
 When running as a container, supply configuration through environment variables instead.

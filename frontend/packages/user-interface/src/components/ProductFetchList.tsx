@@ -44,8 +44,7 @@ export const ProductFetchList = ({
   };
 
   const producten = data?.getOpenProducten.content as
-    | OpenProductProduct[]
-    | undefined;
+    OpenProductProduct[] | undefined;
 
   if (!producten) return null;
 

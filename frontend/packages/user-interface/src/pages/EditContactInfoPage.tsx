@@ -50,8 +50,7 @@ const TELEFOON_VALIDATION = [
 const EditContactInfoPage = () => {
   const { type } = useParams<{ type: TypeParams }>();
   const adresType = capitalizeFirstLetter(type || "") as
-    | keyof typeof DigitaleAdresType
-    | keyof typeof VerificatieType;
+    keyof typeof DigitaleAdresType | keyof typeof VerificatieType;
   const digitaleAdresType = DigitaleAdresType[adresType];
   const navigate = useNavigate();
   const { contact } = useContext(UserContext);
