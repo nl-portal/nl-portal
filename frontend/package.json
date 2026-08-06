@@ -5,11 +5,15 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "pnpm clean && pnpm run --recursive --parallel build",
+    "build": "pnpm clean && pnpm --filter \"nl-portal-app-dev...\" build",
     "build:watch": "pnpm clean && pnpm run --recursive --parallel build:watch",
     "clean": "pnpm run --recursive clean",
     "codegen": "pnpm run --recursive --parallel codegen",
-    "dev": "pnpm clean && pnpm run --recursive --parallel dev",
+    "dev": "pnpm clean && pnpm --parallel --filter \"nl-portal-app-dev...\" dev",
+    "preview": "pnpm --filter \"nl-portal-app-dev\" preview",
+    "app:build": "pnpm clean && pnpm --filter \"nl-portal-app...\" build",
+    "app:dev": "pnpm clean && pnpm --parallel --filter \"nl-portal-app...\" dev",
+    "app:preview": "pnpm --filter \"nl-portal-app\" preview",
     "lint": "eslint \"packages/**/*.{js,jsx,ts,tsx}\"",
     "lint:css": "stylelint \"**/*.{css,scss}\"",
     "lint:fix": "eslint \"packages/**/*.{js,jsx,ts,tsx}\" --fix",
@@ -17,13 +21,12 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "test": "pnpm run --recursive --parallel test",
-    "test:coverage": "pnpm run --recursive --parallel --filter '!./packages/app' test:coverage",
+    "test:coverage": "pnpm run --recursive --parallel --filter '!./packages/app' --filter '!./packages/app-dev' test:coverage",
     "typecheck": "pnpm run --recursive --parallel typecheck",
     "update-patch": "npm-check-updates --configFilePath .ncurc.patch.js",
     "update-minor": "npm-check-updates --configFilePath .ncurc.minor.js",
     "update-major": "npm-check-updates --configFilePath .ncurc.major.js",
-    "postinstall": "cd .. && husky frontend/.husky",
-    "preview": "pnpm run --recursive preview"
+    "postinstall": "cd .. && husky frontend/.husky"
   },
   "devDependencies": {
     "@commitlint/cli": "20.5.3",

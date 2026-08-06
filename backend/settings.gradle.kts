@@ -38,6 +38,7 @@ pluginManagement {
 }
 include(
     "app",
+    "app-dev",
     "core",
     "gradle:license-report",
     "graphql",

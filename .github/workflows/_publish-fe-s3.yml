@@ -37,7 +37,7 @@ jobs:
                 run: tar -xf frontend-stage.tar && rm frontend-stage.tar
             -   name: Pack library tarballs
                 working-directory: frontend
-                run: pnpm -r --filter=!./packages/app --out=%s.tgz pack
+                run: pnpm -r --filter=!./packages/app --filter=!./packages/app-dev --out=%s.tgz pack
             -   name: Push tarballs to S3
                 working-directory: frontend
                 env:
