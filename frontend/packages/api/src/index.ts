@@ -1,5 +1,6 @@
 export { default as ApiContext, ApiProvider } from "./contexts/ApiContext";
 export * from "./constants/apollo-cache";
+export * from "./generated/types";
 export * from "./generated/graphql";
 
 export * from "./hooks/useUserContactMutation";
