@@ -27,12 +27,14 @@ const Task = ({ task, openInContext }: Props) => {
   const taskUrl = useTaskUrl(task, openInContext) ?? "";
   const handleClick = useLinkClickHandler(taskUrl);
 
+  const verloopDatum = task.verloopdatum ?? undefined;
+
   if (openInContext && task.koppeling) {
     return (
       <ActionSingle
         relativeDate
         labels={labels}
-        dateTime={task.verloopdatum}
+        dateTime={verloopDatum}
         locale={currentLocale}
         link={taskUrl}
         Link={PortalLink}
@@ -85,7 +87,7 @@ const Task = ({ task, openInContext }: Props) => {
     <ActionMulti
       relativeDate
       labels={labels}
-      dateTime={task.verloopdatum}
+      dateTime={verloopDatum}
       locale={currentLocale}
       actions={createActions()}
     >

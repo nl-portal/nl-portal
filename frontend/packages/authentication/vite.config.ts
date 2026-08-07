@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [peerDepsExternal({ includeDependencies: true }), react(), dts()],
   build: {
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
+      entry: resolve(import.meta.dirname, "src/index.ts"),
       name: "authentication",
       fileName: "index",
       formats: ["es"],

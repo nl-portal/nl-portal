@@ -4,14 +4,6 @@ const minorConfig = require("./.ncurc.minor");
 
 module.exports = {
   ...minorConfig,
-  reject: [
-    ...minorConfig.reject,
-    "eslint",
-    "typescript",
-    "graphql",
-    "@graphql-codegen/cli",
-    "@graphql-codegen/client-preset",
-    "@graphql-typed-document-node/core",
-  ],
+  reject: [...minorConfig.reject, "eslint", "typescript"],
   target: "latest",
 };
