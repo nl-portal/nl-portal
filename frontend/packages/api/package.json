@@ -30,7 +30,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@apollo/client": "4.2.9",
+    "@apollo/client": "4.2.10",
     "graphql": "^16.12.0"
   },
   "devDependencies": {
