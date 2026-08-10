@@ -81,7 +81,7 @@
     "react-loading-skeleton": "^3.5.0"
   },
   "devDependencies": {
-    "@apollo/client": "4.2.9",
+    "@apollo/client": "4.2.10",
     "@nl-portal/nl-portal-api": "workspace:*",
     "@nl-portal/nl-portal-authentication": "workspace:*",
     "@nl-portal/nl-portal-localization": "workspace:*",
@@ -108,7 +108,7 @@
     "wait-on": "^9.0.3"
   },
   "peerDependencies": {
-    "@apollo/client": "4.2.9",
+    "@apollo/client": "4.2.10",
     "@nl-portal/nl-portal-api": "workspace:*",
     "@nl-portal/nl-portal-authentication": "workspace:*",
     "@nl-portal/nl-portal-localization": "workspace:*",
