@@ -34,6 +34,10 @@ COPY --chown=101:101 --from=build /workspace/packages/app/build /usr/share/nginx
 COPY --chown=101:101 packages/app/conf/nginx.conf /etc/nginx/templates/nginx.conf.template
 COPY --chown=101:101 --chmod=+x packages/app/entrypoint.sh /docker-entrypoint.d/40-envsubst-config.sh
 
+# nginx-unprivileged already defaults to this user; pinned explicitly so the
+# non-root requirement is self-documenting and can't silently regress.
+USER 101
+
 EXPOSE 8081
 
 LABEL org.opencontainers.image.description="NL Portal Frontend."
