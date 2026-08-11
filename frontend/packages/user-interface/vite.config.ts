@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+/// <reference types="vitest/config" />
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -14,7 +14,7 @@ export default defineConfig({
       fileName: "index",
       formats: ["es"],
     },
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         entryFileNames: "[name].js",
         globals: {
@@ -22,7 +22,6 @@ export default defineConfig({
         },
       },
     },
-    commonjsOptions: { transformMixedEsModules: true },
   },
   test: {
     globals: true,
