@@ -40,8 +40,12 @@ const ParkerenOverview = () => {
           ],
           dataMapping: [
             "naam",
-            (product) => <FormattedDate value={product?.startDatum ?? undefined} />,
-            (product) => <FormattedDate value={product?.eindDatum ?? undefined} />,
+            (product) => (
+              <FormattedDate value={product?.startDatum ?? undefined} />
+            ),
+            (product) => (
+              <FormattedDate value={product?.eindDatum ?? undefined} />
+            ),
             (product) =>
               capitalizeFirstLetter(product?.status.toLowerCase() ?? ""),
             (product) => {
