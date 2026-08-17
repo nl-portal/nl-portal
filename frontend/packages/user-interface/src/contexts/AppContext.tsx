@@ -43,7 +43,6 @@ interface Features {
     casesContactMomentsEnabled: boolean;
     casesPartialSearchEnabled: boolean;
     casesResultExplanationEnabled: boolean;
-    legacyPaymentEnabled: boolean;
     messageCountEnabled: boolean;
     myInhabitantCountEnabled: boolean;
     openProductEnabled: boolean;

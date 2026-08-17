@@ -59,7 +59,6 @@ include(
     "zgw:documenten-api",
     "zgw:berichten",
     "zgw:besluiten",
-    "payment",
     "payment-direct",
     "zgw:zaken-api",
     "zgw:openproduct",

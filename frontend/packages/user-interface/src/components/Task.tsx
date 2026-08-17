@@ -4,7 +4,6 @@ import { ActionMulti, ActionSingle } from "@gemeente-denhaag/action";
 import useTaskUrl from "../hooks/useTaskUrl";
 import { ButtonLink } from "@gemeente-denhaag/button-link";
 import { ChevronRightIcon } from "@gemeente-denhaag/icons";
-import useOgonePayment from "../hooks/useOgonePayment";
 import { Button } from "@gemeente-denhaag/button";
 import { useLinkClickHandler } from "react-router";
 import { FormattedMessage } from "react-intl";
@@ -13,6 +12,7 @@ import {
   useActionLabels,
 } from "@nl-portal/nl-portal-localization";
 import { useContext } from "react";
+import usePayment from "../hooks/usePayment";
 
 interface Props {
   task: TaakV2;
@@ -22,8 +22,7 @@ interface Props {
 const Task = ({ task, openInContext }: Props) => {
   const labels = useActionLabels();
   const { currentLocale } = useContext(LocaleContext);
-  const { startPayment, loading, renderPaymentRedirectForm } =
-    useOgonePayment();
+  const { startPayment, loading } = usePayment();
   const taskUrl = useTaskUrl(task, openInContext) ?? "";
   const handleClick = useLinkClickHandler(taskUrl);
 
@@ -62,7 +61,7 @@ const Task = ({ task, openInContext }: Props) => {
         if (task.ogonebetaling) {
           const paymentRequestPayload = {
             amount: task.ogonebetaling.bedrag,
-            pspId: task.ogonebetaling.pspid,
+            identifier: task.ogonebetaling.pspid,
             orderId: task.id,
             reference: task.ogonebetaling.betaalkenmerk,
             title: task.titel,
@@ -74,7 +73,6 @@ const Task = ({ task, openInContext }: Props) => {
               disabled={loading}
             >
               <FormattedMessage id="task.ogonebetaling.button" />
-              {renderPaymentRedirectForm()}
             </Button>
           );
         }
