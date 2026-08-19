@@ -34,6 +34,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductBestand
 import nl.nlportal.openproduct.client.domain.OpenProductBestandenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductContact
 import nl.nlportal.openproduct.client.domain.OpenProductContactenFilters
+import nl.nlportal.openproduct.client.domain.OpenProductContentElement
 import nl.nlportal.openproduct.client.domain.OpenProductLink
 import nl.nlportal.openproduct.client.domain.OpenProductLinksFilters
 import nl.nlportal.openproduct.client.domain.OpenProductLocatie
@@ -44,7 +45,6 @@ import nl.nlportal.openproduct.client.domain.OpenProductPrijs
 import nl.nlportal.openproduct.client.domain.OpenProductPrijzenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
-import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
 import nl.nlportal.openproduct.client.domain.OpenProductProductUpdate
 import nl.nlportal.openproduct.client.domain.OpenProductProductenFilters
@@ -67,7 +67,6 @@ import nl.nlportal.openproduct.client.path.Producten
 import nl.nlportal.openproduct.client.path.Schemas
 import nl.nlportal.openproduct.client.path.Themas
 import nl.nlportal.openproduct.graphql.domain.OpenProductThemaHierarchy
-import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.domain.Zaak
 import nl.nlportal.zakenapi.service.ZakenApiService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
@@ -716,7 +715,7 @@ class OpenProductService(
      * @param: productTypeId, producttype id
      * @return: List of producttype content
      */
-    suspend fun getProductTypeContent(productTypeId: UUID): List<OpenProductProductTypeContent>? {
+    suspend fun getProductTypeContent(productTypeId: UUID): List<OpenProductContentElement>? {
         try {
             return openProductTypeClient.path<ProductTypes>().get(
                 id = productTypeId,
