@@ -200,25 +200,32 @@ nl-portal:
                             successUrl: http://localhost:3000
         verificatie:
             enabled: true
+    frontend:
         theme:
             logo:
             style:
-        features:
-            properties:
-                message-count-polling-interval: 10000
-                overview-current-cases-preview-length: 4
-                overview-maintenance-alert-title-nl: Ontwikkelmodus
-                overview-maintenance-alert-title-en: Development mode
-                overview-maintenance-alert-text-nl: Deze omgeving draait in ontwikkelmodus met testgegevens.
-                overview-maintenance-alert-text-en: This environment is running in development mode with test data.
-            toggles:
-                theme-api-enabled: true
-                message-count-enabled: true
-                cases-partial-search-enabled: true
-                my-inhabitant-count-enabled: true
-                open-product-enabled: true
-                cases-result-explanation-enabled: true
-                legacy-payment-enabled: true
-                cases-contact-moments-enabled: true
-                overview-intro-enabled: true
-                overview-maintenance-alert-enabled: true
+        properties:
+            message-count-polling-interval: 10000
+            overview-current-cases-preview-length: 4
+            overview-maintenance-alert-title-nl: Ontwikkelmodus
+            overview-maintenance-alert-title-en: Development mode
+            overview-maintenance-alert-text-nl: Deze omgeving draait in ontwikkelmodus met testgegevens.
+            overview-maintenance-alert-text-en: This environment is running in development mode with test data.
+        toggles:
+            theme-api-enabled: true
+            message-count-enabled: true
+            cases-partial-search-enabled: true
+            my-inhabitant-count-enabled: true
+            open-product-enabled: true
+            cases-result-explanation-enabled: true
+            legacy-payment-enabled: true
+            cases-contact-moments-enabled: true
+            overview-intro-enabled: true
+            overview-maintenance-alert-enabled: true
+        modules-whitelist:
+            - zakenapi
+            - product
+            - haalcentraalhr
+            - haalcentraal2
+            - taak
+            - openproduct

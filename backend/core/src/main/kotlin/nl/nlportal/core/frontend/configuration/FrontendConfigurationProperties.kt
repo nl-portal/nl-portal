@@ -21,11 +21,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.frontend", ignoreUnknownFields = true)
 class FrontendConfigurationProperties {
-    var style: String? = null
-    var logo: String? = null
+    var theme: FrontendTheme = FrontendTheme()
     var properties: FrontendProperties = FrontendProperties()
     var toggles: FrontendToggles = FrontendToggles()
     var modulesWhitelist: List<String> = emptyList()
+
+    class FrontendTheme(
+        var style: String? = null,
+        var logo: String? = null,
+    )
 
     @JsonInclude(Include.NON_NULL)
     class FrontendProperties {

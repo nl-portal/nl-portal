@@ -16,12 +16,12 @@
 package nl.nlportal.core.frontend.domain
 
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties.FrontendProperties
+import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties.FrontendTheme
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties.FrontendToggles
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties.FrontendModuleProperties
 
 data class FrontendData(
-    var style: String? = null,
-    var logo: String? = null,
+    var theme: FrontendTheme = FrontendTheme(),
     var properties: FrontendProperties = FrontendProperties(),
     var toggles: FrontendToggles = FrontendToggles(),
     var modules: Map<String, FrontendModuleProperties>? = emptyMap(),

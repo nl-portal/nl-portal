@@ -84,7 +84,7 @@ class FrontendConfigurationResourceTest(
                 .responseBodyContent
                 ?.toString(Charset.defaultCharset())
 
-        assertEquals(frontendConfigurationProperties.style, responseBodyContent)
+        assertEquals(frontendConfigurationProperties.theme.style, responseBodyContent)
     }
 
     @Test
@@ -101,6 +101,6 @@ class FrontendConfigurationResourceTest(
                 .responseBodyContent
                 ?.toString(Charset.defaultCharset())
 
-        assertEquals(frontendConfigurationProperties.logo, responseBodyContent)
+        assertEquals(frontendConfigurationProperties.theme.logo, responseBodyContent)
     }
 }

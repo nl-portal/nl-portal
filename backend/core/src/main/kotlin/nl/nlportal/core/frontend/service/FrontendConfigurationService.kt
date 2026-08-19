@@ -32,8 +32,7 @@ class FrontendConfigurationService(
             modules = getModules(),
             toggles = frontendConfigurationProperties.toggles,
             properties = frontendConfigurationProperties.properties,
-            style = frontendConfigurationProperties.style,
-            logo = frontendConfigurationProperties.logo,
+            theme = frontendConfigurationProperties.theme,
         )
 
     fun getModules(): Map<String, FrontendModuleProperties> {
@@ -43,7 +42,7 @@ class FrontendConfigurationService(
             .mapKeys { (key, _) -> key.replace("api", "") }
     }
 
-    fun getLogo(): String? = frontendConfigurationProperties.logo
+    fun getLogo(): String? = frontendConfigurationProperties.theme.logo
 
-    fun getStyle(): String? = frontendConfigurationProperties.style
+    fun getStyle(): String? = frontendConfigurationProperties.theme.style
 }
