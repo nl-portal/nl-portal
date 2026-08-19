@@ -25,6 +25,7 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -45,10 +46,12 @@ internal class ProductMutationIT(
 ) {
     lateinit var server: MockWebServer
     lateinit var url: String
+    private val putBodies = mutableListOf<String>()
 
     @BeforeEach
     internal fun setUp() {
         server = MockWebServer()
+        putBodies.clear()
         setupMockOpenZaakServer()
         server.start()
         url = server.url("/").toString()
@@ -84,7 +87,23 @@ internal class ProductMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.textValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.stringValue())
+        assertEquals(1, putBodies.size)
+    }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun updateVerbruiksObjectTestBurgerNotInitiator() {
+        httpGraphQlTester
+            .document(graphqlUpdateProductVerbruiksObject)
+            .execute()
+            .errors()
+            .satisfy { errors ->
+                assertEquals(1, errors.size)
+                assertTrue(errors[0].message!!.contains("Access denied to this product"))
+            }
+
+        assertEquals(0, putBodies.size)
     }
 
     fun setupMockOpenZaakServer() {
@@ -94,6 +113,9 @@ internal class ProductMutationIT(
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val path = request.path?.substringBefore('?')
                     val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
+                    if (request.method == "PUT") {
+                        putBodies.add(request.body.readUtf8())
+                    }
                     val response =
                         when (request.method + " " + path) {
                             "GET /api/v2/objects" -> {
