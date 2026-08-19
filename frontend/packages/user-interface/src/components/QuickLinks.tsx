@@ -4,15 +4,20 @@ import { useIntl } from "react-intl";
 import RouterContext from "../contexts/RouterContext";
 import PortalLink from "./PortalLink";
 import styles from "./QuickLinks.module.scss";
-import classNames from "classnames";
+import SectionHeader from "./SectionHeader";
 
-const QuickLinks = () => {
+interface QuickLinkProps {
+  titleTranslationId?: string | null;
+}
+
+const QuickLinks = ({
+  titleTranslationId = "quickLinks.title",
+}: QuickLinkProps) => {
   const intl = useIntl();
+  const title = titleTranslationId
+    ? intl.formatMessage({ id: titleTranslationId })
+    : undefined;
   const { navigationItems } = useContext(RouterContext);
-  const classes = classNames(
-    "denhaag-quick-links",
-    styles["denhaag-quick-links--mobile"],
-  );
   const items = useMemo(() => {
     return navigationItems
       .flat()
@@ -26,10 +31,11 @@ const QuickLinks = () => {
       }));
   }, []);
 
-  console.log(classes);
-
   return (
-    <QuickLinksComponent className={classes} items={items} Link={PortalLink} />
+    <section className={styles["quick-links"]}>
+      <SectionHeader title={title} />
+      <QuickLinksComponent items={items} Link={PortalLink} />
+    </section>
   );
 };
 

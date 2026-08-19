@@ -315,6 +315,7 @@ export const NL_NL_MESSAGES: Messages = {
     "form.success.text": "Uw aanvraag is succesvol verwerkt.",
     "form.error.title": "Er is iets misgegaan",
     "form.error.text": "Probeer het later opnieuw.",
+    "quickLinks.title": "Snel naar",
     "footer.legal.privacy": "Privacy",
     "footer.legal.privacy.url":
       "https://www.denhaag.nl/nl/algemene-privacyverklaring/",
