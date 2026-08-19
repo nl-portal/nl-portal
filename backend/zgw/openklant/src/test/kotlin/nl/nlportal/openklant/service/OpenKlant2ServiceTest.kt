@@ -107,6 +107,48 @@ class OpenKlant2ServiceTest {
             assertEquals(1, mockServer.requestCount)
         }
 
+    @Test
+    fun `should delete DigitaleAdres that belongs to the authenticated user`() =
+        runTest {
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            mockServer.enqueue(mockJsonResponse(digitaleAdressenPage))
+            mockServer.enqueue(MockResponse().setResponseCode(204))
+
+            service.deleteDigitaleAdresById(
+                authentication = JwtBuilder().aanvragerBsn(OWNER_BSN).buildBurgerAuthentication(),
+                digitaleAdresId = UUID.fromString(DIGITALE_ADRES_ID),
+            )
+
+            // the digitale adressen are searched scoped to the authenticated user
+            val searchRequest = mockServer.takeRequest()
+            assertTrue(searchRequest.path!!.contains("verstrektDoorPartij__partijIdentificator__objectId=$OWNER_BSN"))
+
+            val deleteRequest = mockServer.takeRequest()
+            assertEquals("DELETE", deleteRequest.method)
+            assertTrue(deleteRequest.path!!.endsWith("/digitaleadressen/$DIGITALE_ADRES_ID"))
+        }
+
+    @Test
+    fun `should not delete DigitaleAdres of another user`() =
+        runTest {
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            // the scoped search of the other user does not return the digitale adres
+            mockServer.enqueue(mockJsonResponse(TestHelper.emptyPage))
+
+            val exception =
+                assertThrows<ResponseStatusException> {
+                    service.deleteDigitaleAdresById(
+                        authentication = JwtBuilder().aanvragerBsn(OTHER_BSN).buildBurgerAuthentication(),
+                        digitaleAdresId = UUID.fromString(DIGITALE_ADRES_ID),
+                    )
+                }
+
+            assertEquals(HttpStatus.UNAUTHORIZED, exception.statusCode)
+            // no DELETE request left this service
+            assertEquals(1, mockServer.requestCount)
+            assertEquals("GET", mockServer.takeRequest().method)
+        }
+
     private fun mockJsonResponse(body: String) =
         MockResponse()
             .addHeader("Content-Type", "application/json; charset=utf-8")
@@ -115,8 +157,27 @@ class OpenKlant2ServiceTest {
 
     companion object {
         private const val KLANTCONTACT_ID = "33549ba5-95f0-44d2-9c63-776ec126bc55"
+        private const val DIGITALE_ADRES_ID = "1300d2ab-13cb-4c12-9818-3b76e2a5d993"
         private const val OWNER_BSN = "296648875"
         private const val OTHER_BSN = "999999999"
+
+        private val digitaleAdressenPage =
+            """
+            {
+                "count": 1,
+                "next": null,
+                "previous": null,
+                "results": [
+                    {
+                        "uuid": "$DIGITALE_ADRES_ID",
+                        "url": "http://localhost:8007/klantinteracties/api/v1/digitaleadressen/$DIGITALE_ADRES_ID",
+                        "adres": "lucas@boom.nl",
+                        "soortDigitaalAdres": "email",
+                        "omschrijving": "Persoonlijke email adres"
+                    }
+                ]
+            }
+            """.trimIndent()
 
         private val klantContactenPage =
             """
