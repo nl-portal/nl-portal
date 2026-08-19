@@ -21,6 +21,7 @@ import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openklant.TestHelper
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -83,7 +84,7 @@ class OpenKlant2KlantContactQueryIT(
         }
 
     @Test
-    @WithBurgerUser("123456788")
+    @WithBurgerUser("296648875")
     fun `should find KlantContact for authenticated user`() =
         runTest {
             val responseBody =
@@ -96,9 +97,24 @@ class OpenKlant2KlantContactQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            verify(openKlant2Service, times(1)).findKlantContact(any())
+            verify(openKlant2Service, times(1)).findKlantContact(any(), any())
 
             assertNotNull(responseBody)
             assertEquals("E-mail", responseBody?.get("kanaal")?.textValue())
+        }
+
+    @Test
+    @WithBurgerUser("999999999")
+    fun `should not find KlantContact of another user`() =
+        runTest {
+            httpGraphQlTester
+                .document(TestHelper.readFileAsString("/config/graphql/getUserKlantContact.gql"))
+                .execute()
+                .errors()
+                .satisfy { errors ->
+                    assertEquals(1, errors.size)
+                    assertTrue(errors[0].message!!.contains("Access denied to this klantcontact"))
+                }.path("getUserKlantContact")
+                .valueIsNull()
         }
 }
