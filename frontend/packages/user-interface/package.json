@@ -61,6 +61,7 @@
     "@gemeente-denhaag/pagination": "3.1.1",
     "@gemeente-denhaag/paragraph": "2.2.1",
     "@gemeente-denhaag/process-steps": "4.3.1",
+    "@gemeente-denhaag/quick-links": "1.1.0",
     "@gemeente-denhaag/radio-button": "^3.2.0",
     "@gemeente-denhaag/responsive-content": "2.1.1",
     "@gemeente-denhaag/select": "^3.2.0",

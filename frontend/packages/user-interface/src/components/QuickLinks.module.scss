@@ -1,0 +1,7 @@
+@use "../styles/mixins";
+
+.denhaag-quick-links--mobile {
+  @include mixins.breakpoint(desktop) {
+    display: none !important;
+  }
+}
