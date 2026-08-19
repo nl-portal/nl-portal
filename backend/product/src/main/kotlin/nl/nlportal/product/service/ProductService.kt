@@ -257,6 +257,13 @@ class ProductService(
         val objectsApiVerbruiksObject =
             getObjectsApiObjectById<ProductVerbruiksObject>(id.toString()) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
+        val verbruiksObject = objectsApiVerbruiksObject.record.data
+        val product = getObjectsApiObjectById<Product>(verbruiksObject.productInstantie)?.record?.data
+
+        if (!isAuthorized(authentication, product?.rollen)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
+        }
+
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiVerbruiksObject)
         updateRequest.record.data.data = Mapper.get().convertValue(submission, ObjectNode::class.java)
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
