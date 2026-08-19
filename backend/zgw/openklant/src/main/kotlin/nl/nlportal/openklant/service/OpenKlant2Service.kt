@@ -302,15 +302,10 @@ class OpenKlant2Service(
         authentication: CommonGroundAuthentication,
         digitaleAdresId: UUID,
     ) {
-        val userPartijId =
-            findPartijIdentificatoren(authentication)
-                ?.singleOrNull { it.partijIdentificator?.objectId == authentication.userId }
-                ?.identificeerdePartij
-                ?.uuid
+        val userDigitaleAdressen = findDigitaleAdressen(authentication)
 
-        if (userPartijId == null) {
-            logger.debug { "Failed to delete Digitale Adres: Given DigitaleAdres does not belong to Authenticated User" }
-            return
+        if (userDigitaleAdressen.none { it.uuid == digitaleAdresId }) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this digitale adres")
         }
 
         try {
