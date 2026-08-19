@@ -112,7 +112,8 @@ class ProductQuery(
         @Argument productId: UUID,
     ): List<ProductVerbruiksObject> =
         productService.getProductVerbruiksObjecten(
-            productId.toString(),
+            authentication = authentication,
+            productId = productId.toString(),
             pageNumber = 1,
             pageSize = 20,
         )
@@ -239,10 +240,12 @@ class ProductQuery(
 
     @SchemaMapping(typeName = "Product", field = "verbruiksobjecten")
     suspend fun verbruiksobjecten(
+        authentication: CommonGroundAuthentication,
         product: Product,
     ): List<ProductVerbruiksObject> =
         productService.getProductVerbruiksObjecten(
-            productId = product.id.toString(),
+            authentication = authentication,
+            product = product,
             pageNumber = 1,
             pageSize = 20,
         )

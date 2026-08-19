@@ -121,6 +121,34 @@ class ProductService(
     }
 
     suspend fun getProductVerbruiksObjecten(
+        authentication: CommonGroundAuthentication,
+        productId: String,
+        pageNumber: Int,
+        pageSize: Int,
+    ): List<ProductVerbruiksObject> {
+        val product = getObjectsApiObjectById<Product>(productId)?.record?.data
+
+        if (!isAuthorized(authentication, product?.rollen)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
+        }
+
+        return findProductVerbruiksObjecten(productId, pageNumber, pageSize)
+    }
+
+    suspend fun getProductVerbruiksObjecten(
+        authentication: CommonGroundAuthentication,
+        product: Product,
+        pageNumber: Int,
+        pageSize: Int,
+    ): List<ProductVerbruiksObject> {
+        if (!isAuthorized(authentication, product.rollen)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
+        }
+
+        return findProductVerbruiksObjecten(product.id.toString(), pageNumber, pageSize)
+    }
+
+    private suspend fun findProductVerbruiksObjecten(
         productId: String,
         pageNumber: Int,
         pageSize: Int,
@@ -420,12 +448,14 @@ class ProductService(
         authentication: CommonGroundAuthentication,
         productRollen: Map<String, ProductRol>?,
     ): Boolean {
-        productRollen?.forEach { (_, rol) ->
-            if (rol.identificatie == authentication.userId) {
-                return true
+        // the same identificaties that getInitiatorSearchParameters scopes the object search on
+        val identificaties =
+            when (authentication) {
+                is BedrijfAuthentication -> listOfNotNull(authentication.userId, authentication.getVestigingsNummer())
+                else -> listOf(authentication.userId)
             }
-        }
-        return false
+
+        return productRollen?.values?.any { it.identificatie in identificaties } ?: false
     }
 
     suspend fun getSourceAsJson(

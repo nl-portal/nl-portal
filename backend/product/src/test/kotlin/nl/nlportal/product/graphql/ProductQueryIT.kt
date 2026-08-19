@@ -37,6 +37,7 @@ import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 import java.net.URI
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 
@@ -186,6 +187,20 @@ internal class ProductQueryIT(
 
         assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/0/id")?.stringValue())
         assertEquals("test verbruiksobject", responseBody.requiredAt("/0/soort")?.stringValue())
+    }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun getProductVerbruiksObjectenTestBurgerNotInitiator() {
+        httpGraphQlTester
+            .document(graphqlGetProductVerbruiksObjecten)
+            .execute()
+            .errors()
+            .satisfy { errors ->
+                assertEquals(1, errors.size)
+                assertTrue(errors[0].message!!.contains("Access denied to this product"))
+            }.path("getProductVerbruiksObjecten")
+            .pathDoesNotExist()
     }
 
     @Test
