@@ -55,7 +55,6 @@ class FrontendConfigurationProperties {
         var messageCountEnabled: Boolean? = null
         var casesPartialSearchEnabled: Boolean? = null
         var openProductEnabled: Boolean? = null
-        var legacyPaymentEnabled: Boolean? = null
         var themeApiEnabled: Boolean? = null
         var casesResultExplanationEnabled: Boolean? = null
         var myInhabitantCountEnabled: Boolean? = null

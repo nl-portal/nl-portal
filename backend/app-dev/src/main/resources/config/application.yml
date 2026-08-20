@@ -218,7 +218,6 @@ nl-portal:
             my-inhabitant-count-enabled: true
             open-product-enabled: true
             cases-result-explanation-enabled: true
-            legacy-payment-enabled: true
             cases-contact-moments-enabled: true
             overview-intro-enabled: true
             overview-maintenance-alert-enabled: true
