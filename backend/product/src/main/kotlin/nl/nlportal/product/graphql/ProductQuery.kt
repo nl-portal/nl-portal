@@ -157,6 +157,7 @@ class ProductQuery(
                             object : TypeReference<Map<String, DmnVariable>>() {},
                         )
                     },
+                authentication = authentication,
             )
 
         return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})

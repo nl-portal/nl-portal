@@ -68,7 +68,7 @@ class ProductService(
             return product
         }
 
-        throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
+        throw ResponseStatusException(HttpStatus.UNAUTHORIZED, ACCESS_DENIED_TO_PRODUCT)
     }
 
     suspend fun getProductenForProductType(
@@ -129,7 +129,7 @@ class ProductService(
         val product = getObjectsApiObjectById<Product>(productId)?.record?.data
 
         if (!isAuthorized(authentication, product?.rollen)) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, ACCESS_DENIED_TO_PRODUCT)
         }
 
         return findProductVerbruiksObjecten(productId, pageNumber, pageSize)
@@ -142,7 +142,7 @@ class ProductService(
         pageSize: Int,
     ): List<ProductVerbruiksObject> {
         if (!isAuthorized(authentication, product.rollen)) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, ACCESS_DENIED_TO_PRODUCT)
         }
 
         return findProductVerbruiksObjecten(product.id.toString(), pageNumber, pageSize)
@@ -261,7 +261,7 @@ class ProductService(
         val product = getObjectsApiObjectById<Product>(verbruiksObject.productInstantie)?.record?.data
 
         if (!isAuthorized(authentication, product?.rollen)) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this product")
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, ACCESS_DENIED_TO_PRODUCT)
         }
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiVerbruiksObject)
@@ -468,6 +468,7 @@ class ProductService(
     suspend fun getSourceAsJson(
         key: String,
         value: UUID,
+        authentication: CommonGroundAuthentication,
     ): String? =
         when (key) {
             "product" -> {
@@ -475,6 +476,7 @@ class ProductService(
                     ?.apply {
                         this.record.data.id = this.uuid
                     }?.let {
+                        requireAuthorized(authentication, it.record.data.rollen)
                         Mapper.get().writeValueAsString(it.record.data)
                     }
             }
@@ -484,6 +486,7 @@ class ProductService(
                     ?.apply {
                         this.record.data.id = this.uuid
                     }?.let {
+                        requireAuthorizedForProductInstantie(authentication, it.record.data.productInstantie)
                         Mapper.get().writeValueAsString(it.record.data)
                     }
             }
@@ -493,6 +496,11 @@ class ProductService(
                     ?.apply {
                         this.record.data.id = this.uuid
                     }?.let {
+                        requireAuthorizedForProductInstantie(
+                            authentication,
+                            it.record.data.productInstantie
+                                .toString(),
+                        )
                         Mapper.get().writeValueAsString(it.record.data)
                     }
             }
@@ -501,6 +509,21 @@ class ProductService(
                 null
             }
         }
+
+    // resolves the product the object belongs to, so its rollen can be checked
+    private suspend fun requireAuthorizedForProductInstantie(
+        authentication: CommonGroundAuthentication,
+        productInstantie: String,
+    ) = requireAuthorized(authentication, getObjectsApiObjectById<Product>(productInstantie)?.record?.data?.rollen)
+
+    private fun requireAuthorized(
+        authentication: CommonGroundAuthentication,
+        productRollen: Map<String, ProductRol>?,
+    ) {
+        if (!isAuthorized(authentication, productRollen)) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, ACCESS_DENIED_TO_PRODUCT)
+        }
+    }
 
     private fun getInitiatorSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> =
         when (authentication) {
@@ -538,6 +561,7 @@ class ProductService(
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_NAME = "naam"
         const val OBJECT_SEARCH_PARAMETER_PRODUCT_TYPE = "PDCProductType"
         const val OBJECT_SEARCH_PARAMETER_SUB_PRODUCT_TYPE = "subtype"
+        const val ACCESS_DENIED_TO_PRODUCT = "Access denied to this product"
 
         val logger = KotlinLogging.logger {}
     }
