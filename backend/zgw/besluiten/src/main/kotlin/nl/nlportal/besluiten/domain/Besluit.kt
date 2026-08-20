@@ -7,7 +7,7 @@ data class Besluit(
     val identificatie: String,
     val verantwoordelijkeOrganisatie: String,
     val besluittype: String,
-    val zaak: String,
+    val zaak: String? = null,
     val datum: LocalDate,
     val toelichting: String?,
     val bestuursorgaan: String?,

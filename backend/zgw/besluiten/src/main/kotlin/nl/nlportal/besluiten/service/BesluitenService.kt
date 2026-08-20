@@ -70,6 +70,10 @@ class BesluitenService(
             besluitId = besluitId,
         )
 
+        if(besluit.zaak.isNullOrBlank()) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Besluit is not related to a Zaak")
+        }
+
         //get the zaak to check if authenticated user is authorized for zaak
         zakenApiService.getZaak(
             authentication = authentication,
