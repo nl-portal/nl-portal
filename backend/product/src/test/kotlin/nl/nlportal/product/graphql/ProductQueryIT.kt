@@ -321,7 +321,7 @@ internal class ProductQueryIT(
     }
 
     @Test
-    @WithBurgerUser("569312864")
+    @WithBurgerUser("569312863")
     fun getProductDescisionTest() {
         val responseBody =
             httpGraphQlTester
@@ -334,6 +334,20 @@ internal class ProductQueryIT(
                 .get()
 
         assertEquals("https://formulier.denhaag.nl/Tripleforms/formulier/nl-NL/DefaultEnvironment/scNaheffingsAanslagParkeren.aspx", responseBody.requiredAt("/0/action/value")?.textValue())
+    }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun getProductDescisionTestBurgerNotInitiator() {
+        httpGraphQlTester
+            .document(graphqlGetProductDecision)
+            .execute()
+            .errors()
+            .satisfy { errors ->
+                assertEquals(1, errors.size)
+                assertTrue(errors[0].message!!.contains("Access denied to this product"))
+            }.path("getProductDecision")
+            .pathDoesNotExist()
     }
 
     @Test
@@ -367,6 +381,20 @@ internal class ProductQueryIT(
 
         assertEquals("f9d7f166-bcea-4448-a984-4e717e558458", responseBody.requiredAt("/objectId")?.textValue())
         assertEquals("http://localhost:8080/formuliernaam", responseBody.requiredAt("/formulierUrl")?.textValue())
+    }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun productPrefillTestBurgerNotInitiator() {
+        httpGraphQlTester
+            .document(graphqlProductPrefill)
+            .execute()
+            .errors()
+            .satisfy { errors ->
+                assertEquals(1, errors.size)
+                assertTrue(errors[0].message!!.contains("Access denied to this product"))
+            }.path("productPrefill")
+            .pathDoesNotExist()
     }
 
     fun setupMockServer() {
