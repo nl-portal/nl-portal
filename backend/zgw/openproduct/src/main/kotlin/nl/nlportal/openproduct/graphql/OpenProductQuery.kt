@@ -22,7 +22,9 @@ import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.openproduct.client.domain.OpenProductActie
+import nl.nlportal.openproduct.client.domain.OpenProductContentElement
 import nl.nlportal.openproduct.client.domain.OpenProductProduct
+import nl.nlportal.openproduct.client.domain.OpenProductProductType
 import nl.nlportal.openproduct.client.domain.OpenProductToegestaneStatus
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductService
@@ -131,4 +133,9 @@ class OpenProductQuery(
         openProductService.getOpenProductDocumenten(
             openProductProduct = openProductProduct,
         )
+
+    @SchemaMapping(typeName = "OpenProductProduct", field = "content")
+    suspend fun content(
+        openProductProduct: OpenProductProduct,
+    ): List<OpenProductContentElement>? = openProductService.getProductTypeContent(productTypeId = openProductProduct.producttype.uuid)
 }
