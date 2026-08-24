@@ -4,11 +4,12 @@ graphql:
 
 nl-portal:
     config:
-        haalcentraalhr:
-            enabled: true
-            properties:
-                url: #filled in test
-                apiKey: "some-api-key"
+        haalcentraal:
+            hr:
+                enabled: true
+                properties:
+                    url: #filled in test
+                    apiKey: "some-api-key"
 
 spring:
     security:

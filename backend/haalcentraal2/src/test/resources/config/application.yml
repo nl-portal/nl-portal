@@ -16,13 +16,14 @@ nl-portal:
                 allowed-cities-for-bewoning:
                     - "'s-Gravenhage"
                     - "Ypenburg"
-        haalcentraalhr:
-            enabled: true
-            properties:
-                url: #filled in test
-                apiKey: "some-api-key"
-                ssl:
-                    enabled: false
+        haalcentraal:
+            hr:
+                enabled: true
+                properties:
+                    url: #filled in test
+                    apiKey: "some-api-key"
+                    ssl:
+                        enabled: false
 
 spring:
     security:

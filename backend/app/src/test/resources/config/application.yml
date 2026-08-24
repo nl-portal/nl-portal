@@ -111,13 +111,14 @@ nl-portal:
             properties:
                 brp-api-url: http://localhost:56789/haalcentraal/api/brp/
                 bewoning-api-url: http://localhost:56789/haalcentraal/api/bewoning/
-        haalcentraalhr:
-            enabled: true
-            properties:
-                url: http://localhost:56789
-                apiKey: test-api-key
-                ssl:
-                    enabled: false
+        haalcentraal:
+            hr:
+                enabled: true
+                properties:
+                    url: http://localhost:56789
+                    apiKey: test-api-key
+                    ssl:
+                        enabled: false
         taak:
             enabled: true
             properties:
