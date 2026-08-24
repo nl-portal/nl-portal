@@ -15,13 +15,24 @@
  */
 package nl.nlportal.openproduct.client.domain
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
+import java.util.UUID
 
 interface OpenProductFilters
 
 data class OpenProductUrl(
     val url: String? = null,
     val urn: String? = null,
+)
+
+data class OpenProductContentElement(
+    val uuid: UUID,
+    val labels: List<String>? = emptyList(),
+    @JsonProperty("aanvullende_informatie")
+    val aanvullendeInformatie: String? = null,
+    val content: String,
+    val taal: String,
 )
 
 enum class OpenProductToegestaneStatus(

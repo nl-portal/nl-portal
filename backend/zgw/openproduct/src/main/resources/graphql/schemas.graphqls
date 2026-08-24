@@ -241,6 +241,7 @@ type OpenProductProduct {
     zaken: [Zaak!]
     aanvraagZaakUrn: String
     aanvraagZaakUrl: String
+    content: [OpenProductContentElement!]
 }
 
 type OpenProductProductProductType {
@@ -285,7 +286,7 @@ type OpenProductProductType {
     dataObjectSchema: OpenProductSchema
     verzoektypen: [OpenProductUrl!]!
     zaaktypen: [OpenProductUrl!]!
-    content: [OpenProductProductTypeContent!]
+    content: [OpenProductContentElement!]
     publicatieStartDatum: Date
     publicatieEindDatum: Date
     doelgroep: OpenProductDoelgroep
@@ -296,7 +297,7 @@ type OpenProductProductTypeBestand {
     uuid: UUID!
 }
 
-type OpenProductProductTypeContent {
+type OpenProductContentElement {
     content: String!
     labels: [String!]
     taal: String!

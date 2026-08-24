@@ -17,8 +17,8 @@ package nl.nlportal.openproduct.graphql
 
 import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.openproduct.client.domain.OpenProductContentElement
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
-import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -61,5 +61,5 @@ class OpenProductTypeQuery(
     @SchemaMapping(typeName = "OpenProductProductType", field = "content")
     suspend fun content(
         openProductProductType: OpenProductProductType,
-    ): List<OpenProductProductTypeContent>? = openProductService.getProductTypeContent(productTypeId = openProductProductType.uuid)
+    ): List<OpenProductContentElement>? = openProductService.getProductTypeContent(productTypeId = openProductProductType.uuid)
 }

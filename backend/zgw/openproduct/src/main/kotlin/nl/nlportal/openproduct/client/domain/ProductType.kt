@@ -64,13 +64,6 @@ data class OpenProductProductType(
     val doelgroep: OpenProductDoelgroep? = null,
 )
 
-data class OpenProductProductTypeContent(
-    val uuid: UUID,
-    val taal: String,
-    val content: String,
-    val labels: List<String>? = emptyList(),
-)
-
 data class OpenProductProductTypeThema(
     val uuid: UUID,
     val naam: String,
