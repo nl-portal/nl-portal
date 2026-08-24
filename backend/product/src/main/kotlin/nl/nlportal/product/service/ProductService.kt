@@ -55,13 +55,17 @@ class ProductService(
     suspend fun getProduct(
         authentication: CommonGroundAuthentication,
         id: UUID,
-    ): Product? {
+    ): Product {
         val product =
             getObjectsApiObjectById<Product>(id.toString())
                 ?.apply {
                     this.record.data.id = this.uuid
                 }?.record
                 ?.data
+
+        if (product == null) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
+        }
 
         if (isAuthorized(authentication, product?.rollen)) {
             return product
@@ -121,21 +125,6 @@ class ProductService(
 
     suspend fun getProductVerbruiksObjecten(
         authentication: CommonGroundAuthentication,
-        productId: String,
-        pageNumber: Int,
-        pageSize: Int,
-    ): List<ProductVerbruiksObject> {
-        val product = getObjectsApiObjectById<Product>(productId)?.record?.data
-
-        if (!isAuthorized(authentication, product?.rollen)) {
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, ACCESS_DENIED_TO_PRODUCT)
-        }
-
-        return findProductVerbruiksObjecten(productId, pageNumber, pageSize)
-    }
-
-    suspend fun getProductVerbruiksObjecten(
-        authentication: CommonGroundAuthentication,
         product: Product,
         pageNumber: Int,
         pageSize: Int,
@@ -144,18 +133,10 @@ class ProductService(
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, ACCESS_DENIED_TO_PRODUCT)
         }
 
-        return findProductVerbruiksObjecten(product.id.toString(), pageNumber, pageSize)
-    }
-
-    private suspend fun findProductVerbruiksObjecten(
-        productId: String,
-        pageNumber: Int,
-        pageSize: Int,
-    ): List<ProductVerbruiksObject> {
         return try {
             val objectSearchParameters =
                 listOf(
-                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, productId),
+                    ObjectSearchParameter(OBJECT_SEARCH_PARAMETER_PRODUCT_INSTANTIE, Comparator.EQUAL_TO, product.id.toString()),
                 )
             return getObjectsApiObjectResultPage<ProductVerbruiksObject>(
                 productConfigProperties.productVerbruiksObjectTypeUrl,
@@ -167,7 +148,7 @@ class ProductService(
                 it.record.data
             }
         } catch (ex: Exception) {
-            logger.error { "Something went wrong with get Verbruiksobjecten by productInstantieId $productId with error: ${ex.message}" }
+            logger.error { "Something went wrong with get Verbruiksobjecten by productInstantieId $product.id with error: ${ex.message}" }
             listOf()
         }
     }
