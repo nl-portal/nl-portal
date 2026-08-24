@@ -507,6 +507,7 @@ services:
     nl-portal-clamav:
         container_name: nl-portal-clamav
         image: clamav/clamav:latest
+        platform: linux/amd64
         profiles:
             - clamav
         network_mode: "service:localhost"

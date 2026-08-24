@@ -173,6 +173,27 @@ The following services will be started:
 | OpenProduct database (postgres) | - |
 | Redis | - |
 
+#### Haalcentraal only
+Execute the following command:
+```shell
+docker compose --profile haalcentraal up -d
+```
+
+| Service      | Mapped port |
+|--------------|:-----------:|
+| Haalcentraal BRP |    5010     |
+| Haalcentraal Bewoning     |    5011     |
+
+#### ClamAV virusscanner only
+Execute the following command:
+```shell
+docker compose --profile clamav up -d
+```
+
+| Service               | Mapped port |
+|-----------------------|:-----------:|
+| ClamAV                |    3310     |
+
 #### Keycloak and database only
 Execute the following command: 
 ```shell
@@ -184,6 +205,13 @@ docker compose up -d
 | NL Portal database (postgres) |  5432         |
 | Keycloak |  8082         |
 | Keycloak database (postgres) |    -   |
+
+
+#### To run all containers Keycloak, ZGW related services, HaalCentraal and ClamAV
+Execute the following command:
+```shell
+docker compose --profile zgw --profile haalcentraal --profile clamav up -d
+```
 
 ## Maintenance
 

@@ -51,6 +51,7 @@ class BesluitDocumentResourceIT(
         private const val KNOWN_DOC_ID = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
         private const val BESLUIT_ID = "8863ab83-3496-4f40-9cad-f9d9526597c8"
         private const val BESLUITUNAUTHORIZEDZAAK_URL = "7721129b-7bb9-49d0-9a84-0eb34b18320e"
+        private const val BESLUITNOZAAK_URL = "6dfbd348-3a9a-4b37-8be6-3c288b245a58"
         private const val UNKNOWN_BESLUIT_ID = "2a27bc3c-6a4c-432a-a9cb-5c31004e7769"
         private const val UNRELATED_DOC_ID = "00000000-0000-0000-0000-0000000000ff"
         private val logger = KotlinLogging.logger {}
@@ -109,6 +110,17 @@ class BesluitDocumentResourceIT(
 
     @Test
     @WithBurgerUser("999990755")
+    fun `should return 400 when there no zaak in besluit`() {
+        webTestClient
+            .get()
+            .uri("/api/besluiten/$BESLUITNOZAAK_URL/document/$KNOWN_DOC_ID/content")
+            .exchange()
+            .expectStatus()
+            .isBadRequest
+    }
+
+    @Test
+    @WithBurgerUser("999990755")
     fun `should return 401 when user is not authorized for zaak`() {
         webTestClient
             .get()
@@ -154,6 +166,10 @@ class BesluitDocumentResourceIT(
 
                         "GET /besluiten/api/v1/besluiten/$BESLUITUNAUTHORIZEDZAAK_URL" -> {
                             TestHelper.mockResponse(TestHelper.handleBesluitRequestUnauthorizedZaak)
+                        }
+
+                        "GET /besluiten/api/v1/besluiten/$BESLUITNOZAAK_URL" -> {
+                            TestHelper.mockResponse(TestHelper.handleBesluitRequestNoZaak)
                         }
 
                         "GET /besluiten/api/v1/besluitinformatieobjecten/$KNOWN_DOC_ID" -> {
