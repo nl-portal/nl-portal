@@ -32,6 +32,7 @@ nl-portal:
       overview-maintenance-alert-title-en: alert title
       overview-maintenance-alert-title-nl: waarschuwings onderwerp
       overview-current-cases-preview-length: 4
+      overview-current-tasks-preview-length: 4
       custom: '{
   "pwikProSiteId": "f25a2e8a-bae1-423c-8478-fee59040da63",
   "pwikProAccountAddress": "http://pwikpro.com",
@@ -42,13 +43,13 @@ nl-portal:
   "otelEnvironment": "DEV",
   "otelEnabled": true
   }'
+
     toggles:
       theme-api-enabled: true
       message-count-enabled: true
       cases-partial-search-enabled: true
       cases-result-explanation-enabled: true
       open-product-enabled: true
-      legacy-payment-enabled: false
       my-inhabitant-count-enabled: false
       cases-contact-moments-enabled: true
 ---

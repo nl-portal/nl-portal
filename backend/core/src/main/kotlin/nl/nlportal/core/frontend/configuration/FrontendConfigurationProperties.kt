@@ -47,6 +47,7 @@ class FrontendConfigurationProperties {
         var overviewMaintenanceAlertTextNl: String? = null
         var overviewMaintenanceAlertTextEn: String? = null
         var overviewCurrentCasesPreviewLength: Int? = null
+        var overviewCurrentTasksPreviewLength: Int? = null
         var custom: String? = null
     }
 
