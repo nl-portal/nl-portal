@@ -30,7 +30,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@formio/js": "5.5.0",
+    "@formio/js": "5.5.1",
     "@formio/protected-eval": "2.0.0",
     "@formio/react": "6.2.1",
     "@gemeente-denhaag/action": "4.4.0",
@@ -38,7 +38,7 @@
     "@gemeente-denhaag/button": "3.1.1",
     "@gemeente-denhaag/button-group": "^2.1.0",
     "@gemeente-denhaag/button-link": "3.2.1",
-    "@gemeente-denhaag/card": "5.1.1",
+    "@gemeente-denhaag/card": "5.1.2",
     "@gemeente-denhaag/checkbox": "^3.2.0",
     "@gemeente-denhaag/contact-timeline": "4.1.1",
     "@gemeente-denhaag/data-badge": "2.2.1",
@@ -64,10 +64,10 @@
     "@gemeente-denhaag/radio-button": "^3.2.0",
     "@gemeente-denhaag/responsive-content": "2.1.1",
     "@gemeente-denhaag/select": "^3.2.0",
-    "@gemeente-denhaag/side-navigation": "4.2.1",
+    "@gemeente-denhaag/side-navigation": "4.2.2",
     "@gemeente-denhaag/skip-link": "^1.1.0",
     "@gemeente-denhaag/stylesprovider": "3.3.1",
-    "@gemeente-denhaag/tab": "3.3.0",
+    "@gemeente-denhaag/tab": "3.3.1",
     "@gemeente-denhaag/table": "4.1.1",
     "@gemeente-denhaag/text-input": "3.2.1",
     "@gemeente-denhaag/textarea": "^3.2.0",
@@ -81,7 +81,7 @@
     "react-loading-skeleton": "^3.5.0"
   },
   "devDependencies": {
-    "@apollo/client": "4.2.10",
+    "@apollo/client": "4.2.12",
     "@nl-portal/nl-portal-api": "workspace:*",
     "@nl-portal/nl-portal-authentication": "workspace:*",
     "@nl-portal/nl-portal-localization": "workspace:*",
@@ -108,7 +108,7 @@
     "wait-on": "^9.0.3"
   },
   "peerDependencies": {
-    "@apollo/client": "4.2.10",
+    "@apollo/client": "4.2.12",
     "@nl-portal/nl-portal-api": "workspace:*",
     "@nl-portal/nl-portal-authentication": "workspace:*",
     "@nl-portal/nl-portal-localization": "workspace:*",
