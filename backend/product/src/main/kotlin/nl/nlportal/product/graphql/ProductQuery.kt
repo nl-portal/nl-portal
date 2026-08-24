@@ -113,7 +113,7 @@ class ProductQuery(
     ): List<ProductVerbruiksObject> =
         productService.getProductVerbruiksObjecten(
             authentication = authentication,
-            productId = productId.toString(),
+            product = productService.getProduct(authentication, productId),
             pageNumber = 1,
             pageSize = 20,
         )
