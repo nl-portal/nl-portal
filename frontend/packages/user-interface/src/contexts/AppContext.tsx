@@ -36,6 +36,10 @@ import UserContext from "./UserContext";
 import FullscreenSkeleton from "../components/FullscreenSkeleton";
 
 interface Features {
+  theme: {
+    logo: string;
+    style: string;
+  };
   properties: {
     custom: Record<string, string | number>;
     messageCountPollingInterval: number;
@@ -73,7 +77,6 @@ type Themes =
 interface AppContextType {
   history: string[];
   features: Features | undefined;
-  logoUrl: string | undefined;
   themes: Themes;
   messagesCount: number;
   refetchThemes: () => void;
@@ -92,7 +95,6 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
   const [firstLoad, setFirstLoad] = useState(true);
   const { restUri } = useContext(ApiContext);
   const [features, setFeatures] = useState<Features | undefined>(undefined);
-  const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
   const [loadingConfig, startTransition] = useTransition();
   const { initNavigationItems, updateNavigationItems } =
     useContext(RouterContext);
@@ -117,7 +119,7 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     if (features) return;
     startTransition(async () => {
       try {
-        const response = await fetch(`${restUri}/public/features`);
+        const response = await fetch(`${restUri}/public/frontend`);
 
         if (!response.ok) {
           console.warn("Theme features API failed:", response.status);
@@ -136,6 +138,13 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
         json.toggles.custom = JSON.parse(json.toggles.custom || "{}");
 
         setFeatures(json);
+
+        const styleNode = document.createElement("style");
+        styleNode.nonce =
+          document.querySelector<HTMLMetaElement>("meta[name='csp-nonce']")
+            ?.content || "";
+        styleNode.textContent = json.theme.style;
+        document.head.appendChild(styleNode);
       } catch (err) {
         console.error("Failed to load features:", err);
       }
@@ -148,47 +157,6 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     document.documentElement.classList.add(themeClass);
     return () => document.documentElement.classList.remove(themeClass);
   }, [features]);
-
-  useEffect(() => {
-    if (!features?.toggles.themeApiEnabled) return;
-    startTransition(async () => {
-      try {
-        const response = await fetch(`${restUri}/public/theme/logo`);
-        if (!response.ok) {
-          console.warn("Theme logo API failed:", response.status);
-          return;
-        }
-
-        const logoUrl = await response.text();
-        setLogoUrl(logoUrl);
-      } catch (err) {
-        console.error("Failed to load logo:", err);
-      }
-    });
-  }, [restUri, startTransition, features]);
-
-  useEffect(() => {
-    if (!features?.toggles.themeApiEnabled) return;
-    startTransition(async () => {
-      try {
-        const styleResponse = await fetch(`${restUri}/public/theme/style`);
-        if (!styleResponse.ok) {
-          console.warn("Theme style API failed:", styleResponse.status);
-          return;
-        }
-
-        const styleValue = await styleResponse.text();
-        const styleNode = document.createElement("style");
-        styleNode.nonce =
-          document.querySelector<HTMLMetaElement>("meta[name='csp-nonce']")
-            ?.content || "";
-        styleNode.textContent = styleValue;
-        document.head.appendChild(styleNode);
-      } catch (err) {
-        console.error("Failed to load theme styling:", err);
-      }
-    });
-  }, [restUri, startTransition, features]);
 
   const {
     loading: loadingThemes,
@@ -253,7 +221,6 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
       value={{
         history,
         features,
-        logoUrl,
         themes,
         messagesCount,
         refetchThemes,
