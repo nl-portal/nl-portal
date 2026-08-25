@@ -25,7 +25,10 @@ class HandelsregisterService(
 ) {
     suspend fun getMaatschappelijkeActiviteit(authentication: CommonGroundAuthentication): MaatschappelijkeActiviteit? {
         if (authentication is BedrijfAuthentication) {
-            return handelsregisterClient.getMaatschappelijkeActiviteit(authentication.getKvkNummer())
+            return getKvkData(
+                kvkNummer = authentication.getKvkNummer(),
+                vestigingsNummer = authentication.getVestigingsNummer(),
+            )
         }
 
         return null
@@ -35,7 +38,25 @@ class HandelsregisterService(
         val authenticationGemachtigde = authentication.getGemachtigde()
 
         return authenticationGemachtigde?.kvk?.let {
-            handelsregisterClient.getMaatschappelijkeActiviteit(it)
+            getKvkData(
+                kvkNummer = it,
+                vestigingsNummer = authentication.getGemachtigde()?.vestigingsnummer,
+            )
         }
+    }
+
+    suspend fun getKvkData(
+        kvkNummer: String,
+        vestigingsNummer: String? = null,
+    ): MaatschappelijkeActiviteit? {
+        val kvkData = handelsregisterClient.getMaatschappelijkeActiviteit(kvkNummer) ?: return null
+
+        kvkData.embedded?.vestiging = kvkData.embedded.hoofdvestiging
+
+        if (!vestigingsNummer.isNullOrBlank()) {
+            val vestiging = handelsregisterClient.getVestiging(vestigingsNummer)
+            kvkData.embedded?.vestiging = vestiging
+        }
+        return kvkData
     }
 }

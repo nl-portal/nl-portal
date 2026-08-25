@@ -32,11 +32,11 @@ type SbiActiviteit {
 }
 
 type Embedded {
-    hoofdvestiging: Hoofdvestiging!,
+    vestiging: Vestiging,
     eigenaar: Eigenaar!,
 }
 
-type Hoofdvestiging {
+type Vestiging {
     vestigingsnummer: String!,
     kvkNummer: String!,
     eersteHandelsnaam: String!,

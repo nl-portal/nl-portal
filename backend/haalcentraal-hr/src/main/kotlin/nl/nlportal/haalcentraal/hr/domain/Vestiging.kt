@@ -15,7 +15,7 @@
  */
 package nl.nlportal.haalcentraal.hr.domain
 
-data class Hoofdvestiging(
+data class Vestiging(
     val vestigingsnummer: String,
     val kvkNummer: String,
     val eersteHandelsnaam: String,

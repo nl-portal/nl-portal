@@ -39,9 +39,10 @@ abstract class CommonGroundAuthentication(
 
         return (token.claims[GEMACHTIGDE_KEY] as Map<*, *>).let {
             AuthenticationGemachtigde(
-                it[BSN_KEY]?.toString(),
-                it[KVK_NUMMER_KEY]?.toString(),
-                it[SUB_KEY]?.toString(),
+                bsn = it[BSN_KEY]?.toString(),
+                kvk = it[KVK_NUMMER_KEY]?.toString(),
+                uid = it[SUB_KEY]?.toString(),
+                vestigingsnummer = it[VESTIGINGNUMMER_KEY]?.toString(),
             )
         }
     }
