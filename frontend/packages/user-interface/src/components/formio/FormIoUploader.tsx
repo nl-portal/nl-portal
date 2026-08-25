@@ -5,7 +5,7 @@ import { get } from "lodash-es";
 import { FormField } from "@gemeente-denhaag/form-field";
 import { FormLabel } from "@gemeente-denhaag/form-label";
 import { LocalizationProvider } from "@nl-portal/nl-portal-localization";
-import { FileUpload as FileUploadComponent } from "@gemeente-denhaag/file-upload";
+import { FileUpload } from "@gemeente-denhaag/file-upload";
 import { File } from "@gemeente-denhaag/file";
 import { Alert } from "@gemeente-denhaag/alert";
 import { Paragraph } from "@gemeente-denhaag/typography";
@@ -19,31 +19,34 @@ export interface UploadedFile {
   isUploaded?: boolean;
 }
 
-interface FileUploadProps {
+interface PortalFileUploadProps {
   id: string;
   label?: string;
   context: object;
-  multipleFiles?: boolean;
   multiple: boolean;
-  onChange: (fileList: Array<UploadedFile>) => void;
+  onChange: (fileList: UploadedFile[]) => void;
+  onUploadStart: (upload: Promise<void>) => void;
+  onUploadEnd: (upload: Promise<void>) => void;
   informatieobjecttype?: string;
-  initialValue?: any;
+  initialValue?: UploadedFile[];
   taakId?: string;
 }
 
-const FileUpload = ({
+const PortalFileUpload = ({
   id,
   label,
   context,
-  multipleFiles,
   multiple,
   onChange,
+  onUploadStart,
+  onUploadEnd,
   informatieobjecttype,
   initialValue = [],
   taakId,
-}: FileUploadProps) => {
+}: PortalFileUploadProps) => {
   const [error, setError] = useState(false);
-  const [fileList, setFileList] = useState<Array<UploadedFile>>(initialValue);
+  const [fileList, setFileList] = useState<UploadedFile[]>(initialValue);
+
   const intl = useIntl();
 
   const handleError = (tempId?: string) => {
@@ -53,6 +56,17 @@ const FileUpload = ({
       setFileList((prev) => prev.filter((item) => item.id !== tempId));
     }
   };
+
+  const interpolateInformatieobjectUrl = (url: string) =>
+    url.replace(
+      /({{\s*(.*?)\s*}})/g,
+      (input, _capturedTemplate, capturedPath) => {
+        const value = get(context, capturedPath);
+
+        return value ?? input;
+      },
+    );
+
   const uploadFile = (file: File) => {
     const restUri = sessionStorage.getItem("REST_URI");
     const uploadLink = `${restUri}/taak/${taakId}/document/content`;
@@ -77,7 +91,7 @@ const FileUpload = ({
 
     setFileList((prev) => (multiple ? [tempItem, ...prev] : [tempItem]));
 
-    fetch(uploadLink, {
+    const upload = fetch(uploadLink, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${FormIoUploader.getOidcToken()}`,
@@ -85,7 +99,10 @@ const FileUpload = ({
       body: formData,
     })
       .then(async (response) => {
-        if (!response.ok) return handleError(tempId);
+        if (!response.ok) {
+          handleError(tempId);
+          return;
+        }
 
         const jsonResponse = await response.json();
         const uploadedFile: UploadedFile = {
@@ -107,29 +124,23 @@ const FileUpload = ({
       .catch(() => {
         handleError(tempId);
       });
+
+    // Inform Form.io that a file upload is in progress.
+    onUploadStart(upload);
+
+    void upload.finally(() => {
+      // Letting Form.io know that the file upload has completed.
+      onUploadEnd(upload);
+    });
   };
 
   useEffect(() => {
     onChange(fileList);
-  }, [fileList]);
-
-  function interpolateInformatieobjectUrl(url: string) {
-    if (context) {
-      return url.replace(
-        /({{\s*(.*?)\s*}})/g,
-        (input, _capturedTemplate, capturedPath) => {
-          let value = get(context, capturedPath);
-          return value ? value : input;
-        },
-      );
-    } else {
-      return url;
-    }
-  }
+  }, [fileList, onChange]);
 
   return (
     <FormField invalid={error}>
-      <FormLabel htmlFor={id}>{label}</FormLabel>
+      {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
       {error && (
         <Alert
           close={() => {
@@ -144,25 +155,25 @@ const FileUpload = ({
           variant="error"
         />
       )}
-      {(multipleFiles || fileList.length === 0) && (
-        <FileUploadComponent
+      {(multiple || fileList.length === 0) && (
+        <FileUpload
           id={id}
           buttonLabel={intl.formatMessage({
             id: "formio.fileUpload.buttonLabel",
           })}
           text={intl.formatMessage({ id: "formio.fileUpload.text" })}
           onFilesSelected={(files) =>
-            Array.from(files || []).forEach((file) => uploadFile(file))
+            Array.from(files || []).forEach(uploadFile)
           }
         />
       )}
       {fileList.map((file) => (
         <File
+          key={file.id}
           name={file.name}
           size={String(file.size)}
-          key={file.id}
           onClick={() =>
-            setFileList((prev) => prev.filter((f) => f.id !== file.id))
+            setFileList((prev) => prev.filter((item) => item.id !== file.id))
           }
           removable
           loading={!file.isUploaded}
@@ -175,7 +186,7 @@ const FieldComponent = Components.components.field;
 
 class FormIoUploader extends FieldComponent {
   private reactRoot: Root | null;
-  static globalOidcToken: string = "";
+  static globalOidcToken = "";
 
   constructor(component: any, options: any, data: any) {
     super(component, options, data);
@@ -215,8 +226,16 @@ class FormIoUploader extends FieldComponent {
 
   static getOidcToken = () => FormIoUploader.globalOidcToken;
 
-  onChangeHandler = (files: Array<UploadedFile>) => {
+  onChangeHandler = (files: UploadedFile[]) => {
     this.updateValue(files, undefined);
+  };
+
+  onUploadStartHandler = (upload: Promise<void>) => {
+    this.emit("fileUploadingStart", upload);
+  };
+
+  onUploadEndHandler = (upload: Promise<void>) => {
+    this.emit("fileUploadingEnd", upload);
   };
 
   render() {
@@ -236,11 +255,14 @@ class FormIoUploader extends FieldComponent {
 
     this.reactRoot.render(
       <LocalizationProvider>
-        <FileUpload
+        <PortalFileUpload
           id={`${this.component.id}-${this.component.key}`}
+          label={this.component.label}
           context={this.data}
           multiple={this.component.multipleFiles}
           onChange={this.onChangeHandler}
+          onUploadStart={this.onUploadStartHandler}
+          onUploadEnd={this.onUploadEndHandler}
           informatieobjecttype={this.component.informatieobjecttype || ""}
           initialValue={this.dataValue}
           taakId={this.options.taakId}
