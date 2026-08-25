@@ -42,5 +42,10 @@ query {
             naam,
         },
         decisions
+        content {
+            taal,
+            content,
+            labels
+        }
     }
 }

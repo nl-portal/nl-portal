@@ -84,6 +84,27 @@ object TestHelper {
         }
         """.trimIndent()
 
+    val handleBesluitRequestNoZaak =
+        """
+        {
+          "url": "http://localhost:8001/besluiten/api/v1/besluiten/7721129b-7bb9-49d0-9a84-0eb34b18320e",
+          "identificatie": "klantportaal",
+          "verantwoordelijkeOrganisatie": "klantportaal",
+          "besluittype": "http://localhost:8000/catalogi/api/v1/besluittypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
+          "zaak": "",
+          "datum": "2019-08-24",
+          "toelichting": "toelichting",
+          "bestuursorgaan": "klant",
+          "ingangsdatum": "2019-08-24",
+          "vervaldatum": "2019-08-24",
+          "vervalreden": "tijdelijk",
+          "vervalredenWeergave": "string",
+          "publicatiedatum": "2019-08-24",
+          "verzenddatum": "2019-08-24",
+          "uiterlijkeReactiedatum": "2019-08-24"
+        }
+        """.trimIndent()
+
     val handleBesluitDocumentRequest =
         """
           {

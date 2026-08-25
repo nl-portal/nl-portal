@@ -17,8 +17,8 @@ package nl.nlportal.openproduct.client.path
 
 import java.util.UUID
 import nl.nlportal.openproduct.client.OpenProductTypeClient
+import nl.nlportal.openproduct.client.domain.OpenProductContentElement
 import nl.nlportal.openproduct.client.domain.OpenProductProductType
-import nl.nlportal.openproduct.client.domain.OpenProductProductTypeContent
 import nl.nlportal.openproduct.client.domain.OpenProductProductTypesFilters
 import nl.nlportal.openproduct.client.domain.ResultPage
 import org.springframework.http.MediaType
@@ -68,7 +68,7 @@ class ProductTypes(
             .retrieve()
             .awaitBody()
 
-    suspend fun get(id: UUID): List<OpenProductProductTypeContent>? =
+    suspend fun get(id: UUID): List<OpenProductContentElement> =
         client
             .webClient
             .get()

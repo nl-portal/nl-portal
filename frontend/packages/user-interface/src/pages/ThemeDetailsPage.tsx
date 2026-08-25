@@ -10,7 +10,7 @@ import {
   GetOpenProductQueryVariables,
   GetOpenProductQuery,
 } from "@nl-portal/nl-portal-api";
-import { useQuery } from "@apollo/client/react";
+import { skipToken, useQuery } from "@apollo/client/react";
 import TasksList from "../components/TasksList";
 import CasesList from "../components/CasesList";
 import { useParams } from "react-router";
@@ -40,9 +40,14 @@ const ThemeDetailsPage = ({
 }: ThemeDetailsPageProps) => {
   const intl = useIntl();
   const { id } = useParams<{ id: string }>();
-  const openProduct = useQuery(GetOpenProductDocument, {
-    variables: { id },
-  });
+  const openProduct = useQuery(
+    GetOpenProductDocument,
+    id
+      ? {
+          variables: { id },
+        }
+      : skipToken,
+  );
 
   const { data, loading, error } = openProduct;
   const product = data?.getOpenProduct as OpenProductProduct | undefined;

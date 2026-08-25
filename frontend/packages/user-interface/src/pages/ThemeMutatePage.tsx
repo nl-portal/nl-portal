@@ -8,7 +8,7 @@ import {
   GetOpenProductQuery,
   GetOpenProductQueryVariables,
 } from "@nl-portal/nl-portal-api";
-import { useQuery } from "@apollo/client/react";
+import { skipToken, useQuery } from "@apollo/client/react";
 
 interface Props {
   slug: string;
@@ -29,9 +29,14 @@ const ThemeMutatePage = ({
 }: Props) => {
   const intl = useIntl();
   const params = useParams<{ id: string }>();
-  const openProduct = useQuery(GetOpenProductDocument, {
-    variables: { id: params.id },
-  });
+  const openProduct = useQuery(
+    GetOpenProductDocument,
+    params.id
+      ? {
+          variables: { id: params.id },
+        }
+      : skipToken,
+  );
 
   return (
     <PageGrid>
