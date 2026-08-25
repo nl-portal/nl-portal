@@ -7,7 +7,12 @@ import {
   TaakStatus,
   GetPortaalFormulierByIdV2Document,
 } from "@nl-portal/nl-portal-api";
-import { useMutation, useLazyQuery, useQuery } from "@apollo/client/react";
+import {
+  useMutation,
+  useLazyQuery,
+  useQuery,
+  skipToken,
+} from "@apollo/client/react";
 import { Alert } from "@gemeente-denhaag/alert";
 import { useIntl } from "react-intl";
 import styles from "./TaskDetailsPage.module.scss";
@@ -67,9 +72,11 @@ const TaskDetailsPage = () => {
 
   const { data: task, loading: taskLoading } = useQuery(
     GetPortaalFormulierByIdV2Document,
-    {
-      variables: { id },
-    },
+    id
+      ? {
+          variables: { id },
+        }
+      : skipToken,
   );
 
   const [
@@ -92,6 +99,7 @@ const TaskDetailsPage = () => {
   }, [task]);
 
   useEffect(() => {
+    if (!id) return;
     if (!task?.getTaakByIdV2?.portaalformulier) return;
     if (task?.getTaakByIdV2?.status !== TaakStatus.Open) return;
 
@@ -100,6 +108,8 @@ const TaskDetailsPage = () => {
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const onFormSubmit = async (formioSubmission: any) => {
+    if (!id) return;
+
     if (formioSubmission?.state === "submitted") {
       const transformedData = convertPortalFileUploadResult(
         formioSubmission.data,

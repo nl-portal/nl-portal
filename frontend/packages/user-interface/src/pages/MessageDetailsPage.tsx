@@ -3,7 +3,7 @@ import {
   Bericht,
   GetBerichtDocument,
 } from "@nl-portal/nl-portal-api";
-import { useQuery } from "@apollo/client/react";
+import { skipToken, useQuery } from "@apollo/client/react";
 import { useOutletContext, useParams } from "react-router";
 import BackLink from "../components/BackLink";
 import PageGrid from "../components/PageGrid";
@@ -25,9 +25,14 @@ const MessageDetailsPage = () => {
     data: messageData,
     loading: messageLoading,
     error: messageError,
-  } = useQuery(GetBerichtDocument, {
-    variables: { id: id },
-  });
+  } = useQuery(
+    GetBerichtDocument,
+    id
+      ? {
+          variables: { id },
+        }
+      : skipToken,
+  );
 
   useEffect(() => {
     try {

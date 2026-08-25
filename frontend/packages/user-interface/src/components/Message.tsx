@@ -26,7 +26,7 @@ const Message = ({ message }: Props) => {
       labels={labels}
       dateTime={message.publicatiedatum}
       locale={currentLocale}
-      link={paths.message(message.id)}
+      link={paths.message(message.id ?? undefined)}
       Link={PortalLink}
     >
       {message.geopend ? (

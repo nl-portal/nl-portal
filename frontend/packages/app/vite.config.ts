@@ -1,21 +1,36 @@
-/// <reference types="vitest" />
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   build: {
     chunkSizeWarningLimit: 2048,
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes("@formio")) return "formio";
-          if (id.includes("@gemeente-denhaag")) return "gemeente-denhaag";
-          if (id.includes("@nl-portal")) return "nl-portal";
+        codeSplitting: {
+          groups: [
+            {
+              name(id) {
+                if (id.includes("@formio")) {
+                  return "formio";
+                }
+
+                if (id.includes("@gemeente-denhaag")) {
+                  return "gemeente-denhaag";
+                }
+
+                if (id.includes("@nl-portal")) {
+                  return "nl-portal";
+                }
+
+                return null;
+              },
+            },
+          ],
         },
       },
     },
     outDir: "build",
-    commonjsOptions: { transformMixedEsModules: true },
   },
   html: {
     cspNonce: "##NL_PORTAL_NONCE##",

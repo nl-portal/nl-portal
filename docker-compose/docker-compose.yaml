@@ -58,7 +58,7 @@ services:
             POSTGRES_PASSWORD: keycloak
 
     nl-portal-openzaak:
-        image: openzaak/open-zaak:1.29.2
+        image: openzaak/open-zaak:1.30.0
         container_name: nl-portal-openzaak
         platform: linux/amd64
         profiles:
@@ -92,7 +92,7 @@ services:
             - ./imports/openzaak/private-media:/app/private-media
 
     nl-portal-openzaak-import:
-        image: openzaak/open-zaak:1.29.2
+        image: openzaak/open-zaak:1.30.0
         container_name: nl-portal-openzaak-import
         platform: linux/amd64
         profiles:
@@ -123,7 +123,7 @@ services:
             - POSTGRES_DB=openzaak
 
     nl-portal-openklant-2:
-        image: maykinmedia/open-klant:2.17.1
+        image: maykinmedia/open-klant:2.18.0
         container_name: nl-portal-openklant-2
         profiles:
             - zgw
@@ -155,7 +155,7 @@ services:
         command: sh /app/init/start.sh
 
     nl-portal-openklant-2-import:
-        image: maykinmedia/open-klant:2.17.1
+        image: maykinmedia/open-klant:2.18.0
         container_name: nl-portal-openklant-2-import
         profiles:
             - zgw
@@ -315,7 +315,7 @@ services:
             - nl-portal-objecttypen-api-database
 
     nl-portal-open-notificaties:
-        image: openzaak/open-notificaties:1.16.1
+        image: openzaak/open-notificaties:1.16.2
         container_name: nl-portal-open-notificaties
         platform: linux/amd64
         network_mode: "service:localhost"
@@ -351,7 +351,7 @@ services:
         command: sh /app/init/start.sh
 
     nl-portal-open-notificaties-import:
-        image: openzaak/open-notificaties:1.16.1
+        image: openzaak/open-notificaties:1.16.2
         container_name: nl-portal-open-notificaties-import
         platform: linux/amd64
         network_mode: "service:localhost"
@@ -368,7 +368,7 @@ services:
         environment: *notificaties-env
 
     nl-portal-open-notificaties-celery:
-        image: openzaak/open-notificaties:1.16.1
+        image: openzaak/open-notificaties:1.16.2
         container_name: nl-portal-open-notificaties-celery
         platform: linux/amd64
         network_mode: "service:localhost"
@@ -475,7 +475,7 @@ services:
             - POSTGRES_DB=openproduct
 
     nl-portal-redis:
-        image: redis:6.2.23
+        image: redis:6.2.24
         container_name: nl-portal-redis
         profiles:
             - zgw

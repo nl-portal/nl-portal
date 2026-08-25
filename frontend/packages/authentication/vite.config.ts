@@ -1,4 +1,4 @@
-/// <reference types="vitest" />
+/// <reference types="vitest/config" />
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -9,12 +9,12 @@ export default defineConfig({
   plugins: [peerDepsExternal({ includeDependencies: true }), react(), dts()],
   build: {
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
+      entry: resolve(import.meta.dirname, "src/index.ts"),
       name: "authentication",
       fileName: "index",
       formats: ["es"],
     },
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         entryFileNames: "[name].js",
         globals: {
@@ -22,7 +22,6 @@ export default defineConfig({
         },
       },
     },
-    commonjsOptions: { transformMixedEsModules: true },
   },
   test: {
     globals: true,
