@@ -132,7 +132,7 @@ services:
             - nl-portal-redis
         network_mode: "service:localhost"
         environment: &openklant-2-env
-            - UWSGI_PORT=8014
+            - OPENKLANT_PORT=8014
             - OTEL_SDK_DISABLED=true
             - DJANGO_SETTINGS_MODULE=openklant.conf.docker
             - IS_HTTPS=no
@@ -150,8 +150,6 @@ services:
             - DISABLE_2FA=true
         volumes:
             - ./imports/openklant-2/fixtures:/app/src/openklant/fixtures
-            - ./imports/openklant-2/init:/app/init
-        command: sh /app/init/start.sh
 
     nl-portal-openklant-2-import:
         image: maykinmedia/open-klant:2.18.1
@@ -190,7 +188,7 @@ services:
             - zgw
             - objecten
         environment: &objects-env
-            - UWSGI_PORT=8010
+            - OPENOBJECT_PORT=8010
             - OTEL_SDK_DISABLED=true
             - CORS_ALLOW_ALL_ORIGINS=true
             - SECRET_KEY=${SECRET_KEY:-1(@f(-6s_u(5fd&1sg^uvu2s(c-9sapw)1era8q&)g)h@cwxxg}
@@ -209,12 +207,12 @@ services:
             - CELERY_LOGLEVEL=DEBUG
             - SITE_DOMAIN=localhost:8010
             - OTEL_SERVICE_NAME=open-object
+            - OBJECTS_SUPERUSER_USERNAME=admin
+            - OBJECTS_SUPERUSER_EMAIL=admin@example.org
+            - OBJECTS_SUPERUSER_PASSWORD=admin
         depends_on:
             - nl-portal-open-object-database
             - nl-portal-redis
-        volumes:
-            - ./imports/open-object/init:/app/init
-        command: sh /app/init/start.sh
 
     nl-portal-open-object-celery:
         image: maykinmedia/open-object:4.2.1
@@ -269,7 +267,7 @@ services:
             - zgw
             - objecten
         environment: &notificaties-env
-            - UWSGI_PORT=8012
+            - OPENNOTIFICATIES_PORT=8012
             - OTEL_SDK_DISABLED=true
             - DJANGO_SETTINGS_MODULE=nrc.conf.docker
             - SECRET_KEY=${SECRET_KEY:-4wHY2Cp5`4(q%)]cuWxPQJRp5kN?g+`.Xah>%6Fsq6+)R>p_}
@@ -292,9 +290,6 @@ services:
             - DJANGO_SUPERUSER_PASSWORD=admin
             - LOG_NOTIFICATIONS_IN_DB=yes
             - DISABLE_2FA=true
-        volumes:
-            - ./imports/open-notificaties/init:/app/init
-        command: sh /app/init/start.sh
 
     nl-portal-open-notificaties-import:
         image: openzaak/open-notificaties:1.16.2
@@ -360,11 +355,8 @@ services:
         depends_on:
             - nl-portal-openproduct-database
             - nl-portal-redis
-        volumes:
-            - ./imports/openproduct/init:/app/init
-        command: sh /app/init/start.sh
         environment: &open-product-env
-            - UWSGI_PORT=8015
+            - OPENPRODUCT_PORT=8015
             - OTEL_SDK_DISABLED=true
             - DJANGO_SETTINGS_MODULE=openproduct.conf.docker
             - SECRET_KEY=${SECRET_KEY:-django-insecure-@4wj9(+*bu7*v&%on7+e_8!d1ckl%r=6+sz#d2!pw^@lb0+=}
@@ -379,6 +371,9 @@ services:
             - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/10
             - ALLOWED_HOSTS=*
             - DISABLE_2FA=true
+            - OPENPRODUCT_SUPERUSER_USERNAME=admin
+            - OPENPRODUCT_SUPERUSER_EMAIL=admin@example.org
+            - OPENPRODUCT_SUPERUSER_PASSWORD=admin
 
     nl-portal-openproduct-import:
         image: maykinmedia/open-product:1.9.0
@@ -389,7 +384,7 @@ services:
             - openproduct
         environment: *open-product-env
         network_mode: "service:localhost"
-        command: sh init/import.sh
+        command: sh init/init.sh
         volumes:
             - ./imports/openproduct/fixtures:/app/src/openproduct/fixtures
             - ./imports/openproduct/init:/app/init
@@ -517,4 +512,3 @@ services:
 volumes:
     nl-portal-database-data:
     nl-portal-configuration-panel-database-data:
-    nl-portal-openzaak-private-media:
