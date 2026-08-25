@@ -778,7 +778,7 @@ export type Eigenaar = {
 export type Embedded = {
   __typename?: 'Embedded';
   eigenaar: Eigenaar;
-  hoofdvestiging: Hoofdvestiging;
+  vestiging?: Maybe<Vestiging>;
 };
 
 export type FormDefinition = {
@@ -831,17 +831,6 @@ export type HistoricStatus = {
   __typename?: 'HistoricStatus';
   createdOn: Scalars['String']['output'];
   status: Status;
-};
-
-export type Hoofdvestiging = {
-  __typename?: 'Hoofdvestiging';
-  adressen?: Maybe<Array<Maybe<Adres>>>;
-  eersteHandelsnaam: Scalars['String']['output'];
-  indCommercieleVestiging: Scalars['String']['output'];
-  indHoofdvestiging: Scalars['String']['output'];
-  kvkNummer: Scalars['String']['output'];
-  totaalWerkzamePersonen: Scalars['Int']['output'];
-  vestigingsnummer: Scalars['String']['output'];
 };
 
 export type LinksPage = {
@@ -1528,6 +1517,14 @@ export type OpenProductContact = {
   uuid: Scalars['UUID']['output'];
 };
 
+export type OpenProductContentElement = {
+  __typename?: 'OpenProductContentElement';
+  content: Scalars['String']['output'];
+  labels?: Maybe<Array<Scalars['String']['output']>>;
+  taal: Scalars['String']['output'];
+  uuid: Scalars['UUID']['output'];
+};
+
 export enum OpenProductDoelgroep {
   BedrijvenEnInstellingen = 'BEDRIJVEN_EN_INSTELLINGEN',
   Burgers = 'BURGERS',
@@ -1613,6 +1610,7 @@ export type OpenProductProduct = {
   aanvraagZaakUrl?: Maybe<Scalars['String']['output']>;
   aanvraagZaakUrn?: Maybe<Scalars['String']['output']>;
   acties?: Maybe<Array<OpenProductActie>>;
+  content?: Maybe<Array<OpenProductContentElement>>;
   dataobject?: Maybe<Scalars['JSON']['output']>;
   decisions: Array<Scalars['JSON']['output']>;
   documenten: Array<Document>;
@@ -1654,7 +1652,7 @@ export type OpenProductProductType = {
   bestanden: Array<OpenProductProductTypeBestand>;
   code: Scalars['String']['output'];
   contacten: Array<OpenProductContact>;
-  content?: Maybe<Array<OpenProductProductTypeContent>>;
+  content?: Maybe<Array<OpenProductContentElement>>;
   dataObjectSchema?: Maybe<OpenProductSchema>;
   doelgroep?: Maybe<OpenProductDoelgroep>;
   externCodes: Array<OpenProductProductTypeExterneCode>;
@@ -1685,14 +1683,6 @@ export type OpenProductProductType = {
 export type OpenProductProductTypeBestand = {
   __typename?: 'OpenProductProductTypeBestand';
   bestand: Scalars['String']['output'];
-  uuid: Scalars['UUID']['output'];
-};
-
-export type OpenProductProductTypeContent = {
-  __typename?: 'OpenProductProductTypeContent';
-  content: Scalars['String']['output'];
-  labels?: Maybe<Array<Scalars['String']['output']>>;
-  taal: Scalars['String']['output'];
   uuid: Scalars['UUID']['output'];
 };
 
@@ -2568,6 +2558,17 @@ export type VerificationConfig = {
   typesNeedVerification?: Maybe<Array<VerificatieType>>;
 };
 
+export type Vestiging = {
+  __typename?: 'Vestiging';
+  adressen?: Maybe<Array<Maybe<Adres>>>;
+  eersteHandelsnaam: Scalars['String']['output'];
+  indCommercieleVestiging: Scalars['String']['output'];
+  indHoofdvestiging: Scalars['String']['output'];
+  kvkNummer: Scalars['String']['output'];
+  totaalWerkzamePersonen: Scalars['Int']['output'];
+  vestigingsnummer: Scalars['String']['output'];
+};
+
 export type Zaak = {
   __typename?: 'Zaak';
   besluiten: Array<Besluit>;
@@ -2734,7 +2735,7 @@ export type GetUnopenedBerichtenCountQuery = { __typename?: 'Query', getUnopened
 export type GetBedrijfQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBedrijfQuery = { __typename?: 'Query', getBedrijf?: { __typename?: 'MaatschappelijkeActiviteit', naam: string, kvkNummer: string, embedded?: { __typename?: 'Embedded', eigenaar: { __typename?: 'Eigenaar', rechtsvorm: string }, hoofdvestiging: { __typename?: 'Hoofdvestiging', adressen?: Array<{ __typename?: 'Adres', straatnaam?: string | null, huisnummer?: number | null, postcode: string, plaats: string } | null> | null } } | null } | null };
+export type GetBedrijfQuery = { __typename?: 'Query', getBedrijf?: { __typename?: 'MaatschappelijkeActiviteit', naam: string, kvkNummer: string, embedded?: { __typename?: 'Embedded', eigenaar: { __typename?: 'Eigenaar', rechtsvorm: string }, vestiging?: { __typename?: 'Vestiging', adressen?: Array<{ __typename?: 'Adres', straatnaam?: string | null, huisnummer?: number | null, postcode: string, plaats: string } | null> | null } | null } | null } | null };
 
 export type GetDirectPaymentStatusQueryVariables = Exact<{
   identifier: Scalars['String']['input'];
@@ -2924,7 +2925,7 @@ export const UpdateProductVerbruiksObjectDocument = {"kind":"Document","definiti
 export const GetBerichtDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBericht"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getBericht"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"berichtTekst"}},{"kind":"Field","name":{"kind":"Name","value":"berichtType"}},{"kind":"Field","name":{"kind":"Name","value":"einddatumHandelingstermijn"}},{"kind":"Field","name":{"kind":"Name","value":"geopend"}},{"kind":"Field","name":{"kind":"Name","value":"handelingsperspectief"}},{"kind":"Field","name":{"kind":"Name","value":"identificatie"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"documenten"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uuid"}},{"kind":"Field","name":{"kind":"Name","value":"documentapi"}},{"kind":"Field","name":{"kind":"Name","value":"identificatie"}},{"kind":"Field","name":{"kind":"Name","value":"creatiedatum"}},{"kind":"Field","name":{"kind":"Name","value":"titel"}},{"kind":"Field","name":{"kind":"Name","value":"formaat"}},{"kind":"Field","name":{"kind":"Name","value":"bestandsnaam"}},{"kind":"Field","name":{"kind":"Name","value":"bestandsomvang"}}]}},{"kind":"Field","name":{"kind":"Name","value":"onderwerp"}},{"kind":"Field","name":{"kind":"Name","value":"publicatiedatum"}},{"kind":"Field","name":{"kind":"Name","value":"referentie"}}]}}]}}]} as unknown as DocumentNode<GetBerichtQuery, GetBerichtQueryVariables>;
 export const GetBerichtenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBerichten"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pageNumber"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pageSize"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"onderwerp"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getBerichten"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pageNumber"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pageNumber"}}},{"kind":"Argument","name":{"kind":"Name","value":"pageSize"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pageSize"}}},{"kind":"Argument","name":{"kind":"Name","value":"onderwerp"},"value":{"kind":"Variable","name":{"kind":"Name","value":"onderwerp"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"content"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"einddatumHandelingstermijn"}},{"kind":"Field","name":{"kind":"Name","value":"publicatiedatum"}},{"kind":"Field","name":{"kind":"Name","value":"geopend"}},{"kind":"Field","name":{"kind":"Name","value":"onderwerp"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalElements"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]} as unknown as DocumentNode<GetBerichtenQuery, GetBerichtenQueryVariables>;
 export const GetUnopenedBerichtenCountDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUnopenedBerichtenCount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUnopenedBerichtenCount"}}]}}]} as unknown as DocumentNode<GetUnopenedBerichtenCountQuery, GetUnopenedBerichtenCountQueryVariables>;
-export const GetBedrijfDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBedrijf"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getBedrijf"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"naam"}},{"kind":"Field","name":{"kind":"Name","value":"kvkNummer"}},{"kind":"Field","name":{"kind":"Name","value":"embedded"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"eigenaar"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rechtsvorm"}}]}},{"kind":"Field","name":{"kind":"Name","value":"hoofdvestiging"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adressen"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"straatnaam"}},{"kind":"Field","name":{"kind":"Name","value":"huisnummer"}},{"kind":"Field","name":{"kind":"Name","value":"postcode"}},{"kind":"Field","name":{"kind":"Name","value":"plaats"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBedrijfQuery, GetBedrijfQueryVariables>;
+export const GetBedrijfDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetBedrijf"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getBedrijf"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"naam"}},{"kind":"Field","name":{"kind":"Name","value":"kvkNummer"}},{"kind":"Field","name":{"kind":"Name","value":"embedded"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"eigenaar"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rechtsvorm"}}]}},{"kind":"Field","name":{"kind":"Name","value":"vestiging"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"adressen"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"straatnaam"}},{"kind":"Field","name":{"kind":"Name","value":"huisnummer"}},{"kind":"Field","name":{"kind":"Name","value":"postcode"}},{"kind":"Field","name":{"kind":"Name","value":"plaats"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetBedrijfQuery, GetBedrijfQueryVariables>;
 export const GetDirectPaymentStatusDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDirectPaymentStatus"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"identifier"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"hostedCheckoutId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getDirectPaymentStatus"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"identifier"},"value":{"kind":"Variable","name":{"kind":"Name","value":"identifier"}}},{"kind":"Argument","name":{"kind":"Name","value":"hostedCheckoutId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"hostedCheckoutId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<GetDirectPaymentStatusQuery, GetDirectPaymentStatusQueryVariables>;
 export const GetDocumentenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDocumenten"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getZaak"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"zaaktype"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"identificatie"}}]}},{"kind":"Field","name":{"kind":"Name","value":"documenten"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"documentapi"}},{"kind":"Field","name":{"kind":"Name","value":"bestandsnaam"}},{"kind":"Field","name":{"kind":"Name","value":"bestandsomvang"}},{"kind":"Field","name":{"kind":"Name","value":"creatiedatum"}},{"kind":"Field","name":{"kind":"Name","value":"formaat"}},{"kind":"Field","name":{"kind":"Name","value":"identificatie"}},{"kind":"Field","name":{"kind":"Name","value":"titel"}},{"kind":"Field","name":{"kind":"Name","value":"uuid"}}]}}]}}]}}]} as unknown as DocumentNode<GetDocumentenQuery, GetDocumentenQueryVariables>;
 export const GetFormDefinitionByTaskIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetFormDefinitionByTaskId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"taskId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UUID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getFormDefinitionByTaskId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"taskId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"taskId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"formDefinition"}}]}}]}}]} as unknown as DocumentNode<GetFormDefinitionByTaskIdQuery, GetFormDefinitionByTaskIdQueryVariables>;
