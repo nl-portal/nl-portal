@@ -8,7 +8,7 @@ import {
   ZaakStatus,
   OnderwerpObjectIndentificatorType,
 } from "@nl-portal/nl-portal-api";
-import { useQuery, useLazyQuery } from "@apollo/client/react";
+import { useQuery, useLazyQuery, skipToken } from "@apollo/client/react";
 import {
   LocaleContext,
   useDateFormatter,
@@ -46,9 +46,14 @@ const CaseDetailsPage = () => {
     data: caseData,
     loading: caseLoading,
     error: caseError,
-  } = useQuery(GetZaakDocument, {
-    variables: { id },
-  });
+  } = useQuery(
+    GetZaakDocument,
+    id
+      ? {
+          variables: { id },
+        }
+      : skipToken,
+  );
   const [getMomenten, { data: momentsData, loading: momentsLoading }] =
     useLazyQuery(GetUserKlantContactenDocument);
 

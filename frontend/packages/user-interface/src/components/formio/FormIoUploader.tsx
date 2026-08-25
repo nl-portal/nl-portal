@@ -44,7 +44,6 @@ const FileUpload = ({
 }: FileUploadProps) => {
   const [error, setError] = useState(false);
   const [fileList, setFileList] = useState<Array<UploadedFile>>(initialValue);
-  const [dataContext, setDataContext] = useState(context);
   const intl = useIntl();
 
   const handleError = (tempId?: string) => {
@@ -109,20 +108,17 @@ const FileUpload = ({
         handleError(tempId);
       });
   };
-  useEffect(() => {
-    setDataContext(context);
-  }, [context]);
 
   useEffect(() => {
     onChange(fileList);
   }, [fileList]);
 
   function interpolateInformatieobjectUrl(url: string) {
-    if (dataContext) {
+    if (context) {
       return url.replace(
         /({{\s*(.*?)\s*}})/g,
         (input, _capturedTemplate, capturedPath) => {
-          let value = get(dataContext, capturedPath);
+          let value = get(context, capturedPath);
           return value ? value : input;
         },
       );

@@ -1,7 +1,6 @@
 import { useMutation } from "@apollo/client/react";
+import { DigitaleAdresType, DigitaleAdresResponse } from "../generated/types";
 import {
-  DigitaleAdresType,
-  DigitaleAdresResponse,
   GetUserDigitaleAdressenDocument,
   GetUserDigitaleAdressenQuery,
   CreateUserDigitaleAdresDocument,
