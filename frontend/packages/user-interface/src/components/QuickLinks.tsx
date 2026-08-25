@@ -31,6 +31,8 @@ const QuickLinks = ({
       }));
   }, []);
 
+  if (items.length === 0) return null;
+
   return (
     <section className={styles["quick-links"]}>
       <SectionHeader title={title} />
