@@ -772,7 +772,7 @@ export type Eigenaar = {
 export type Embedded = {
   __typename?: 'Embedded';
   eigenaar: Eigenaar;
-  hoofdvestiging: Hoofdvestiging;
+  vestiging?: Maybe<Vestiging>;
 };
 
 export type FormDefinition = {
@@ -825,17 +825,6 @@ export type HistoricStatus = {
   __typename?: 'HistoricStatus';
   createdOn: Scalars['String']['output'];
   status: Status;
-};
-
-export type Hoofdvestiging = {
-  __typename?: 'Hoofdvestiging';
-  adressen?: Maybe<Array<Maybe<Adres>>>;
-  eersteHandelsnaam: Scalars['String']['output'];
-  indCommercieleVestiging: Scalars['String']['output'];
-  indHoofdvestiging: Scalars['String']['output'];
-  kvkNummer: Scalars['String']['output'];
-  totaalWerkzamePersonen: Scalars['Int']['output'];
-  vestigingsnummer: Scalars['String']['output'];
 };
 
 export type LinksPage = {
@@ -1522,6 +1511,14 @@ export type OpenProductContact = {
   uuid: Scalars['UUID']['output'];
 };
 
+export type OpenProductContentElement = {
+  __typename?: 'OpenProductContentElement';
+  content: Scalars['String']['output'];
+  labels?: Maybe<Array<Scalars['String']['output']>>;
+  taal: Scalars['String']['output'];
+  uuid: Scalars['UUID']['output'];
+};
+
 export enum OpenProductDoelgroep {
   BedrijvenEnInstellingen = 'BEDRIJVEN_EN_INSTELLINGEN',
   Burgers = 'BURGERS',
@@ -1607,6 +1604,7 @@ export type OpenProductProduct = {
   aanvraagZaakUrl?: Maybe<Scalars['String']['output']>;
   aanvraagZaakUrn?: Maybe<Scalars['String']['output']>;
   acties?: Maybe<Array<OpenProductActie>>;
+  content?: Maybe<Array<OpenProductContentElement>>;
   dataobject?: Maybe<Scalars['JSON']['output']>;
   decisions: Array<Scalars['JSON']['output']>;
   documenten: Array<Document>;
@@ -1648,7 +1646,7 @@ export type OpenProductProductType = {
   bestanden: Array<OpenProductProductTypeBestand>;
   code: Scalars['String']['output'];
   contacten: Array<OpenProductContact>;
-  content?: Maybe<Array<OpenProductProductTypeContent>>;
+  content?: Maybe<Array<OpenProductContentElement>>;
   dataObjectSchema?: Maybe<OpenProductSchema>;
   doelgroep?: Maybe<OpenProductDoelgroep>;
   externCodes: Array<OpenProductProductTypeExterneCode>;
@@ -1679,14 +1677,6 @@ export type OpenProductProductType = {
 export type OpenProductProductTypeBestand = {
   __typename?: 'OpenProductProductTypeBestand';
   bestand: Scalars['String']['output'];
-  uuid: Scalars['UUID']['output'];
-};
-
-export type OpenProductProductTypeContent = {
-  __typename?: 'OpenProductProductTypeContent';
-  content: Scalars['String']['output'];
-  labels?: Maybe<Array<Scalars['String']['output']>>;
-  taal: Scalars['String']['output'];
   uuid: Scalars['UUID']['output'];
 };
 
@@ -2560,6 +2550,17 @@ export type VerificationConfig = {
   __typename?: 'VerificationConfig';
   enabled?: Maybe<Scalars['Boolean']['output']>;
   typesNeedVerification?: Maybe<Array<VerificatieType>>;
+};
+
+export type Vestiging = {
+  __typename?: 'Vestiging';
+  adressen?: Maybe<Array<Maybe<Adres>>>;
+  eersteHandelsnaam: Scalars['String']['output'];
+  indCommercieleVestiging: Scalars['String']['output'];
+  indHoofdvestiging: Scalars['String']['output'];
+  kvkNummer: Scalars['String']['output'];
+  totaalWerkzamePersonen: Scalars['Int']['output'];
+  vestigingsnummer: Scalars['String']['output'];
 };
 
 export type Zaak = {
