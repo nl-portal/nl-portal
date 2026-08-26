@@ -116,6 +116,52 @@ internal class HaalCentraal2GemachtigdeQueryIT(
         assertEquals("Vries", responseBody.requiredAt("/persoon/naam/geslachtsnaam")?.stringValue())
     }
 
+    @Test
+    @WithBurgerUser("318634776", gemachtigdeKvk = "90012768")
+    fun `getGemachtigde with kvk`() {
+        val query =
+            """
+            query {
+                getGemachtigdeV2 {
+                    bedrijf {
+                        naam
+                        embedded{
+                            eigenaar {
+                                rechtsvorm
+                            }
+                            vestiging {
+                                eersteHandelsnaam
+                                adressen {
+                                    straatnaam
+                                    huisnummer
+                                    postbusnummer
+                                    postcode
+                                    plaats
+                                    volledigAdres
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getGemachtigdeV2")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("Test bedrijf", responseBody.requiredAt("/bedrijf/naam")?.stringValue())
+        assertEquals("Eenmanszaak", responseBody.requiredAt("/bedrijf/embedded/eigenaar/rechtsvorm")?.stringValue())
+        assertEquals("Test bedrijf", responseBody.requiredAt("/bedrijf/embedded/vestiging/eersteHandelsnaam")?.stringValue())
+        assertEquals("Postbus 1000 2260BA LEIDSCHENDAM", responseBody.requiredAt("/bedrijf/embedded/vestiging/adressen/0/volledigAdres")?.stringValue())
+    }
+
     private fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
