@@ -58,10 +58,15 @@ class OpenProductPrefillService(
                 id = productId,
             )
 
+        if(product == null) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Product kan niet gevonden worden voor $productId")
+        }
+
         // get the actie
         val searchVariables =
             listOf<Pair<OpenProductActiesFilters, Any>>(
                 OpenProductActiesFilters.NAAM to naam,
+                OpenProductActiesFilters.PRODUCTTYPE_UUID to product.producttype.uuid,
             )
         val acties =
             openProductService
@@ -72,7 +77,7 @@ class OpenProductPrefillService(
                 ).results
 
         if (acties.isEmpty()) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Prefill actie kan niet gevonden worden voor" + naam)
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Prefill actie kan niet gevonden worden voor$naam")
         }
 
         val prefillData = mutableMapOf<String, Any>()
@@ -80,7 +85,6 @@ class OpenProductPrefillService(
         val json = JsonUnflattener.unflatten(prefillData)
         return hashAndCreateObject(
             json = json,
-            key = naam,
             formulierUrl = acties[0].url,
             authentication = authentication,
         )
@@ -88,7 +92,6 @@ class OpenProductPrefillService(
 
     private suspend fun hashAndCreateObject(
         json: String,
-        key: String,
         formulierUrl: String,
         authentication: CommonGroundAuthentication,
     ): OpenProductPrefillResponse {
@@ -99,7 +102,6 @@ class OpenProductPrefillService(
             OpenProductPrefillObject(
                 nonce = nonce,
                 identificatie = getPrefillIndentificatio(authentication = authentication),
-                formulier = key,
                 data = Mapper.get().readValue(json, ObjectNode::class.java),
             )
         val createRequest =

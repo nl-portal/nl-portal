@@ -75,7 +75,6 @@ data class OpenProductPrefillResponse(
 data class OpenProductPrefillObject(
     val nonce: String,
     val identificatie: OpenProductPrefillObjectIdentificatie,
-    val formulier: String,
     val data: ObjectNode,
 )
 
