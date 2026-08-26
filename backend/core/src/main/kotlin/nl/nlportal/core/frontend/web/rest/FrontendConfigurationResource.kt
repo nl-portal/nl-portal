@@ -30,18 +30,4 @@ class FrontendConfigurationResource(
 ) {
     @GetMapping(value = [""])
     fun features(): ResponseEntity<FrontendData> = ResponseEntity.ok().header("Content-Type", "application/json").body(frontendConfigurationService.getFrontendData())
-
-    @GetMapping(value = ["/theme/style"])
-    fun style(): ResponseEntity<String> =
-        when (val style = frontendConfigurationService.getStyle()) {
-            null -> ResponseEntity.noContent().build()
-            else -> ResponseEntity.ok().header("Content-Type", "text/css").body(style)
-        }
-
-    @GetMapping(value = ["/theme/logo"])
-    fun logo(): ResponseEntity<String> =
-        when (val logo = frontendConfigurationService.getLogo()) {
-            null -> ResponseEntity.noContent().build()
-            else -> ResponseEntity.ok().body(logo)
-        }
 }

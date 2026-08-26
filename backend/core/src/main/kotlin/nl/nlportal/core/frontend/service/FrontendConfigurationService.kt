@@ -41,8 +41,4 @@ class FrontendConfigurationService(
             .filterKeys { it in modulesWhitelist }
             .mapKeys { (key, _) -> key.replace("api", "") }
     }
-
-    fun getLogo(): String? = frontendConfigurationProperties.theme.logo
-
-    fun getStyle(): String? = frontendConfigurationProperties.theme.style
 }

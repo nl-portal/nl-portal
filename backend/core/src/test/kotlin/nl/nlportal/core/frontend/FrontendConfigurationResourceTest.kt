@@ -69,38 +69,4 @@ class FrontendConfigurationResourceTest(
             responseJson.requiredAt("/modules/besluiten/enabled").booleanValue(),
         )
     }
-
-    @Test
-    fun `get style`() {
-        val responseBodyContent =
-            webTestClient
-                .get()
-                .uri("/api/public/frontend/theme/style")
-                .exchange()
-                .expectStatus()
-                .isOk
-                .expectBody()
-                .returnResult()
-                .responseBodyContent
-                ?.toString(Charset.defaultCharset())
-
-        assertEquals(frontendConfigurationProperties.theme.style, responseBodyContent)
-    }
-
-    @Test
-    fun `get logo`() {
-        val responseBodyContent =
-            webTestClient
-                .get()
-                .uri("/api/public/frontend/theme/logo")
-                .exchange()
-                .expectStatus()
-                .isOk
-                .expectBody()
-                .returnResult()
-                .responseBodyContent
-                ?.toString(Charset.defaultCharset())
-
-        assertEquals(frontendConfigurationProperties.theme.logo, responseBodyContent)
-    }
 }
