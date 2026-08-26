@@ -18,6 +18,7 @@ package nl.nlportal.openproduct.client.domain
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonValue
 import java.util.UUID
+import tools.jackson.databind.node.ObjectNode
 
 data class OpenProductActie(
     val uuid: UUID,
@@ -63,6 +64,31 @@ enum class OpenProductDmnVariableType(
     BOOLEAN("Boolean"),
     DATE("Date"),
     LONG("Long"),
+}
+
+data class OpenProductPrefillResponse(
+    val objectId: UUID,
+    val hash: String,
+    val formulierUrl: String,
+)
+
+data class OpenProductPrefillObject(
+    val nonce: String,
+    val identificatie: OpenProductPrefillObjectIdentificatie,
+    val formulier: String,
+    val data: ObjectNode,
+)
+
+data class OpenProductPrefillObjectIdentificatie(
+    val type: OpenProductPrefillObjectIdentificatieType,
+    val value: String,
+)
+
+enum class OpenProductPrefillObjectIdentificatieType(
+    @JsonValue val value: String,
+) {
+    KVK("kvk"),
+    BSN("bsn"),
 }
 
 enum class OpenProductActiesFilters(

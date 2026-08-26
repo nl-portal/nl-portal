@@ -24,6 +24,7 @@ import nl.nlportal.openproduct.client.OpenProductDmnClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.security.config.ProductDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.openproduct.service.OpenProductDmnService
+import nl.nlportal.openproduct.service.OpenProductPrefillService
 import nl.nlportal.openproduct.service.OpenProductService
 import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.service.ZakenApiService
@@ -99,6 +100,18 @@ class OpenProductAutoConfiguration {
         OpenProductDmnService(
             openProductDmnClient = openProductDmnClient,
             openProductService = openProductService,
+        )
+
+    @Bean
+    fun openProductPrefillService(
+        openProductService: OpenProductService,
+        objectsApiClient: ObjectsApiClient,
+        openProductModuleConfiguration: OpenProductModuleConfiguration,
+    ): OpenProductPrefillService =
+        OpenProductPrefillService(
+            openProductService = openProductService,
+            objectsApiClient = objectsApiClient,
+            openProductPrefillConfigurationProperties = openProductModuleConfiguration.properties.prefill,
         )
 
     @Bean
