@@ -41,7 +41,6 @@ class HandelsregisterService(
         return authenticationGemachtigde?.kvk?.let {
             getKvkData(
                 kvkNummer = it,
-                vestigingsNummer = null,
             )
         }
     }
@@ -57,7 +56,7 @@ class HandelsregisterService(
             kvkData.embedded?.vestiging = kvkData.embedded.hoofdvestiging
 
             if (!vestigingsNummer.isNullOrBlank()) {
-                // set vestiging based of vestigingnummer in vestiging
+                // set vestiging based of vestigingsnummer in vestiging
                 kvkData.embedded?.vestiging = handelsregisterClient.getVestiging(vestigingsNummer)
             }
             return kvkData
