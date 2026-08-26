@@ -133,7 +133,7 @@ class PrefillService(
                 productName,
             )
         sources?.forEach {
-            val source = productService.getSourceAsJson(it.key, it.value)
+            val source = productService.getSourceAsJson(it.key, it.value, authentication)
 
             if (source == null) {
                 logger.warn { "Could not find objects for key $it.key with uuid $it.value" }

@@ -49,7 +49,9 @@ import nl.nlportal.openklant.client.path.KlantContacten
 import nl.nlportal.openklant.client.path.PartijIdentificatoren
 import nl.nlportal.openklant.client.path.Partijen
 import nl.nlportal.openklant.graphql.domain.OnderwerpObjectIndentificatorType
+import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
 
 class OpenKlant2Service(
@@ -300,15 +302,10 @@ class OpenKlant2Service(
         authentication: CommonGroundAuthentication,
         digitaleAdresId: UUID,
     ) {
-        val userPartijId =
-            findPartijIdentificatoren(authentication)
-                ?.singleOrNull { it.partijIdentificator?.objectId == authentication.userId }
-                ?.identificeerdePartij
-                ?.uuid
+        val userDigitaleAdressen = findDigitaleAdressen(authentication)
 
-        if (userPartijId == null) {
-            logger.debug { "Failed to delete Digitale Adres: Given DigitaleAdres does not belong to Authenticated User" }
-            return
+        if (userDigitaleAdressen.none { it.uuid == digitaleAdresId }) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this digitale adres")
         }
 
         try {
@@ -347,10 +344,20 @@ class OpenKlant2Service(
         }
     }
 
-    suspend fun findKlantContact(klantContactId: UUID): OpenKlant2Klantcontact? =
-        openKlant2Client
+    suspend fun findKlantContact(
+        authentication: CommonGroundAuthentication,
+        klantContactId: UUID,
+    ): OpenKlant2Klantcontact? {
+        val userKlantContacten = findKlantContacten(authentication)
+
+        if (userKlantContacten.none { it.uuid == klantContactId.toString() }) {
+            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this klantcontact")
+        }
+
+        return openKlant2Client
             .path<KlantContacten>()
             .get(klantContactId)
+    }
 
     private fun createPartijIndicator(authentication: CommonGroundAuthentication): OpenKlant2Identificator =
         when (authentication) {

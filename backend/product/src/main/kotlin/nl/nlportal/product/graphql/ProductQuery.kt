@@ -112,7 +112,8 @@ class ProductQuery(
         @Argument productId: UUID,
     ): List<ProductVerbruiksObject> =
         productService.getProductVerbruiksObjecten(
-            productId.toString(),
+            authentication = authentication,
+            product = productService.getProduct(authentication, productId),
             pageNumber = 1,
             pageSize = 20,
         )
@@ -156,6 +157,7 @@ class ProductQuery(
                             object : TypeReference<Map<String, DmnVariable>>() {},
                         )
                     },
+                authentication = authentication,
             )
 
         return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
@@ -239,10 +241,12 @@ class ProductQuery(
 
     @SchemaMapping(typeName = "Product", field = "verbruiksobjecten")
     suspend fun verbruiksobjecten(
+        authentication: CommonGroundAuthentication,
         product: Product,
     ): List<ProductVerbruiksObject> =
         productService.getProductVerbruiksObjecten(
-            productId = product.id.toString(),
+            authentication = authentication,
+            product = product,
             pageNumber = 1,
             pageSize = 20,
         )
