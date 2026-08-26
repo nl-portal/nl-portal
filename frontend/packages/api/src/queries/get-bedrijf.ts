@@ -9,7 +9,7 @@ export const QUERY_GET_BEDRIJF = gql`
         eigenaar {
           rechtsvorm
         }
-        hoofdvestiging {
+        vestiging {
           adressen {
             straatnaam
             huisnummer

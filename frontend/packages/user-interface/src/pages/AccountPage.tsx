@@ -179,9 +179,8 @@ const AccountPage = () => {
                   detail: (
                     <DescriptionListDetail translate="no">
                       {getStreetString(
-                        bedrijf?.embedded?.hoofdvestiging?.adressen?.[0]
-                          ?.straatnaam,
-                        bedrijf?.embedded?.hoofdvestiging?.adressen?.[0]?.huisnummer?.toString(),
+                        bedrijf?.embedded?.vestiging?.adressen?.[0]?.straatnaam,
+                        bedrijf?.embedded?.vestiging?.adressen?.[0]?.huisnummer?.toString(),
                         undefined,
                         undefined,
                       )}
@@ -195,10 +194,8 @@ const AccountPage = () => {
                   detail: (
                     <DescriptionListDetail translate="no">
                       {getPostalCodeCityString(
-                        bedrijf?.embedded?.hoofdvestiging?.adressen?.[0]
-                          ?.postcode,
-                        bedrijf?.embedded?.hoofdvestiging?.adressen?.[0]
-                          ?.plaats,
+                        bedrijf?.embedded?.vestiging?.adressen?.[0]?.postcode,
+                        bedrijf?.embedded?.vestiging?.adressen?.[0]?.plaats,
                       )}
                     </DescriptionListDetail>
                   ),
