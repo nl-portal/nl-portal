@@ -87,7 +87,7 @@ internal class ProductMutationIT(
                 .entity(JsonNode::class.java)
                 .get()
 
-        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.stringValue())
+        assertEquals("2d725c07-2f26-4705-8637-438a42b5a800", responseBody.requiredAt("/id")?.toString())
         assertEquals(1, putBodies.size)
     }
 

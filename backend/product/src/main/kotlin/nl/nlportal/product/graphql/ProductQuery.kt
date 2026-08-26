@@ -107,6 +107,7 @@ class ProductQuery(
 
     @QueryMapping
     suspend fun getProductVerbruiksObjecten(
+        authentication: CommonGroundAuthentication,
         @Argument productId: UUID,
     ): List<ProductVerbruiksObject> =
         productService.getProductVerbruiksObjecten(
@@ -134,6 +135,7 @@ class ProductQuery(
 
     @QueryMapping
     suspend fun getProductDecision(
+        authentication: CommonGroundAuthentication,
         @Argument sources: Any? = null,
         @Argument key: String,
         @Argument productTypeId: UUID? = null,
