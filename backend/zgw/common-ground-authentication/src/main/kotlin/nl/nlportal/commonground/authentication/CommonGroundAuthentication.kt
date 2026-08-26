@@ -42,7 +42,6 @@ abstract class CommonGroundAuthentication(
                 bsn = it[BSN_KEY]?.toString(),
                 kvk = it[KVK_NUMMER_KEY]?.toString(),
                 uid = it[SUB_KEY]?.toString(),
-                vestigingsnummer = it[VESTIGINGNUMMER_KEY]?.toString(),
             )
         }
     }

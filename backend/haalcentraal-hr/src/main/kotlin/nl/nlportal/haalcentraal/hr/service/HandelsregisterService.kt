@@ -15,6 +15,7 @@
  */
 package nl.nlportal.haalcentraal.hr.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
@@ -40,7 +41,7 @@ class HandelsregisterService(
         return authenticationGemachtigde?.kvk?.let {
             getKvkData(
                 kvkNummer = it,
-                vestigingsNummer = authentication.getGemachtigde()?.vestigingsnummer,
+                vestigingsNummer = null,
             )
         }
     }
@@ -49,14 +50,25 @@ class HandelsregisterService(
         kvkNummer: String,
         vestigingsNummer: String? = null,
     ): MaatschappelijkeActiviteit? {
-        val kvkData = handelsregisterClient.getMaatschappelijkeActiviteit(kvkNummer) ?: return null
+        try {
+            val kvkData = handelsregisterClient.getMaatschappelijkeActiviteit(kvkNummer)
 
-        kvkData.embedded?.vestiging = kvkData.embedded.hoofdvestiging
+            // set hoofdvesting in vestiging
+            kvkData.embedded?.vestiging = kvkData.embedded.hoofdvestiging
 
-        if (!vestigingsNummer.isNullOrBlank()) {
-            val vestiging = handelsregisterClient.getVestiging(vestigingsNummer)
-            kvkData.embedded?.vestiging = vestiging
+            if (!vestigingsNummer.isNullOrBlank()) {
+                // set vestiging based of vestigingnummer in vestiging
+                kvkData.embedded?.vestiging = handelsregisterClient.getVestiging(vestigingsNummer)
+            }
+            return kvkData
+        } catch (ex: Exception) {
+            logger.error { "Something went wrong while getting information of a company: ${ex.message}" }
         }
-        return kvkData
+
+        return null
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }
