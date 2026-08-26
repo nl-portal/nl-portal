@@ -1,5 +1,5 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
-import scalarConfig from "./src/constants/scalars";
+import { scalarConfig } from "./src/constants/scalars";
 
 const config: CodegenConfig = {
   overwrite: true,

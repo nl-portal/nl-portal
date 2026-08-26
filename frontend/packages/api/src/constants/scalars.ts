@@ -1,4 +1,4 @@
-const scalarConfig = {
+export const scalarConfig = {
   strictScalars: true,
   scalars: {
     ID: {
@@ -55,5 +55,3 @@ const scalarConfig = {
     },
   },
 };
-
-export default scalarConfig;
