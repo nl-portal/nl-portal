@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ data class ResultPage<T>(
     val previous: URI? = null,
     val results: List<T>,
 ) {
-    fun getNextPageNumber(): Int? {
-        return next
+    fun getNextPageNumber(): Int? =
+        next
             ?.query
             ?.split("&")
             ?.map { Pair(it.substringBefore("="), it.substringAfter("=")) }
@@ -32,5 +32,4 @@ data class ResultPage<T>(
             ?.map { it.second }
             ?.map { it.toInt() }
             ?.single()
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2025 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -134,19 +134,33 @@ internal class TaakFormQueryIT(
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val path = request.path?.substringBefore('?')
                     return when (request.method + " " + path) {
-                        "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" ->
+                        "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
                             TestHelper.mockResponseFromFile("/data/get-task-form-by-url.json")
-                        "GET /api/v2/objects/44444444-4444-4444-4444-444444444444" ->
+                        }
+
+                        "GET /api/v2/objects/44444444-4444-4444-4444-444444444444" -> {
                             TestHelper.mockResponseFromFile("/data/get-task-form-by-id.json")
-                        "GET /api/v2/objects/33333333-3333-3333-3333-333333333333" ->
+                        }
+
+                        "GET /api/v2/objects/33333333-3333-3333-3333-333333333333" -> {
                             TestHelper.mockResponseFromFile("/data/get-task-no-form.json")
-                        "GET /api/v2/objects/11111111-1111-1111-1111-111111111111" ->
+                        }
+
+                        "GET /api/v2/objects/11111111-1111-1111-1111-111111111111" -> {
                             TestHelper.mockResponseFromFile("/data/get-task-form-mismatch.json")
-                        "GET /api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4" ->
+                        }
+
+                        "GET /api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4" -> {
                             TestHelper.mockResponseFromFile("/data/get-form-definition.json")
-                        "GET /api/v2/objects/22222222-2222-2222-2222-222222222222" ->
+                        }
+
+                        "GET /api/v2/objects/22222222-2222-2222-2222-222222222222" -> {
                             TestHelper.mockResponseFromFile("/data/get-form-definition-wrong-type.json")
-                        else -> MockResponse().setResponseCode(404)
+                        }
+
+                        else -> {
+                            MockResponse().setResponseCode(404)
+                        }
                     }
                 }
             }

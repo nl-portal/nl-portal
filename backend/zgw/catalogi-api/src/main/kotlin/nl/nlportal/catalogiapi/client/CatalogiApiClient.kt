@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,30 +46,28 @@ class CatalogiApiClient(
         return webClient()
             .get()
             .uri {
-                it.path("/catalogi/api/v1/statustypen")
+                it
+                    .path("/catalogi/api/v1/statustypen")
                     .queryParams(params)
                     .build()
-            }
-            .retrieve()
+            }.retrieve()
             .awaitBody<ResultPage<StatusType>>()
             .results
     }
 
-    suspend fun getStatusType(statusTypeId: UUID): ZaakStatusType {
-        return webClient()
+    suspend fun getStatusType(statusTypeId: UUID): ZaakStatusType =
+        webClient()
             .get()
             .uri("/catalogi/api/v1/statustypen/$statusTypeId")
             .retrieve()
             .awaitBody()
-    }
 
-    suspend fun getZaakType(zaakTypeId: UUID): ZaakType {
-        return webClient()
+    suspend fun getZaakType(zaakTypeId: UUID): ZaakType =
+        webClient()
             .get()
             .uri("/catalogi/api/v1/zaaktypen/$zaakTypeId")
             .retrieve()
             .awaitBody()
-    }
 
     suspend fun getBesluitTypes(zaakType: String): List<BesluitType> {
         val params = LinkedMultiValueMap<String, String>()
@@ -80,30 +78,28 @@ class CatalogiApiClient(
         return webClient()
             .get()
             .uri {
-                it.path("/catalogi/api/v1/besluittypen")
+                it
+                    .path("/catalogi/api/v1/besluittypen")
                     .queryParams(params)
                     .build()
-            }
-            .retrieve()
+            }.retrieve()
             .awaitBody<ResultPage<BesluitType>>()
             .results
     }
 
-    suspend fun getBesluitType(besluitTypeId: UUID): BesluitType {
-        return webClient()
+    suspend fun getBesluitType(besluitTypeId: UUID): BesluitType =
+        webClient()
             .get()
             .uri("/catalogi/api/v1/besluittypen/$besluitTypeId")
             .retrieve()
             .awaitBody()
-    }
 
-    suspend fun getResultaatType(resultaatTypeId: UUID): ResultaatType {
-        return webClient()
+    suspend fun getResultaatType(resultaatTypeId: UUID): ResultaatType =
+        webClient()
             .get()
             .uri("/catalogi/api/v1/resultaattypen/$resultaatTypeId")
             .retrieve()
             .awaitBody()
-    }
 
     private fun webClient(): WebClient {
         val token =
@@ -112,7 +108,8 @@ class CatalogiApiClient(
                 catalogiApiConfig.clientId,
             )
 
-        return WebClient.builder()
+        return WebClient
+            .builder()
             .clientConnector(
                 ReactorClientHttpConnector(
                     HttpClient.create().wiretap(
@@ -121,13 +118,12 @@ class CatalogiApiClient(
                         AdvancedByteBufFormat.TEXTUAL,
                     ),
                 ),
-            )
-            .exchangeStrategies(
-                ExchangeStrategies.builder()
+            ).exchangeStrategies(
+                ExchangeStrategies
+                    .builder()
                     .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024) }
                     .build(),
-            )
-            .baseUrl(catalogiApiConfig.url)
+            ).baseUrl(catalogiApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .defaultHeader("Authorization", "Bearer $token")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 Ritense BV, the Netherlands.
+ * Copyright 2015-2024 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,26 +64,24 @@ class DocumentenApiClient(
     suspend fun getDocumentContent(
         id: UUID,
         documentApi: String,
-    ): ByteArray {
-        return webClient(documentApi)
+    ): ByteArray =
+        webClient(documentApi)
             .get()
             .uri("/enkelvoudiginformatieobjecten/$id/download")
             .accept(MediaType.APPLICATION_OCTET_STREAM)
             .retrieve()
             .awaitBody()
-    }
 
     fun getDocumentContentStream(
         id: UUID,
         documentApi: String,
-    ): Flow<DataBuffer> {
-        return webClient(documentApi)
+    ): Flow<DataBuffer> =
+        webClient(documentApi)
             .get()
             .uri("/enkelvoudiginformatieobjecten/$id/download")
             .accept(MediaType.APPLICATION_OCTET_STREAM)
             .retrieve()
             .bodyToFlow()
-    }
 
     suspend fun postDocument(
         request: PostEnkelvoudiginformatieobjectRequest,
@@ -100,41 +98,42 @@ class DocumentenApiClient(
             .body(
                 BodyInserters
                     .fromValue(request),
-            )
-            .retrieve()
+            ).retrieve()
             .awaitBody<Document>()
     }
 
     private fun webClient(documentApi: String): WebClient {
         val documentenApiConfig = documentenApiConfigs.getConfig(documentApi)
 
-        return WebClient.builder()
+        return WebClient
+            .builder()
             .clientConnector(
                 ReactorClientHttpConnector(
-                    HttpClient.create().wiretap(
-                        "reactor.netty.http.client.HttpClient",
-                        LogLevel.DEBUG,
-                        AdvancedByteBufFormat.TEXTUAL,
-                    ).let { client ->
-                        var result = client
-                        if (clientSslContextResolver != null) {
-                            documentenApiConfig.ssl?.let {
-                                val sslContext =
-                                    clientSslContextResolver.resolve(
-                                        it.key,
-                                        it.trustedCertificate,
-                                    )
+                    HttpClient
+                        .create()
+                        .wiretap(
+                            "reactor.netty.http.client.HttpClient",
+                            LogLevel.DEBUG,
+                            AdvancedByteBufFormat.TEXTUAL,
+                        ).let { client ->
+                            var result = client
+                            if (clientSslContextResolver != null) {
+                                documentenApiConfig.ssl?.let {
+                                    val sslContext =
+                                        clientSslContextResolver.resolve(
+                                            it.key,
+                                            it.trustedCertificate,
+                                        )
 
-                                result = client.secure { builder -> builder.sslContext(sslContext) }
+                                    result = client.secure { builder -> builder.sslContext(sslContext) }
 
-                                logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                    logger.debug { "Client SSL context was set: private key=${it.key != null}, trusted certificate=${it.trustedCertificate != null}." }
+                                }
                             }
-                        }
-                        result
-                    },
+                            result
+                        },
                 ),
-            )
-            .baseUrl(documentenApiConfig.url)
+            ).baseUrl(documentenApiConfig.url)
             .defaultHeader("Accept-Crs", "EPSG:4326")
             .defaultHeader("Content-Crs", "EPSG:4326")
             .apply {
@@ -144,8 +143,7 @@ class DocumentenApiClient(
                         idTokenGenerator.generateToken(documentenApiConfig.secret!!, documentenApiConfig.clientId!!)
                     it.defaultHeader("Authorization", "Bearer $token")
                 }
-            }
-            .build()
+            }.build()
     }
 
     companion object {

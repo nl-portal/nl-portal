@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2026 Ritense BV, the Netherlands.
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,10 +27,11 @@ object FilenameSanitizer {
     fun sanitize(filename: String?): String {
         if (filename.isNullOrBlank()) return "unnamed"
 
-        var sanitized = filename
-            .replace(UNSAFE_FILENAME_CHARS, "_")
-            .replace(PATH_TRAVERSAL, "_")
-            .trim('.', ' ')
+        var sanitized =
+            filename
+                .replace(UNSAFE_FILENAME_CHARS, "_")
+                .replace(PATH_TRAVERSAL, "_")
+                .trim('.', ' ')
 
         if (sanitized.isBlank() || sanitized.matches(ONLY_DOTS)) {
             sanitized = "unnamed"
@@ -57,8 +58,10 @@ object FilenameSanitizer {
         return if (isAscii) {
             "attachment; filename=\"$safe\""
         } else {
-            val encoded = URLEncoder.encode(safe, StandardCharsets.UTF_8)
-                .replace("+", "%20")
+            val encoded =
+                URLEncoder
+                    .encode(safe, StandardCharsets.UTF_8)
+                    .replace("+", "%20")
             "attachment; filename=\"${safe.filter { it.code in 32..126 && it != '"' }}\"; filename*=UTF-8''$encoded"
         }
     }

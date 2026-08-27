@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.springframework.web.reactive.function.client.WebClient
 @EnableConfigurationProperties(
     ZakenApiConfig::class,
 )
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled","catalogiapi.enabled","zakenapi.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "catalogiapi.enabled", "zakenapi.enabled"], havingValue = "true")
 class ZakenApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ZakenApiService::class)
@@ -43,27 +43,22 @@ class ZakenApiAutoConfiguration {
         documentenApiService: DocumentenApiService,
         objectsApiClient: ObjectsApiClient,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
-    ): ZakenApiService {
-        return ZakenApiService(
+    ): ZakenApiService =
+        ZakenApiService(
             zakenApiClient = zakenApiClient,
             zakenApiConfigProperties = zakenApiConfig.properties,
             documentenApiService = documentenApiService,
             objectsApiClient = objectsApiClient,
             authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
         )
-    }
 
     @Bean
-    fun zakenApiConfig(): ZakenApiConfig {
-        return ZakenApiConfig()
-    }
+    fun zakenApiConfig(): ZakenApiConfig = ZakenApiConfig()
 
     @Bean
     fun zakenApiClient(
         zakenApiConfig: ZakenApiConfig,
         catalogiApiConfig: CatalogiApiConfig,
         webClientBuilder: WebClient.Builder,
-    ): ZakenApiClient {
-        return ZakenApiClient(zakenApiConfig.properties, catalogiApiConfig.properties, webClientBuilder)
-    }
+    ): ZakenApiClient = ZakenApiClient(zakenApiConfig.properties, catalogiApiConfig.properties, webClientBuilder)
 }

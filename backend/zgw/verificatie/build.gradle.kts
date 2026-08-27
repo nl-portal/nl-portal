@@ -1,6 +1,5 @@
-import org.springframework.boot.gradle.tasks.bundling.BootJar
 /*
- * Copyright (c) 2024 Ritense BV, the Netherlands.
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +13,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 plugins {
     kotlin("jvm")
 }

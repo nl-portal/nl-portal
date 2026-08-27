@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2025 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package nl.nlportal.zgw.taak.autoconfigure
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.config.taak")
-class TaakConfig{
+class TaakConfig {
     var enabled: Boolean = false
     var properties: TaakConfigProperties = TaakConfigProperties()
 

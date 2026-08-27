@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(TaakConfig::class)
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled","taak.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "taak.enabled"], havingValue = "true")
 class TaakAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(TaakService::class)
@@ -44,30 +44,22 @@ class TaakAutoConfiguration {
         objectsApiClient: ObjectsApiClient,
         taakObjectConfig: TaakConfig,
         authenticationMachtigingsService: AuthenticationMachtigingsDienstService,
-    ): TaakService {
-        return TaakService(objectsApiClient, taakObjectConfig.properties, authenticationMachtigingsService)
-    }
+    ): TaakService = TaakService(objectsApiClient, taakObjectConfig.properties, authenticationMachtigingsService)
 
     @Bean
     @ConditionalOnMissingBean(TaakQueryV2::class)
-    fun taskQueryV2(taskService: TaakService): TaakQueryV2 {
-        return TaakQueryV2(taskService)
-    }
+    fun taskQueryV2(taskService: TaakService): TaakQueryV2 = TaakQueryV2(taskService)
 
     @Bean
     @ConditionalOnMissingBean(TaakMutationV2::class)
-    fun taskMutationV2(taskService: TaakService): TaakMutationV2 {
-        return TaakMutationV2(taskService)
-    }
+    fun taskMutationV2(taskService: TaakService): TaakMutationV2 = TaakMutationV2(taskService)
 
     @Bean
     @ConditionalOnMissingBean(TaakFormQuery::class)
     fun taakFormQuery(
         taskService: TaakService,
         objectsApiFormDefinitionService: ObjectsApiFormDefinitionService,
-    ): TaakFormQuery {
-        return TaakFormQuery(taskService, objectsApiFormDefinitionService)
-    }
+    ): TaakFormQuery = TaakFormQuery(taskService, objectsApiFormDefinitionService)
 
     @Bean
     @ConditionalOnMissingBean(TaakDocumentResource::class)
@@ -77,12 +69,10 @@ class TaakAutoConfiguration {
         documentenApiService: DocumentenApiService,
         virusScanService: VirusScanService?,
         documentApisConfig: DocumentApisConfig,
-    ): TaakDocumentResource =
-        TaakDocumentResource(taakService, documentenApiService, virusScanService, documentApisConfig)
+    ): TaakDocumentResource = TaakDocumentResource(taakService, documentenApiService, virusScanService, documentApisConfig)
 
     @Bean
     @ConditionalOnMissingBean(TaakDocumentResourceHttpSecurityConfigurer::class)
     @ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
-    fun taakDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer =
-        TaakDocumentResourceHttpSecurityConfigurer()
+    fun taakDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer = TaakDocumentResourceHttpSecurityConfigurer()
 }

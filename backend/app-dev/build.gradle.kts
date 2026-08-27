@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
@@ -22,7 +21,7 @@ plugins {
 
 dependencies {
     implementation(project(":zgw:openklant"))
-    //implementation(project(":form"))
+    // implementation(project(":form"))
     implementation(project(":case"))
     implementation(project(":haalcentraal-hr"))
     implementation(project(":haalcentraal2"))
@@ -49,7 +48,7 @@ dependencies {
     testImplementation(project(":zgw:common-ground-authentication-test"))
     testImplementation(TestDependencies.postgresql)
     testImplementation(TestDependencies.springBootTest)
-    //testImplementation(TestDependencies.springSecurityTest)
+    // testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.springBootWebClientTest)
     testImplementation(TestDependencies.springBootTestWebClient)
     testImplementation(TestDependencies.springGraphQLTest)

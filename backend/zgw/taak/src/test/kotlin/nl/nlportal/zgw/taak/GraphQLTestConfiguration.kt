@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import org.springframework.util.StreamUtils
 
 @Configuration
 class GraphQLTestConfiguration {
-
     @Value("classpath:graphql-queries/getTakenQueryV2.graphql")
     private lateinit var getTakenFileV2: Resource
 
@@ -38,34 +37,30 @@ class GraphQLTestConfiguration {
     private lateinit var updateTaakV2: Resource
 
     @Bean
-    fun getTakenPayloadV2(): String {
-        return StreamUtils.copyToString(
+    fun getTakenPayloadV2(): String =
+        StreamUtils.copyToString(
             getTakenFileV2.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun getTaakByIdPayloadV2(): String {
-        return StreamUtils.copyToString(
+    fun getTaakByIdPayloadV2(): String =
+        StreamUtils.copyToString(
             getTaakByIdFileV2.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun getTaakByIdPayloadV2Bedrijf(): String {
-        return StreamUtils.copyToString(
+    fun getTaakByIdPayloadV2Bedrijf(): String =
+        StreamUtils.copyToString(
             getTaakByIdFileV2Bedrijf.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 
     @Bean
-    fun updateTaakPayloadV2(): String {
-        return StreamUtils.copyToString(
+    fun updateTaakPayloadV2(): String =
+        StreamUtils.copyToString(
             updateTaakV2.inputStream,
             StandardCharsets.UTF_8,
         )
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 Ritense BV, the Netherlands.
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ class BesluitDocumentResource(
             besluitenService.getBesluitDocumentContent(
                 authentication = authentication,
                 besluitId = besluitId,
-                documentId = documentId
+                documentId = documentId,
             )
 
         return ResponseEntity

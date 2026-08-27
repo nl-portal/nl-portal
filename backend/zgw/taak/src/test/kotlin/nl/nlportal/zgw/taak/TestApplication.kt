@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,21 +23,21 @@ import org.springframework.context.annotation.Bean
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
 
-@SpringBootApplication(exclude = [
-    OauthSecurityAutoConfiguration::class,
-])
+@SpringBootApplication(
+    exclude = [
+        OauthSecurityAutoConfiguration::class,
+    ],
+)
 class TestApplication {
     fun main(args: Array<String>) {
         runApplication<TestApplication>(*args)
     }
 
     @Bean
-    fun springSecurityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        return http
+    fun springSecurityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
+        http
             .csrf { it.disable() }
             .authorizeExchange {
                 it.anyExchange().permitAll()
-            }
-            .build()
-    }
+            }.build()
 }

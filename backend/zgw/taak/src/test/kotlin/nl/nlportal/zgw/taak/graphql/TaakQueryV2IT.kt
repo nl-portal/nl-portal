@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,7 +122,6 @@ internal class TaakQueryV2IT(
         assertEquals("2023-09-20T18:25:43.524", responseBody.requiredAt("/content/0/verloopdatum")?.stringValue())
         assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/content/0/portaalformulier/formulier/value")?.stringValue())
         assertEquals("Jan", responseBody.requiredAt("/content/0/portaalformulier/data/voornaam")?.stringValue())
-
     }
 
     @Test
@@ -189,7 +188,6 @@ internal class TaakQueryV2IT(
         assertEquals("2023-09-20T18:25:43.524", responseBody.get("verloopdatum")?.stringValue())
         assertEquals("http://localhost:8010/api/v2/objects/4e40fb4c-a29a-4e48-944b-c34a1ff6c8f4", responseBody.requiredAt("/portaalformulier/formulier/value")?.stringValue())
         assertEquals("Jan", responseBody.requiredAt("/portaalformulier/data/voornaam")?.stringValue())
-
     }
 
     @Test
@@ -219,9 +217,9 @@ internal class TaakQueryV2IT(
     @WithBurgerUser("569312864")
     fun `should unauthorized get task by id for burger`() {
         httpGraphQlTester
-                .document(getTaakByIdPayloadV2Bedrijf)
-                .execute()
-                .errors()
+            .document(getTaakByIdPayloadV2Bedrijf)
+            .execute()
+            .errors()
     }
 
     fun setupMockObjectsApiServer() {
@@ -252,14 +250,19 @@ internal class TaakQueryV2IT(
                                     MockResponse().setResponseCode(404)
                                 }
                             }
+
                             "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce708" -> {
                                 TestHelper.mockResponseFromFile("/data/get-taskv2.json")
                             }
+
                             "GET /api/v2/objects/2d725c07-2f26-4705-8637-438a42b5ac2d" -> {
                                 TestHelper.mockResponseFromFile("/data/get-taskv2-bedrijf.json")
                             }
+
                             //
-                            else -> MockResponse().setResponseCode(404)
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

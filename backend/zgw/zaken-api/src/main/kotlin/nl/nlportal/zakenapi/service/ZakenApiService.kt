@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 Ritense BV, the Netherlands.
+ * Copyright 2015-2024 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,8 @@ class ZakenApiService(
         zaakTypeUUIDs: List<UUID> = emptyList(),
     ): ZaakPage {
         val request =
-            zakenApiClient.zoeken()
+            zakenApiClient
+                .zoeken()
                 .search()
                 .page(page)
                 .withAuthentication(authentication)
@@ -89,7 +90,7 @@ class ZakenApiService(
             request.ofZaakTypes(it)
         }
 
-        if(zakenApiConfigProperties.zaakTypesIdsExcluded.isNotEmpty()) {
+        if (zakenApiConfigProperties.zaakTypesIdsExcluded.isNotEmpty()) {
             request.notInZaakTypes(zakenApiConfigProperties.zaakTypesIdsExcluded)
         }
 
@@ -108,7 +109,8 @@ class ZakenApiService(
     ): Zaak {
         // Get rollen of zaak to check if user has access
         val zaakRollenRequest =
-            zakenApiClient.zaakRollen()
+            zakenApiClient
+                .zaakRollen()
                 .search()
                 .forZaak(id)
                 .withAuthentication(authentication)
@@ -132,15 +134,14 @@ class ZakenApiService(
         return zaak
     }
 
-    suspend fun getZaakFromZaakApi(id: UUID): Zaak {
-        return zakenApiClient.zaken().get(id).retrieve()
-    }
+    suspend fun getZaakFromZaakApi(id: UUID): Zaak = zakenApiClient.zaken().get(id).retrieve()
 
-    suspend fun getZaakStatus(statusUrl: String): ZaakStatus {
-        return zakenApiClient.zaakStatussen().get(extractId(statusUrl)).retrieve()
-    }
+    suspend fun getZaakStatus(statusUrl: String): ZaakStatus = zakenApiClient.zaakStatussen().get(extractId(statusUrl)).retrieve()
 
-    suspend fun getZaakSubStatussen(zaakUrl: String, statusUrl: String): List<ZaakSubStatus> {
+    suspend fun getZaakSubStatussen(
+        zaakUrl: String,
+        statusUrl: String,
+    ): List<ZaakSubStatus> {
         try {
             return zakenApiClient
                 .zaakSubStatussen()
@@ -148,8 +149,10 @@ class ZakenApiService(
                 .page(1)
                 .forZaak(zaakUrl)
                 .forStatus(statusUrl)
-                .retrieve().results.filterNot { it.doelgroep == ZaakSubStatusDoelgroep.INTERN }.sortedBy { it.tijdstip }
-
+                .retrieve()
+                .results
+                .filterNot { it.doelgroep == ZaakSubStatusDoelgroep.INTERN }
+                .sortedBy { it.tijdstip }
         } catch (ex: Exception) {
             logger.warn { "Could not get zak sub statussen for $zaakUrl and $statusUrl: $ex" }
         }
@@ -157,42 +160,51 @@ class ZakenApiService(
     }
 
     suspend fun getDocumenten(zaakUrl: String): List<Document> {
-        val documents = getZaakDocumenten(zaakUrl)
-            .map { zaakDocument ->
-                documentenApiService
-                    .getDocument(zaakDocument.informatieobject)
-                    .copy(identificatie = zaakDocument.uuid)
-            }
+        val documents =
+            getZaakDocumenten(zaakUrl)
+                .map { zaakDocument ->
+                    documentenApiService
+                        .getDocument(zaakDocument.informatieobject)
+                        .copy(identificatie = zaakDocument.uuid)
+                }
 
         return documentenApiService.filterDocuments(documents)
     }
 
-    suspend fun getZaakStatusHistory(zaakId: UUID): List<ZaakStatus> {
-        return zakenApiClient.zaakStatussen().search().forZaak(zaakId).retrieveAll()
-    }
+    suspend fun getZaakStatusHistory(zaakId: UUID): List<ZaakStatus> =
+        zakenApiClient
+            .zaakStatussen()
+            .search()
+            .forZaak(zaakId)
+            .retrieveAll()
 
-    suspend fun getZaakDocumenten(zaakUrl: String): List<ZaakDocument> {
-        return zakenApiClient.zaakInformatieobjecten().search().forZaak(zaakUrl).retrieve()
-    }
+    suspend fun getZaakDocumenten(zaakUrl: String): List<ZaakDocument> =
+        zakenApiClient
+            .zaakInformatieobjecten()
+            .search()
+            .forZaak(zaakUrl)
+            .retrieve()
 
-    suspend fun getZaakResultaat(resultaatUrl: String): ZaakResultaat {
-        return zakenApiClient.zaakResultaten().get(extractId(resultaatUrl)).retrieve()
-    }
+    suspend fun getZaakResultaat(resultaatUrl: String): ZaakResultaat = zakenApiClient.zaakResultaten().get(extractId(resultaatUrl)).retrieve()
 
     suspend fun getZaakDetails(zaakUrl: String): ZaakDetails {
         val zaakId = extractId(zaakUrl)
         val zaakDetailsObjects =
-            zakenApiClient.zaakObjecten().search().forZaak(zaakId).retrieveAll()
+            zakenApiClient
+                .zaakObjecten()
+                .search()
+                .forZaak(zaakId)
+                .retrieveAll()
                 .filter { it.objectTypeOverige.lowercase(Locale.getDefault()) == "portaalzaakdetails" }
-                .map { getObjectApiZaakDetails(it.objectUrl) }.flatMap { it?.record?.data?.data!! }
+                .map { getObjectApiZaakDetails(it.objectUrl) }
+                .flatMap { it?.record?.data?.data!! }
         return ZaakDetails(zaakUrl, zaakDetailsObjects)
     }
 
-    private suspend fun getObjectApiZaakDetails(objectUrl: String): ObjectsApiObject<ZaakDetailsObject>? {
-        return objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
+    private suspend fun getObjectApiZaakDetails(objectUrl: String): ObjectsApiObject<ZaakDetailsObject>? =
+        objectsApiClient.getObjectByUrl<ZaakDetailsObject>(
             url = objectUrl,
         )
-    }
 
     suspend fun getZaakDocumentContent(
         zaakDocumentId: String,
@@ -220,7 +232,9 @@ class ZakenApiService(
                         .getDocumentContentStreaming(zaakDocument.informatieobject)
             }
 
-            else -> null to null
+            else -> {
+                null to null
+            }
         }
     }
 
