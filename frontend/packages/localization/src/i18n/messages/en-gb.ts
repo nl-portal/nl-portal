@@ -307,6 +307,7 @@ export const EN_GB_MESSAGES: Messages = {
     "form.success.text": "Your request has been processed successfully.",
     "form.error.title": "Something went wrong",
     "form.error.text": "Please try again later.",
+    "quickLinks.title": "Quick links to",
     "footer.legal.privacy": "Privacy",
     "footer.legal.privacy.url":
       "https://www.denhaag.nl/en/data-protection-declaration/",

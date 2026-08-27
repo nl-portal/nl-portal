@@ -1,0 +1,7 @@
+@use "../styles/mixins";
+
+.quick-links {
+  @include mixins.breakpoint(desktop) {
+    display: none !important;
+  }
+}

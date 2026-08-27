@@ -49,24 +49,24 @@ export const testNavigationItems: NavigationItem[][] = [
     {
       titleTranslationKey: "overview",
       path: testPaths.overview,
-      icon: <GridIcon />,
+      icon: GridIcon,
     },
   ],
   [
     {
       titleTranslationKey: "tasks",
       path: testPaths.tasks,
-      icon: <CheckCircleIcon />,
+      icon: CheckCircleIcon,
     },
     {
       titleTranslationKey: "cases",
       path: testPaths.cases,
-      icon: <ArchiveIcon />,
+      icon: ArchiveIcon,
     },
     {
       titleTranslationKey: "messages",
       path: testPaths.messages,
-      icon: <InboxIcon />,
+      icon: InboxIcon,
       hasMessagesCount: true,
     },
   ],
@@ -74,19 +74,19 @@ export const testNavigationItems: NavigationItem[][] = [
     {
       titleTranslationKey: "belastingzaken",
       path: testPaths.themeOverview("belastingzaken"),
-      icon: <EuroIcon />,
+      icon: EuroIcon,
       themeSlug: "belastingzaken",
     },
     {
       titleTranslationKey: "parkeren",
       path: testPaths.themeOverview("parkeren"),
-      icon: <CarIcon />,
+      icon: CarIcon,
       themeSlug: "parkeren",
     },
     {
       titleTranslationKey: "inkomensondersteuning",
       path: testPaths.themeOverview("inkomensondersteuning"),
-      icon: <EuroIcon />,
+      icon: EuroIcon,
       themeSlug: "inkomensondersteuning",
     },
   ],
@@ -94,7 +94,7 @@ export const testNavigationItems: NavigationItem[][] = [
     {
       titleTranslationKey: "account",
       path: testPaths.account,
-      icon: <UserIcon />,
+      icon: UserIcon,
     },
   ],
 ];
