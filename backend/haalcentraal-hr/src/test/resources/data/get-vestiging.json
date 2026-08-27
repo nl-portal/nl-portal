@@ -1,0 +1,67 @@
+{
+    "vestigingsnummer": "990000262129",
+    "kvkNummer": "90002768",
+    "rsin": "992479940",
+    "indNonMailing": "Nee",
+    "materieleRegistratie": {
+        "datumAanvang": "20020101"
+    },
+    "statutaireNaam": "Regional Sanjoflex B.V.",
+    "eersteHandelsnaam": "Regional Sanjoflex B.V.",
+    "indHoofdvestiging": "Nee",
+    "indCommercieleVestiging": "Ja",
+    "voltijdWerkzamePersonen": 0,
+    "totaalWerkzamePersonen": 1,
+    "deeltijdWerkzamePersonen": 1,
+    "handelsnamen": [
+        {
+            "naam": "Regional Sanjoflex B.V.",
+            "volgorde": 0
+        }
+    ],
+    "adressen": [
+        {
+            "type": "correspondentieadres",
+            "indAfgeschermd": "Nee",
+            "volledigAdres": "Maarten Trompstraat 2 6372VR Landgraaf",
+            "straatnaam": "Maarten Trompstraat",
+            "huisnummer": 2,
+            "postcode": "6372VR",
+            "plaats": "Landgraaf",
+            "land": "Nederland"
+        },
+        {
+            "type": "bezoekadres",
+            "indAfgeschermd": "Nee",
+            "volledigAdres": "Kanneke 3 5375BS Reek",
+            "straatnaam": "Kanneke",
+            "huisnummer": 3,
+            "huisletter": "B",
+            "postcode": "5375BS",
+            "plaats": "Reek",
+            "land": "Nederland"
+        }
+    ],
+    "sbiActiviteiten": [
+        {
+            "sbiCode": "01500",
+            "sbiOmschrijving": "Akker- en/of tuinbouw in combinatie met het fokken en houden van dieren",
+            "indHoofdactiviteit": "Ja"
+        },
+        {
+            "sbiCode": "66120",
+            "sbiOmschrijving": "Bemiddeling in effecten- en goederencontracten",
+            "indHoofdactiviteit": "Nee"
+        }
+    ],
+    "links": [
+        {
+            "rel": "self",
+            "href": "https://api.kvk.nl/test/api/v1/vestigingsprofielen/990000262129"
+        },
+        {
+            "rel": "basisprofiel",
+            "href": "https://api.kvk.nl/test/api/v1/basisprofielen/90002768"
+        }
+    ]
+}

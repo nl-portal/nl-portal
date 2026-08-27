@@ -19,4 +19,5 @@ class AuthenticationGemachtigde(
     val bsn: String? = null,
     val kvk: String? = null,
     val uid: String? = null,
+    val vestigingsnummer: String? = null,
 )

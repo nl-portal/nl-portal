@@ -27,6 +27,7 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 
 * **Upgrade naar Spring Boot 4.1.0** (Spring Framework 7 / Spring Security 7), Kotlin 2.4.10. Bouwen en uitbreiden vereist Java 21; controleer eigen code, configuratie en dependencies op Spring Boot 4- / Spring Security 7-wijzigingen.
 * **Frontend-platform bijgewerkt**: React 19, Vite 8, TypeScript 5.9. Bouwen vereist Node 24 en pnpm 11.
+* **Haalcentraal HR: In de graphql response is hoofdvestiging gewijzigd naar vestiging. Dit zorgt ook voor ondersteuning voor als je ingelogd bent voor vestiging en je dus het correct adres krijgt 
 
 ## Deprecations
 
