@@ -42,16 +42,16 @@ export const scalarConfig = {
       output: "any",
     },
     BigDecimal: {
-      input: "unknown",
-      output: "unknown",
+      input: "number",
+      output: "number",
     },
     BigInteger: {
-      input: "unknown",
-      output: "unknown",
+      input: "number",
+      output: "number",
     },
     Long: {
-      input: "unknown",
-      output: "unknown",
+      input: "number",
+      output: "number",
     },
   },
 };
