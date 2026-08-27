@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled","catalogiapi.enabled","zakenapi.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "catalogiapi.enabled", "zakenapi.enabled"], havingValue = "true")
 class ZakenAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ZaakQuery::class)
@@ -36,23 +36,18 @@ class ZakenAutoConfiguration {
         zakenApiService: ZakenApiService,
         besluitenService: BesluitenService,
         catalogiApiService: CatalogiApiService,
-    ): ZaakQuery {
-        return ZaakQuery(
+    ): ZaakQuery =
+        ZaakQuery(
             zakenApiService = zakenApiService,
             besluitenService = besluitenService,
-            catalogiApiService = catalogiApiService
+            catalogiApiService = catalogiApiService,
         )
-    }
 
     @Bean
     @ConditionalOnMissingBean(ZaakDocumentResource::class)
-    fun zaakDocumentResource(zakenApiService: ZakenApiService): ZaakDocumentResource {
-        return ZaakDocumentResource(zakenApiService)
-    }
+    fun zaakDocumentResource(zakenApiService: ZakenApiService): ZaakDocumentResource = ZaakDocumentResource(zakenApiService)
 
     @Bean
     @ConditionalOnMissingBean(ZaakDocumentResourceHttpSecurityConfigurer::class)
-    fun zaakDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer {
-        return ZaakDocumentResourceHttpSecurityConfigurer()
-    }
+    fun zaakDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer = ZaakDocumentResourceHttpSecurityConfigurer()
 }

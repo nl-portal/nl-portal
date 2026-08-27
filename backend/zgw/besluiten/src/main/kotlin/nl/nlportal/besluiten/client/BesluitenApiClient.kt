@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nl.nlportal.besluiten.client
 
 import nl.nlportal.besluiten.client.BesluitenApiConfig.BesluitenApiConfigProperties
@@ -33,8 +48,7 @@ class BesluitenApiClient(
                             ClientRequest.from(it).header("Authorization", "Bearer ${getToken()}").build(),
                         )
                     },
-                )
-                .defaultHeader("Accept-Crs", "EPSG:4326")
+                ).defaultHeader("Accept-Crs", "EPSG:4326")
                 .defaultHeader("Content-Crs", "EPSG:4326")
                 .build()
     }
@@ -55,45 +69,42 @@ class BesluitenApiClient(
         return webClient
             .get()
             .uri {
-                it.path("/besluiten/api/v1/besluiten")
+                it
+                    .path("/besluiten/api/v1/besluiten")
                     .queryParams(params)
                     .build()
-            }
-            .retrieve()
+            }.retrieve()
             .handleStatus()
             .awaitBody<ResultPage<Besluit>>()
             .results
     }
 
-    suspend fun getBesluit(besluitId: UUID): Besluit {
-        return webClient
+    suspend fun getBesluit(besluitId: UUID): Besluit =
+        webClient
             .get()
             .uri("/besluiten/api/v1/besluiten/$besluitId")
             .retrieve()
             .handleStatus()
             .awaitBody<Besluit>()
-    }
 
-    suspend fun getBesluitAuditTrails(besluitId: UUID): List<BesluitAuditTrail> {
-        return webClient
+    suspend fun getBesluitAuditTrails(besluitId: UUID): List<BesluitAuditTrail> =
+        webClient
             .get()
             .uri("/besluiten/api/v1/besluiten/$besluitId/audittrail")
             .retrieve()
             .handleStatus()
             .awaitBody<List<BesluitAuditTrail>>()
-    }
 
     suspend fun getBesluitAuditTrail(
         besluitId: UUID,
         auditTrailId: UUID,
-    ): BesluitAuditTrail {
-        return webClient
+    ): BesluitAuditTrail =
+        webClient
             .get()
             .uri("/besluiten/api/v1/besluiten/$besluitId/audittrail/$auditTrailId")
             .retrieve()
             .handleStatus()
             .awaitBody<BesluitAuditTrail>()
-    }
 
     suspend fun getBesluitDocumenten(
         besluit: String,
@@ -105,42 +116,38 @@ class BesluitenApiClient(
         return webClient
             .get()
             .uri {
-                it.path("/besluiten/api/v1/besluitinformatieobjecten")
+                it
+                    .path("/besluiten/api/v1/besluitinformatieobjecten")
                     .queryParams(params)
                     .build()
-            }
-            .retrieve()
+            }.retrieve()
             .handleStatus()
             .awaitBody<List<BesluitDocument>>()
     }
 
-    suspend fun getBesluitDocument(documentId: UUID): BesluitDocument {
-        return webClient
+    suspend fun getBesluitDocument(documentId: UUID): BesluitDocument =
+        webClient
             .get()
             .uri("/besluiten/api/v1/besluitinformatieobjecten/$documentId")
             .retrieve()
             .handleStatus()
             .awaitBody<BesluitDocument>()
-    }
 
-    private fun getToken(): String {
-        return IdTokenGenerator().generateToken(
+    private fun getToken(): String =
+        IdTokenGenerator().generateToken(
             besluitenApiConfig.secret,
             besluitenApiConfig.clientId,
         )
-    }
 
     fun WebClient.ResponseSpec.handleStatus() =
         this
             .onStatus(
                 { httpStatus -> HttpStatus.NOT_FOUND == httpStatus },
                 { throw ResponseStatusException(HttpStatus.NOT_FOUND) },
-            )
-            .onStatus(
+            ).onStatus(
                 { httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus },
                 { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) },
-            )
-            .onStatus(
+            ).onStatus(
                 { httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus },
                 {
                     throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)

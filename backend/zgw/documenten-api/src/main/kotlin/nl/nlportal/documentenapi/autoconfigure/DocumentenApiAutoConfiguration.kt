@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,32 +32,22 @@ import org.springframework.core.io.ResourceLoader
 @AutoConfiguration
 @EnableConfigurationProperties(DocumentApisConfig::class)
 @ConditionalOnProperty(prefix = "nl-portal.config.documentenapis", name = ["enabled"], havingValue = "true")
-
 class DocumentenApiAutoConfiguration {
-
     @Bean
     @ConditionalOnMissingBean(ClientSslContextResolver::class)
-    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver {
-        return ResourceClientSslContextResolver(resourceLoader)
-    }
+    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver = ResourceClientSslContextResolver(resourceLoader)
 
     @Bean
     @ConditionalOnMissingBean(DocumentenApiService::class)
     fun documentenApiService(
         documentenApiClient: DocumentenApiClient,
-        documentApisConfig: DocumentApisConfig
-
-    ): DocumentenApiService {
-        return DocumentenApiService(documentenApiClient, documentApisConfig.properties)
-    }
+        documentApisConfig: DocumentApisConfig,
+    ): DocumentenApiService = DocumentenApiService(documentenApiClient, documentApisConfig.properties)
 
     @Bean
     fun documentenApiClient(
         documentApisConfig: DocumentApisConfig,
         idTokenGenerator: IdTokenGenerator,
         @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
-    ): DocumentenApiClient {
-        return DocumentenApiClient(documentApisConfig.properties, idTokenGenerator, clientSslContextResolver)
-    }
-
+    ): DocumentenApiClient = DocumentenApiClient(documentApisConfig.properties, idTokenGenerator, clientSslContextResolver)
 }

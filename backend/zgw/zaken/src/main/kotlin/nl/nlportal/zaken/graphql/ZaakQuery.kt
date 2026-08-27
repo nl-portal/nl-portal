@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,111 +53,93 @@ open class ZaakQuery(
         @Argument identificatie: String? = null,
         @Argument omschrijving: String? = null,
         @Argument identificatieContains: String? = null,
-    ): ZaakPage = zakenApiService.getZaken(
-        page = page ?: 1,
-        pageSize = pageSize,
-        authentication = authentication,
-        zaakTypeUrl = zaakTypeUrl,
-        isOpen = isOpen,
-        identificatie = identificatie,
-        omschrijving = omschrijving,
-        identificatieContains = identificatieContains,
-    )
+    ): ZaakPage =
+        zakenApiService.getZaken(
+            page = page ?: 1,
+            pageSize = pageSize,
+            authentication = authentication,
+            zaakTypeUrl = zaakTypeUrl,
+            isOpen = isOpen,
+            identificatie = identificatie,
+            omschrijving = omschrijving,
+            identificatieContains = identificatieContains,
+        )
 
     @QueryMapping
     open suspend fun getZaak(
         @Argument id: UUID,
         authentication: CommonGroundAuthentication,
-    ): Zaak {
-        return zakenApiService.getZaak(
+    ): Zaak =
+        zakenApiService.getZaak(
             id = id,
-            authentication = authentication
+            authentication = authentication,
         )
-    }
 
     @SchemaMapping(typeName = "Zaak", field = "status")
     suspend fun status(
         zaak: Zaak,
-    ): ZaakStatus? {
-        return zaak.status?.let { zakenApiService.getZaakStatus(it) }
-    }
+    ): ZaakStatus? = zaak.status?.let { zakenApiService.getZaakStatus(it) }
 
     @SchemaMapping(typeName = "Zaak", field = "statusGeschiedenis")
     suspend fun statusGeschiedenis(
         zaak: Zaak,
-    ): List<ZaakStatus> {
-        return zakenApiService.getZaakStatusHistory(zaak.uuid)
-    }
+    ): List<ZaakStatus> = zakenApiService.getZaakStatusHistory(zaak.uuid)
 
     @SchemaMapping(typeName = "Zaak", field = "documenten")
     suspend fun documenten(
         zaak: Zaak,
-    ): List<Document> {
-        return zakenApiService.getDocumenten(zaak.url)
-    }
+    ): List<Document> = zakenApiService.getDocumenten(zaak.url)
 
     @SchemaMapping(typeName = "Zaak", field = "statussen")
     suspend fun statussen(
         zaak: Zaak,
-    ): List<StatusType> {
-        return catalogiApiService.getZaakStatusTypes(zaak.zaaktype)
-    }
+    ): List<StatusType> = catalogiApiService.getZaakStatusTypes(zaak.zaaktype)
 
     @SchemaMapping(typeName = "Zaak", field = "zaaktype")
     suspend fun zaaktype(
         zaak: Zaak,
-    ): ZaakType {
-        return catalogiApiService.getZaakType(zaak.zaaktype)
-    }
+    ): ZaakType = catalogiApiService.getZaakType(zaak.zaaktype)
 
     @SchemaMapping(typeName = "Zaak", field = "zaakdetails")
     suspend fun zaakdetails(
         zaak: Zaak,
-    ): ZaakDetails {
-        return zakenApiService.getZaakDetails(zaak.url)
-    }
+    ): ZaakDetails = zakenApiService.getZaakDetails(zaak.url)
 
     @SchemaMapping(typeName = "Zaak", field = "besluiten")
     suspend fun besluiten(
         zaak: Zaak,
-    ): List<Besluit> {
-        return besluitenService.getBesluiten(
+    ): List<Besluit> =
+        besluitenService.getBesluiten(
             zaak = zaak.url,
         )
-    }
 
     @SchemaMapping(typeName = "Zaak", field = "resultaat")
     suspend fun resultaat(
         zaak: Zaak,
-    ): ZaakResultaat? {
-        return zaak.resultaat?.let {
+    ): ZaakResultaat? =
+        zaak.resultaat?.let {
             zakenApiService.getZaakResultaat(it)
         }
-    }
 
     @SchemaMapping(typeName = "ZaakResultaat", field = "resultaattype")
     suspend fun resultaattype(
         zaakResultaat: ZaakResultaat,
-    ): ResultaatType {
-        return catalogiApiService.getResultaatType(
-            resultaatTypeUrl = zaakResultaat.resultaattype
+    ): ResultaatType =
+        catalogiApiService.getResultaatType(
+            resultaatTypeUrl = zaakResultaat.resultaattype,
         )
-    }
 
     @SchemaMapping(typeName = "ZaakStatus", field = "statustype")
     suspend fun statustype(
-        zaakStatus: ZaakStatus
-    ): ZaakStatusType {
-        return catalogiApiService.getZaakStatusType(zaakStatus.statustype)
-    }
+        zaakStatus: ZaakStatus,
+    ): ZaakStatusType = catalogiApiService.getZaakStatusType(zaakStatus.statustype)
 
     @SchemaMapping(typeName = "ZaakStatus", field = "substatussen")
     suspend fun substatussen(
-        zaakStatus: ZaakStatus
-    ): List<ZaakSubStatus> {
-        return zakenApiService.getZaakSubStatussen(
+        zaakStatus: ZaakStatus,
+    ): List<ZaakSubStatus> =
+        zakenApiService.getZaakSubStatussen(
             zaakUrl = zaakStatus.zaak,
-            statusUrl = zaakStatus.url
+            statusUrl = zaakStatus.url,
         )
-    }
 }

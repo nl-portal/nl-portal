@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,8 +74,8 @@ internal class DocumentenApiServiceTest(
             assertDocumentReturned(document)
         }
 
-    private fun getTestDocument(status: DocumentStatus?): Document {
-        return Document(
+    private fun getTestDocument(status: DocumentStatus?): Document =
+        Document(
             "http://example.com/enkelvoudiginformatieobjecten/0727b025-eaae-4587-a375-3fe671a19dd8",
             "identificatie",
             "2020-04-17",
@@ -86,7 +86,6 @@ internal class DocumentenApiServiceTest(
             status,
             OPENBAAR,
         )
-    }
 
     private fun assertDocumentReturned(document: Document) {
         assertEquals(

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,11 @@ import okhttp3.mockwebserver.MockResponse
 import java.util.UUID
 
 object TestHelper {
-    fun mockResponseFromFile(fileName: String): MockResponse {
-        return MockResponse()
+    fun mockResponseFromFile(fileName: String): MockResponse =
+        MockResponse()
             .addHeader("Content-Type", "application/json; charset=utf-8")
             .setResponseCode(200)
             .setBody(readFileAsString(fileName))
-    }
 
     private fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName)!!.readText(Charsets.UTF_8)
 

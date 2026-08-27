@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,11 @@ import org.springframework.context.annotation.Bean
 class CatalogiApiAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(CatalogiApiService::class)
-    fun catalogiApiService(catalogiApiClient: CatalogiApiClient): CatalogiApiService {
-        return CatalogiApiService(catalogiApiClient)
-    }
+    fun catalogiApiService(catalogiApiClient: CatalogiApiClient): CatalogiApiService = CatalogiApiService(catalogiApiClient)
 
     @Bean
     fun catalogiApiClient(
         catalogiApiConfig: CatalogiApiConfig,
         idTokenGenerator: IdTokenGenerator,
-    ): CatalogiApiClient {
-        return CatalogiApiClient(catalogiApiConfig.properties, idTokenGenerator)
-    }
+    ): CatalogiApiClient = CatalogiApiClient(catalogiApiConfig.properties, idTokenGenerator)
 }

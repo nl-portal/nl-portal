@@ -7,15 +7,15 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  BigDecimal: { input: unknown; output: unknown; }
-  BigInteger: { input: unknown; output: unknown; }
+  BigDecimal: { input: number; output: number; }
+  BigInteger: { input: number; output: number; }
   Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
   JSON: { input: any; output: any; }
   LocalDateTime: { input: string; output: string; }
   LocalTime: { input: string; output: string; }
   Locale: { input: string; output: string; }
-  Long: { input: unknown; output: unknown; }
+  Long: { input: number; output: number; }
   PositiveFloat: { input: number; output: number; }
   UUID: { input: string; output: string; }
   ZonedDateTime: { input: string; output: string; }

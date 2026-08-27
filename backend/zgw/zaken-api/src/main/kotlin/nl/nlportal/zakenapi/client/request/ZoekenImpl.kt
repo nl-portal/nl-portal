@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package nl.nlportal.zakenapi.client.request
 
 import nl.nlportal.zakenapi.client.ZakenApiClient
@@ -26,17 +25,17 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.client.awaitBody
 import java.util.UUID
 
-class ZoekenImpl(val zakenApiClient: ZakenApiClient) : Zaken {
-    override fun search(): SearchZaken {
-        return SearchZoekenImpl(zakenApiClient)
-    }
+class ZoekenImpl(
+    val zakenApiClient: ZakenApiClient,
+) : Zaken {
+    override fun search(): SearchZaken = SearchZoekenImpl(zakenApiClient)
 
-    override fun get(id: UUID): GetZaak {
-        throw NotImplementedError()
-    }
+    override fun get(id: UUID): GetZaak = throw NotImplementedError()
 }
 
-class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
+class SearchZoekenImpl(
+    val zakenApiClient: ZakenApiClient,
+) : SearchZaken {
     val bodyValue: MultiValueMap<String, Any> = LinkedMultiValueMap()
     val queryParams: MultiValueMap<String, String> = LinkedMultiValueMap()
 
@@ -50,6 +49,7 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
             zakenApiClient.useNnpKvkQueryIdentificators() -> {
                 bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvk)
             }
+
             else -> {
                 bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__annIdentificatie", kvk)
             }
@@ -116,6 +116,7 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
                 bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__vestigingsNummer", vestigingsNummer)
                 bodyValue.add("rol__betrokkeneIdentificatie__nietNatuurlijkPersoon__kvkNummer", kvkNummer)
             }
+
             else -> {
                 bodyValue.add("rol__betrokkeneIdentificatie__vestiging__vestigingsNummer", vestigingsNummer)
                 bodyValue.add("rol__betrokkeneIdentificatie__vestiging__kvkNummer", kvkNummer)
@@ -141,8 +142,8 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
         return this
     }
 
-    override suspend fun retrieve(): ResultPage<Zaak> {
-        return this.zakenApiClient.webClient
+    override suspend fun retrieve(): ResultPage<Zaak> =
+        this.zakenApiClient.webClient
             .post()
             .uri { it.path("/zaken/api/v1/zaken/_zoek").queryParams(queryParams).build() }
             .contentType(MediaType.APPLICATION_JSON)
@@ -151,5 +152,4 @@ class SearchZoekenImpl(val zakenApiClient: ZakenApiClient) : SearchZaken {
             .retrieve()
             .handleStatus()
             .awaitBody()
-    }
 }

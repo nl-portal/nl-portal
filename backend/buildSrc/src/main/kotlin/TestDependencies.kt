@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 object TestDependencies {
     val hamcrest by lazy { "org.hamcrest:hamcrest:${Versions.hamcrest}" }
-    val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutines}"}
+    val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutines}" }
     val mockitoKotlin by lazy { "org.mockito.kotlin:mockito-kotlin:${Versions.mockitoKotlin}" }
     val okHttp by lazy { "com.squareup.okhttp3:okhttp:${Versions.okHttp3}" }
     val okHttpMockWebserver by lazy { "com.squareup.okhttp3:mockwebserver:${Versions.okHttp3}" }
     val okHttpTls by lazy { "com.squareup.okhttp3:okhttp-tls:${Versions.okHttp3}" }
     val postgresql by lazy { "org.postgresql:postgresql:${Versions.postgresql}" }
     val h2 by lazy { "com.h2database:h2:${Versions.h2}" }
-    val springBootTest by lazy {"org.springframework.boot:spring-boot-starter-test"}
-    val springBootWebClientTest by lazy {"org.springframework.boot:spring-boot-starter-webclient-test"}
-    val springBootTestWebClient by lazy {"org.springframework.boot:spring-boot-webtestclient"}
-    val springSecurityTest by lazy {"org.springframework.security:spring-security-test"}
-    val springGraphQLTest by lazy {"org.springframework.boot:spring-boot-starter-graphql-test"}
+    val springBootTest by lazy { "org.springframework.boot:spring-boot-starter-test" }
+    val springBootWebClientTest by lazy { "org.springframework.boot:spring-boot-starter-webclient-test" }
+    val springBootTestWebClient by lazy { "org.springframework.boot:spring-boot-webtestclient" }
+    val springSecurityTest by lazy { "org.springframework.security:spring-security-test" }
+    val springGraphQLTest by lazy { "org.springframework.boot:spring-boot-starter-graphql-test" }
     val assertJCore by lazy { "org.assertj:assertj-core" }
     val kotlinTest by lazy { "org.jetbrains.kotlin:kotlin-test" }
     val junitJupiterTest by lazy { "org.junit.jupiter:junit-jupiter" }

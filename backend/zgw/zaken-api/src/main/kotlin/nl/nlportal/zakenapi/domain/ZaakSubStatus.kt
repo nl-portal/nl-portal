@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ data class ZaakSubStatus(
 )
 
 enum class ZaakSubStatusDoelgroep(
-    @JsonValue val value: String
+    @JsonValue val value: String,
 ) {
-
     INTERN("intern"),
     BETROKKENEN("betrokkenen"),
-    GEEN_DOELGROEP("");
+    GEEN_DOELGROEP(""),
+    ;
 
     override fun toString(): String = this.value
 }

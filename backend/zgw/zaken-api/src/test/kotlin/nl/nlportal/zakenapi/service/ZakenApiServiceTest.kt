@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nl.nlportal.zakenapi.service
 
 import java.io.File
@@ -59,30 +74,33 @@ class ZakenApiServiceTest {
     fun setUp() {
         MockitoAnnotations.openMocks(this)
 
-        zakenApiConfigProperties = ZakenApiConfigProperties().apply {
-            url = "http://localhost:8080"
-            clientId = "zaken-api-client-id"
-            secret = "zaken-api-secret"
-            zaakTypesIdsExcluded = emptyList()
-        }
-
-        val documentApiConfig = DocumentApiConfig().apply {
-            url = "http://localhost:8001"
-            clientId = "zaken-api-client-id"
-            secret = "zaken-api-secret"
-        }
-        val documentApiConfigs = mapOf("openzaak" to documentApiConfig)
-        documentApisConfig = DocumentApisConfig().apply {
-            properties = DocumentenApisConfigProperties().apply {
-                vertrouwelijkheidsaanduidingWhitelist =
-                    listOf(
-                        OPENBAAR,
-                        ZAAKVERTROUWELIJK,
-                    )
-                configurations = mapOf("openzaak" to documentApiConfig)
+        zakenApiConfigProperties =
+            ZakenApiConfigProperties().apply {
+                url = "http://localhost:8080"
+                clientId = "zaken-api-client-id"
+                secret = "zaken-api-secret"
+                zaakTypesIdsExcluded = emptyList()
             }
 
-        }
+        val documentApiConfig =
+            DocumentApiConfig().apply {
+                url = "http://localhost:8001"
+                clientId = "zaken-api-client-id"
+                secret = "zaken-api-secret"
+            }
+        val documentApiConfigs = mapOf("openzaak" to documentApiConfig)
+        documentApisConfig =
+            DocumentApisConfig().apply {
+                properties =
+                    DocumentenApisConfigProperties().apply {
+                        vertrouwelijkheidsaanduidingWhitelist =
+                            listOf(
+                                OPENBAAR,
+                                ZAAKVERTROUWELIJK,
+                            )
+                        configurations = mapOf("openzaak" to documentApiConfig)
+                    }
+            }
 
         zakenApiService =
             ZakenApiService(
@@ -93,10 +111,11 @@ class ZakenApiServiceTest {
                 authenticationMachtigingsDienstService,
             )
 
-        documentenApiService = DocumentenApiService(
-            documentenApiClient = documentenApiClient,
-            documentenApisConfigProperties = documentApisConfig.properties
-        )
+        documentenApiService =
+            DocumentenApiService(
+                documentenApiClient = documentenApiClient,
+                documentenApisConfigProperties = documentApisConfig.properties,
+            )
     }
 
     @Test
@@ -116,8 +135,7 @@ class ZakenApiServiceTest {
                     .forZaak(testZaakDocument.zaak)
                     .withAuthentication(authentication)
                     .retrieveAll(),
-            )
-                .thenReturn(testRollen)
+            ).thenReturn(testRollen)
 
             whenever(documentenApiService.getDocument(testZaakDocument.informatieobject))
                 .doReturn(testDocument)

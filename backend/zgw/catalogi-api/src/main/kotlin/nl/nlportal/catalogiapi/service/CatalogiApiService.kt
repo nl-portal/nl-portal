@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,27 +27,15 @@ import java.util.UUID
 class CatalogiApiService(
     val catalogiApiClient: CatalogiApiClient,
 ) {
-    suspend fun getZaakStatusTypes(zaakType: String): List<StatusType> {
-        return catalogiApiClient.getStatusTypes(zaakType).sortedBy { it.volgnummer }
-    }
+    suspend fun getZaakStatusTypes(zaakType: String): List<StatusType> = catalogiApiClient.getStatusTypes(zaakType).sortedBy { it.volgnummer }
 
-    suspend fun getZaakStatusType(statusTypeUrl: String): ZaakStatusType {
-        return catalogiApiClient.getStatusType(extractId(statusTypeUrl))
-    }
+    suspend fun getZaakStatusType(statusTypeUrl: String): ZaakStatusType = catalogiApiClient.getStatusType(extractId(statusTypeUrl))
 
-    suspend fun getZaakType(zaakTypeUrl: String): ZaakType {
-        return catalogiApiClient.getZaakType(extractId(zaakTypeUrl))
-    }
+    suspend fun getZaakType(zaakTypeUrl: String): ZaakType = catalogiApiClient.getZaakType(extractId(zaakTypeUrl))
 
-    suspend fun getBesluitTypes(zaakType: String): List<BesluitType> {
-        return catalogiApiClient.getBesluitTypes(zaakType)
-    }
+    suspend fun getBesluitTypes(zaakType: String): List<BesluitType> = catalogiApiClient.getBesluitTypes(zaakType)
 
-    suspend fun getBesluitType(besluitTypeUrl: String): BesluitType {
-        return catalogiApiClient.getBesluitType(extractId(besluitTypeUrl))
-    }
+    suspend fun getBesluitType(besluitTypeUrl: String): BesluitType = catalogiApiClient.getBesluitType(extractId(besluitTypeUrl))
 
-    suspend fun getResultaatType(resultaatTypeUrl: String): ResultaatType {
-        return catalogiApiClient.getResultaatType(extractId(resultaatTypeUrl))
-    }
+    suspend fun getResultaatType(resultaatTypeUrl: String): ResultaatType = catalogiApiClient.getResultaatType(extractId(resultaatTypeUrl))
 }
