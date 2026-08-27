@@ -7,14 +7,14 @@ import type * as Types from './types';
 import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type FormulierFieldsFragment = { value: string };
 
-export type OpenProductFieldsFragment = { uuid: string, url: string | null, naam: string, startDatum: string | null, eindDatum: string | null, gepubliceerd: boolean | null, aanmaakDatum: string, updateDatum: string, prijs: number | null, status: Types.OpenProductToegestaneStatus, frequentie: Types.OpenProductFrequentie, verbruiksobject: any, dataobject: any, decisions: Array<any>, producttype: { code: string, uniformeProductNaam: string, toegestaneStatussen: Array<Types.OpenProductToegestaneStatus> }, documenten: Array<{ documentapi: string, bestandsnaam: string | null, bestandsomvang: number | null, creatiedatum: string | null, formaat: string | null, identificatie: string | null, titel: string | null, uuid: string }>, acties: Array<{ uuid: string, naam: string, productTypeUuid: string | null }> | null };
+export type OpenProductFieldsFragment = { uuid: string, url: string | null, naam: string, startDatum: string | null, eindDatum: string | null, gepubliceerd: boolean | null, aanmaakDatum: string, updateDatum: string, prijs: number | null, status: Types.OpenProductToegestaneStatus, frequentie: Types.OpenProductFrequentie, verbruiksobject: any, dataobject: any, decisions: Array<any>, producttype: { code: string, uniformeProductNaam: string, toegestaneStatussen: Array<Types.OpenProductToegestaneStatus> }, documenten: Array<{ documentapi: string, bestandsnaam: string | null, bestandsomvang: number | null, creatiedatum: string | null, formaat: string | null, identificatie: string | null, titel: string | null, uuid: string }> | null, acties: Array<{ uuid: string, naam: string, productTypeUuid: string | null }> | null };
 
 export type CreateUserDigitaleAdresMutationVariables = Exact<{
   digitaleAdresRequest: Types.DigitaleAdresRequestInput;
 }>;
 
 
-export type CreateUserDigitaleAdresMutation = { createUserDigitaleAdres: { uuid: string | null, waarde: string, type: Types.DigitaleAdresType, omschrijving: string, referentie: string, verificatieDatum: string | null, verificatieNeeded: boolean, verificatieCodeVerified: boolean } | null };
+export type CreateUserDigitaleAdresMutation = { createUserDigitaleAdres: { uuid: string | null, waarde: string, type: Types.DigitaleAdresType, omschrijving: string, referentie: string, verificatieDatum: string | null, verificatieNeeded: boolean | null, verificatieCodeVerified: boolean | null } | null };
 
 export type DeleteUserDigitaleAdresMutationVariables = Exact<{
   digitaleAdresId: string;
@@ -48,7 +48,7 @@ export type UpdateUserDigitaleAdresMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserDigitaleAdresMutation = { updateUserDigitaleAdres: { uuid: string | null, waarde: string, type: Types.DigitaleAdresType, omschrijving: string, referentie: string, verificatieDatum: string | null, verificatieNeeded: boolean, verificatieCodeVerified: boolean } | null };
+export type UpdateUserDigitaleAdresMutation = { updateUserDigitaleAdres: { uuid: string | null, waarde: string, type: Types.DigitaleAdresType, omschrijving: string, referentie: string, verificatieDatum: string | null, verificatieNeeded: boolean | null, verificatieCodeVerified: boolean | null } | null };
 
 export type UpdateProductVerbruiksObjectMutationVariables = Exact<{
   id: string;
@@ -152,7 +152,7 @@ export type GetOpenProductQueryVariables = Exact<{
 }>;
 
 
-export type GetOpenProductQuery = { getOpenProduct: { uuid: string, url: string | null, naam: string, startDatum: string | null, eindDatum: string | null, gepubliceerd: boolean | null, aanmaakDatum: string, updateDatum: string, prijs: number | null, status: Types.OpenProductToegestaneStatus, frequentie: Types.OpenProductFrequentie, verbruiksobject: any, dataobject: any, decisions: Array<any>, zaken: Array<{ uuid: string, omschrijving: string, identificatie: string, startdatum: string, zaaktype: { identificatie: string, omschrijving: string }, status: { statustype: { isEindstatus: boolean } } | null }> | null, taken: Array<{ id: string, soort: Types.TaakSoort, titel: string, status: Types.TaakStatus, verloopdatum: string | null, koppeling: { registratie: string, value: string | null }, url: { uri: string } | null, portaalformulier: { formulier: { soort: string, value: string } } | null, ogonebetaling: { bedrag: number, betaalkenmerk: string, pspid: string } | null }> | null, producttype: { code: string, uniformeProductNaam: string, toegestaneStatussen: Array<Types.OpenProductToegestaneStatus> }, documenten: Array<{ documentapi: string, bestandsnaam: string | null, bestandsomvang: number | null, creatiedatum: string | null, formaat: string | null, identificatie: string | null, titel: string | null, uuid: string }>, acties: Array<{ uuid: string, naam: string, productTypeUuid: string | null }> | null } | null };
+export type GetOpenProductQuery = { getOpenProduct: { uuid: string, url: string | null, naam: string, startDatum: string | null, eindDatum: string | null, gepubliceerd: boolean | null, aanmaakDatum: string, updateDatum: string, prijs: number | null, status: Types.OpenProductToegestaneStatus, frequentie: Types.OpenProductFrequentie, verbruiksobject: any, dataobject: any, decisions: Array<any>, zaken: Array<{ uuid: string, omschrijving: string, identificatie: string, startdatum: string, zaaktype: { identificatie: string, omschrijving: string }, status: { statustype: { isEindstatus: boolean } } | null }> | null, taken: Array<{ id: string, soort: Types.TaakSoort, titel: string, status: Types.TaakStatus, verloopdatum: string | null, koppeling: { registratie: string, value: string | null }, url: { uri: string } | null, portaalformulier: { formulier: { soort: string, value: string } } | null, ogonebetaling: { bedrag: number, betaalkenmerk: string, pspid: string } | null }> | null, producttype: { code: string, uniformeProductNaam: string, toegestaneStatussen: Array<Types.OpenProductToegestaneStatus> }, documenten: Array<{ documentapi: string, bestandsnaam: string | null, bestandsomvang: number | null, creatiedatum: string | null, formaat: string | null, identificatie: string | null, titel: string | null, uuid: string }> | null, acties: Array<{ uuid: string, naam: string, productTypeUuid: string | null }> | null } | null };
 
 export type GetOpenProductenQueryVariables = Exact<{
   pageNumber?: number | null | undefined;
@@ -165,7 +165,7 @@ export type GetOpenProductenQueryVariables = Exact<{
 }>;
 
 
-export type GetOpenProductenQuery = { getOpenProducten: { number: number, size: number, totalElements: number, numberOfElements: number, totalPages: number, content: Array<{ uuid: string, url: string | null, naam: string, startDatum: string | null, eindDatum: string | null, gepubliceerd: boolean | null, aanmaakDatum: string, updateDatum: string, prijs: number | null, status: Types.OpenProductToegestaneStatus, frequentie: Types.OpenProductFrequentie, verbruiksobject: any, dataobject: any, decisions: Array<any>, producttype: { code: string, uniformeProductNaam: string, toegestaneStatussen: Array<Types.OpenProductToegestaneStatus> }, documenten: Array<{ documentapi: string, bestandsnaam: string | null, bestandsomvang: number | null, creatiedatum: string | null, formaat: string | null, identificatie: string | null, titel: string | null, uuid: string }>, acties: Array<{ uuid: string, naam: string, productTypeUuid: string | null }> | null }> } };
+export type GetOpenProductenQuery = { getOpenProducten: { number: number, size: number, totalElements: number, numberOfElements: number, totalPages: number, content: Array<{ uuid: string, url: string | null, naam: string, startDatum: string | null, eindDatum: string | null, gepubliceerd: boolean | null, aanmaakDatum: string, updateDatum: string, prijs: number | null, status: Types.OpenProductToegestaneStatus, frequentie: Types.OpenProductFrequentie, verbruiksobject: any, dataobject: any, decisions: Array<any>, producttype: { code: string, uniformeProductNaam: string, toegestaneStatussen: Array<Types.OpenProductToegestaneStatus> }, documenten: Array<{ documentapi: string, bestandsnaam: string | null, bestandsomvang: number | null, creatiedatum: string | null, formaat: string | null, identificatie: string | null, titel: string | null, uuid: string }> | null, acties: Array<{ uuid: string, naam: string, productTypeUuid: string | null }> | null }> } };
 
 export type GetPersoonV2QueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -232,7 +232,7 @@ export type GetTakenV2Query = { getTakenV2: { totalElements: number, totalPages:
 export type GetUserDigitaleAdressenQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserDigitaleAdressenQuery = { getUserDigitaleAdressen: Array<{ uuid: string | null, waarde: string, type: Types.DigitaleAdresType, omschrijving: string, referentie: string, verificatieDatum: string | null, verificatieNeeded: boolean }> | null };
+export type GetUserDigitaleAdressenQuery = { getUserDigitaleAdressen: Array<{ uuid: string | null, waarde: string, type: Types.DigitaleAdresType, omschrijving: string, referentie: string, verificatieDatum: string | null, verificatieNeeded: boolean | null }> | null };
 
 export type GetUserKlantContactenQueryVariables = Exact<{
   identificatorType: Types.OnderwerpObjectIndentificatorType;
