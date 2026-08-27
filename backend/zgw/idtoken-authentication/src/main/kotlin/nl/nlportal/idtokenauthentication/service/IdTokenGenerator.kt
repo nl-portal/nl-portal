@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import com.nimbusds.jwt.JWTClaimsSet.Builder
 import com.nimbusds.jwt.SignedJWT
 import java.util.Date
 
-
 class IdTokenGenerator {
     fun generateToken(
         secretKey: String,
@@ -32,20 +31,23 @@ class IdTokenGenerator {
             "SecretKey needs to be at least 32 in length"
         }
 
-        val claimsSet = Builder()
-            .subject(clientId)
-            .issuer(clientId)
-            .issueTime(Date())
-            .expirationTime(Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 minutes
-            .claim("client_id", clientId)
-            .appendUserInfo(null, null)
-            .build()
+        val claimsSet =
+            Builder()
+                .subject(clientId)
+                .issuer(clientId)
+                .issueTime(Date())
+                .expirationTime(Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 minutes
+                .claim("client_id", clientId)
+                .appendUserInfo(null, null)
+                .build()
 
-        val signedJWT = SignedJWT(
-            JWSHeader.Builder(JWSAlgorithm.HS256)
-                .build(),
-            claimsSet
-        )
+        val signedJWT =
+            SignedJWT(
+                JWSHeader
+                    .Builder(JWSAlgorithm.HS256)
+                    .build(),
+                claimsSet,
+            )
         signedJWT.sign(MACSigner(secretKey.encodeToByteArray()))
         return signedJWT.serialize()
     }
@@ -60,20 +62,23 @@ class IdTokenGenerator {
             "SecretKey needs to be at least 32 in length"
         }
 
-        val claimsSet = Builder()
-            .subject(clientId)
-            .issuer(clientId)
-            .issueTime(Date())
-            .expirationTime(Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 minutes
-            .claim("client_id", clientId)
-            .appendUserInfo(userId, userRepresentation)
-            .build()
+        val claimsSet =
+            Builder()
+                .subject(clientId)
+                .issuer(clientId)
+                .issueTime(Date())
+                .expirationTime(Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 minutes
+                .claim("client_id", clientId)
+                .appendUserInfo(userId, userRepresentation)
+                .build()
 
-        val signedJWT = SignedJWT(
-            JWSHeader.Builder(JWSAlgorithm.HS256)
-                .build(),
-            claimsSet
-        )
+        val signedJWT =
+            SignedJWT(
+                JWSHeader
+                    .Builder(JWSAlgorithm.HS256)
+                    .build(),
+                claimsSet,
+            )
         signedJWT.sign(MACSigner(secretKey.encodeToByteArray()))
         return signedJWT.serialize()
     }
@@ -81,11 +86,10 @@ class IdTokenGenerator {
     private fun Builder.appendUserInfo(
         userId: String?,
         userRepresentation: Any?,
-    ): Builder {
-        return this
+    ): Builder =
+        this
             .claim("user_id", userId ?: DEFAULT_USER_ID)
             .claim("user_representation", userRepresentation ?: DEFAULT_USER_REPRESENTATION)
-    }
 
     companion object {
         private const val DEFAULT_USER_ID = "Valtimo"

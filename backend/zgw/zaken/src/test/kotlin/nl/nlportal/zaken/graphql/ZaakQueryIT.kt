@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -154,7 +154,6 @@ internal class ZaakQueryIT(
         assertEquals("2021-09-16T14:00:00Z", responseBody.requiredAt("/content/0/statusGeschiedenis/0/datumStatusGezet")?.stringValue())
         assertEquals("Zaak afgerond", responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/omschrijving")?.stringValue())
         assertEquals(true, responseBody.requiredAt("/content/0/statusGeschiedenis/0/statustype/isEindstatus")?.booleanValue())
-
     }
 
     @Test
@@ -242,7 +241,6 @@ internal class ZaakQueryIT(
                 }
             }
             """.trimIndent()
-
 
         val responseBody =
             httpGraphQlTester
@@ -704,7 +702,6 @@ internal class ZaakQueryIT(
         assertEquals("Eerste status", responseBody.requiredAt("/statussen/0/omschrijving")?.stringValue())
         assertEquals("Derde status", responseBody.requiredAt("/statussen/2/omschrijving")?.stringValue())
         assertEquals("klantportaal", responseBody.requiredAt("/besluiten/0/identificatie")?.stringValue())
-
     }
 
     @Test
@@ -896,21 +893,66 @@ internal class ZaakQueryIT(
                                     handleZaakListRequest()
                                 }
                             }
-                            "/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6" -> handleStatusRequest()
-                            "/zaken/api/v1/statussen" -> handleStatusListRequest()
-                            "/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b" -> handleZaakTypeRequest()
-                            "/catalogi/api/v1/statustypen" -> handleStatusTypenRequest()
-                            "/catalogi/api/v1/statustypen/a4bd90f4-b80c-446b-9f68-62c5b39298ff" -> handleStatusTypeRequest()
-                            "/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> handleZaakRequest()
-                            "/zaken/api/v1/zaakinformatieobjecten" -> handleZaakInformatieObjectenRequest()
-                            "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleDocumentRequest()
-                            "/zaken/api/v1/rollen" -> handleZaakRollenRequest()
-                            "/besluiten/api/v1/besluiten" -> handleBesluitenRequest()
-                            "/besluiten/api/v1/besluitinformatieobjecten" -> handleBesluitDocumentenRequest()
-                            "/zaken/api/v1/substatussen" -> handleSubStatusListRequest()
-                            "/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleResultaatRequest()
-                            "/catalogi/api/v1/resultaattypen/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> handleResultaatTypeRequest()
-                            else -> MockResponse().setResponseCode(404)
+
+                            "/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6" -> {
+                                handleStatusRequest()
+                            }
+
+                            "/zaken/api/v1/statussen" -> {
+                                handleStatusListRequest()
+                            }
+
+                            "/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b" -> {
+                                handleZaakTypeRequest()
+                            }
+
+                            "/catalogi/api/v1/statustypen" -> {
+                                handleStatusTypenRequest()
+                            }
+
+                            "/catalogi/api/v1/statustypen/a4bd90f4-b80c-446b-9f68-62c5b39298ff" -> {
+                                handleStatusTypeRequest()
+                            }
+
+                            "/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> {
+                                handleZaakRequest()
+                            }
+
+                            "/zaken/api/v1/zaakinformatieobjecten" -> {
+                                handleZaakInformatieObjectenRequest()
+                            }
+
+                            "/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> {
+                                handleDocumentRequest()
+                            }
+
+                            "/zaken/api/v1/rollen" -> {
+                                handleZaakRollenRequest()
+                            }
+
+                            "/besluiten/api/v1/besluiten" -> {
+                                handleBesluitenRequest()
+                            }
+
+                            "/besluiten/api/v1/besluitinformatieobjecten" -> {
+                                handleBesluitDocumentenRequest()
+                            }
+
+                            "/zaken/api/v1/substatussen" -> {
+                                handleSubStatusListRequest()
+                            }
+
+                            "/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> {
+                                handleResultaatRequest()
+                            }
+
+                            "/catalogi/api/v1/resultaattypen/095be615-a8ad-4c33-8e9c-c7612fbf6c9f" -> {
+                                handleResultaatTypeRequest()
+                            }
+
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }
@@ -1498,8 +1540,9 @@ internal class ZaakQueryIT(
         return mockResponse(body)
     }
 
-    fun mockResponse(body: String): MockResponse {
-        return MockResponse().addHeader("Content-Type", "application/json; charset=utf-8").setResponseCode(200)
+    fun mockResponse(body: String): MockResponse =
+        MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(200)
             .setBody(body)
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 object Dependencies {
     val everitJsonSchema by lazy { "com.github.erosb:everit-json-schema:${Versions.everitJsonSchema}" }
     val jsonPath by lazy { "com.jayway.jsonpath:json-path:${Versions.jsonPath}" }
@@ -27,14 +26,14 @@ object Dependencies {
 
     val commonsIo by lazy { "commons-io:commons-io:${Versions.commonsIo}" }
     val commonsCodec by lazy { "commons-codec:commons-codec:${Versions.commonsCodec}" }
-    val apacheCommons by lazy { "org.apache.commons:commons-lang3:${Versions.apacheCommons}"}
-    val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJavaScalars}"}
+    val apacheCommons by lazy { "org.apache.commons:commons-lang3:${Versions.apacheCommons}" }
+    val graphqlJavaExtendedScalars by lazy { "com.graphql-java:graphql-java-extended-scalars:${Versions.graphqlJavaScalars}" }
 
     val jacksonKotlinModule by lazy { "tools.jackson.module:jackson-module-kotlin" }
-    val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}"}
+    val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}" }
     val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${Versions.springCloud}" }
     val springCloudStreamBinderRabbit by lazy { "org.springframework.cloud:spring-cloud-stream-binder-rabbit:${Versions.springCloud}" }
-    val springBootStarter by lazy {"org.springframework.boot:spring-boot-starter"}
-    val springWebFlux by lazy {"org.springframework.boot:spring-boot-starter-webflux"}
-    val springBootWebClient by lazy {"org.springframework.boot:spring-boot-starter-webclient"}
+    val springBootStarter by lazy { "org.springframework.boot:spring-boot-starter" }
+    val springWebFlux by lazy { "org.springframework.boot:spring-boot-starter-webflux" }
+    val springBootWebClient by lazy { "org.springframework.boot:spring-boot-starter-webclient" }
 }

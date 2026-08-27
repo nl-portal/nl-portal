@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 Ritense BV, the Netherlands.
+ * Copyright 2015-2024 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,8 @@ class ZaakDocumentResource(
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied")
         }
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(
                 HttpHeaders().apply {
                     set(
@@ -63,8 +64,7 @@ class ZaakDocumentResource(
                         FilenameSanitizer.encodeForContentDisposition(document.bestandsnaam),
                     )
                 },
-            )
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            ).contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(content)
     }
 

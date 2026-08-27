@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nl.nlportal.documentenapi.service
 
 import java.time.LocalDate
@@ -24,23 +39,18 @@ class DocumentenApiService(
     suspend fun getDocument(
         documentId: UUID,
         documentApi: String,
-    ): Document {
-        return documentenApiClient.getDocument(documentId, documentApi)
-    }
+    ): Document = documentenApiClient.getDocument(documentId, documentApi)
 
-    suspend fun getDocument(documentUrl: String): Document {
-        return documentenApiClient.getDocument(
+    suspend fun getDocument(documentUrl: String): Document =
+        documentenApiClient.getDocument(
             extractId(documentUrl),
             documentenApisConfigProperties.getConfigForDocumentUrl(documentUrl),
         )
-    }
 
     fun getDocumentContentStreaming(
         documentId: UUID,
         documentApi: String,
-    ): Flow<DataBuffer> {
-        return documentenApiClient.getDocumentContentStream(documentId, documentApi)
-    }
+    ): Flow<DataBuffer> = documentenApiClient.getDocumentContentStream(documentId, documentApi)
 
     fun getDocumentContentStreaming(informatieobejctUrl: String): Flow<DataBuffer> {
         val informatieObjectId = extractId(informatieobejctUrl)
@@ -56,7 +66,8 @@ class DocumentenApiService(
         informatieobjecttype: String? = null,
     ): Document {
         val auteur =
-            ReactiveSecurityContextHolder.getContext()
+            ReactiveSecurityContextHolder
+                .getContext()
                 .map { (it.authentication as PortalAuthentication).userId }
                 .awaitSingleOrNull() ?: "valtimo"
         val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
@@ -92,10 +103,9 @@ class DocumentenApiService(
 
     fun filterDocuments(
         documents: List<Document>,
-    ): List<Document> {
-        return documents.filter { document ->
+    ): List<Document> =
+        documents.filter { document ->
             document.status in documentenApisConfigProperties.statusWhitelist &&
-                    document.vertrouwelijkheidaanduiding in documentenApisConfigProperties.vertrouwelijkheidsaanduidingWhitelist
+                document.vertrouwelijkheidaanduiding in documentenApisConfigProperties.vertrouwelijkheidsaanduidingWhitelist
         }
-    }
 }

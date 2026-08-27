@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import io.spring.gradle.dependencymanagement.org.codehaus.plexus.interpolation.os.Os.FAMILY_MAC
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -50,6 +65,17 @@ plugins {
     signing
 }
 
+spotless {
+    kotlinGradle {
+        target("*.gradle.kts", "gradle/*.gradle.kts")
+        ktlint()
+        licenseHeaderFile(
+            rootProject.file("licenses/kts.template"),
+            "\\w.*",
+        )
+    }
+}
+
 allprojects {
     repositories {
         mavenCentral()
@@ -80,16 +106,18 @@ subprojects {
         apply(plugin = "signing")
     }
 
-    if (project.findProperty("isLib") != null || project.findProperty("isApp") != null) {
-        configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-            kotlin {
-                ktlint()
-                // by default the target is every '.kt' and '.kts` file in the java sourcesets
-                licenseHeaderFile("licenseHeaderFile.template") // or licenseHeaderFile.template
-            }
-            kotlinGradle {
-                target("*.gradle.kts") // default target for kotlinGradle
-            }
+    configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+        kotlin {
+            ktlint()
+            licenseHeaderFile(rootProject.file("licenses/kt.template"))
+        }
+        kotlinGradle {
+            target("*.gradle.kts", "gradle/*.gradle.kts")
+            ktlint()
+            licenseHeaderFile(
+                rootProject.file("licenses/kts.template"),
+                "\\w.*",
+            )
         }
     }
 
@@ -141,7 +169,13 @@ subprojects {
         repositories {
             maven {
                 name = "Sonatype"
-                url = uri(project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path)
+                url =
+                    uri(
+                        project.layout.buildDirectory
+                            .dir(sonatypeCentralStagingDir)
+                            .get()
+                            .asFile.path,
+                    )
             }
         }
 
@@ -173,7 +207,7 @@ subprojects {
         properties {
             property(
                 "sonar.coverage.jacoco.xmlReportPaths",
-                "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml"
+                "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml",
             )
         }
     }
@@ -214,9 +248,7 @@ tasks.bootJar {
     enabled = false
 }
 
-fun getSigningKey(signingKeyBase64: String): ByteArray {
-    return decode(signingKeyBase64.subSequence(0, signingKeyBase64.length))
-}
+fun getSigningKey(signingKeyBase64: String): ByteArray = decode(signingKeyBase64.subSequence(0, signingKeyBase64.length))
 
 tasks.withType<PublishToMavenRepository> {
     enabled = false

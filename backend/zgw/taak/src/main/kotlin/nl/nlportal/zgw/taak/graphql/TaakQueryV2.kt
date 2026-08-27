@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ class TaakQueryV2(
         @Argument zaakUUID: UUID? = null,
         @Argument status: TaakStatus? = null,
         @Argument title: String? = null,
-    ): TaakPageV2 {
-        return taskService.getTaken(
+    ): TaakPageV2 =
+        taskService.getTaken(
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
             authentication = authentication,
@@ -45,16 +45,14 @@ class TaakQueryV2(
             status = status,
             title = title,
         )
-    }
 
     @QueryMapping
     suspend fun getTaakByIdV2(
         @Argument id: UUID,
         authentication: CommonGroundAuthentication,
-    ): TaakV2? {
-        return taskService.getTaakByIdV2(
+    ): TaakV2? =
+        taskService.getTaakByIdV2(
             id = id,
-            authentication = authentication
+            authentication = authentication,
         )
-    }
 }

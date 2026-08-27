@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,10 @@ class TaakMutationV2(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
         @Argument submission: Any,
-    ): TaakV2 {
-        return taskService.submitTaak(
+    ): TaakV2 =
+        taskService.submitTaak(
             id = id,
             submission = submission,
             authentication = authentication,
         )
-    }
 }

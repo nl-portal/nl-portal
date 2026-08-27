@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nl.nlportal.besluiten.graphql
 
 import nl.nlportal.besluiten.domain.Besluit
@@ -15,34 +30,30 @@ import org.springframework.stereotype.Controller
 @Controller
 class BesluitenQuery(
     val besluitenService: BesluitenService,
-    val catalogiApiService: CatalogiApiService
+    val catalogiApiService: CatalogiApiService,
 ) {
     @SchemaMapping(typeName = "Besluit", field = "audittrails")
     suspend fun auditTrails(
         authentication: CommonGroundAuthentication,
-        besluit: Besluit
-    ): List<BesluitAuditTrail> {
-        return besluitenService.getBesluitAuditTrails(CoreUtils.extractId(besluit.url))
-    }
+        besluit: Besluit,
+    ): List<BesluitAuditTrail> = besluitenService.getBesluitAuditTrails(CoreUtils.extractId(besluit.url))
 
     @SchemaMapping(typeName = "Besluit", field = "documenten")
     suspend fun documenten(
         authentication: CommonGroundAuthentication,
-        besluit: Besluit
-    ): List<Document> {
-        return besluitenService.getBesluitDocumenten(
+        besluit: Besluit,
+    ): List<Document> =
+        besluitenService.getBesluitDocumenten(
             authentication = authentication,
-            besluit = besluit.url
+            besluit = besluit.url,
         )
-    }
 
     @SchemaMapping(typeName = "Besluit", field = "besluittype")
     suspend fun besluittype(
         authentication: CommonGroundAuthentication,
-        besluit: Besluit
-    ): BesluitType {
-        return catalogiApiService.getBesluitType(
-            besluitTypeUrl = besluit.besluittype
+        besluit: Besluit,
+    ): BesluitType =
+        catalogiApiService.getBesluitType(
+            besluitTypeUrl = besluit.besluittype,
         )
-    }
 }

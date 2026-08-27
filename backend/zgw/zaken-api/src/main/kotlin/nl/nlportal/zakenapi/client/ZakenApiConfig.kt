@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2025 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.util.UUID
 
 @ConfigurationProperties(prefix = "nl-portal.config.zakenapi")
 class ZakenApiConfig {
-
     var enabled: Boolean = false
     var properties: ZakenApiConfigProperties = ZakenApiConfigProperties()
 
