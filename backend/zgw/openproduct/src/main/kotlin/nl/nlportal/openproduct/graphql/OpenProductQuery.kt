@@ -101,21 +101,25 @@ class OpenProductQuery(
 
     @SchemaMapping(typeName = "OpenProductProduct", field = "taken")
     suspend fun taken(
+        authentication: CommonGroundAuthentication,
         openProductProduct: OpenProductProduct,
     ): List<TaakV2>? =
         openProductProduct.taken?.let {
             openProductService.getProductTaken(
-                it,
+                authentication = authentication,
+                taken = it,
             )
         }
 
     @SchemaMapping(typeName = "OpenProductProduct", field = "acties")
     suspend fun acties(
+        authentication: CommonGroundAuthentication,
         openProductProduct: OpenProductProduct,
     ): List<OpenProductActie> = openProductService.getProductActies(openProductProduct.producttype.uuid)
 
     @SchemaMapping(typeName = "OpenProductProduct", field = "decisions")
     suspend fun decisions(
+        authentication: CommonGroundAuthentication,
         openProductProduct: OpenProductProduct,
     ): List<ObjectNode> {
         val result =
@@ -128,6 +132,7 @@ class OpenProductQuery(
 
     @SchemaMapping(typeName = "OpenProductProduct", field = "documenten")
     suspend fun documenten(
+        authentication: CommonGroundAuthentication,
         openProductProduct: OpenProductProduct,
     ): List<Document>? =
         openProductService.getOpenProductDocumenten(
@@ -136,6 +141,7 @@ class OpenProductQuery(
 
     @SchemaMapping(typeName = "OpenProductProduct", field = "content")
     suspend fun content(
+        authentication: CommonGroundAuthentication,
         openProductProduct: OpenProductProduct,
     ): List<OpenProductContentElement>? = openProductService.getProductTypeContent(productTypeId = openProductProduct.producttype.uuid)
 }

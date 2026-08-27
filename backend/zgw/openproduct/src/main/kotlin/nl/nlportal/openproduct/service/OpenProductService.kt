@@ -77,6 +77,7 @@ import nl.nlportal.zgw.taak.autoconfigure.TaakConfig.TaakConfigProperties
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
 import nl.nlportal.zgw.taak.domain.TaakV2
 import nl.nlportal.zgw.taak.graphql.TaakPageV2
+import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -86,10 +87,10 @@ class OpenProductService(
     private val openProductClient: OpenProductClient,
     private val openProductTypeClient: OpenProductTypeClient,
     private val objectsApiTaskConfigProperties: TaakConfigProperties,
-    private val objectsApiClient: ObjectsApiClient,
     private val zakenApiService: ZakenApiService,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     private val documentenApiService: DocumentenApiService,
+    private val taakService: TaakService,
 ) {
     /**
      * Get published themas
@@ -1013,12 +1014,11 @@ class OpenProductService(
                 themaId = id,
                 themas = themas,
             )
-        val taken =
-            findTakenByIdentification(
-                authentication = authentication,
-                pageNumber = 1,
-                pageSize = pageSize ?: 999,
-            )
+        val taken = taakService.getTakenV2(
+            authentication = authentication,
+            pageNumber = 1,
+            pageSize = pageSize ?: 999,
+        ).content
 
         // when no tasks are found, just return immediately
         if (taken.isEmpty()) {
@@ -1086,21 +1086,24 @@ class OpenProductService(
      * @return: list of taken
      */
     suspend fun getProductTaken(
+        authentication: CommonGroundAuthentication,
         taken: List<OpenProductUrl>,
     ): List<TaakV2> {
-        val takenList = mutableListOf<TaakV2>()
+        val takenList = mutableSetOf<TaakV2>()
         taken.forEach {
             try {
-                val taakObject = objectsApiClient.getObjectById<TaakObjectV2>(CoreUtils.extractId(it.url!!).toString())
-                if (taakObject != null) {
-                    takenList.add(TaakV2.fromObjectsApi(taakObject))
-                }
+                takenList.add(
+                    taakService.getTaakByIdV2(
+                        authentication = authentication,
+                        id= extractId(it.url!!),
+                    )
+                )
             } catch (e: Exception) {
                 logger.error { "Error getting product taken: " + e.message }
             }
         }
 
-        return takenList
+        return takenList.toList()
     }
 
     /**
@@ -1228,74 +1231,6 @@ class OpenProductService(
 
         return collectedThemas.toList()
     }
-
-    /**
-     * Find taken by authentication, get the taken of the authenticated user
-     * @param: productTypeId, uuid of producttype
-     * @param: pageNumber, page number for pagination
-     * @param: pageSize, page size for pagination
-     * @return: list of taken
-     */
-    private suspend fun findTakenByIdentification(
-        authentication: CommonGroundAuthentication,
-        pageNumber: Int,
-        pageSize: Int,
-    ): List<TaakV2> {
-        try {
-            val objectSearchParameters =
-                mutableListOf(
-                    ObjectSearchParameter(
-                        "identificatie__type",
-                        nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO,
-                        authentication.userType,
-                    ),
-                    ObjectSearchParameter(
-                        "identificatie__value",
-                        nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO,
-                        authentication.userId,
-                    ),
-                    ObjectSearchParameter("status", nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO, "open"),
-                )
-
-            authenticationMachtigingsDienstService.taakTypes(authentication)?.let {
-                objectSearchParameters.add(ObjectSearchParameter("eigenaar", Comparator.IN_LIST, it.joinToString("|")))
-            }
-
-            return getObjectsApiObjectResultPage<TaakObjectV2>(
-                objectsApiTaskConfigProperties.objectTypeUrl,
-                objectSearchParameters,
-                pageNumber,
-                pageSize,
-            ).let { resultPage ->
-                TaakPageV2.fromResultPage(pageNumber, pageSize, resultPage)
-            }.content
-        } catch (e: Exception) {
-            logger.error { "Error getting thema taken: " + e.message }
-        }
-        return emptyList()
-    }
-
-    /**
-     * Get objecten from Objects API
-     * @param: objectTypeUrl, url of the objecttype
-     * @param: searchParameters, the query search parameter
-     * @param: pageNumber, page number for pagination
-     * @param: pageSize, page size for pagination
-     * @return: Results of objects
-     */
-    private suspend inline fun <reified T> getObjectsApiObjectResultPage(
-        objectTypeUrl: String,
-        searchParameters: List<ObjectSearchParameter>,
-        pageNumber: Int,
-        pageSize: Int,
-    ): nl.nlportal.zgw.objectenapi.domain.ResultPage<ObjectsApiObject<T>> =
-        objectsApiClient.getObjects<T>(
-            objectSearchParameters = searchParameters,
-            objectTypeUrl = objectTypeUrl,
-            page = pageNumber,
-            pageSize = pageSize,
-            ordering = "-record__startAt",
-        )
 
     /**
      * Search themas from subthema all the way up to the hoofd thema
