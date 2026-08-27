@@ -1014,11 +1014,13 @@ class OpenProductService(
                 themaId = id,
                 themas = themas,
             )
-        val taken = taakService.getTakenV2(
-            authentication = authentication,
-            pageNumber = 1,
-            pageSize = pageSize ?: 999,
-        ).content
+        val taken =
+            taakService
+                .getTakenV2(
+                    authentication = authentication,
+                    pageNumber = 1,
+                    pageSize = pageSize ?: 999,
+                ).content
 
         // when no tasks are found, just return immediately
         if (taken.isEmpty()) {
@@ -1095,8 +1097,8 @@ class OpenProductService(
                 takenList.add(
                     taakService.getTaakByIdV2(
                         authentication = authentication,
-                        id= extractId(it.url!!),
-                    )
+                        id = extractId(it.url!!),
+                    ),
                 )
             } catch (e: Exception) {
                 logger.error { "Error getting product taken: " + e.message }
