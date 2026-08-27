@@ -1321,12 +1321,12 @@ class OpenProductService(
             is BedrijfAuthentication -> {
                 val vestigingsNummer = authentication.getVestigingsNummer()
                 if (vestigingsNummer != null) {
-                    product.eigenaren.firstOrNull { it.kvkNummer == authentication.userId } != null
-                } else {
                     product.eigenaren.firstOrNull {
                         it.kvkNummer == authentication.userId &&
-                            it.vestigingsnummer == vestigingsNummer
+                                it.vestigingsnummer == vestigingsNummer
                     } != null
+                } else {
+                    product.eigenaren.firstOrNull { it.kvkNummer == authentication.userId } != null
                 }
             }
 
