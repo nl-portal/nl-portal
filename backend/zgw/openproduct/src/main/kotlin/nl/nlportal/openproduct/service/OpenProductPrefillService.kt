@@ -58,7 +58,7 @@ class OpenProductPrefillService(
                 id = productId,
             )
 
-        if(product == null) {
+        if (product == null) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Product kan niet gevonden worden voor $productId")
         }
 
