@@ -1,9 +1,10 @@
-import { ReactNode } from "react";
+import React from "react";
 
 export type NavigationItem = {
   titleTranslationKey: string;
   path: string;
-  icon: ReactNode;
+  icon: React.ElementType;
   hasMessagesCount?: boolean;
   themeSlug?: string;
+  showInQuickLinks?: boolean;
 };

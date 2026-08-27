@@ -28,6 +28,7 @@ const Menu = () => {
       {navigationItems.map((array, index) => (
         <SideNavigationList key={`sidenav-list-${index}`}>
           {array.map((item) => {
+            const Icon = item.icon;
             const current = item === currentNavigationItem;
             const className = `denhaag-side-navigation__link ${
               current && "denhaag-side-navigation__link--current"
@@ -36,7 +37,7 @@ const Menu = () => {
             return (
               <SideNavigationItem key={item.path}>
                 <Link className={className} hrefLang={hrefLang} to={item.path}>
-                  {item.icon}
+                  <Icon />
                   <SideNavigationLinkLabel>
                     <FormattedMessage
                       id={`pageTitles.${item.titleTranslationKey}`}

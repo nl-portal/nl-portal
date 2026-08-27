@@ -21,6 +21,7 @@ import { useNavigate, useOutletContext } from "react-router";
 import AppContext from "../contexts/AppContext";
 import ProductsList from "../components/ProductsList";
 import { DEFAULT_LOCALES } from "@nl-portal/nl-portal-localization";
+import QuickLinks from "../components/QuickLinks";
 
 interface OverviewPageProps {
   showNoEmailAlert?: boolean;
@@ -155,6 +156,7 @@ const OverviewPage = ({
         </PageHeader>
       )}
       {children}
+      <QuickLinks />
       {Boolean(fetchTasksLength) && (
         <TasksList
           loading={loading}
