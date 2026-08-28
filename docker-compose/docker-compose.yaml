@@ -1,3 +1,5 @@
+name: nl-portal-docker-compose
+
 services:
     #keycloak
 

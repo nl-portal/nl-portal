@@ -26,7 +26,17 @@ strictPeerDependencies: false
 # Transitive-dependency pins carried over from packages/app. pnpm only honours `overrides` at the
 # workspace root, so they live here now that the app is built from the workspace (frontend/Dockerfile)
 # instead of standalone. Prefer bumping the owning direct dependency; these are a stopgap.
+# React-context singletons. The libraries declare these as peerDependencies (ranges, consumer-facing)
+# and mirror those ranges in devDependencies. Once the apps consume the libraries via workspace:*
+# instead of published tarballs, those devDependency ranges resolve to their own copies, so a lib and
+# an app end up with two Reacts, two IntlProviders, two Routers. Pinning one version each here
+# collapses them without changing the published peerDependency ranges.
 overrides:
+  react: 19.2.7
+  react-dom: 19.2.7
+  react-intl: 7.1.14
+  react-router: 7.16.0
+  "@apollo/client": 3.13.8
   "@babel/core": 7.29.6
   esbuild: 0.28.1
   rollup: 4.59.0

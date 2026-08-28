@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+**/build
+!packages/app/build
+**/coverage
+**/.turbo
+**/*.tsbuildinfo
+.pnpm-store
+.vscode
+.idea
+**/.DS_Store
+Thumbs.db
+Dockerfile
+.dockerignore
