@@ -1,5 +1,5 @@
 query {
-    getProductVerbruiksObjecten(productId: "7d9cd6c2-8147-46f2-9ae9-c67e8213c500") {
+    getProductVerbruiksObjecten(productId: "2d725c07-2f26-4705-8637-438a42b5ac2d") {
             id
             soort,
             productInstantie,

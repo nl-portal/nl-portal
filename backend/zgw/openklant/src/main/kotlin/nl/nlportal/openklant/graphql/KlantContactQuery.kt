@@ -35,16 +35,18 @@ class KlantContactQuery(
         @Argument identificatorId: UUID? = null,
     ): List<OpenKlant2Klantcontact> =
         openklant2Service.findKlantContacten(
-            authentication = authentication, // dfe.graphQlContext[AUTHENTICATION_KEY],
+            authentication = authentication,
             identificatorType = identificatorType,
             identificatorId = identificatorId,
         )
 
     @QueryMapping
     suspend fun getUserKlantContact(
+        authentication: CommonGroundAuthentication,
         @Argument klantContactId: UUID,
     ): OpenKlant2Klantcontact? =
         openklant2Service.findKlantContact(
+            authentication = authentication,
             klantContactId = klantContactId,
         )
 }

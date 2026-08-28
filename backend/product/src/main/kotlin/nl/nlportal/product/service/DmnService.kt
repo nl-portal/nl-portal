@@ -17,6 +17,7 @@ package nl.nlportal.product.service
 
 import com.jayway.jsonpath.JsonPath
 import io.github.oshai.kotlinlogging.KotlinLogging
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.product.client.DmnClient
 import nl.nlportal.product.domain.BeslisTabelConfiguration
@@ -134,6 +135,7 @@ class DmnService(
         productTypeId: UUID? = null,
         productName: String,
         dmnVariables: Map<String, DmnVariable>? = null,
+        authentication: CommonGroundAuthentication,
     ): List<Map<String, DmnResponse>> {
         val variablesMapping = mutableMapOf<String, DmnVariable>()
         // add dmnVariables
@@ -157,7 +159,7 @@ class DmnService(
 
         // loop through the sources and get the Object as Json and map with the variables
         sources?.forEach {
-            val source = productService.getSourceAsJson(it.key, it.value)
+            val source = productService.getSourceAsJson(it.key, it.value, authentication)
 
             if (source == null) {
                 logger.warn { "Could not find objects for key ${it.key} with uuid ${it.value}" }
