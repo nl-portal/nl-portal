@@ -1,0 +1,58 @@
+name: _validate-build
+
+on:
+    workflow_call:
+        inputs:
+            javaVersion:
+                type: string
+                default: "21"
+            nodeVersion:
+                type: string
+                default: "24"
+            runBackend:
+                description: "Build+test the backend stack."
+                type: boolean
+                default: true
+            runFrontend:
+                description: "Build+test the frontend stack."
+                type: boolean
+                default: true
+
+permissions:
+    contents: read
+
+jobs:
+    build-be:
+        if: ${{ inputs.runBackend }}
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            -   name: Set up JDK ${{ inputs.javaVersion }}
+                uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+                with:
+                    java-version: ${{ inputs.javaVersion }}
+                    distribution: temurin
+            -   name: Set up Gradle
+                uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6.3.0
+            -   name: Build with Gradle
+                working-directory: backend
+                run: ./gradlew build
+
+    build-fe:
+        if: ${{ inputs.runFrontend }}
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            -   name: Set up Node.js ${{ inputs.nodeVersion }}
+                uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+                with:
+                    node-version: ${{ inputs.nodeVersion }}
+            -   name: Install
+                working-directory: frontend
+                run: npm install -g pnpm@11 && pnpm install
+            -   name: Build
+                working-directory: frontend
+                run: pnpm -r build
+            -   name: Test
+                working-directory: frontend
+                run: pnpm test

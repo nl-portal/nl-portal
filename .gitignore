@@ -1,0 +1,80 @@
+# =============================================================================
+# NL Portal monorepo - root .gitignore
+#
+# Covers the whole tree (backend/, frontend/, docker-compose/, documentation/).
+# Stack-specific ignores also live in backend/.gitignore, frontend/.gitignore
+# and each frontend package - this root file is additive and keeps build
+# output, tooling caches and local/editor files out of the commit window.
+# =============================================================================
+
+# --- Build output (Gradle + Node/Vite) -------------------------------------
+# `build/` (trailing slash) only matches directories, so files like
+# build.gradle(.kts) are safe. Keep Gradle's committed source-set build dirs.
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+.gradle/
+.kotlin/
+dist/
+dist-ssr/
+*.tsbuildinfo
+
+# --- Package managers / dependency caches -----------------------------------
+node_modules/
+.pnpm-store/
+
+# --- Test / coverage / reports ----------------------------------------------
+coverage/
+.nyc_output/
+
+# --- Publishing & release staging -------------------------------------------
+# JReleaser + Sonatype staging land under build/ (already ignored); these
+# catch any tool that writes them at another level.
+**/sonatypeCentralStaging/
+**/staging-deploy/
+**/jreleaser/
+*.sbom
+
+# --- Logs -------------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- OS files ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# --- IDE / editor ------------------------------------------------------------
+# Ignore all dot-prefixed IDE dirs/files, but keep the shared, committed
+# editor config (frontend/.vscode/settings.json is tracked on purpose).
+.idea/
+.fleet/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.local
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# --- Local environment / secrets --------------------------------------------
+# Protect against committing dot-env files (they may hold local secrets).
+# NOTE: the committed compose/module env files are NOT ignored here -
+#   * docker-compose/imports/**/*.env  -> named `backend.env`/`frontend.env`
+#     (no leading dot), so the patterns below never match them.
+#   * backend/case/.env and backend/form/.env ARE `.env` files that belong in
+#     the repo, so they are re-included explicitly.
+.env
+.env.*
+!.env.example
+!.env.*.example
+!.env.template
+!backend/case/.env
+!backend/form/.env

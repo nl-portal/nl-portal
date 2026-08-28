@@ -7,8 +7,7 @@ import java.net.URI
 import kotlin.io.encoding.Base64.Default.decode
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-val sonatypeCentralStagingDir = "sonatypeCentralStaging"
-val projectsExcludedFromPublish = setOf("app", "gradle", "cve-report", "license-report", "zgw")
+val sonatypeCentralStagingDir: String = project.property("sonatypeCentralStagingDir").toString()
 
 plugins {
     java
@@ -48,8 +47,6 @@ plugins {
 
     id("org.owasp.dependencycheck") version "12.1.8"
 
-    id("org.jreleaser") version "1.19.0"
-
     `maven-publish`
     signing
 }
@@ -62,54 +59,6 @@ allprojects {
         maven(URI("https://app.camunda.com/nexus/content/groups/public"))
         maven(URI("https://s01.oss.sonatype.org/content/groups/staging/"))
         maven(URI("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-    }
-}
-
-jreleaser {
-    project {
-        java {
-            groupId.set("nl.nl-portal")
-        }
-    }
-    signing {
-        active.set(org.jreleaser.model.Active.ALWAYS)
-        armored.set(true)
-    }
-
-    release {
-        // At least one releaser must be configured, but we only want to /deploy/ to Maven Central for now
-        github {
-            skipTag.set(true)
-            skipRelease.set(true)
-        }
-    }
-
-    deploy {
-        maven {
-            mavenCentral {
-                register("sonatype") {
-                    active.set(org.jreleaser.model.Active.RELEASE)
-                    url.set("https://central.sonatype.com/api/v1/publisher")
-                    subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
-                        stagingRepository(project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path)
-                    }
-                }
-            }
-
-            nexus2 {
-                register("snapshot-deploy") {
-                    active.set(org.jreleaser.model.Active.SNAPSHOT)
-                    snapshotUrl.set("https://central.sonatype.com/repository/maven-snapshots/")
-                    applyMavenCentralRules.set(true)
-                    snapshotSupported.set(true)
-                    closeRepository.set(true)
-                    releaseRepository.set(true)
-                    subprojects.filter { it.name !in projectsExcludedFromPublish }.forEach { project ->
-                        stagingRepository(project.layout.buildDirectory.dir(sonatypeCentralStagingDir).get().asFile.path)
-                    }
-                }
-            }
-        }
     }
 }
 

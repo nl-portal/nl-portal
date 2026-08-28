@@ -1,0 +1,54 @@
+name: CI
+
+on:
+    pull_request:
+        branches:
+            - main
+            - "release/*.x"
+            - "rc/**"
+
+concurrency:
+    group: ci-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+jobs:
+    changes:
+        runs-on: ubuntu-latest
+        outputs:
+            backend: ${{ steps.filter.outputs.backend }}
+            frontend: ${{ steps.filter.outputs.frontend }}
+        steps:
+            -   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+            -   uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+                id: filter
+                with:
+                    filters: |
+                        backend:
+                            - 'backend/**'
+                        frontend:
+                            - 'frontend/**'
+
+    validate:
+        needs: changes
+        uses: ./.github/workflows/_validate-build.yml
+        with:
+            nodeVersion: "22"
+            runBackend: ${{ needs.changes.outputs.backend == 'true' }}
+            runFrontend: ${{ needs.changes.outputs.frontend == 'true' }}
+
+    ci-required:
+        needs: [changes, validate]
+        if: always()
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Aggregate result
+                env:
+                    VALIDATE_RESULT: ${{ needs.validate.result }}
+                run: |
+                    echo "::notice::validate result = ${VALIDATE_RESULT}"
+                    if [ "${VALIDATE_RESULT}" = "failure" ] || [ "${VALIDATE_RESULT}" = "cancelled" ]; then
+                      exit 1
+                    fi

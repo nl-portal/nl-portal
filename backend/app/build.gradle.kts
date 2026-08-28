@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2026 Ritense BV, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,31 +19,43 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":zgw:openklant"))
-    implementation(project(":form"))
-    implementation(project(":haalcentraal-hr"))
-    implementation(project(":haalcentraal2"))
-    implementation(project(":zgw:taak"))
+    implementation(project(":core"))
+    implementation(project(":graphql"))
+    implementation(project(":zgw:common-ground-authentication"))
+    implementation(project(":zgw:catalogi-api"))
     implementation(project(":zgw:documenten-api"))
+    implementation(project(":zgw:objectenapi"))
+    implementation(project(":zgw:openklant"))
+    implementation(project(":zgw:zaken-api"))
     implementation(project(":zgw:berichten"))
     implementation(project(":zgw:besluiten"))
-    implementation(project(":payment"))
-    implementation(project(":payment-direct"))
-    implementation(project(":zgw:zaken-api"))
+    implementation(project(":zgw:taak"))
     implementation(project(":zgw:openproduct"))
+    implementation(project(":payment-direct"))
+    implementation(project(":haalcentraal-hr"))
+    implementation(project(":haalcentraal2"))
+    implementation(project(":form"))
     implementation(project(":product"))
 
+    implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.postgresql:postgresql")
 }
 
-tasks.getByName<Jar>("jar") {
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    enabled = true
+    archiveFileName.set("app.jar")
+    mainClass.set("nl.nlportal.app.PortalApplicationKt")
+}
+
+tasks.named<Jar>("jar") {
     enabled = false
 }
 
 tasks.withType<PublishToMavenRepository>().configureEach {
     enabled = false
 }
+
 tasks.withType<PublishToMavenLocal>().configureEach {
     enabled = false
 }

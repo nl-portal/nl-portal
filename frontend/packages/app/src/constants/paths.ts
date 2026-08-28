@@ -11,7 +11,7 @@ export const paths: Paths = {
   message: (id = ":id") => `/berichten/bericht/${id}`,
   themeOverview: (slug = ":slug") => `/${slug}`,
   themeList: (slug = ":slug", productTypeSlug = ":productTypeSlug") =>
-      `/${slug}/${productTypeSlug}/lijst`,
+    `/${slug}/${productTypeSlug}/lijst`,
   themeDetails: (slug = ":slug", id = ":id") => `/${slug}/${id}`,
   themeHistory: (slug = ":slug", id = ":id") => `/${slug}/${id}/geschiedenis`,
   themeMutate: (slug = ":slug", id = ":id") => `/${slug}/${id}/wijzigen`,

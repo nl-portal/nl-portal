@@ -27,6 +27,7 @@ plugins {
 
 include(
     "app",
+    "app-dev",
     "core",
     "gradle:cve-report",
     "gradle:license-report",
