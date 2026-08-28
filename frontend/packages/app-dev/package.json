@@ -1,7 +1,7 @@
 {
-  "name": "@nl-portal/nl-portal-app",
+  "name": "nl-portal-app-dev",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "author": "Ritense",
   "license": "EUPL-1.2",
   "type": "module",
@@ -41,5 +41,9 @@
     "vite-bundle-visualizer": "^1.2.1",
     "vitest": "^4.0.15",
     "wait-on": "^9.0.3"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=11.0.0 <12"
   }
 }
