@@ -1,0 +1,45 @@
+{
+  "name": "@nl-portal/nl-portal-app",
+  "private": true,
+  "version": "1.0.0",
+  "author": "Ritense",
+  "license": "EUPL-1.2",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm wait && vite --port 3000 --mode development",
+    "build": "pnpm wait && tsc && vite build",
+    "preinstall": "npx only-allow pnpm",
+    "preview": "vite preview",
+    "clean": "rimraf dist",
+    "wait": "wait-on ../api/dist/index.js && wait-on ../authentication/dist/index.js && wait-on ../localization/dist/index.js && wait-on ../user-interface/dist/index.js",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gemeente-denhaag/design-tokens": "1.1.0",
+    "@gemeente-denhaag/icons": "4.0.1",
+    "@gemeente-denhaag/link": "4.1.0",
+    "@gemeente-denhaag/status-badge": "^2.0.0",
+    "@nl-portal/nl-portal-api": "workspace:*",
+    "@nl-portal/nl-portal-authentication": "workspace:*",
+    "@nl-portal/nl-portal-localization": "workspace:*",
+    "@nl-portal/nl-portal-user-interface": "workspace:*",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-intl": "^7.1.14",
+    "react-router": "^7.10.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "rimraf": "^6.1.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0",
+    "vite-bundle-visualizer": "^1.2.1",
+    "vitest": "^4.0.15",
+    "wait-on": "^9.0.3"
+  }
+}
