@@ -25,6 +25,10 @@ import { vi } from "vitest";
 // length is set; every other feature stays off so message/product/theme queries
 // remain skipped in tests.
 const featuresResponse = {
+  theme: {
+    logo: "",
+    style: "",
+  },
   properties: {
     custom: "{}",
     messageCountPollingInterval: 30000,
@@ -52,7 +56,6 @@ const featuresResponse = {
     openProductEnabled: false,
     overviewIntroEnabled: false,
     overviewMaintenanceAlertEnabled: false,
-    themeApiEnabled: false,
   },
 };
 
@@ -63,7 +66,7 @@ vi.stubGlobal(
       typeof input === "string"
         ? input
         : ((input as Request).url ?? String(input));
-    if (url.includes("/public/features")) {
+    if (url.includes("/public/frontend")) {
       return Promise.resolve({
         ok: true,
         status: 200,
