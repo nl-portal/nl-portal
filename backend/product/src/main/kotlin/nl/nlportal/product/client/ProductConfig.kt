@@ -21,6 +21,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 class ProductConfig(
     var enabled: Boolean = false,
     var properties: ProductConfigProperties = ProductConfigProperties(),
+    @property:Deprecated(
+        "Verbruiksobject modification is disabled by default as of 3.0.5 and is removed in 4.0.0. " +
+            "Use the openproduct module instead.",
+    )
+    var verbruiksObjectModificationEnabled: Boolean = false,
 ) {
     data class ProductConfigProperties(
         var productTypeUrl: String = "",
