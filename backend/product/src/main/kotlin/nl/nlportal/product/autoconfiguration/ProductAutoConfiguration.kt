@@ -121,6 +121,12 @@ class ProductAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(ProductService::class)
-    @ConditionalOnProperty(prefix = "nl-portal.config.product", name = ["enabled"], havingValue = "true")
+    @ConditionalOnProperty(
+        prefix = "nl-portal.config.product",
+        name = ["enabled", "verbruiks-object-modification-enabled"],
+        havingValue = "true",
+    )
+    @Deprecated("Removed in 4.0.0. Use the openproduct module instead.")
+    @Suppress("DEPRECATION")
     fun productMutation(productService: ProductService): ProductMutation = ProductMutation(productService)
 }

@@ -125,6 +125,32 @@ class OpenKlant2DigitaleAdresMutationIT(
 
     @Test
     @Order(3)
+    @WithBurgerUser("999999999")
+    fun `should not delete DigitaleAdres of another burger`() =
+        runTest {
+            // when
+            val mutation =
+                """
+                mutation {
+                            deleteUserDigitaleAdres(digitaleAdresId: "$testdigitaleAdresUUID")
+                        }
+                """.trimIndent()
+
+            // then
+            httpGraphQlTester
+                .document(mutation)
+                .execute()
+                .errors()
+                .satisfy { errors ->
+                    assertEquals(1, errors.size)
+                    assertTrue(errors[0].message!!.contains("Access denied to this digitale adres"))
+                }
+
+            // that the DigitaleAdres still exists is proven by the next test, which deletes it as its owner
+        }
+
+    @Test
+    @Order(4)
     @WithBurgerUser("296648875")
     fun `should delete existing DigitaleAdres for burger`() =
         runTest {
@@ -156,7 +182,7 @@ class OpenKlant2DigitaleAdresMutationIT(
         }
 
     @Test
-    @Order(4)
+    @Order(5)
     @WithBurgerUser("395823511")
     fun `should create DigitaleAdres for burger zonder partij`() =
         runTest {

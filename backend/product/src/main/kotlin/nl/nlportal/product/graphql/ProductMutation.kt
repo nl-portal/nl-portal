@@ -19,10 +19,20 @@ import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.product.domain.ProductVerbruiksObject
 import nl.nlportal.product.service.ProductService
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
 
+@Deprecated(
+    "Verbruiksobject modification is disabled by default as of 3.0.5 and is removed in 4.0.0. " +
+        "Use the openproduct module instead.",
+)
+@ConditionalOnProperty(
+    prefix = "nl-portal.config.product",
+    name = ["enabled", "verbruiks-object-modification-enabled"],
+    havingValue = "true",
+)
 @Controller
 class ProductMutation(
     private val productService: ProductService,
