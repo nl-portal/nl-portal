@@ -332,8 +332,13 @@ class OpenKlant2Service(
             searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODESOORTOBJECTID to "uuid")
         }
         identificatorType?.let {
-            searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEREGISTER to "open-" + it.name.lowercase())
             searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEOBJECTTYPE to it.name.lowercase())
+        }
+
+        getKlantContactCodeRegister(
+            identificatorType = identificatorType,
+        )?.let {
+            searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEREGISTER to it)
         }
 
         return try {
@@ -495,6 +500,20 @@ class OpenKlant2Service(
                 )
             }
         }
+
+    private fun getKlantContactCodeRegister(
+        identificatorType: OnderwerpObjectIndentificatorType? = null,
+    ): String? {
+        if (openKlantConfigurationProperties.klantContactCodeRegister != null) {
+            return when (identificatorType) {
+                OnderwerpObjectIndentificatorType.PRODUCT -> openKlantConfigurationProperties.klantContactCodeRegister?.product
+                OnderwerpObjectIndentificatorType.ZAAK -> openKlantConfigurationProperties.klantContactCodeRegister?.zaak
+                else -> null
+            }
+        }
+
+        return null
+    }
 
     companion object {
         private val logger = KotlinLogging.logger {}

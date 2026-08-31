@@ -39,5 +39,11 @@ class OpenKlantModuleConfiguration {
         var klantinteractiesApiUrl: URI? = null,
         var token: String? = null,
         var digitalAdressenReferentie: String? = null,
-    )
+        var klantContactCodeRegister: KlantContactCodeRegster? = null,
+    ) {
+        class KlantContactCodeRegster {
+            var zaak: String? = null
+            var product: String? = null
+        }
+    }
 }
