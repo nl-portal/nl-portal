@@ -15,18 +15,19 @@
  */
 package nl.nlportal.core.frontend.web.rest
 
-import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
-import nl.nlportal.core.frontend.service.FrontendFeaturesConfigurationService
+import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
+import nl.nlportal.core.frontend.domain.FrontendData
+import nl.nlportal.core.frontend.service.FrontendConfigurationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping(value = ["/api/public"])
-class FrontendFeaturesConfigurationResource(
-    private val frontendFeaturesConfigurationService: FrontendFeaturesConfigurationService,
+@RequestMapping(value = ["/api/public/frontend"])
+class FrontendConfigurationResource(
+    private val frontendConfigurationService: FrontendConfigurationService,
 ) {
-    @GetMapping(value = ["/features"])
-    fun features(): ResponseEntity<FrontendFeaturesConfigurationProperties> = ResponseEntity.ok().header("Content-Type", "application/json").body(frontendFeaturesConfigurationService.getFeatures())
+    @GetMapping(value = [""])
+    fun features(): ResponseEntity<FrontendData> = ResponseEntity.ok().header("Content-Type", "application/json").body(frontendConfigurationService.getFrontendData())
 }
