@@ -224,7 +224,7 @@ type OpenProductPrijsRegel {
 type OpenProductProduct {
     aanmaakDatum: ZonedDateTime!
     dataobject: JSON
-    documenten: [Document!]!
+    documenten: [Document!]
     eindDatum: Date
     frequentie: OpenProductFrequentie!
     gepubliceerd: Boolean

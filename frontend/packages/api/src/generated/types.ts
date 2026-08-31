@@ -713,9 +713,9 @@ export type DigitaleAdresResponse = {
   referentie: Scalars['String']['output'];
   type: DigitaleAdresType;
   uuid?: Maybe<Scalars['UUID']['output']>;
-  verificatieCodeVerified: Scalars['Boolean']['output'];
+  verificatieCodeVerified?: Maybe<Scalars['Boolean']['output']>;
   verificatieDatum?: Maybe<Scalars['Date']['output']>;
-  verificatieNeeded: Scalars['Boolean']['output'];
+  verificatieNeeded?: Maybe<Scalars['Boolean']['output']>;
   waarde: Scalars['String']['output'];
 };
 
@@ -1614,7 +1614,7 @@ export type OpenProductProduct = {
   content?: Maybe<Array<OpenProductContentElement>>;
   dataobject?: Maybe<Scalars['JSON']['output']>;
   decisions: Array<Scalars['JSON']['output']>;
-  documenten: Array<Document>;
+  documenten?: Maybe<Array<Document>>;
   eindDatum?: Maybe<Scalars['Date']['output']>;
   frequentie: OpenProductFrequentie;
   gepubliceerd?: Maybe<Scalars['Boolean']['output']>;

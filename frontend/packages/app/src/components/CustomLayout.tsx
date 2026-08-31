@@ -25,7 +25,8 @@ import { HeaderLogo } from "./HeaderLogo.tsx";
 
 const CustomLayout = () => {
   const intl = useIntl();
-  const { logoUrl } = useContext(AppContext);
+  const { features } = useContext(AppContext);
+  const logoUrl = features?.theme.logo;
 
   const logo = {
     href: paths.overview,

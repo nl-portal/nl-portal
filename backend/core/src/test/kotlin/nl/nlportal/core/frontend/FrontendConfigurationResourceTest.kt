@@ -13,31 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.core.nl.nlportal.core.frontend
+package nl.nlportal.core.frontend
 
+import java.nio.charset.Charset
+import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
+import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
+import nl.nlportal.core.util.Mapper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.web.reactive.server.WebTestClient
-import nl.nlportal.core.frontend.configuration.FrontendFeaturesConfigurationProperties
-import nl.nlportal.core.util.Mapper
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
+import org.springframework.test.web.reactive.server.WebTestClient
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class FrontendFeaturesConfigurationResourceTest(
+@TestInstance(Lifecycle.PER_CLASS)
+class FrontendConfigurationResourceTest(
     @Autowired private val webTestClient: WebTestClient,
-    @Autowired private val frontendFeaturesConfigurationProperties: FrontendFeaturesConfigurationProperties,
+    @Autowired private val frontendConfigurationProperties: FrontendConfigurationProperties,
+    @Autowired private val frontendModuleConfigurationProperties: FrontendModuleConfigurationProperties,
 ) {
     @Test
-    fun `get features`() {
+    fun `get frontend configuration`() {
         val responseBodyContent =
             webTestClient
                 .get()
-                .uri("/api/public/features")
+                .uri("/api/public/frontend")
                 .exchange()
                 .expectStatus()
                 .isOk
@@ -47,14 +51,22 @@ class FrontendFeaturesConfigurationResourceTest(
 
         val responseJson = Mapper.get().readTree(responseBodyContent)
 
-        assertEquals(frontendFeaturesConfigurationProperties.properties.myAddressResearchUrl, responseJson.requiredAt("/properties/myAddressResearchUrl").stringValue())
+        assertEquals(frontendConfigurationProperties.properties.myAddressResearchUrl, responseJson.requiredAt("/properties/myAddressResearchUrl").stringValue())
         assertEquals(
-            frontendFeaturesConfigurationProperties.properties.overviewCurrentCasesPreviewLength,
+            frontendConfigurationProperties.properties.overviewCurrentCasesPreviewLength,
             responseJson.requiredAt("/properties/overviewCurrentCasesPreviewLength").intValue(),
         )
         assertEquals(
-            frontendFeaturesConfigurationProperties.toggles.casesContactMomentsEnabled,
+            frontendConfigurationProperties.toggles.casesContactMomentsEnabled,
             responseJson.requiredAt("/toggles/casesContactMomentsEnabled").booleanValue(),
+        )
+        assertEquals(
+            true,
+            responseJson.requiredAt("/modules/taak/enabled").booleanValue(),
+        )
+        assertEquals(
+            false,
+            responseJson.requiredAt("/modules/besluiten/enabled").booleanValue(),
         )
     }
 }
