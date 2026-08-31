@@ -72,3 +72,11 @@ nl-portal:
                     allowedMethods: "*"
         endpoints:
             unsecured: /api/public/**
+    frontend:
+        modules-whitelist:
+            - zakenapi
+            - product
+            - haalcentraalhr
+            - haalcentraal2
+            - taak
+            - openproduct

@@ -44,7 +44,7 @@ const QuickLinks = ({
         }),
         href: item.path,
       }));
-  }, []);
+  }, [navigationItems, intl]);
 
   if (items.length === 0) return null;
 
