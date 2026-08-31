@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Ritense BV, the Netherlands.
+ * Copyright 2015-2024 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -107,20 +107,20 @@ object TestHelper {
 
     val handleBesluitDocumentRequest =
         """
-          {
-            "url": "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-            "informatieobject": "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
-            "besluit": "http://localhost:8001/besluiten/api/v1/besluiten/8863ab83-3496-4f40-9cad-f9d9526597c8"
-          }    
+        {
+          "url": "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+          "informatieobject": "http://localhost:10001/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+          "besluit": "http://localhost:8001/besluiten/api/v1/besluiten/8863ab83-3496-4f40-9cad-f9d9526597c8"
+        }    
         """.trimIndent()
 
     val handleBesluitDocumentUnrelatedRequest =
         """
-          {
-            "url": "http://localhost:10001/enkelvoudiginformatieobjecten/00000000-0000-0000-0000-0000000000ff",
-            "informatieobject": "http://localhost:10001/enkelvoudiginformatieobjecten/00000000-0000-0000-0000-0000000000ff",
-            "besluit": "http://localhost:8001/besluiten/api/v1/besluiten/2a27bc3c-6a4c-432a-a9cb-5c31004e7769"
-          }    
+        {
+          "url": "http://localhost:10001/enkelvoudiginformatieobjecten/00000000-0000-0000-0000-0000000000ff",
+          "informatieobject": "http://localhost:10001/enkelvoudiginformatieobjecten/00000000-0000-0000-0000-0000000000ff",
+          "besluit": "http://localhost:8001/besluiten/api/v1/besluiten/2a27bc3c-6a4c-432a-a9cb-5c31004e7769"
+        }    
         """.trimIndent()
 
     val handleDocumentResponse =
@@ -172,49 +172,49 @@ object TestHelper {
 
     val handleZaakResponse =
         """
-            {
-                "url": "http://localhost:8001/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
-                "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
-                "identificatie": "ZAAK-2021-0000000003",
-                "bronorganisatie": "051845623",
-                "omschrijving": "Voorbeeld afgesloten zaak 1",
-                "toelichting": "",
-                "zaaktype": "http://localhost:8000/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
-                "registratiedatum": "2021-09-16",
-                "verantwoordelijkeOrganisatie": "051845623",
-                "startdatum": "2021-09-16",
-                "einddatum": null,
-                "einddatumGepland": null,
-                "uiterlijkeEinddatumAfdoening": null,
-                "publicatiedatum": null,
-                "communicatiekanaal": "",
-                "productenOfDiensten": [],
-                "vertrouwelijkheidaanduiding": "zaakvertrouwelijk",
-                "betalingsindicatie": "",
-                "betalingsindicatieWeergave": "",
-                "laatsteBetaaldatum": null,
-                "zaakgeometrie": null,
-                "verlenging": {
-                    "reden": "",
-                    "duur": null
-                },
-                "opschorting": {
-                    "indicatie": false,
-                    "reden": ""
-                },
-                "selectielijstklasse": "",
-                "hoofdzaak": null,
-                "deelzaken": [],
-                "relevanteAndereZaken": [],
-                "eigenschappen": [],
-                "status": "http://localhost:8000/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6",
-                "kenmerken": [],
-                "archiefnominatie": null,
-                "archiefstatus": "nog_te_archiveren",
-                "archiefactiedatum": null,
-                "resultaat": "http://localhost:8001/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
-            }
-            """.trimIndent()
+        {
+            "url": "http://localhost:8001/zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a",
+            "uuid": "5d479908-fbb7-49c2-98c9-9afecf8de79a",
+            "identificatie": "ZAAK-2021-0000000003",
+            "bronorganisatie": "051845623",
+            "omschrijving": "Voorbeeld afgesloten zaak 1",
+            "toelichting": "",
+            "zaaktype": "http://localhost:8000/catalogi/api/v1/zaaktypen/496f51fd-ccdb-406e-805a-e7602ae78a2b",
+            "registratiedatum": "2021-09-16",
+            "verantwoordelijkeOrganisatie": "051845623",
+            "startdatum": "2021-09-16",
+            "einddatum": null,
+            "einddatumGepland": null,
+            "uiterlijkeEinddatumAfdoening": null,
+            "publicatiedatum": null,
+            "communicatiekanaal": "",
+            "productenOfDiensten": [],
+            "vertrouwelijkheidaanduiding": "zaakvertrouwelijk",
+            "betalingsindicatie": "",
+            "betalingsindicatieWeergave": "",
+            "laatsteBetaaldatum": null,
+            "zaakgeometrie": null,
+            "verlenging": {
+                "reden": "",
+                "duur": null
+            },
+            "opschorting": {
+                "indicatie": false,
+                "reden": ""
+            },
+            "selectielijstklasse": "",
+            "hoofdzaak": null,
+            "deelzaken": [],
+            "relevanteAndereZaken": [],
+            "eigenschappen": [],
+            "status": "http://localhost:8000/zaken/api/v1/statussen/0c019c8a-2274-4a7b-b381-2f35908500a6",
+            "kenmerken": [],
+            "archiefnominatie": null,
+            "archiefstatus": "nog_te_archiveren",
+            "archiefactiedatum": null,
+            "resultaat": "http://localhost:8001/zaken/api/v1/resultaten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+        }
+        """.trimIndent()
 
     val handleZaakRollenResponse =
         """
@@ -249,6 +249,4 @@ object TestHelper {
                "results": []
              }    
         """.trimIndent()
-
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 Ritense BV, the Netherlands.
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,7 +199,9 @@ class BesluitDocumentResourceIT(
                             }
                         }
 
-                        "GET /zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> TestHelper.mockResponse(TestHelper.handleZaakResponse)
+                        "GET /zaken/api/v1/zaken/5d479908-fbb7-49c2-98c9-9afecf8de79a" -> {
+                            TestHelper.mockResponse(TestHelper.handleZaakResponse)
+                        }
 
                         else -> {
                             MockResponse().setResponseCode(404)

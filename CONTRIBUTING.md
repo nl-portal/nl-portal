@@ -83,6 +83,29 @@ valid Conventional Commit.
 
 See `backend/README.md`, `frontend/README.md` and `docker-compose/README.md` for details.
 
+## Copyright headers
+
+Every backend `.kt` / `.kts` and frontend `.ts` / `.tsx` / `.js` / `.jsx` file
+carries the EUPL 1.2 header. Enforcement:
+
+- Backend: `./gradlew spotlessCheck` (CI-blocking, part of `check` / `build`).
+  Apply locally with `./gradlew spotlessApply`.
+- Frontend: `cd frontend && pnpm lint` (CI-blocking in `_stage-fe.yml`, husky
+  pre-commit via lint-staged, husky pre-push via `.husky/pre-push`). Apply /
+  auto-repair locally with `pnpm lint:fix`.
+
+The frontend quality gate is normally Prettier, not ESLint. The `notice/notice`
+rule is an intentional exception because ESLint is the only tool with a fixable,
+dynamic-year header rule that plugs into the existing husky / lint-staged wiring.
+`eslint-config-prettier` is included in the flat config so ESLint's stylistic
+rules cannot collide with Prettier.
+
+The header-consolidation rewrite is listed in `.git-blame-ignore-revs`. GitHub's
+blame view and most IDEs (IntelliJ, VS Code + GitLens) honor this file
+automatically. If your tooling doesn't, run
+`git config blame.ignoreRevsFile .git-blame-ignore-revs` once locally so
+`git blame` skips the rewrite.
+
 ## Code of Conduct
 
 By participating you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md).

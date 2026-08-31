@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package nl.nlportal.zakenapi.client
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -126,7 +141,8 @@ class ZakenApiClientTest {
         mockServer.enqueue(emptyZakenResponse())
 
         return runTest {
-            zakenApiClient.zaken()
+            zakenApiClient
+                .zaken()
                 .search()
                 .withAuthentication(JwtBuilder().aanvragerBsn("123").buildBurgerAuthentication())
                 .retrieve()
@@ -144,7 +160,8 @@ class ZakenApiClientTest {
         mockServer.enqueue(emptyZakenResponse())
 
         return runTest {
-            zakenApiClient.zaken()
+            zakenApiClient
+                .zaken()
                 .search()
                 .withAuthentication(JwtBuilder().aanvragerKvk("123").buildBedrijfAuthentication())
                 .retrieve()
@@ -199,22 +216,19 @@ class ZakenApiClientTest {
         }
     }
 
-    fun emptyZakenResponse(): MockResponse {
-        return pagedRetrieve(listOf(listOf()))[0]
-    }
+    fun emptyZakenResponse(): MockResponse = pagedRetrieve(listOf(listOf()))[0]
 
-    fun zaak(uuid: String = "1941048a-7290-4a78-8c4e-14feaec137dc"): String {
-        return """
-            {
-                "uuid": "$uuid",
-                "url": "http://localhost:1000",
-                "identificatie": "ABC",
-                "omschrijving": "ABCD",
-                "zaaktype": "http://localhost:1000/type",
-                "startdatum": "2024-10-10"
-            }
-            """.trimIndent()
-    }
+    fun zaak(uuid: String = "1941048a-7290-4a78-8c4e-14feaec137dc"): String =
+        """
+        {
+            "uuid": "$uuid",
+            "url": "http://localhost:1000",
+            "identificatie": "ABC",
+            "omschrijving": "ABCD",
+            "zaaktype": "http://localhost:1000/type",
+            "startdatum": "2024-10-10"
+        }
+        """.trimIndent()
 
     @Test
     fun `search zakeninformatieobjecten - filters`() {
@@ -226,8 +240,7 @@ class ZakenApiClientTest {
                         zaakInformatieobjecten(),
                         zaakInformatieobjecten(),
                     ).joinToString(prefix = "[", postfix = "]"),
-                )
-                .addHeader("Content-Type", "application/json; charset=utf-8"),
+                ).addHeader("Content-Type", "application/json; charset=utf-8"),
         )
 
         return runTest {
@@ -254,20 +267,19 @@ class ZakenApiClientTest {
         }
     }
 
-    private fun zaakInformatieobjecten(uuid: String = "1941048a-7290-4a78-8c4e-14feaec137dc"): String {
-        return """
-            {
-            "url": "http://example.com",
-            "uuid": "$uuid",
-            "informatieobject": "http://example.com",
-            "zaak": "http://example.com",
-            "aardRelatieWeergave": "Hoort bij, omgekeerd: kent",
-            "titel": "string",
-            "beschrijving": "string",
-            "registratiedatum": "2019-08-24T14:15:22Z"
-            }
-            """.trimIndent()
-    }
+    private fun zaakInformatieobjecten(uuid: String = "1941048a-7290-4a78-8c4e-14feaec137dc"): String =
+        """
+        {
+        "url": "http://example.com",
+        "uuid": "$uuid",
+        "informatieobject": "http://example.com",
+        "zaak": "http://example.com",
+        "aardRelatieWeergave": "Hoort bij, omgekeerd: kent",
+        "titel": "string",
+        "beschrijving": "string",
+        "registratiedatum": "2019-08-24T14:15:22Z"
+        }
+        """.trimIndent()
 
     @Test
     fun `search zaakobjecten - filters`() {
@@ -278,8 +290,7 @@ class ZakenApiClientTest {
                     zaakObjecten(),
                 ),
             ),
-        )
-            .forEach { mockServer.enqueue(it) }
+        ).forEach { mockServer.enqueue(it) }
 
         return runTest {
             val response =
@@ -287,7 +298,8 @@ class ZakenApiClientTest {
                     .zaakObjecten()
                     .search()
                     .forZaak("http://localhost/zaak")
-                    .ofObject("http://localhost/object").ofObjectType(ObjectType.WOZ_OBJECT)
+                    .ofObject("http://localhost/object")
+                    .ofObjectType(ObjectType.WOZ_OBJECT)
                     .retrieveAll()
 
             assertEquals(2, response.size)
@@ -303,19 +315,18 @@ class ZakenApiClientTest {
         }
     }
 
-    fun zaakObjecten(uuid: String = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"): String {
-        return """
-            {
-            "url": "http://example.com",
-            "uuid": "$uuid",
-            "zaak": "http://example.com",
-            "object": "http://example.com",
-            "objectType": "adres",
-            "objectTypeOverige": "string",
-            "relatieomschrijving": "string"
-            }
-            """.trimIndent()
-    }
+    fun zaakObjecten(uuid: String = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"): String =
+        """
+        {
+        "url": "http://example.com",
+        "uuid": "$uuid",
+        "zaak": "http://example.com",
+        "object": "http://example.com",
+        "objectType": "adres",
+        "objectTypeOverige": "string",
+        "relatieomschrijving": "string"
+        }
+        """.trimIndent()
 
     @Test
     fun `search zaak rollen - filters`() {
@@ -362,23 +373,22 @@ class ZakenApiClientTest {
         }
     }
 
-    fun zaakRollen(uuid: String = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"): String {
-        return """
-            {
-            "url": "http://example.com",
-            "uuid": "$uuid",
-            "zaak": "http://example.com",
-            "betrokkene": "http://example.com",
-            "betrokkeneType": "natuurlijk_persoon",
-            "roltype": "http://example.com",
-            "omschrijving": "string",
-            "omschrijvingGeneriek": "string",
-            "roltoelichting": "string",
-            "registratiedatum": "2019-08-24T14:15:22Z",
-            "indicatieMachtiging": "gemachtigde"
-            }
-            """.trimIndent()
-    }
+    fun zaakRollen(uuid: String = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"): String =
+        """
+        {
+        "url": "http://example.com",
+        "uuid": "$uuid",
+        "zaak": "http://example.com",
+        "betrokkene": "http://example.com",
+        "betrokkeneType": "natuurlijk_persoon",
+        "roltype": "http://example.com",
+        "omschrijving": "string",
+        "omschrijvingGeneriek": "string",
+        "roltoelichting": "string",
+        "registratiedatum": "2019-08-24T14:15:22Z",
+        "indicatieMachtiging": "gemachtigde"
+        }
+        """.trimIndent()
 
     @Test
     fun `search zaak statussen - filters`() {
@@ -414,18 +424,17 @@ class ZakenApiClientTest {
         }
     }
 
-    fun zaakStatus(uuid: String = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"): String {
-        return """
-            {
-            "url": "http://example.com",
-            "uuid": "$uuid",
-            "zaak": "http://example.com",
-            "statustype": "http://example.com",
-            "datumStatusGezet": "2019-08-24T14:15:22Z",
-            "statustoelichting": "string"
-            }
-            """.trimIndent()
-    }
+    fun zaakStatus(uuid: String = "095be615-a8ad-4c33-8e9c-c7612fbf6c9f"): String =
+        """
+        {
+        "url": "http://example.com",
+        "uuid": "$uuid",
+        "zaak": "http://example.com",
+        "statustype": "http://example.com",
+        "datumStatusGezet": "2019-08-24T14:15:22Z",
+        "statustoelichting": "string"
+        }
+        """.trimIndent()
 
     fun pagedRetrieve(pages: List<List<String>>): List<MockResponse> {
         val count = pages.fold(0) { acc, n -> acc + n.size }

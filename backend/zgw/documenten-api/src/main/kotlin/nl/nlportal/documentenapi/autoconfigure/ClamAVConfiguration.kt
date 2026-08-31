@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Ritense BV, the Netherlands.
+ * Copyright 2015-2025 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package nl.nlportal.documentenapi.autoconfigure
 
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -33,7 +32,7 @@ class ClamAVConfiguration {
     @Bean
     @ConditionalOnMissingBean(VirusScanService::class)
     fun virusScanService(
-        clamAVVirusScanConfig: ClamAVVirusScanConfig
+        clamAVVirusScanConfig: ClamAVVirusScanConfig,
     ): VirusScanService {
         logger.info {
             "ClamAV virusscan is loaded with host: ${clamAVVirusScanConfig.properties.hostName} and port: ${clamAVVirusScanConfig.properties.port}"

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.netty.handler.logging.LogLevel
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.haalcentraal.hr.client.HaalCentraalHrConfig.HaalCentraalHrConfigProperties
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
+import nl.nlportal.haalcentraal.hr.domain.Vestiging
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
@@ -35,6 +36,13 @@ class HandelsregisterClient(
         webClient()
             .get()
             .uri("/basisprofielen/$kvkNummer")
+            .retrieve()
+            .awaitBody()
+
+    suspend fun getVestiging(vestigingsNummer: String): Vestiging =
+        webClient()
+            .get()
+            .uri("/vestigingsprofielen/$vestigingsNummer")
             .retrieve()
             .awaitBody()
 

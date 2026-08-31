@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package nl.nlportal.haalcentraal.hr.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
@@ -25,7 +26,10 @@ class HandelsregisterService(
 ) {
     suspend fun getMaatschappelijkeActiviteit(authentication: CommonGroundAuthentication): MaatschappelijkeActiviteit? {
         if (authentication is BedrijfAuthentication) {
-            return handelsregisterClient.getMaatschappelijkeActiviteit(authentication.getKvkNummer())
+            return getKvkData(
+                kvkNummer = authentication.getKvkNummer(),
+                vestigingsNummer = authentication.getVestigingsNummer(),
+            )
         }
 
         return null
@@ -35,7 +39,35 @@ class HandelsregisterService(
         val authenticationGemachtigde = authentication.getGemachtigde()
 
         return authenticationGemachtigde?.kvk?.let {
-            handelsregisterClient.getMaatschappelijkeActiviteit(it)
+            getKvkData(
+                kvkNummer = it,
+            )
         }
+    }
+
+    suspend fun getKvkData(
+        kvkNummer: String,
+        vestigingsNummer: String? = null,
+    ): MaatschappelijkeActiviteit? {
+        try {
+            val kvkData = handelsregisterClient.getMaatschappelijkeActiviteit(kvkNummer)
+
+            // set hoofdvesting in vestiging
+            kvkData.embedded?.vestiging = kvkData.embedded.hoofdvestiging
+
+            if (!vestigingsNummer.isNullOrBlank()) {
+                // set vestiging based of vestigingsnummer in vestiging
+                kvkData.embedded?.vestiging = handelsregisterClient.getVestiging(vestigingsNummer)
+            }
+            return kvkData
+        } catch (ex: Exception) {
+            logger.error { "Something went wrong while getting information of a company: ${ex.message}" }
+        }
+
+        return null
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 }

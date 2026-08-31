@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,6 @@ open class TaakService(
     private val taakConfigProperties: TaakConfigProperties,
     val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
-
     suspend fun getTaken(
         pageNumber: Int,
         pageSize: Int,
@@ -144,7 +143,8 @@ open class TaakService(
         val submissionAsMap = Mapper.get().convertValue(submission, object : TypeReference<Map<String, Any>>() {})
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.portaalformulier?.verzondenData = submissionAsMap
+        updateRequest.record.data.portaalformulier
+            ?.verzondenData = submissionAsMap
         updateRequest.record.data.status = TaakStatus.AFGEROND
         updateRequest.record.correctedBy = authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
@@ -220,19 +220,16 @@ open class TaakService(
         )
     }
 
-    private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> {
-        return listOf(
+    private fun getUserSearchParameters(authentication: CommonGroundAuthentication): List<ObjectSearchParameter> =
+        listOf(
             ObjectSearchParameter("identificatie__type", Comparator.EQUAL_TO, authentication.userType),
             ObjectSearchParameter("identificatie__value", Comparator.EQUAL_TO, authentication.userId),
         )
-    }
 
     private fun isAuthorizedForTaak(
         authentication: CommonGroundAuthentication,
         taakIdentificatie: TaakIdentificatie,
-    ): Boolean {
-        return taakIdentificatie.type.lowercase() == authentication.userType && taakIdentificatie.value == authentication.userId
-    }
+    ): Boolean = taakIdentificatie.type.lowercase() == authentication.userType && taakIdentificatie.value == authentication.userId
 
     private fun isAuthorizedForTaak(
         authentication: CommonGroundAuthentication,

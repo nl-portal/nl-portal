@@ -1,5 +1,5 @@
 /*
- * Copyright $YEAR Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,3 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package nl.nlportal.haalcentraal.hr.domain
+
+data class Vestiging(
+    val vestigingsnummer: String,
+    val kvkNummer: String,
+    val eersteHandelsnaam: String,
+    val indHoofdvestiging: String,
+    val indCommercieleVestiging: String,
+    val totaalWerkzamePersonen: Int,
+    val adressen: List<Adres>?,
+)

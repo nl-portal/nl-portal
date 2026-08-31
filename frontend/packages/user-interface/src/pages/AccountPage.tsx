@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { FormattedMessage, useIntl } from "react-intl";
 import styles from "./AccountPage.module.scss";
 import {
@@ -179,9 +194,8 @@ const AccountPage = () => {
                   detail: (
                     <DescriptionListDetail translate="no">
                       {getStreetString(
-                        bedrijf?.embedded?.hoofdvestiging?.adressen?.[0]
-                          ?.straatnaam,
-                        bedrijf?.embedded?.hoofdvestiging?.adressen?.[0]?.huisnummer?.toString(),
+                        bedrijf?.embedded?.vestiging?.adressen?.[0]?.straatnaam,
+                        bedrijf?.embedded?.vestiging?.adressen?.[0]?.huisnummer?.toString(),
                         undefined,
                         undefined,
                       )}
@@ -195,10 +209,8 @@ const AccountPage = () => {
                   detail: (
                     <DescriptionListDetail translate="no">
                       {getPostalCodeCityString(
-                        bedrijf?.embedded?.hoofdvestiging?.adressen?.[0]
-                          ?.postcode,
-                        bedrijf?.embedded?.hoofdvestiging?.adressen?.[0]
-                          ?.plaats,
+                        bedrijf?.embedded?.vestiging?.adressen?.[0]?.postcode,
+                        bedrijf?.embedded?.vestiging?.adressen?.[0]?.plaats,
                       )}
                     </DescriptionListDetail>
                   ),

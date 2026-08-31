@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Ritense BV, the Netherlands.
+ * Copyright 2015-2024 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,24 @@
  */
 package nl.nlportal.openklant.service
 
+import java.util.UUID
+import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.JwtBuilder
+import nl.nlportal.openklant.TestHelper
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertThrows
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 class OpenKlant2ServiceTest {
     private lateinit var openklantModuleConfiguration: OpenKlantModuleConfiguration
@@ -52,5 +64,129 @@ class OpenKlant2ServiceTest {
     @AfterEach
     internal fun tearDown() {
         mockServer.shutdown()
+    }
+
+    @Test
+    fun `should find KlantContact that belongs to the authenticated user`() =
+        runTest {
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            mockServer.enqueue(mockJsonResponse(klantContactenPage))
+            mockServer.enqueue(mockJsonResponse(TestHelper.Partijen.klantContact))
+
+            val klantContact =
+                service.findKlantContact(
+                    authentication = JwtBuilder().aanvragerBsn(OWNER_BSN).buildBurgerAuthentication(),
+                    klantContactId = UUID.fromString(KLANTCONTACT_ID),
+                )
+
+            assertNotNull(klantContact)
+            assertEquals(KLANTCONTACT_ID, klantContact.uuid)
+
+            // the klantcontacten are searched scoped to the authenticated user
+            val searchRequest = mockServer.takeRequest()
+            assertTrue(searchRequest.path!!.contains("hadBetrokkene__wasPartij__partijIdentificator__objectId=$OWNER_BSN"))
+        }
+
+    @Test
+    fun `should not find KlantContact of another user`() =
+        runTest {
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            // the scoped search of the other user does not return the klantcontact
+            mockServer.enqueue(mockJsonResponse(TestHelper.emptyPage))
+
+            val exception =
+                assertThrows<ResponseStatusException> {
+                    service.findKlantContact(
+                        authentication = JwtBuilder().aanvragerBsn(OTHER_BSN).buildBurgerAuthentication(),
+                        klantContactId = UUID.fromString(KLANTCONTACT_ID),
+                    )
+                }
+
+            assertEquals(HttpStatus.UNAUTHORIZED, exception.statusCode)
+            // the klantcontact itself is never requested
+            assertEquals(1, mockServer.requestCount)
+        }
+
+    @Test
+    fun `should delete DigitaleAdres that belongs to the authenticated user`() =
+        runTest {
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            mockServer.enqueue(mockJsonResponse(digitaleAdressenPage))
+            mockServer.enqueue(MockResponse().setResponseCode(204))
+
+            service.deleteDigitaleAdresById(
+                authentication = JwtBuilder().aanvragerBsn(OWNER_BSN).buildBurgerAuthentication(),
+                digitaleAdresId = UUID.fromString(DIGITALE_ADRES_ID),
+            )
+
+            // the digitale adressen are searched scoped to the authenticated user
+            val searchRequest = mockServer.takeRequest()
+            assertTrue(searchRequest.path!!.contains("verstrektDoorPartij__partijIdentificator__objectId=$OWNER_BSN"))
+
+            val deleteRequest = mockServer.takeRequest()
+            assertEquals("DELETE", deleteRequest.method)
+            assertTrue(deleteRequest.path!!.endsWith("/digitaleadressen/$DIGITALE_ADRES_ID"))
+        }
+
+    @Test
+    fun `should not delete DigitaleAdres of another user`() =
+        runTest {
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            // the scoped search of the other user does not return the digitale adres
+            mockServer.enqueue(mockJsonResponse(TestHelper.emptyPage))
+
+            val exception =
+                assertThrows<ResponseStatusException> {
+                    service.deleteDigitaleAdresById(
+                        authentication = JwtBuilder().aanvragerBsn(OTHER_BSN).buildBurgerAuthentication(),
+                        digitaleAdresId = UUID.fromString(DIGITALE_ADRES_ID),
+                    )
+                }
+
+            assertEquals(HttpStatus.UNAUTHORIZED, exception.statusCode)
+            // no DELETE request left this service
+            assertEquals(1, mockServer.requestCount)
+            assertEquals("GET", mockServer.takeRequest().method)
+        }
+
+    private fun mockJsonResponse(body: String) =
+        MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(200)
+            .setBody(body)
+
+    companion object {
+        private const val KLANTCONTACT_ID = "33549ba5-95f0-44d2-9c63-776ec126bc55"
+        private const val DIGITALE_ADRES_ID = "1300d2ab-13cb-4c12-9818-3b76e2a5d993"
+        private const val OWNER_BSN = "296648875"
+        private const val OTHER_BSN = "999999999"
+
+        private val digitaleAdressenPage =
+            """
+            {
+                "count": 1,
+                "next": null,
+                "previous": null,
+                "results": [
+                    {
+                        "uuid": "$DIGITALE_ADRES_ID",
+                        "url": "http://localhost:8007/klantinteracties/api/v1/digitaleadressen/$DIGITALE_ADRES_ID",
+                        "adres": "lucas@boom.nl",
+                        "soortDigitaalAdres": "email",
+                        "omschrijving": "Persoonlijke email adres"
+                    }
+                ]
+            }
+            """.trimIndent()
+
+        private val klantContactenPage =
+            """
+            {
+                "count": 1,
+                "next": null,
+                "previous": null,
+                "results": [${TestHelper.Partijen.klantContact}]
+            }
+            """.trimIndent()
     }
 }

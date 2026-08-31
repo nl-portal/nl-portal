@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,14 +111,18 @@ internal class TaakMutationV2IT(
                                     MockResponse().setResponseCode(404)
                                 }
                             }
+
                             "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce708" -> {
                                 TestHelper.mockResponseFromFile("/data/put-objectsapi-task-response-v2.json")
                             }
+
                             "PUT /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce708" -> {
                                 TestHelper.mockResponseFromFile("/data/put-objectsapi-task-response-v2.json")
                             }
 
-                            else -> MockResponse().setResponseCode(404)
+                            else -> {
+                                MockResponse().setResponseCode(404)
+                            }
                         }
                     return response
                 }

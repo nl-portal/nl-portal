@@ -1,3 +1,18 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import { ReactElement } from "react";
 import {
   LocalizationProvider,
@@ -49,24 +64,24 @@ export const testNavigationItems: NavigationItem[][] = [
     {
       titleTranslationKey: "overview",
       path: testPaths.overview,
-      icon: <GridIcon />,
+      icon: GridIcon,
     },
   ],
   [
     {
       titleTranslationKey: "tasks",
       path: testPaths.tasks,
-      icon: <CheckCircleIcon />,
+      icon: CheckCircleIcon,
     },
     {
       titleTranslationKey: "cases",
       path: testPaths.cases,
-      icon: <ArchiveIcon />,
+      icon: ArchiveIcon,
     },
     {
       titleTranslationKey: "messages",
       path: testPaths.messages,
-      icon: <InboxIcon />,
+      icon: InboxIcon,
       hasMessagesCount: true,
     },
   ],
@@ -74,19 +89,19 @@ export const testNavigationItems: NavigationItem[][] = [
     {
       titleTranslationKey: "belastingzaken",
       path: testPaths.themeOverview("belastingzaken"),
-      icon: <EuroIcon />,
+      icon: EuroIcon,
       themeSlug: "belastingzaken",
     },
     {
       titleTranslationKey: "parkeren",
       path: testPaths.themeOverview("parkeren"),
-      icon: <CarIcon />,
+      icon: CarIcon,
       themeSlug: "parkeren",
     },
     {
       titleTranslationKey: "inkomensondersteuning",
       path: testPaths.themeOverview("inkomensondersteuning"),
-      icon: <EuroIcon />,
+      icon: EuroIcon,
       themeSlug: "inkomensondersteuning",
     },
   ],
@@ -94,7 +109,7 @@ export const testNavigationItems: NavigationItem[][] = [
     {
       titleTranslationKey: "account",
       path: testPaths.account,
-      icon: <UserIcon />,
+      icon: UserIcon,
     },
   ],
 ];

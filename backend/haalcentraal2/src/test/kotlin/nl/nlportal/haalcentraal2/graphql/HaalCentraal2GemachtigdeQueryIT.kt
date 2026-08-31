@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,6 +114,52 @@ internal class HaalCentraal2GemachtigdeQueryIT(
 
         assertEquals("Pieter Jan de Vries", responseBody.requiredAt("/persoon/naam/volledigeNaam")?.stringValue())
         assertEquals("Vries", responseBody.requiredAt("/persoon/naam/geslachtsnaam")?.stringValue())
+    }
+
+    @Test
+    @WithBurgerUser("318634776", gemachtigdeKvk = "90012768")
+    fun `getGemachtigde with kvk`() {
+        val query =
+            """
+            query {
+                getGemachtigdeV2 {
+                    bedrijf {
+                        naam
+                        embedded{
+                            eigenaar {
+                                rechtsvorm
+                            }
+                            vestiging {
+                                eersteHandelsnaam
+                                adressen {
+                                    straatnaam
+                                    huisnummer
+                                    postbusnummer
+                                    postcode
+                                    plaats
+                                    volledigAdres
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getGemachtigdeV2")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("Test bedrijf", responseBody.requiredAt("/bedrijf/naam")?.stringValue())
+        assertEquals("Eenmanszaak", responseBody.requiredAt("/bedrijf/embedded/eigenaar/rechtsvorm")?.stringValue())
+        assertEquals("Test bedrijf", responseBody.requiredAt("/bedrijf/embedded/vestiging/eersteHandelsnaam")?.stringValue())
+        assertEquals("Postbus 1000 2260BA LEIDSCHENDAM", responseBody.requiredAt("/bedrijf/embedded/vestiging/adressen/0/volledigAdres")?.stringValue())
     }
 
     private fun setupMockServer() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,72 +61,48 @@ class ZakenApiClient(
                     ReactorClientHttpConnector(
                         HttpClient.create().wiretap(
                             "reactor.netty.http.client.HttpClient",
-                            LogLevel.TRACE, AdvancedByteBufFormat.TEXTUAL,
+                            LogLevel.TRACE,
+                            AdvancedByteBufFormat.TEXTUAL,
                         ),
                     ),
-                )
-                .filter(
+                ).filter(
                     ExchangeFilterFunction.ofRequestProcessor {
                         Mono.just(
                             ClientRequest.from(it).header("Authorization", "Bearer ${getToken()}").build(),
                         )
                     },
-                )
-                .defaultHeader("Accept-Crs", "EPSG:4326")
+                ).defaultHeader("Accept-Crs", "EPSG:4326")
                 .defaultHeader("Content-Crs", "EPSG:4326")
                 .build()
     }
 
-    private fun getToken(): String {
-        return IdTokenGenerator().generateToken(
+    private fun getToken(): String =
+        IdTokenGenerator().generateToken(
             zakenApiConfig.secret,
             zakenApiConfig.clientId,
         )
-    }
 
-    fun getZaakUrl(zaakId: Any): String {
-        return "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId"
-    }
+    fun getZaakUrl(zaakId: Any): String = "${zakenApiConfig.url}/zaken/api/v1/zaken/$zaakId"
 
-    fun getZaakTypeUrl(zaakTypeId: UUID): String {
-        return "${catalogiApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId"
-    }
+    fun getZaakTypeUrl(zaakTypeId: UUID): String = "${catalogiApiConfig.url}/catalogi/api/v1/zaaktypen/$zaakTypeId"
 
-    fun zaken(): Zaken {
-        return ZakenImpl(this)
-    }
+    fun zaken(): Zaken = ZakenImpl(this)
 
-    fun zoeken(): Zaken {
-        return ZoekenImpl(this)
-    }
+    fun zoeken(): Zaken = ZoekenImpl(this)
 
-    fun zaakRollen(): ZaakRollen {
-        return ZaakRollenImpl(this)
-    }
+    fun zaakRollen(): ZaakRollen = ZaakRollenImpl(this)
 
-    fun zaakObjecten(): ZaakObjecten {
-        return ZaakObjectenImpl(this)
-    }
+    fun zaakObjecten(): ZaakObjecten = ZaakObjectenImpl(this)
 
-    fun zaakInformatieobjecten(): ZaakInformatieobjecten {
-        return ZakenInformatieobjectenImpl(this)
-    }
+    fun zaakInformatieobjecten(): ZaakInformatieobjecten = ZakenInformatieobjectenImpl(this)
 
-    fun zaakStatussen(): ZaakStatussen {
-        return ZaakStatussenImpl(this)
-    }
+    fun zaakStatussen(): ZaakStatussen = ZaakStatussenImpl(this)
 
-    fun zaakResultaten(): ZaakResultaten {
-        return ZaakResultatenImpl(this)
-    }
+    fun zaakResultaten(): ZaakResultaten = ZaakResultatenImpl(this)
 
-    fun zaakSubStatussen(): ZaakSubStatussen {
-        return ZaakSubStatussenImpl(this)
-    }
+    fun zaakSubStatussen(): ZaakSubStatussen = ZaakSubStatussenImpl(this)
 
-    fun useNnpKvkQueryIdentificators(): Boolean {
-        return zakenApiConfig.useNnpKvkQueryIdentificators
-    }
+    fun useNnpKvkQueryIdentificators(): Boolean = zakenApiConfig.useNnpKvkQueryIdentificators
 }
 
 fun WebClient.ResponseSpec.handleStatus() =
@@ -134,12 +110,10 @@ fun WebClient.ResponseSpec.handleStatus() =
         .onStatus(
             { httpStatus -> HttpStatus.NOT_FOUND == httpStatus },
             { throw ResponseStatusException(HttpStatus.NOT_FOUND) },
-        )
-        .onStatus(
+        ).onStatus(
             { httpStatus -> HttpStatus.UNAUTHORIZED == httpStatus },
             { throw ResponseStatusException(HttpStatus.UNAUTHORIZED) },
-        )
-        .onStatus(
+        ).onStatus(
             { httpStatus -> HttpStatus.INTERNAL_SERVER_ERROR == httpStatus },
             {
                 throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)

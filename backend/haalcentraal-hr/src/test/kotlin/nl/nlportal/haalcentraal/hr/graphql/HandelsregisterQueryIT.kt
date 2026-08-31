@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Ritense BV, the Netherlands.
+ * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,13 +59,29 @@ internal class HandelsregisterQueryIT(
     }
 
     @Test
-    @WithBedrijfUser("90012768")
-    fun getNaam() {
+    @WithBedrijfUser(kvkNummer = "90012768")
+    fun getKvkData() {
         val query =
             """
             query {
                 getBedrijf {
                     naam
+                    embedded{
+                        eigenaar {
+                            rechtsvorm
+                        }
+                        vestiging {
+                            eersteHandelsnaam
+                            adressen {
+                                straatnaam
+                                huisnummer
+                                postbusnummer
+                                postcode
+                                plaats
+                                volledigAdres
+                            }
+                        }
+                    }
                 }
             }
             """.trimIndent()
@@ -81,6 +97,56 @@ internal class HandelsregisterQueryIT(
                 .get()
 
         assertEquals("Test bedrijf", responseBody.get("naam").stringValue())
+        assertEquals("Eenmanszaak", responseBody.requiredAt("/embedded/eigenaar/rechtsvorm")?.stringValue())
+        assertEquals("Test bedrijf", responseBody.requiredAt("/embedded/vestiging/eersteHandelsnaam")?.stringValue())
+        assertEquals("Postbus 1000 2260BA LEIDSCHENDAM", responseBody.requiredAt("/embedded/vestiging/adressen/0/volledigAdres")?.stringValue())
+    }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "90012768",
+        vestigingsNummer = "990000262129",
+    )
+    fun getKvkDataWithVestiging() {
+        val query =
+            """
+            query {
+                getBedrijf {
+                    naam
+                    embedded{
+                        eigenaar {
+                            rechtsvorm
+                        }
+                        vestiging {
+                            eersteHandelsnaam
+                            adressen {
+                                straatnaam
+                                huisnummer
+                                postbusnummer
+                                postcode
+                                plaats
+                                volledigAdres
+                            }
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBedrijf")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("Test bedrijf", responseBody.get("naam").stringValue())
+        assertEquals("Eenmanszaak", responseBody.requiredAt("/embedded/eigenaar/rechtsvorm")?.stringValue())
+        assertEquals("Regional Sanjoflex B.V.", responseBody.requiredAt("/embedded/vestiging/eersteHandelsnaam")?.stringValue())
+        assertEquals("Maarten Trompstraat 2 6372VR Landgraaf", responseBody.requiredAt("/embedded/vestiging/adressen/0/volledigAdres")?.stringValue())
     }
 
     private fun setupMockServer() {
@@ -91,6 +157,7 @@ internal class HandelsregisterQueryIT(
                     val response =
                         when (request.path?.substringBefore('?')) {
                             "/basisprofielen/90012768" -> TestHelper.mockResponseFromFile("/data/get-maatschappelijke-activiteiten.json")
+                            "/vestigingsprofielen/990000262129" -> TestHelper.mockResponseFromFile("/data/get-vestiging.json")
                             else -> MockResponse().setResponseCode(404)
                         }
                     return response

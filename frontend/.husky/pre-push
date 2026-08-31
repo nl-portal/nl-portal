@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+set -e
+
+echo "▶ Frontend: pnpm lint (includes copyright header check)"
+(cd frontend && pnpm lint)
+
+echo "▶ Backend: ./gradlew spotlessCheck"
+(cd backend && ./gradlew spotlessCheck)
