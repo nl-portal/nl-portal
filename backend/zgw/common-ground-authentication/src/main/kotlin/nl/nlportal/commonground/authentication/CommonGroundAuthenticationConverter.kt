@@ -79,21 +79,47 @@ class CommonGroundAuthenticationConverter(
         webClient
             .post()
             .uri(URI.create("${jwt.issuer.toString().trimEnd('/')}/protocol/openid-connect/token"))
-            .body(
-                BodyInserters.fromFormData(
-                    LinkedMultiValueMap(
-                        mapOf(
-                            "client_id" to keycloakConfig.resource,
-                            "client_secret" to keycloakConfig.credentials.secret,
-                            "grant_type" to "urn:ietf:params:oauth:grant-type:token-exchange",
-                            "subject_token" to jwt.tokenValue,
-                            "requested_token_type" to "urn:ietf:params:oauth:token-type:access_token",
-                            "audience" to keycloakConfig.audience,
-                        ).mapValues { listOf(it.value) },
-                    ),
-                ),
-            ).retrieve()
-            .bodyToMono<TokenResponse>()
+            .body(BodyInserters.fromFormData(tokenExchangeFormData(jwt)))
+            .retrieve()
+            .onStatus({ it.isError }) { response ->
+                response
+                    .bodyToMono<String>()
+                    .defaultIfEmpty("")
+                    .flatMap { body ->
+                        logger.error {
+                            "Token exchange failed with status ${response.statusCode()} in " +
+                                "${keycloakConfig.tokenExchangeVersion} mode: $body"
+                        }
+                        response.createException()
+                    }
+            }.bodyToMono<TokenResponse>()
+
+    private fun tokenExchangeFormData(jwt: Jwt): LinkedMultiValueMap<String, String> {
+        val formData = LinkedMultiValueMap<String, String>()
+        formData.add("client_id", keycloakConfig.resource)
+        formData.add("client_secret", keycloakConfig.credentials.secret)
+        formData.add("grant_type", GRANT_TYPE_TOKEN_EXCHANGE)
+        formData.add("subject_token", jwt.tokenValue)
+        formData.add("requested_token_type", TOKEN_TYPE_ACCESS_TOKEN)
+
+        when (keycloakConfig.tokenExchangeVersion) {
+            KeycloakConfig.TokenExchangeVersion.V1 -> {
+                val audience = keycloakConfig.audience
+                require(!audience.isNullOrBlank()) {
+                    "nl-portal.authentication.keycloak.audience is required when token-exchange-version is v1"
+                }
+                formData.add("audience", audience)
+            }
+
+            KeycloakConfig.TokenExchangeVersion.V2 -> {
+                formData.add("subject_token_type", TOKEN_TYPE_ACCESS_TOKEN)
+                keycloakConfig.audience
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { formData.add("audience", it) }
+            }
+        }
+        return formData
+    }
 
     data class TokenResponse(
         @JsonValue
@@ -103,5 +129,7 @@ class CommonGroundAuthenticationConverter(
 
     companion object {
         val logger = KotlinLogging.logger {}
+        const val GRANT_TYPE_TOKEN_EXCHANGE = "urn:ietf:params:oauth:grant-type:token-exchange"
+        const val TOKEN_TYPE_ACCESS_TOKEN = "urn:ietf:params:oauth:token-type:access_token"
     }
 }

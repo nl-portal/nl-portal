@@ -28,7 +28,7 @@ De snelste manier om de NL Portal te bekijken is via de kant-en-klare demo-omgev
 
 * De prebuilt NL Portal backend en frontend images (`ghcr.io/nl-portal/nl-portal-app-backend` en `ghcr.io/nl-portal/nl-portal-app-frontend`).
 * De benodigde ZGW componenten (Open Zaak, Objecten API, OpenKlant, OpenProduct) en Haal Centraal mocks, opgedeeld in docker-compose profielen zodat je zelf kiest welke onderdelen je start.
-* Een voorgeconfigureerde Keycloak met token exchange v1 (zie ook de [Keycloak configuratie](keycloak.md) pagina).
+* Een voorgeconfigureerde Keycloak met de [legacy token exchange (v1)](keycloak-token-exchange-v1.md). Vanaf 3.1.0 ondersteunt de backend ook [standard token exchange (v2)](keycloak-token-exchange-v2.md); zie [Keycloak configuratie](keycloak.md) voor de keuze tussen beide.
 
 Clone de repository en start de demo-omgeving met:
 

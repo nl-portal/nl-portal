@@ -1,30 +1,34 @@
-# React + TypeScript + Vite
+# nl-portal-app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Part of the [NL Portal](https://github.com/nl-portal/nl-portal) frontend libraries, a collection of
+packages providing a configurable portal implementation for municipalities.
 
-Currently, two official plugins are available:
+This package is the reference portal implementation. It wires the `@nl-portal/*` libraries together
+and is where configuration such as routing, theming, and backend endpoints takes place.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+It is not published to npm. It is built and released as a container image,
+`ghcr.io/nl-portal/nl-portal-app-frontend`, from the [frontend Dockerfile](../../Dockerfile).
 
-## Expanding the ESLint configuration
+## Running from sources
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+From the [frontend](../..) root, after `pnpm install`:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
-    tsconfigRootDir: __dirname,
-  },
-};
+```bash
+pnpm app:dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+This starts this package together with the `@nl-portal/*` libraries it depends on, so changes in the
+libraries are picked up while running. Use `pnpm app:build` for a production build and
+`pnpm app:preview` to serve it.
+
+Note that `pnpm dev` starts the development app (`nl-portal-app-dev`) instead of this one.
+
+See the [frontend README](../../README.md) for the full development setup.
+
+## Documentation
+
+See [nl-portal.nl](https://nl-portal.nl) for setup, configuration, and architecture.
+
+## License
+
+[EUPL-1.2](https://github.com/nl-portal/nl-portal/blob/main/frontend/LICENSE.MD)

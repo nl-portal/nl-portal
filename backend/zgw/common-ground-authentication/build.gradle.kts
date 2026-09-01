@@ -26,6 +26,7 @@ dependencies {
     testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.kotlinTest)
     testImplementation(TestDependencies.mockitoKotlin)
+    testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(project(":zgw:common-ground-authentication-test"))
 }
 
