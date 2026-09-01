@@ -1,0 +1,322 @@
+[
+  {
+    "model": "klantinteracties.partij",
+    "pk": 1,
+    "fields": {
+      "bezoekadres_nummeraanduiding_id": "",
+      "bezoekadres_straatnaam": "",
+      "bezoekadres_huisnummer": 1,
+      "bezoekadres_huisnummertoevoeging": "",
+      "bezoekadres_postcode": "",
+      "bezoekadres_stad": "",
+      "bezoekadres_adresregel1": "",
+      "bezoekadres_adresregel2": "",
+      "bezoekadres_adresregel3": "",
+      "bezoekadres_land": "",
+      "correspondentieadres_nummeraanduiding_id": "",
+      "correspondentieadres_straatnaam": "",
+      "correspondentieadres_huisnummer": 1,
+      "correspondentieadres_huisnummertoevoeging": "",
+      "correspondentieadres_postcode": "",
+      "correspondentieadres_stad": "",
+      "correspondentieadres_adresregel1": "",
+      "correspondentieadres_adresregel2": "",
+      "correspondentieadres_adresregel3": "",
+      "correspondentieadres_land": "",
+      "uuid": "9f8e8009-2d1c-40ae-931e-c08861ba7207",
+      "voorkeurs_digitaal_adres": 1,
+      "voorkeurs_rekeningnummer": null,
+      "nummer": "0000000001",
+      "interne_notitie": "",
+      "soort_partij": "persoon",
+      "indicatie_geheimhouding": true,
+      "voorkeurstaal": "nld",
+      "indicatie_actief": true
+    }
+  },
+  {
+    "model": "klantinteracties.partij",
+    "pk": 2,
+    "fields": {
+      "bezoekadres_nummeraanduiding_id": "1234567890000002",
+      "bezoekadres_straatnaam": "",
+      "bezoekadres_huisnummer": 1,
+      "bezoekadres_huisnummertoevoeging": "",
+      "bezoekadres_postcode": "",
+      "bezoekadres_stad": "",
+      "bezoekadres_adresregel1": "Keizersgracht 117",
+      "bezoekadres_adresregel2": "1015 CJ Amsterdam",
+      "bezoekadres_adresregel3": "",
+      "bezoekadres_land": "NL",
+      "correspondentieadres_nummeraanduiding_id": "",
+      "correspondentieadres_straatnaam": "",
+      "correspondentieadres_huisnummer": 1,
+      "correspondentieadres_huisnummertoevoeging": "",
+      "correspondentieadres_postcode": "",
+      "correspondentieadres_stad": "",
+      "correspondentieadres_adresregel1": "",
+      "correspondentieadres_adresregel2": "",
+      "correspondentieadres_adresregel3": "",
+      "correspondentieadres_land": "",
+      "uuid": "dce80380-80ed-465e-be6a-50ec5ea971c8",
+      "voorkeurs_digitaal_adres": null,
+      "voorkeurs_rekeningnummer": null,
+      "nummer": "0000000002",
+      "interne_notitie": "",
+      "soort_partij": "organisatie",
+      "indicatie_geheimhouding": true,
+      "voorkeurstaal": "nld",
+      "indicatie_actief": true
+    }
+  },
+  {
+    "model": "klantinteracties.partij",
+    "pk": 3,
+    "fields": {
+      "bezoekadres_nummeraanduiding_id": "",
+      "bezoekadres_straatnaam": "",
+      "bezoekadres_huisnummer": 1,
+      "bezoekadres_huisnummertoevoeging": "",
+      "bezoekadres_postcode": "",
+      "bezoekadres_stad": "",
+      "bezoekadres_adresregel1": "",
+      "bezoekadres_adresregel2": "",
+      "bezoekadres_adresregel3": "",
+      "bezoekadres_land": "",
+      "correspondentieadres_nummeraanduiding_id": "",
+      "correspondentieadres_straatnaam": "",
+      "correspondentieadres_huisnummer": 1,
+      "correspondentieadres_huisnummertoevoeging": "",
+      "correspondentieadres_postcode": "",
+      "correspondentieadres_stad": "",
+      "correspondentieadres_adresregel1": "",
+      "correspondentieadres_adresregel2": "",
+      "correspondentieadres_adresregel3": "",
+      "correspondentieadres_land": "",
+      "uuid": "980fa426-a44a-42c7-bcb3-c8c144ae0aa0",
+      "voorkeurs_digitaal_adres": null,
+      "voorkeurs_rekeningnummer": null,
+      "nummer": "0000000003",
+      "interne_notitie": "",
+      "soort_partij": "contactpersoon",
+      "indicatie_geheimhouding": true,
+      "voorkeurstaal": "nld",
+      "indicatie_actief": true
+    }
+  },
+  {
+    "model": "klantinteracties.partij",
+    "pk": 100,
+    "fields": {
+      "bezoekadres_nummeraanduiding_id": "",
+      "bezoekadres_straatnaam": "",
+      "bezoekadres_huisnummer": 1,
+      "bezoekadres_huisnummertoevoeging": "",
+      "bezoekadres_postcode": "",
+      "bezoekadres_stad": "",
+      "bezoekadres_adresregel1": "",
+      "bezoekadres_adresregel2": "",
+      "bezoekadres_adresregel3": "",
+      "bezoekadres_land": "",
+      "correspondentieadres_nummeraanduiding_id": "",
+      "correspondentieadres_straatnaam": "",
+      "correspondentieadres_huisnummer": 1,
+      "correspondentieadres_huisnummertoevoeging": "",
+      "correspondentieadres_postcode": "",
+      "correspondentieadres_stad": "",
+      "correspondentieadres_adresregel1": "",
+      "correspondentieadres_adresregel2": "",
+      "correspondentieadres_adresregel3": "",
+      "correspondentieadres_land": "",
+      "uuid": "c264d2cf-63a7-4280-bcee-6ec30e822769",
+      "voorkeurs_digitaal_adres": null,
+      "voorkeurs_rekeningnummer": null,
+      "nummer": "11111",
+      "interne_notitie": "",
+      "soort_partij": "persoon",
+      "indicatie_geheimhouding": true,
+      "voorkeurstaal": "nld",
+      "indicatie_actief": true
+    }
+  },
+  {
+    "model": "klantinteracties.partij",
+    "pk": 101,
+    "fields": {
+      "bezoekadres_nummeraanduiding_id": "",
+      "bezoekadres_straatnaam": "",
+      "bezoekadres_huisnummer": 1,
+      "bezoekadres_huisnummertoevoeging": "",
+      "bezoekadres_postcode": "",
+      "bezoekadres_stad": "",
+      "bezoekadres_adresregel1": "",
+      "bezoekadres_adresregel2": "",
+      "bezoekadres_adresregel3": "",
+      "bezoekadres_land": "",
+      "correspondentieadres_nummeraanduiding_id": "",
+      "correspondentieadres_straatnaam": "",
+      "correspondentieadres_huisnummer": 1,
+      "correspondentieadres_huisnummertoevoeging": "",
+      "correspondentieadres_postcode": "",
+      "correspondentieadres_stad": "",
+      "correspondentieadres_adresregel1": "",
+      "correspondentieadres_adresregel2": "",
+      "correspondentieadres_adresregel3": "",
+      "correspondentieadres_land": "",
+      "uuid": "042ed68f-9428-41b8-a8b7-f2bfb1e6bc3d",
+      "voorkeurs_digitaal_adres": null,
+      "voorkeurs_rekeningnummer": null,
+      "nummer": "22222",
+      "interne_notitie": "",
+      "soort_partij": "organisatie",
+      "indicatie_geheimhouding": true,
+      "voorkeurstaal": "nld",
+      "indicatie_actief": true
+    }
+  },
+  {
+    "model": "klantinteracties.vertegenwoordigden",
+    "pk": 1,
+    "fields": {
+      "uuid": "f0dc19b4-71b0-4184-a5a0-65e9914a59e0",
+      "vertegenwoordigende_partij": 2,
+      "vertegenwoordigde_partij": 3
+    }
+  },
+  {
+    "model": "klantinteracties.categorierelatie",
+    "pk": 1,
+    "fields": {
+      "uuid": "2124ed9e-2296-4fb2-8421-b79e5c23ff97",
+      "partij": 2,
+      "categorie": 1,
+      "begin_datum": "2024-03-06",
+      "eind_datum": null
+    }
+  },
+  {
+    "model": "klantinteracties.categorie",
+    "pk": 1,
+    "fields": {
+      "uuid": "2a61e8be-c977-4ec7-b1d7-a443b55267c7",
+      "naam": "MKB"
+    }
+  },
+  {
+    "model": "klantinteracties.organisatie",
+    "pk": 1,
+    "fields": {
+      "partij": 2,
+      "naam": "Maykin"
+    }
+  },
+  {
+    "model": "klantinteracties.organisatie",
+    "pk": 901,
+    "fields": {
+      "partij": 101,
+      "naam": "Ritense"
+    }
+  },
+  {
+    "model": "klantinteracties.persoon",
+    "pk": 1,
+    "fields": {
+      "contactnaam_voorletters": "L.",
+      "contactnaam_voornaam": "Lucas",
+      "contactnaam_voorvoegsel_achternaam": "",
+      "contactnaam_achternaam": "Boom",
+      "partij": 1
+    }
+  },
+  {
+    "model": "klantinteracties.persoon",
+    "pk": 900,
+    "fields": {
+      "contactnaam_voorletters": "V",
+      "contactnaam_voornaam": "Vincent",
+      "contactnaam_voorvoegsel_achternaam": "van",
+      "contactnaam_achternaam": "Beek",
+      "partij": 100
+    }
+  },
+  {
+    "model": "klantinteracties.contactpersoon",
+    "pk": 1,
+    "fields": {
+      "contactnaam_voorletters": "B.",
+      "contactnaam_voornaam": "Bart",
+      "contactnaam_voorvoegsel_achternaam": "",
+      "contactnaam_achternaam": "",
+      "uuid": "c184f398-d663-474b-b042-9956d9deb560",
+      "partij": 3,
+      "werkte_voor_partij": 2
+    }
+  },
+  {
+    "model": "klantinteracties.partijidentificator",
+    "pk": 1,
+    "fields": {
+      "uuid": "dd328a2e-7b8e-4809-be28-f9f894c11c34",
+      "sub_identificator_van": null,
+      "partij": 1,
+      "andere_partij_identificator": "",
+      "partij_identificator_code_objecttype": "natuurlijk_persoon",
+      "partij_identificator_code_soort_object_id": "bsn",
+      "partij_identificator_object_id": "296648875",
+      "partij_identificator_code_register": "brp"
+    }
+  },
+  {
+    "model": "klantinteracties.partijidentificator",
+    "pk": 200,
+    "fields": {
+      "uuid": "fc707204-faf6-4911-9af8-55174808bb94",
+      "sub_identificator_van": null,
+      "partij": 100,
+      "andere_partij_identificator": "",
+      "partij_identificator_code_objecttype": "natuurlijk_persoon",
+      "partij_identificator_code_soort_object_id": "bsn",
+      "partij_identificator_object_id": "569312863",
+      "partij_identificator_code_register": "brp"
+    }
+  },
+  {
+    "model": "klantinteracties.partijidentificator",
+    "pk": 201,
+    "fields": {
+      "uuid": "b945acd0-7d92-4277-b765-b445b47e5c40",
+      "sub_identificator_van": null,
+      "partij": 101,
+      "andere_partij_identificator": "",
+      "partij_identificator_code_objecttype": "niet_natuurlijk_persoon",
+      "partij_identificator_code_soort_object_id": "kvk_nummer",
+      "partij_identificator_object_id": "14127293",
+      "partij_identificator_code_register": "hr"
+    }
+  },
+  {
+    "model": "klantinteracties.partijidentificator",
+    "pk": 202,
+    "fields": {
+      "uuid": "71cf06c1-70ee-4354-9658-d33b167e873d",
+      "sub_identificator_van": 201,
+      "partij": 101,
+      "andere_partij_identificator": "",
+      "partij_identificator_code_objecttype": "vestiging",
+      "partij_identificator_code_soort_object_id": "vestigingsnummer",
+      "partij_identificator_object_id": "000037143557",
+      "partij_identificator_code_register": "hr"
+    }
+  },
+  {
+    "model": "klantinteracties.rekeningnummer",
+    "pk": 1,
+    "fields": {
+      "uuid": "8b5f3eb4-4023-46f6-a05f-8ab5e3bf0be2",
+      "partij": 2,
+      "iban": "NL18BANK23481326",
+      "bic": "1734723742"
+    }
+  }
+]

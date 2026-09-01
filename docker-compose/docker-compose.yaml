@@ -106,9 +106,12 @@ services:
             - ./imports/openzaak/private-media:/app/private-media
             - ./imports/openzaak/init:/app/init
         depends_on:
-            - nl-portal-openzaak
-            - nl-portal-openzaak-database
-            - nl-portal-redis
+            nl-portal-openzaak:
+                condition: service_healthy
+            nl-portal-openzaak-database:
+                condition: service_started
+            nl-portal-redis:
+                condition: service_started
 
     nl-portal-openzaak-database:
         image: postgis/postgis:15-3.5
@@ -133,7 +136,7 @@ services:
             - nl-portal-redis
         network_mode: "service:localhost"
         environment: &openklant-2-env
-            - UWSGI_PORT=8014
+            - OPENKLANT_PORT=8014
             - OTEL_SDK_DISABLED=true
             - DJANGO_SETTINGS_MODULE=openklant.conf.docker
             - IS_HTTPS=no
@@ -148,11 +151,12 @@ services:
             - SECRET_KEY=${SECRET_KEY:-django-insecure-f8s@b*ds4t84-q_2#c0j0506@!l2q6r5_pq5e!vm^_9c*#^66b}
             - CELERY_BROKER_URL=redis://nl-portal-redis:6379/3
             - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/3
+            - OPENKLANT_SUPERUSER_USERNAME=admin
+            - OPENKLANT_SUPERUSER_EMAIL=admin@example.org
+            - DJANGO_SUPERUSER_PASSWORD=admin
             - DISABLE_2FA=true
         volumes:
             - ./imports/openklant-2/fixtures:/app/src/openklant/fixtures
-            - ./imports/openklant-2/init:/app/init
-        command: sh /app/init/start.sh
 
     nl-portal-openklant-2-import:
         image: maykinmedia/open-klant:2.18.0
@@ -167,9 +171,12 @@ services:
             - ./imports/openklant-2/fixtures:/app/src/openklant/fixtures
             - ./imports/openklant-2/init:/app/init
         depends_on:
-            - nl-portal-openklant-2
-            - nl-portal-openklant-2-db
-            - nl-portal-redis
+            nl-portal-openklant-2:
+                condition: service_healthy
+            nl-portal-openklant-2-db:
+                condition: service_started
+            nl-portal-redis:
+                condition: service_started
 
     nl-portal-openklant-2-db:
         image: postgres:15
@@ -208,6 +215,9 @@ services:
             - CELERY_RESULT_EXPIRES=3600
             - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/5
             - CELERY_LOGLEVEL=DEBUG
+            - OBJECTS_SUPERUSER_USERNAME=admin
+            - OBJECTS_SUPERUSER_EMAIL=admin@example.org
+            - DJANGO_SUPERUSER_PASSWORD=admin
         depends_on:
             - nl-portal-objecten-api-database
             - nl-portal-redis
@@ -282,6 +292,9 @@ services:
             - TWO_FACTOR_PATCH_ADMIN=False
             - DISABLE_2FA=true
             - DEBUG=true
+            - OBJECTTYPES_SUPERUSER_USERNAME=admin
+            - OBJECTTYPES_SUPERUSER_EMAIL=admin@example.org
+            - DJANGO_SUPERUSER_PASSWORD=admin
         depends_on:
             - nl-portal-objecttypen-api-database
             - nl-portal-redis
@@ -323,7 +336,7 @@ services:
             - zgw
             - objecten
         environment: &notificaties-env
-            - UWSGI_PORT=8012
+            - OPENNOTIFICATIES_PORT=8012
             - OTEL_SDK_DISABLED=true
             - DJANGO_SETTINGS_MODULE=nrc.conf.docker
             - SECRET_KEY=${SECRET_KEY:-4wHY2Cp5`4(q%)]cuWxPQJRp5kN?g+`.Xah>%6Fsq6+)R>p_}
@@ -346,9 +359,6 @@ services:
             - DJANGO_SUPERUSER_PASSWORD=admin
             - LOG_NOTIFICATIONS_IN_DB=yes
             - DISABLE_2FA=true
-        volumes:
-            - ./imports/open-notificaties/init:/app/init
-        command: sh /app/init/start.sh
 
     nl-portal-open-notificaties-import:
         image: openzaak/open-notificaties:1.16.2
@@ -433,6 +443,9 @@ services:
             - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/10
             - ALLOWED_HOSTS=*
             - DISABLE_2FA=true
+            - OPENPRODUCT_SUPERUSER_USERNAME=admin
+            - OPENPRODUCT_SUPERUSER_EMAIL=admin@example.org
+            - DJANGO_SUPERUSER_PASSWORD=admin
 
     nl-portal-openproduct-import:
         image: maykinmedia/open-product:1.8.0

@@ -1,25 +1,29 @@
 # nl-portal-docker-compose
 
 <!-- TOC -->
-* [nl-portal-docker-compose](#nl-portal-docker-compose)
-  * [Getting started](#getting-started)
-    * [Requirements](#requirements)
-    * [Compose structure and profiles](#compose-structure-and-profiles)
-    * [Running the application](#running-the-application)
-      * [Local (build from source)](#local-build-from-source)
-      * [Remote (published images)](#remote-published-images)
-      * [From sources (active development, fast inner loop)](#from-sources-active-development-fast-inner-loop)
-    * [Starting up supporting services only](#starting-up-supporting-services-only)
-      * [Including all ZGW related services](#including-all-zgw-related-services)
-      * [Keycloak and database only](#keycloak-and-database-only)
-  * [Maintenance](#maintenance)
-    * [Demo data imports](#demo-data-imports)
-    * [Regenerating fixtures](#regenerating-fixtures)
-  * [Known issues](#known-issues)
+
+- [nl-portal-docker-compose](#nl-portal-docker-compose)
+  - [Getting started](#getting-started)
+    - [Requirements](#requirements)
+    - [Compose structure and profiles](#compose-structure-and-profiles)
+    - [Running the application](#running-the-application)
+      - [Local (build from source)](#local-build-from-source)
+      - [Remote (published images)](#remote-published-images)
+      - [From sources (active development, fast inner loop)](#from-sources-active-development-fast-inner-loop)
+    - [Starting up supporting services only](#starting-up-supporting-services-only)
+      - [Including all ZGW related services](#including-all-zgw-related-services)
+      - [Keycloak and database only](#keycloak-and-database-only)
+  - [Maintenance](#maintenance)
+    - [Demo data imports](#demo-data-imports)
+    - [Regenerating fixtures](#regenerating-fixtures)
+  - [Known issues](#known-issues)
+
 <!-- TOC -->
 
 ## Getting started
+
 ### Requirements
+
 - [Docker Desktop](https://docs.docker.com/desktop/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
@@ -30,6 +34,7 @@
 > equivalent `docker-buildx` package for your distro. The `remote` and `sources` modes do not need it.
 
 ### Compose structure and profiles
+
 The compose file is built up out of sets of containers (profiles) that each enable a piece of
 functionality, so you only start what you need. A service without a profile is a core
 requirement and is always started (even with a bare `docker compose up`). Profiles combine:
@@ -44,31 +49,31 @@ See [Running the application](#running-the-application).
 All ports below are exposed via the `localhost` helper container (the services share its
 network namespace), so from your host every service is reachable on `localhost:<port>`.
 
-| Service                                | Port  | Profile / RUN_MODE|
-|----------------------------------------|-------|-------------------|
-| NL Portal Backend (build from source)  | 8080  | RUN_MODE=local    |
-| NL Portal Frontend (build from source) | 3000  | RUN_MODE=local    |
-| NL Portal Backend (published image)    | 8080  | RUN_MODE=remote   |
-| NL Portal Frontend (published image)   | 3000  | RUN_MODE=remote   |
-| NL Portal Database (postgres)          | 5432 | - (core)          |
-| Keycloak                               | 8082  | - (core)          |
-| Keycloak Database (postgres)           | -     | - (core)          |
-| Open Zaak                              | 8001  | zgw, openzaak     |
-| Open Zaak Database (postgis)           | -     | zgw, openzaak     |
-| OpenKlant 2                            | 8014  | zgw, openklant    |
-| OpenKlant 2 Database (postgres)        | -     | zgw, openklant    |
-| Objecten API                           | 8010  | zgw, objecten     |
-| Objecttypen API                        | 8011  | zgw, objecten     |
-| Open Notificaties                      | 8012  | zgw, objecten     |
-| OpenProduct                            | 8015  | zgw, openproduct  |
-| Redis                                  | -     | zgw (sub-profiles)|
-| Haalcentraal BRP                       | 5010  | haalcentraal      |
-| Haalcentraal Bewoning                  | 5011  | haalcentraal      |
-| Configuration Panel Router             | 3001  | config            |
-| Configuration Panel Backend            | 8090  | config            |
-| Configuration Panel Frontend           | 8091  | config            |
-| Configuration Panel Database (postgres)| -     | config            |
-| ClamAV virus scan                      | 3310  | (default)         |
+| Service                                 | Port | Profile / RUN_MODE |
+| --------------------------------------- | ---- | ------------------ |
+| NL Portal Backend (build from source)   | 8080 | RUN_MODE=local     |
+| NL Portal Frontend (build from source)  | 3000 | RUN_MODE=local     |
+| NL Portal Backend (published image)     | 8080 | RUN_MODE=remote    |
+| NL Portal Frontend (published image)    | 3000 | RUN_MODE=remote    |
+| NL Portal Database (postgres)           | 5432 | - (core)           |
+| Keycloak                                | 8082 | - (core)           |
+| Keycloak Database (postgres)            | -    | - (core)           |
+| Open Zaak                               | 8001 | zgw, openzaak      |
+| Open Zaak Database (postgis)            | -    | zgw, openzaak      |
+| OpenKlant 2                             | 8014 | zgw, openklant     |
+| OpenKlant 2 Database (postgres)         | -    | zgw, openklant     |
+| Objecten API                            | 8010 | zgw, objecten      |
+| Objecttypen API                         | 8011 | zgw, objecten      |
+| Open Notificaties                       | 8012 | zgw, objecten      |
+| OpenProduct                             | 8015 | zgw, openproduct   |
+| Redis                                   | -    | zgw (sub-profiles) |
+| Haalcentraal BRP                        | 5010 | haalcentraal       |
+| Haalcentraal Bewoning                   | 5011 | haalcentraal       |
+| Configuration Panel Router              | 3001 | config             |
+| Configuration Panel Backend             | 8090 | config             |
+| Configuration Panel Frontend            | 8091 | config             |
+| Configuration Panel Database (postgres) | -    | config             |
+| ClamAV virus scan                       | 3310 | (default)          |
 
 > **NB!** `RUN_MODE` selects exactly one app-run mode, so `local` and `remote` can never bind the
 > app ports 8080/3000 at the same time. ClamAV now runs by default (no profile) and virus scanning is
@@ -76,6 +81,7 @@ network namespace), so from your host every service is reachable on `localhost:<
 > (virus-DB download), so the first `up` on a cold cache is slower.
 
 ### Running the application
+
 This stack can run the whole NL Portal product (backend + frontend) together with its
 supporting services. NL Portal is now a single monorepo, so the images are named
 `nl-portal-backend` and `nl-portal-frontend` (the old `nl-portal-app-*` names are retired).
@@ -83,35 +89,44 @@ The `RUN_MODE` variable selects how the app runs (`sources` default / `local` / 
 supporting-service profiles (`zgw`, `config`, ...) are chosen independently:
 
 #### Local (build from source)
+
 `RUN_MODE=local` builds the backend and frontend images straight from this monorepo's `../backend`
 and `../frontend` sources (the frontend builds the app together with its workspace libraries) and
 runs them containerized. Use this to verify a change in its shipped form:
+
 ```shell
 RUN_MODE=local docker compose --profile zgw --profile haalcentraal up -d --build
 ```
 
 #### Remote (published images)
+
 `RUN_MODE=remote` pulls the released monorepo images `ghcr.io/nl-portal/nl-portal-backend:4.0` and
 `ghcr.io/nl-portal/nl-portal-frontend:4.0` instead of building — useful for evaluating
 the product without a local build:
+
 ```shell
 RUN_MODE=remote docker compose --profile zgw --profile haalcentraal up -d
 ```
+
 > Note: `4.0` (the current minor line) can be replaced with any available tag from GHCR
 > (`ghcr.io/nl-portal/nl-portal-backend` and `ghcr.io/nl-portal/nl-portal-frontend`),
 > including snapshot tags, provided the `imports/` fixtures and configuration in this
 > stack are compatible with the chosen tag.
 
 #### From sources (active development, fast inner loop)
+
 Run only the supporting services in compose and run the backend and frontend yourself for fast
 reload. `sources` is the default `RUN_MODE`, so the stack does **not** publish the app ports
 (`8080`/`8000`/`3000`), leaving them free for your locally-run app — no `RUN_MODE` needs to be set:
+
 ```shell
 # supporting services only (app ports left free)
 docker compose --profile zgw up -d
 ```
+
 There are two app pairs. For **feature work** run the developer-only dev apps (all modules plus GraphQL
 introspection on, the producten/thema demo, never published). This is the default inner loop:
+
 ```shell
 # backend dev app: no .env.properties, configured from its own application.yml
 cd ../backend && ./gradlew :app-dev:bootRun
@@ -119,12 +134,15 @@ cd ../backend && ./gradlew :app-dev:bootRun
 # frontend dev app on :3000: libraries in watch plus the dev app's vite dev server
 cd ../frontend && pnpm install && pnpm dev
 ```
+
 To run the **shippable app** from sources instead (production-shaped: no demo, openproduct off), use the
 `:app` backend and the `app:`-prefixed frontend script:
+
 ```shell
 cd ../backend && ./gradlew :app:bootRun          # needs .env.properties (see backend/app/README.md)
 cd ../frontend && pnpm app:dev
 ```
+
 Backend GraphQL is at http://localhost:8080/graphql, frontend at http://localhost:3000. `pnpm dev`
 builds the `@nl-portal/*` libraries in watch mode and serves the dev app (`pnpm app:dev` serves the
 shippable app); changing a library rebuilds it and the app hot-reloads. Full config details:
@@ -135,80 +153,92 @@ shippable app); changing a library rebuilds it and the app hot-reloads. Full con
 > It is the `local`/`remote` modes that do, and `RUN_MODE=remote docker compose ...` inline is
 > POSIX-shell syntax that does **not** work in PowerShell or CMD (the variable is silently ignored and
 > the stack falls back to the `sources` default, so no app is started). Set it separately instead:
+>
 > - **PowerShell:** `$env:RUN_MODE="remote"; docker compose --profile zgw up -d`
 > - **CMD:** `set "RUN_MODE=remote" && docker compose --profile zgw up -d`
 > - **Any shell:** add `RUN_MODE=remote` to a `.env` file in this directory (Compose reads it
 >   automatically). This persists across runs, so remove it to go back to the `sources` default.
 
 ### Starting up supporting services only
+
 To run only the supporting services (e.g. when running the application from your IDE),
 leave `RUN_MODE` at its default (`sources`), which starts no app container. Two options:
+
 - Including all ZGW related services, like Open Zaak, Open Klant, Objects API and Objecttypes API
 - Keycloak and database only
 
 #### Including all ZGW related services
+
 Execute the following command:
+
 ```shell
 docker compose --profile zgw up -d
 ```
 
 The following services will be started:
 
-| Service   |      Mapped port      |
-|----------|:-------------:|
-| NL Portal database (postgres) |  5432         |
-| Keycloak |  8082         |
-| Keycloak database (postgres) |    -   |
-| Open Zaak | 8001 |
-| Open Zaak database (postgis) | - |
-| Objecten API | 8010 |
-| Objecten API database (postgis) | - |
-| Objecttypen API | 8011 |
-| Objecttypen API database (postgres) | - |
-| Open Notificaties | 8012 |
-| Open Notificaties database (postgres) | - |
-| OpenKlant 2 | 8014 |
-| OpenKlant 2 database (postgres) | - |
-| OpenProduct | 8015 |
-| OpenProduct database (postgres) | - |
-| Redis | - |
+| Service                               | Mapped port |
+| ------------------------------------- | :---------: |
+| NL Portal database (postgres)         |    5432     |
+| Keycloak                              |    8082     |
+| Keycloak database (postgres)          |      -      |
+| Open Zaak                             |    8001     |
+| Open Zaak database (postgis)          |      -      |
+| Objecten API                          |    8010     |
+| Objecten API database (postgis)       |      -      |
+| Objecttypen API                       |    8011     |
+| Objecttypen API database (postgres)   |      -      |
+| Open Notificaties                     |    8012     |
+| Open Notificaties database (postgres) |      -      |
+| OpenKlant 2                           |    8014     |
+| OpenKlant 2 database (postgres)       |      -      |
+| OpenProduct                           |    8015     |
+| OpenProduct database (postgres)       |      -      |
+| Redis                                 |      -      |
 
 #### Haalcentraal only
+
 Execute the following command:
+
 ```shell
 docker compose --profile haalcentraal up -d
 ```
 
-| Service      | Mapped port |
-|--------------|:-----------:|
-| Haalcentraal BRP |    5010     |
-| Haalcentraal Bewoning     |    5011     |
+| Service               | Mapped port |
+| --------------------- | :---------: |
+| Haalcentraal BRP      |    5010     |
+| Haalcentraal Bewoning |    5011     |
 
 #### ClamAV virusscanner only
+
 Execute the following command:
+
 ```shell
 docker compose --profile clamav up -d
 ```
 
-| Service               | Mapped port |
-|-----------------------|:-----------:|
-| ClamAV                |    3310     |
+| Service | Mapped port |
+| ------- | :---------: |
+| ClamAV  |    3310     |
 
 #### Keycloak and database only
-Execute the following command: 
+
+Execute the following command:
+
 ```shell
 docker compose up -d
 ```
 
-| Service   |      Mapped port      |
-|----------|:-------------:|
-| NL Portal database (postgres) |  5432         |
-| Keycloak |  8082         |
-| Keycloak database (postgres) |    -   |
-
+| Service                       | Mapped port |
+| ----------------------------- | :---------: |
+| NL Portal database (postgres) |    5432     |
+| Keycloak                      |    8082     |
+| Keycloak database (postgres)  |      -      |
 
 #### To run all containers Keycloak, ZGW related services, HaalCentraal and ClamAV
+
 Execute the following command:
+
 ```shell
 docker compose --profile zgw --profile haalcentraal --profile clamav up -d
 ```
@@ -222,59 +252,69 @@ All demo data is seeded as model-serialized Django fixtures loaded with `manage.
 `/docker-entrypoint-initdb.d/`.
 
 Every service uses the same wiring: the app container runs the image's default `/start.sh` (which runs
-`migrate`), and a dedicated `*-import` sidecar reuses the service image, mounts
-`imports/<service>/fixtures` into the image's app package and `imports/<service>/init`, and runs an
-init script that creates the `admin`/`admin` superuser and `loaddata`s the fixtures. This applies to
+`migrate` and creates the `admin`/`admin` superuser via the image's `<SERVICE>_SUPERUSER_USERNAME` /
+`_EMAIL` / `DJANGO_SUPERUSER_PASSWORD` env triplet), and a dedicated `*-import` sidecar reuses the
+service image, mounts `imports/<service>/fixtures` into the image's app package and
+`imports/<service>/init`, and runs an init script that only `loaddata`s the fixtures. This applies to
 `openzaak`, `objecten`, `objecttypen`, `open-notificaties`, `openproduct`, and `openklant-2`. The
 `openproduct` import sidecar additionally loads the UPL reference list via
 `manage.py load_upl --file imports/openproduct/init/UPL-actueel.csv`.
 
-Each import sidecar gates on `python /app/src/manage.py migrate --check` before seeding: it is
-read-only and exits 0 only once every migration in the pinned image is applied, so the load never
-races ahead of migrations and needs no hardcoded per-image sentinel table.
+The `openzaak` and `openklant-2` import sidecars gate on the app container's image-provided
+Dockerfile `HEALTHCHECK` via `depends_on: condition: service_healthy`. The remaining three
+(`open-notificaties`, `objecten`, `objecttypen`, `openproduct`) still poll on
+`python /app/src/manage.py migrate --check` because their pinned image does not ship a Dockerfile
+`HEALTHCHECK`: the check is read-only and exits 0 only once every migration is applied, so the load
+never races ahead of migrations and needs no hardcoded per-image sentinel table.
 
 Because fixtures are model-serialized, a minor image bump that only adds nullable columns imports
 without changes.
 
-> **Temporary workaround - `openproduct` app launcher.** The `openproduct` app container does not run
-> the plain default `/start.sh`; it runs `imports/openproduct/init/start.sh`, a thin wrapper that is
-> identical to the image's `/start.sh` except it `unset`s `UWSGI_PORT` before `exec uwsgi` (and does no
-> seeding). This works around a bug in `maykinmedia/open-product`: its `/start.sh` reads `UWSGI_PORT`
-> into a shell variable but leaves it exported, so uwsgi's `--strict` mode aborts on the auto-mapped
-> `port` directive (`[strict-mode] unknown config directive: port`). Once the ability to set
-> `UWSGI_PORT` is fixed upstream (issue to be lodged with Maykin), drop `start.sh` and revert the app
-> container to the default `/start.sh` like the other services.
+> **Temporary workaround - `openproduct` and `objects-api` app launchers.** The `openproduct` and
+> `objects-api` app containers do not run the plain default `/start.sh`; they run
+> `imports/<service>/init/start.sh`, a thin wrapper that is identical to the image's `/start.sh` except
+> it `unset`s `UWSGI_PORT` before `exec uwsgi` (and does no seeding). This works around a bug in
+> `maykinmedia/open-product` (1.8.0) and `maykinmedia/objects-api` (3.6.2): their `/start.sh` reads
+> `UWSGI_PORT` into a shell variable but leaves it exported, so uwsgi's `--strict` mode aborts on the
+> auto-mapped `port` directive (`[strict-mode] unknown config directive: port`). `open-klant` (2.18.0)
+> and `open-notificaties` (1.16.2) no longer need this wrapper: they renamed the variable to
+> `OPENKLANT_PORT` / `OPENNOTIFICATIES_PORT` respectively, which the image's default `/start.sh`
+> handles correctly under `--strict`. Once the ability to set `UWSGI_PORT` is also fixed in
+> open-product and objects-api upstream (issue to be lodged with Maykin), drop the two `start.sh`
+> wrappers and revert the app containers to the default `/start.sh` like the other services.
 
 ### Regenerating fixtures
 
 Fixtures are committed artifacts. To regenerate after a demo-data or schema change, seed a container
 with the desired data, then dump the relevant apps/models:
+
 ```shell
 docker compose --profile <profile> up -d
 docker compose exec <service> python /app/src/manage.py dumpdata <apps> --indent 2 -o <fixture.json>
 ```
+
 Copy the resulting JSON into `imports/<service>/fixtures/` and commit it.
 
 ## Known issues
 
-* Running on Windows  
-If the services within this compose file fail to start up with the following error or similar:  
-    ```log
-    2025-11-18 11:15:41.901 | /app/init/init.sh: 2: 
-    2025-11-18 11:15:41.902 | Apply database migrations
-    2025-11-18 11:15:59.325 | Unknown command: 'migrate\r'. Did you mean migrate?
-    2025-11-18 11:15:59.325 | Type 'manage.py help' for usage.
-    2025-11-18 11:16:04.229 | Traceback (most recent call last):
-    2025-11-18 11:16:04.229 |   File "/usr/local/lib/python3.12/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
-    2025-11-18 11:16:04.235 |     self.connect()
-    2025-11-18 11:16:04.235 |   File "/usr/local/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
-    2025-11-18 11:16:04.237 |     return func(*args, **kwargs)
-    2025-11-18 11:16:04.237 |            ^^^^^^^^^^^^^^^^^^^^^
-    2025-11-18 11:16:04.237 |   File "/usr/local/lib/python3.12/site-packages/django/db/backends/base/base.py", line 256, in connect
-    2025-11-18 11:16:04.237 |     self.connection = self.get_new_connection(conn_params)
-    2025-11-18 11:16:04.237 |                       
-    ```
+- Running on Windows  
+  If the services within this compose file fail to start up with the following error or similar:
+  ```log
+  2025-11-18 11:15:41.901 | /app/init/init.sh: 2:
+  2025-11-18 11:15:41.902 | Apply database migrations
+  2025-11-18 11:15:59.325 | Unknown command: 'migrate\r'. Did you mean migrate?
+  2025-11-18 11:15:59.325 | Type 'manage.py help' for usage.
+  2025-11-18 11:16:04.229 | Traceback (most recent call last):
+  2025-11-18 11:16:04.229 |   File "/usr/local/lib/python3.12/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+  2025-11-18 11:16:04.235 |     self.connect()
+  2025-11-18 11:16:04.235 |   File "/usr/local/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+  2025-11-18 11:16:04.237 |     return func(*args, **kwargs)
+  2025-11-18 11:16:04.237 |            ^^^^^^^^^^^^^^^^^^^^^
+  2025-11-18 11:16:04.237 |   File "/usr/local/lib/python3.12/site-packages/django/db/backends/base/base.py", line 256, in connect
+  2025-11-18 11:16:04.237 |     self.connection = self.get_new_connection(conn_params)
+  2025-11-18 11:16:04.237 |
+  ```
   Then that means either your editor or git is replacing linux line endings with windows compatible crlf line endings.
   To work with this repository you need to make sure that doesn't happen:
-  * Git: https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings?platform=windows#about-line-endings  
-    * Make sure that the `core.autocrlf` property in git is set to `false` and then pull the project again.
+  - Git: https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings?platform=windows#about-line-endings
+    - Make sure that the `core.autocrlf` property in git is set to `false` and then pull the project again.

@@ -10,6 +10,7 @@ services:
           - openklant-2-db
           - redis
       environment:
+          - OTEL_SDK_DISABLED=true
           - DJANGO_SETTINGS_MODULE=openklant.conf.docker
           - IS_HTTPS=no
           - DB_NAME=openklant
@@ -24,10 +25,12 @@ services:
           - CELERY_BROKER_URL=redis://redis-test:6379/0
           - CELERY_RESULT_BACKEND=redis://redis-test:6379/0
           - DISABLE_2FA=true
-          - RUN_SETUP_CONFIG=true
+          - OPENKLANT_SUPERUSER_USERNAME=admin
+          - OPENKLANT_SUPERUSER_EMAIL=admin@example.org
+          - DJANGO_SUPERUSER_PASSWORD=admin
       volumes:
-          - ./imports/openklant-2/init/data.yaml:/app/data.yaml
           - ./imports/openklant-2/init:/app/init
+          - ./imports/openklant-2/fixtures:/app/src/openklant/fixtures
       command: sh /app/init/init.sh
 
   openklant-2-db:
@@ -37,8 +40,6 @@ services:
           - POSTGRES_USER=openklant
           - POSTGRES_PASSWORD=openklant
           - POSTGRES_DB=openklant
-      volumes:
-          - ./imports/openklant-2/database:/docker-entrypoint-initdb.d/
 
   redis:
       image: redis:8.10.1
