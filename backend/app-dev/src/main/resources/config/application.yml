@@ -35,6 +35,7 @@ spring:
             resourceserver:
                 jwt:
                     issuer-uri: http://localhost:8082/auth/realms/nlportal
+                    audiences: gzac-portal-m2m
     liquibase:
         enabled: false
     datasource:
@@ -80,8 +81,8 @@ logging:
 nl-portal:
     authentication:
         keycloak:
+            token-exchange-version: v2
             resource: gzac-portal-m2m
-            audience: gzac-portal-token-exchange
             credentials:
                 secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
         machtingsdienst:

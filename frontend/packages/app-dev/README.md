@@ -1,30 +1,29 @@
-# React + TypeScript + Vite
+# nl-portal-app-dev
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Part of the [NL Portal](https://github.com/nl-portal/nl-portal) frontend libraries, a collection of
+packages providing a configurable portal implementation for municipalities.
 
-Currently, two official plugins are available:
+This package is a developer-only portal implementation, used to develop and demo the `@nl-portal/*`
+libraries from sources. It is private and never published to npm. Use
+[nl-portal-app](../app) as the reference implementation.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Running from sources
 
-## Expanding the ESLint configuration
+Install dependencies from the [frontend](../..) root first, then start this package:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
-    tsconfigRootDir: __dirname,
-  },
-};
+```bash
+pnpm dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+The `dev` and `build` scripts wait for the library `dist` output, so the libraries must be building
+or built before this app starts.
+
+See the [frontend README](../../README.md) for the full development setup.
+
+## Documentation
+
+See [nl-portal.nl](https://nl-portal.nl) for setup, configuration, and architecture.
+
+## License
+
+[EUPL-1.2](https://github.com/nl-portal/nl-portal/blob/main/frontend/LICENSE.MD)

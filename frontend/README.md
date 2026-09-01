@@ -1,223 +1,137 @@
-# nl-portal-libraries
+# NL Portal Frontend
 
-![Version 3.0.3](https://img.shields.io/badge/Version-3.0.3-blue)  
+![3.x maintenance](https://img.shields.io/badge/3.x-maintenance-orange)
 ![Node 22](https://img.shields.io/badge/Node-22-green)
-![React 19.2.3](https://img.shields.io/badge/React-19.2.3-green)
 
-`nl-portal-libraries` is a collection of packages aimed at providing a configurable portal
-implementation for municipalities.
+> **This is the 3.x maintenance line.** Active development happens on the 4.x line (`main`), where
+> this documentation is kept up to date. The 3.x line still receives fixes and selected minor
+> releases, but new functionality is generally added to 4.x first. Check which line you are on before
+> following instructions from either branch.
 
-The resulting portal implementation is built up of reusable components that fit the specifications
-of the [NL Design System](https://designsystem.gebruikercentraal.nl/).
+The frontend stack of the NL Portal. It is a single [pnpm workspace](https://pnpm.io/workspaces) of
+React packages that together provide a configurable portal implementation for municipalities, built
+on components that follow the [NL Design System](https://designsystem.gebruikercentraal.nl/). Look
+and feel is customized through design tokens; the back-end systems it talks to are configured at
+runtime.
 
-The look and feel of these components can be customized through the use of design tokens. Moreover,
-the back-end systems with which the implementation communicates can be configured, providing each
-municipality with their own unique environment and data.
+## Packages
 
-All such configuration takes place in the implementation [@nl-portal/nl-portal-app](./packages/app).
+Reusable libraries, published as `@nl-portal/*`:
 
-## Development
+- `api` - GraphQL client + generated hooks (Apollo Client).
+- `authentication` - OIDC authentication.
+- `localization` - translations and i18n.
+- `user-interface` - the portal UI components and pages.
 
-To contribute to this repository, first [clone](https://git-scm.com/docs/git-clone) it to your
-device.
+And the two application packages:
 
-Make sure to [install pnpm](https://pnpmpkg.com/getting-started/install).
+- `app` (`nl-portal-app`) - the shippable portal that consumes the libraries via `workspace:*` and is
+  packaged as a container image from [`frontend/Dockerfile`](./Dockerfile). Not published to npm.
+- `app-dev` (`nl-portal-app-dev`) - a developer-only sandbox carrying work-in-progress demos, never
+  published. See [packages/app-dev](./packages/app-dev/README.md).
 
-### Installing dependencies
+## Requirements
 
-Install dependencies for all projects in the [packages](./packages) directory with the following command:
+- Node 22
+- pnpm 11 (`corepack enable` or see https://pnpm.io/installation)
+
+## Getting started
+
+From `frontend/`:
 
 ```shell
-pnpm install
+pnpm install   # install all workspace dependencies
+pnpm dev       # build the libraries in watch mode and serve the DEV app on :3000
 ```
 
-### Starting the project
+The root scripts default to the dev app; add the `app:` prefix for the shippable app:
 
-After installing dependencies, start the project with:
+| Dev app (default) | Shippable app      |
+| ----------------- | ------------------ |
+| `pnpm dev`        | `pnpm app:dev`     |
+| `pnpm build`      | `pnpm app:build`   |
+| `pnpm preview`    | `pnpm app:preview` |
+
+Each `dev` script runs its package's dependencies' dev scripts in parallel: the libraries build in
+watch mode (via `vite build --watch`) and the app waits for them, then starts its vite dev server.
+For a one-off build of every package instead, use `pnpm -r build` (this is what CI runs).
+
+## Quality checks
+
+Run from `frontend/`:
 
 ```shell
-pnpm dev
+pnpm test          # vitest
+pnpm typecheck     # tsc --noEmit
+pnpm lint:css      # stylelint
+pnpm prettier      # formatting check (pnpm prettier:fix to apply)
 ```
 
-This commands runs all the `start` scripts of each of the individual packages in the
-[packages](./packages) directory in parallel.
+`pnpm prettier` is the quality gate. Husky hooks run `lint-staged` over staged files on commit and
+`commitlint` over the commit message; the pre-push hook runs `pnpm lint` (which includes the
+copyright header check) and, note, the backend's `./gradlew spotlessCheck` as well.
 
-Please note that on first run, all packages must have been built first. Please refer to the section
-below.
+## GraphQL codegen
 
-_Tip: Packages can started individually by running `pnpm dev` from their respective
-directories._
+Only `packages/api` runs codegen (`pnpm codegen`), generating typed hooks from the query files in
+[packages/api/src/queries](./packages/api/src/queries). The generated output is committed, so
+consumers reuse it without regenerating. Regeneration requires the GraphQL endpoint (the backend) to
+be reachable, as configured in [codegen.yml](./packages/api/codegen.yml).
 
-### Building
+Once generated, queries are exported as hooks:
 
-After installing dependencies, build the project with `pnpm build` from the project root.
+```ts
+import { useGetZakenQuery } from "@nl-portal/nl-portal-api";
 
-This commands runs all the `build` scripts of each of the individual packages in the
-[packages](./packages) directory.
-
-_Tip: Packages can built individually by running `pnpm build` from their respective
-directories._
-
-### Testing
-
-Testing in this project is done with [Vitest](https://vitest.dev/). Run the tests of all packages with
-`pnpm test` from the project root. To keep watching the tests for any changes, use `pnpm test:watch`.
-
-### Linting
-
-Testing in this project is done with [ESLint](https://eslint.org/). Look for linting errors in all
-packages by running `pnpm lint` from the project root. Use `pnpm lint:fix` to automatically fix these errors.
-
-### Prettifying
-
-Prettifying in this project is done with [Prettier](https://prettier.io/). Look for formatting
-errors in all packages by running `pnpm prettier` from the project root. Use
-`pnpm prettier:fix` to automatically fix these errors.
-
-### Adding dependencies
-
-To add a dependency to _all individual packages_, use `pnpm add <package-name>` from the project
-root. For example: `pnpm add vitest`.
-
-To add a dependency to one or more specific packages use
-`pnpm add <package-name> --scope=<package-name>`. For example, to add Vitest as a dependency to
-[@nl-portal/nl-portal-app](./packages/app) and
-[@nl-portal/nl-portal-user-interface](./packages/user-interface), use:
-`pnpm add vitest --scope=@nl-portal/nl-portal-app --scope=@nl-portal/nl-portal-user-interface`.
-
-If you must add a devDependency to the root project, use `pnpm add <package-name> --dev -W` from the
-project root. For example: `pnpm add vitest --dev -W`.
-
-### Local dependencies
-
-Packages inside the [packages](./packages) folder may depend on each other, simply by adding them to
-their respective `package.json` files and running `pnpm install` from the project root
-afterwards.
-
-For example, the `package.json` of [@nl-portal/nl-portal-app](./packages/app) might include
-`"@nl-portal/nl-portal-user-interface": "0.1.0"` in its list of dependencies. For this to work, the
-version number in the `package.json` of
-[@nl-portal/nl-portal-user-interface](./packages/user-interface) must also be `"0.1.0"`.
-
-### Tips and guidelines for development
-
-- It is advisable to install IDE plugins for [ESLint](https://eslint.org/) and
-  [Prettier](https://prettier.io/). Make sure they use the configurations from the project root. You
-  can set the plugins to automatically fix any errors on saving your files.
-- Please use TypeScript as much as possible.
-- [Use index files for more readable imports.](https://www.bettercoder.io/best-practices/69/use-indexts-to-simplify-imports)
-- Please write unit tests for your code.
-
-## Project structure
-
-The set-up of this project is a [Lerna monorepo](https://github.com/lerna/lerna) using
-[pnpm Workspaces](https://classic.pnpmpkg.com/en/docs/workspaces/).
-
-Individual packages are stored in the [packages](./packages) directory. Each package has its own
-`package.json` file, which includes dependencies and its own `build` and `start` scripts.
-
-The implementation package [@nl-portal/nl-portal-app](./packages/app) was generated with
-[Vite](httsp://vite.dev) using the TypeScript preset. It uses other packages in this project as dependencies. Custom implementations can be based
-on this package.
-
-Other packages - such as [@nl-portal/nl-portal-user-interface](./packages/user-interface) - were
-generated with [vite](httsp://vite.dev). They serve as dependencies for the implementation, so that each future implementation can be kept up-to-date easily.
-
-### Adding a new package
-
-New packages can be created in their own directory, inside the [packages](./packages) directory.
-
-Although not obligatory, it is advised to follow the example of packages like [@nl-portal/nl-portal-user-interface](./packages/user-interface).
-
-Please prefix your package name with `@nl-portal/*` and include the following in its `package.json`:
-
-```
-"author": "Municipality of The Hague",
-"license": "EUPL-1.2",
+const CasesPage = () => {
+  const { data, loading, error, refetch } = useGetZakenQuery();
+  // ...
+};
 ```
 
-_Tip: Make sure your newly created package does not contain its own git repository._
+## Configuration
 
-Please set the version number of your package dependencies to match the version numbers of
-dependencies of other packages, so that [Lerna](https://github.com/lerna/lerna) can combine these
-dependencies.
+On this line, runtime configuration is carried entirely by `window.*` globals: the OIDC and API URLs
+plus the feature and theming toggles. The full set is declared in [window.d.ts](./window.d.ts).
 
-Each package must have their own `.eslintignore`, `.gitignore` and `.prettierignore` files. These
-files include things such as the `dist` and `node_modules` folders.
+Values are set by [packages/app/public/config.js](./packages/app/public/config.js) for local
+development. In a container, `config.template.js` is populated from environment variables at startup
+via nginx `envsubst`, so any of them can be overridden per environment:
 
-Linting and prettifying is done from the root project, so make sure to remove any configuration
-files (such as `.eslintrc.json` or `.prettierrc.json`) from your project if they are included by
-default.
-
-### Configuration
-
-Environment variables are loaded from the implementation [@nl-portal/nl-portal-app](./packages/app)
-by default. Possible configuration values are specified in the
-[Config interface](./packages/app/src/interfaces/config.ts).
-
-These values are set to the window object by [config.js](./packages/app/public/config.js), which
-also contains the default values for local development.
-
-Another configuration option is the authentication methods, which must include the mapping for the 'middel' claim in the JWT token, and the type of login (person, company, proxy). Example snippet for in the implementation:
-
+```shell
+docker run -e OIDC_URL=... -e OIDC_REALM=... -e OIDC_CLIENT_ID=... -e GRAPHQL_URI=... -p 3000:3000 <image>
 ```
-...
+
+Authentication methods are configured in the app itself, mapping the `middel` claim from the JWT to a
+login type:
+
+```ts
 const authenticationMethods = {
   person: ["digid", "machtigen"],
   company: ["eherkenning", "bewindvoering"],
   proxy: ["machtigen", "bewindvoering"],
 };
-...
-const App = () => {
-...
-return (
-    <div className={config.THEME_CLASS}>
-      <LocalizationProvider customMessages={CUSTOM_MESSAGES}>
-        <OidcProvider
-          clientId={config.OIDC_CLIENT_ID}
-          realm={config.OIDC_REALM}
-          url={config.OIDC_URL}
-          redirectUri={config.OIDC_REDIRECT_URI}
-          authenticationMethods={authenticationMethods}
-        >
-        ...
-        </OidcProvider>
-      </LocalizationProvider>
-    </div>
-  );
-};
-...
 ```
 
-When starting the app through Docker, these values can be optionally overridden, i.e.:
+See [packages/app/src/App.tsx](./packages/app/src/App.tsx) for how these are passed to
+`OidcProvider`.
 
+## Published packages
+
+The four libraries publish to npm as `@nl-portal/*`:
+
+```shell
+pnpm add @nl-portal/nl-portal-user-interface
 ```
-docker run --name test -e OIDC_URL=thekeycloakurl -e OIDC_REALM=therealrealm -e OIDC_CLIENT_ID=theclientid -e OIDC_REDIRECT_URI=theredirecturi GRAPHQL_URI=thegraphqluri -dp 3000:3000 test1
+
+Release candidates go out under the `rc` dist-tag. A release only takes `latest` when its version is
+the newest across all lines; otherwise it gets the major-specific tag. Once 4.x is the newest
+release, install from this line explicitly:
+
+```shell
+pnpm add @nl-portal/nl-portal-user-interface@v3
 ```
 
-### GraphQL
+## More information
 
-The implementation [@nl-portal/nl-portal-app](./packages/app) uses
-[Apollo Client](https://www.apollographql.com/docs/react/) through the package
-[@nl-portal/nl-portal-api](./packages/api) to communicate with the GraphQL back-end.
-
-New queries can be added as exported JavaScript variables from separate files
-[in the queries folder](./packages/api/src/queries).
-
-Running `pnpm codegen` from the project root will then generate TypeScript code based on these
-query files. For this to succeed, the GraphQL API endpoint specified in
-[codegen.yml](./packages/api/codegen.yml) must be available.
-
-Once the codegen completes, the queries are exported as hooks from
-[@nl-portal/nl-portal-api](./packages/api) and can be imported and used inside a functional
-component:
-
-```
-...
-import {useGetZakenQuery} from '@nl-portal/nl-portal-api';
-
-const CasesPage = () => {
-  const {data, loading, error, refetch} = useGetZakenQuery();
-  ...
-}
-```
+See the [documentation](https://nl-portal.nl).
