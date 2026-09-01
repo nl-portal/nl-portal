@@ -155,6 +155,8 @@ nl-portal:
                 token: ac045222c9e7cde8120b48735560f9b920bb58cd
                 product-api-url: http://localhost:8015/producten/api/v1
                 product-type-api-url: http://localhost:8015/producttypen/api/v1
+                prefill:
+                    type-url: http://localhost:8011/api/v2/objecttypes/e3cb704f-4091-40c7-a1ee-e8443e74ed0e
         product:
             enabled: true
             properties:
