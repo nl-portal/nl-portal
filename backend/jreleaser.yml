@@ -55,6 +55,7 @@ deploy:
           - zgw/taak/build/sonatypeCentralStaging
           - zgw/verificatie/build/sonatypeCentralStaging
           - zgw/zaken-api/build/sonatypeCentralStaging
+          - zgw/zaken/build/sonatypeCentralStaging
     nexus2:
       sonatype-snapshots:
         active: SNAPSHOT
@@ -87,3 +88,4 @@ deploy:
           - zgw/taak/build/sonatypeCentralStaging
           - zgw/verificatie/build/sonatypeCentralStaging
           - zgw/zaken-api/build/sonatypeCentralStaging
+          - zgw/zaken/build/sonatypeCentralStaging
