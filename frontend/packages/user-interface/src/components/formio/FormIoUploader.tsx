@@ -180,6 +180,7 @@ const PortalFileUpload = ({
           onFilesSelected={(files) =>
             Array.from(files || []).forEach(uploadFile)
           }
+          multiple={multiple}
         />
       )}
       {fileList.map((file) => (
