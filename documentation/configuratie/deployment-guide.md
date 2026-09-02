@@ -39,17 +39,17 @@ Alle module properties, inclusief de optionele, zijn met inline documentatie te 
 
 ### Frontend features
 
-De frontend haalt zijn feature-toggles en -eigenschappen op via `GET /api/public/features`, gevuld vanuit `nl-portal.config.features` op de backend. Deze volgen dezelfde relaxed-binding naamconventie, bijvoorbeeld `NLPORTAL_CONFIG_FEATURES_TOGGLES_OVERVIEWMAINTENANCEALERTENABLED=true`.
+De frontend haalt zijn feature-toggles en -eigenschappen op via `GET /api/public/frontenf`, gevuld vanuit `nl-portal.frontend` op de backend. Deze volgen dezelfde relaxed-binding naamconventie, bijvoorbeeld `NLPORTAL_FRONTEND_TOGGLES_OVERVIEWMAINTENANCEALERTENABLED=true`.
 
-- `nl-portal.config.features.toggles.*` — booleans, zoals `messageCountEnabled`, `casesPartialSearchEnabled`, `openProductEnabled`, `themeApiEnabled`, `casesResultExplanationEnabled`, `myInhabitantCountEnabled`, `casesContactMomentsEnabled`, `overviewIntroEnabled`, `overviewMaintenanceAlertEnabled`.
-- `nl-portal.config.features.properties.*` — waarden, zoals `messageCountPollingInterval`, `overviewCurrentCasesPreviewLength`, `themeClass`, de `overviewMaintenanceAlert{Title,Text}{Nl,En}` teksten en de BRP/adres-URL's.
+- `nl-portal.frontend.toggles.*` — booleans, zoals `messageCountEnabled`, `casesPartialSearchEnabled`, `openProductEnabled`, `casesResultExplanationEnabled`, `myInhabitantCountEnabled`, `casesContactMomentsEnabled`, `overviewIntroEnabled`, `overviewMaintenanceAlertEnabled`.
+- `nl-portal.frontend.properties.*` — waarden, zoals `messageCountPollingInterval`, `overviewCurrentCasesPreviewLength`, `overviewCurrentTasksPreviewLength`, `themeClass`, de `overviewMaintenanceAlert{Title,Text}{Nl,En}` teksten en de BRP/adres-URL's.
 
 De onderhoudsmelding op de overzichtspagina zet je bijvoorbeeld aan met:
 
 ```shell
-NLPORTAL_CONFIG_FEATURES_TOGGLES_OVERVIEWMAINTENANCEALERTENABLED=true
-NLPORTAL_CONFIG_FEATURES_PROPERTIES_OVERVIEWMAINTENANCEALERTTITLENL=Onderhoud
-NLPORTAL_CONFIG_FEATURES_PROPERTIES_OVERVIEWMAINTENANCEALERTTEXTNL=Deze omgeving is tijdelijk in onderhoud.
+NLPORTAL_FRONTEND_TOGGLES_OVERVIEWMAINTENANCEALERTENABLED=true
+NLPORTAL_FRONTEND_PROPERTIES_OVERVIEWMAINTENANCEALERTTITLENL=Onderhoud
+NLPORTAL_FRONTEND_PROPERTIES_OVERVIEWMAINTENANCEALERTTEXTNL=Deze omgeving is tijdelijk in onderhoud.
 ```
 
 Zie [Eigen vormgeving](eigen-vormgeving.md) voor `themeClass` en theming.
