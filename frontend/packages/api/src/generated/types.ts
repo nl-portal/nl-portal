@@ -2335,6 +2335,8 @@ export type QueryGetUserDigitaleAdressenArgs = {
 
 
 export type QueryGetUserKlantContactArgs = {
+  identificatorId?: InputMaybe<Scalars['UUID']['input']>;
+  identificatorType?: InputMaybe<OnderwerpObjectIndentificatorType>;
   klantContactId: Scalars['UUID']['input'];
 };
 
