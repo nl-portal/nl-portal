@@ -32,10 +32,10 @@ const ProductDecisionsList = ({
 }: Props) => {
   const [fetchPrefill] = useLazyQuery(GetOpenProductActiePrefillDocument);
 
-  const handlePrefillClick = () => {
+  const handlePrefillClick = (key: string) => {
     fetchPrefill({
       variables: {
-        naam: "prefill-actie",
+        naam: key,
         productId: productId,
       },
     }).then((result) => {
