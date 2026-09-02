@@ -1034,7 +1034,7 @@ export type OpenKlant2Klantcontact = {
   kanaal: Scalars['String']['output'];
   leiddeTotInterneTaken: Array<OpenKlant2ForeignKey>;
   metadata?: Maybe<Scalars['JSON']['output']>;
-  nummer: Scalars['String']['output'];
+  nummer?: Maybe<Scalars['String']['output']>;
   omvatteBijlagen: Array<OpenKlant2ForeignKey>;
   onderwerp: Scalars['String']['output'];
   plaatsgevondenOp: Scalars['String']['output'];
