@@ -119,7 +119,7 @@ export type Besluit = {
   vervalreden: Scalars['String']['output'];
   vervalredenWeergave: Scalars['String']['output'];
   verzenddatum?: Maybe<Scalars['Date']['output']>;
-  zaak: Scalars['String']['output'];
+  zaak?: Maybe<Scalars['String']['output']>;
 };
 
 export type BesluitAuditTrail = {
@@ -805,10 +805,11 @@ export type HadKlantcontact = {
   inhoud: Scalars['String']['output'];
   kanaal: Scalars['String']['output'];
   leiddeTotInterneTaken: Array<OpenKlant2ForeignKey>;
-  nummer: Scalars['String']['output'];
+  nummer?: Maybe<Scalars['String']['output']>;
   omvatteBijlagen: Array<OpenKlant2ForeignKey>;
   onderwerp: Scalars['String']['output'];
   plaatsgevondenOp: Scalars['String']['output'];
+  referentienummer?: Maybe<Scalars['String']['output']>;
   taal: Scalars['String']['output'];
   url: Scalars['String']['output'];
   uuid: Scalars['String']['output'];
@@ -1034,7 +1035,7 @@ export type OpenKlant2Klantcontact = {
   kanaal: Scalars['String']['output'];
   leiddeTotInterneTaken: Array<OpenKlant2ForeignKey>;
   metadata?: Maybe<Scalars['JSON']['output']>;
-  nummer: Scalars['String']['output'];
+  nummer?: Maybe<Scalars['String']['output']>;
   omvatteBijlagen: Array<OpenKlant2ForeignKey>;
   onderwerp: Scalars['String']['output'];
   plaatsgevondenOp: Scalars['String']['output'];
