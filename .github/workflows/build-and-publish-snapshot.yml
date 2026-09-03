@@ -3,7 +3,6 @@ name: Build and Publish Snapshot
 on:
     push:
         branches:
-            - release/3.x
             - "hotfix/**"
     workflow_dispatch:
 
