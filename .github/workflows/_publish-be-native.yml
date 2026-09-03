@@ -71,8 +71,8 @@ jobs:
                     JRELEASER_GPG_PASSPHRASE: ${{ secrets.GPG_SIGNING_PASSPHRASE }}
                     JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
                     JRELEASER_DEPLOY_MAVEN_MAVENCENTRAL_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-                    JRELEASER_DEPLOY_MAVEN_MAVENCENTRALSNAPSHOTS_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-                    JRELEASER_DEPLOY_MAVEN_MAVENCENTRALSNAPSHOTS_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+                    JRELEASER_DEPLOY_MAVEN_NEXUS2_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+                    JRELEASER_DEPLOY_MAVEN_NEXUS2_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
                     JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Download reports + SBOM
                 if: ${{ inputs.uploadReports }}
