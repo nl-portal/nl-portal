@@ -332,8 +332,13 @@ class OpenKlant2Service(
             searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODESOORTOBJECTID to "uuid")
         }
         identificatorType?.let {
-            searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEREGISTER to "open-" + it.name.lowercase())
             searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEOBJECTTYPE to it.name.lowercase())
+        }
+
+        getKlantContactCodeRegister(
+            identificatorType = identificatorType,
+        )?.let {
+            searchVariables.add(OpenKlant2KlantcontactenFilters.ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEREGISTER to it)
         }
 
         return try {
@@ -347,8 +352,15 @@ class OpenKlant2Service(
     suspend fun findKlantContact(
         authentication: CommonGroundAuthentication,
         klantContactId: UUID,
+        identificatorType: OnderwerpObjectIndentificatorType? = null,
+        identificatorId: UUID? = null,
     ): OpenKlant2Klantcontact? {
-        val userKlantContacten = findKlantContacten(authentication)
+        val userKlantContacten =
+            findKlantContacten(
+                authentication = authentication,
+                identificatorType = identificatorType,
+                identificatorId = identificatorId,
+            )
 
         if (userKlantContacten.none { it.uuid == klantContactId.toString() }) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this klantcontact")
@@ -494,6 +506,15 @@ class OpenKlant2Service(
                     uuid = UUID.randomUUID(),
                 )
             }
+        }
+
+    private fun getKlantContactCodeRegister(
+        identificatorType: OnderwerpObjectIndentificatorType? = null,
+    ): String? =
+        when (identificatorType) {
+            OnderwerpObjectIndentificatorType.PRODUCT -> openKlantConfigurationProperties.klantContactCodeRegister?.product
+            OnderwerpObjectIndentificatorType.ZAAK -> openKlantConfigurationProperties.klantContactCodeRegister?.zaak
+            else -> null
         }
 
     companion object {
