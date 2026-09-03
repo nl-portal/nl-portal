@@ -43,6 +43,8 @@ class KlantContactQuery(
     @QueryMapping
     suspend fun getUserKlantContact(
         authentication: CommonGroundAuthentication,
+        @Argument identificatorType: OnderwerpObjectIndentificatorType? = null,
+        @Argument identificatorId: UUID? = null,
         @Argument klantContactId: UUID,
     ): OpenKlant2Klantcontact? =
         openklant2Service.findKlantContact(

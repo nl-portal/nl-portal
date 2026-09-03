@@ -9,6 +9,7 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 * **Snelle links in de mobiele weergave.** Frontend-`MenuItems` kunnen nu ook worden getoond in de nieuwe sectie **Quick Links** op de overzichtspagina. Zo kunnen gebruikers in de mobiele weergave sneller naar belangrijke onderdelen navigeren.
 * **Uniforme documentafhandeling.** Besluiten-, openproduct- en productdocumenten worden nu op dezelfde manier getoond en gedownload als zaak- en berichtdocumenten. Zie [Document filtering](../../../features/document-filtering/document-filtering.md).
 * Den Haag-componenten bijgewerkt naar de laatste versie.
+* Er is een optie toegevoegd om het zoeken naar klantcontact(en) te beperken op basis van de referentie van het gekoppelde object. Hiermee kunnen implementaties het zoeken naar contacten beperken tot contacten die zijn gekoppeld aan een OpenZaak-zaak, een OpenProduct-product of beide.
 
 ## Bugfixes
 

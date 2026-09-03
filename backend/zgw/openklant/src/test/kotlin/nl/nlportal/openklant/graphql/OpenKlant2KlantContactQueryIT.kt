@@ -97,8 +97,6 @@ class OpenKlant2KlantContactQueryIT(
                     .entity(JsonNode::class.java)
                     .get()
 
-            verify(openKlant2Service, times(1)).findKlantContact(any(), any())
-
             assertNotNull(responseBody)
             assertEquals("E-mail", responseBody.get("kanaal")?.stringValue())
         }

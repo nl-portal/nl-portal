@@ -15,7 +15,7 @@ type Besluit {
     vervalreden: String!
     vervalredenWeergave: String!
     verzenddatum: Date
-    zaak: String!
+    zaak: String
     auditTrails: [BesluitAuditTrail!]!
     besluittype: BesluitType!
     documenten: [Document!]!
