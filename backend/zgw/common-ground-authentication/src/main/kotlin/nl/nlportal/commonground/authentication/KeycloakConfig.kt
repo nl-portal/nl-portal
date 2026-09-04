@@ -20,10 +20,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "nl-portal.authentication.keycloak")
 data class KeycloakConfig(
     var resource: String = "",
-    var audience: String = "",
+    var audience: String? = null,
     var credentials: KeycloakCredentials = KeycloakCredentials(""),
+    var tokenExchangeVersion: TokenExchangeVersion = TokenExchangeVersion.V1,
 ) {
     data class KeycloakCredentials(
         var secret: String = "",
     )
+
+    enum class TokenExchangeVersion {
+        V1,
+        V2,
+    }
 }
