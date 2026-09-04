@@ -140,7 +140,7 @@ class OpenProductPrefillService(
 
             is BedrijfAuthentication -> {
                 OpenProductPrefillObjectIdentificatie(
-                    type = OpenProductPrefillObjectIdentificatieType.BSN,
+                    type = OpenProductPrefillObjectIdentificatieType.KVK,
                     value = authentication.userId,
                 )
             }
