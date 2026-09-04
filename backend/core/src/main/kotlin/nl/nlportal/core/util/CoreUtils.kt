@@ -16,6 +16,8 @@
 package nl.nlportal.core.util
 
 import java.security.NoSuchAlgorithmException
+import java.security.SecureRandom
+import java.util.Base64
 import java.util.UUID
 import org.apache.commons.codec.digest.DigestUtils
 
@@ -42,4 +44,11 @@ object CoreUtils {
                 DigestUtils.sha1Hex(input)
             }
         }
+
+    @JvmStatic
+    fun generateNonce(byteLength: Int = 16): String {
+        val randomBytes = ByteArray(byteLength)
+        SecureRandom().nextBytes(randomBytes)
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes)
+    }
 }

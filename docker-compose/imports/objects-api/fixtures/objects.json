@@ -100,6 +100,16 @@
     }
 },
 {
+    "model": "core.object",
+    "pk": 12,
+    "fields": {
+        "uuid": "3bd76c12-01d5-4016-b0df-cdacfcca0fad",
+        "object_type": 7,
+        "created_on": "2026-08-05T09:35:28.484Z",
+        "modified_on": "2026-08-05T09:35:28.504Z"
+    }
+},
+{
     "model": "core.objectrecord",
     "pk": 1,
     "fields": {
@@ -894,6 +904,36 @@
                             }
                         ]
                     }
+                }
+            }
+        },
+        "start_at": "2026-01-07",
+        "end_at": null,
+        "registration_at": "2026-01-07",
+        "correct": null,
+        "geometry": null,
+        "created_on": "2026-08-05T09:35:28.508Z",
+        "modified_on": "2026-08-05T09:35:28.512Z",
+        "_object_type": 4
+    }
+},
+{
+    "model": "core.objectrecord",
+    "pk": 12,
+    "fields": {
+        "index": 1,
+        "object": 12,
+        "version": 1,
+        "data": {
+            "nonce": "8713246dfs89a7",
+            "identificatie": {
+                "type": "bsn",
+                "value": "999994499"
+            },
+            "data": {
+                "mijnExtraData": "abc",
+                "Een genest object": {
+                    "nogMeer": "data"
                 }
             }
         },

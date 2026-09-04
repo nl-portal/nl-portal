@@ -156,6 +156,32 @@
     }
 },
 {
+    "model": "core.objecttype",
+    "pk": 7,
+    "fields": {
+        "service": 1,
+        "uuid": "e3cb704f-4091-40c7-a1ee-e8443e74ed0e",
+        "_name": "ForrmulierPrefill",
+        "is_imported": false,
+        "name": "",
+        "name_plural": "",
+        "description": "",
+        "data_classification": "open",
+        "maintainer_organization": "",
+        "maintainer_department": "",
+        "contact_person": "",
+        "contact_email": "",
+        "source": "",
+        "update_frequency": "unknown",
+        "provider_organization": "",
+        "documentation_url": "",
+        "labels": {},
+        "created_at": null,
+        "modified_at": null,
+        "allow_geometry": true
+    }
+},
+{
     "model": "token.permission",
     "pk": 1,
     "fields": {
@@ -216,6 +242,17 @@
     "fields": {
         "token_auth": 1,
         "object_type": 6,
+        "mode": "read_and_write",
+        "use_fields": false,
+        "fields": {}
+    }
+},
+{
+    "model": "token.permission",
+    "pk": 7,
+    "fields": {
+        "token_auth": 1,
+        "object_type": 7,
         "mode": "read_and_write",
         "use_fields": false,
         "fields": {}
