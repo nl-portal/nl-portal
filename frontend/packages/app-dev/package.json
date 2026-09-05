@@ -22,8 +22,8 @@
   },
   "dependencies": {
     "@apollo/client": "4.2.12",
-    "@gemeente-denhaag/design-tokens": "1.4.2",
-    "@gemeente-denhaag/icons": "4.2.1",
+    "@gemeente-denhaag/design-tokens": "1.4.3",
+    "@gemeente-denhaag/icons": "4.2.2",
     "@gemeente-denhaag/link": "4.2.1",
     "@gemeente-denhaag/status-badge": "^2.0.0",
     "@nl-portal/nl-portal-api": "workspace:*",
@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.5",
+    "@types/react-dom": "19.2.7",
     "@typescript-eslint/eslint-plugin": "^8.67.0",
     "@typescript-eslint/parser": "^8.67.0",
     "@vitejs/plugin-react": "^6.1.0",

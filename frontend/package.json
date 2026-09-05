@@ -42,11 +42,11 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.11.0",
     "husky": "9.1.7",
-    "lint-staged": "17.3.0",
+    "lint-staged": "17.4.1",
     "npm-check-updates": "^23.1.0",
     "prettier": "3.9.6",
     "rollup-plugin-peer-deps-external": "2.2.4",
-    "stylelint": "17.14.1",
+    "stylelint": "17.15.0",
     "stylelint-config-standard-scss": "17.0.0",
     "typescript": "6.0.3",
     "vitest": "^4.1.11"
@@ -55,5 +55,5 @@
     "node": ">=24.0.0",
     "pnpm": ">=11.0.0 <12"
   },
-  "packageManager": "pnpm@11.22.0+sha512.1ff870c4c6133dfd88fb2afc46dd13d47f09c9794b438c6fdb47ca98caf3bc16381ee0be93a091b8e3824cf01f889f46d7d9e20910fb0be1ab0fb5baa80dd621"
+  "packageManager": "pnpm@11.25.0"
 }
