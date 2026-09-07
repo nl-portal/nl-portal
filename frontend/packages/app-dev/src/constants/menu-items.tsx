@@ -16,6 +16,7 @@
 import { NavigationItem } from "@nl-portal/nl-portal-user-interface";
 import {
   ArchiveIcon,
+  CalendarIcon,
   CarIcon,
   CheckCircleIcon,
   GridIcon,
@@ -38,6 +39,11 @@ export const menuItems: NavigationItem[][] = [
       titleTranslationKey: "tasks",
       path: paths.tasks,
       icon: CheckCircleIcon,
+    },
+    {
+      titleTranslationKey: "appointments",
+      path: paths.appointments,
+      icon: CalendarIcon,
     },
     {
       titleTranslationKey: "messages",
