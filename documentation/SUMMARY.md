@@ -28,6 +28,8 @@
 * [Connectiviteit](configuratie/connectiviteit.md)
 * [Deployment guide](configuratie/deployment-guide.md)
 * [Keycloak configuratie](configuratie/keycloak.md)
+    * [Standard token exchange (v2)](configuratie/keycloak-token-exchange-v2.md)
+    * [Legacy token exchange (v1)](configuratie/keycloak-token-exchange-v1.md)
 
 ## Support en resources
 
@@ -72,6 +74,9 @@
         * [3.0.3_3.0.2-1](release-notes/3.0.x/app/3.0.3_3.0.2-1.md)
         * [3.0.4_3.0.3-1](release-notes/3.0.x/app/3.0.4_3.0.3-1.md)
         * [3.0.5](release-notes/3.0.x/app/3.0.5.md)
+* 3.1.x
+    * Backend Libraries
+        * [3.1.0](release-notes/3.1.x/backend-libraries/3.1.0.md)
 
 ## Contributing to NL portal
 
