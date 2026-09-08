@@ -105,7 +105,7 @@ class CommonGroundAuthenticationConverter(
         when (keycloakConfig.tokenExchangeVersion) {
             KeycloakConfig.TokenExchangeVersion.V1 -> {
                 val audience = keycloakConfig.audience
-                require(!audience.isNullOrBlank()) {
+                require(audience.isNotBlank()) {
                     "nl-portal.authentication.keycloak.audience is required when token-exchange-version is v1"
                 }
                 formData.add("audience", audience)
@@ -114,7 +114,7 @@ class CommonGroundAuthenticationConverter(
             KeycloakConfig.TokenExchangeVersion.V2 -> {
                 formData.add("subject_token_type", TOKEN_TYPE_ACCESS_TOKEN)
                 keycloakConfig.audience
-                    ?.takeIf { it.isNotBlank() }
+                    .takeIf { it.isNotBlank() }
                     ?.let { formData.add("audience", it) }
             }
         }

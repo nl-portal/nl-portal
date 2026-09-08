@@ -48,6 +48,24 @@ tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     mainClass.set("nl.nlportal.app.PortalApplicationKt")
 }
 
+val dockerComposeDevEnvironment =
+    mapOf(
+        "DATABASE_URL" to "jdbc:postgresql://localhost:54321/nl-portal",
+        "DATABASE_USERNAME" to "nlportal",
+        "DATABASE_PASSWORD" to "password",
+        "JWKS_URI" to "http://localhost:8082/auth/realms/nlportal/protocol/openid-connect/certs",
+        "KEYCLOAK_CLIENT_ID" to "gzac-portal-m2m",
+        "KEYCLOAK_CLIENT_SECRET" to "ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc",
+        "KEYCLOAK_TOKEN_EXCHANGE_VERSION" to "v2",
+    )
+
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    mainClass.set("nl.nlportal.app.PortalApplicationKt")
+    dockerComposeDevEnvironment.forEach { (name, fallback) ->
+        environment(name, providers.environmentVariable(name).getOrElse(fallback))
+    }
+}
+
 tasks.named<Jar>("jar") {
     enabled = false
 }

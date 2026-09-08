@@ -34,11 +34,20 @@ import org.springframework.context.annotation.Bean
 import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
-@EnableConfigurationProperties(
-    OpenProductModuleConfiguration::class,
-    TaakConfig::class,
+@EnableConfigurationProperties(OpenProductModuleConfiguration::class)
+@ConditionalOnProperty(
+    prefix = "nl-portal.config",
+    name = [
+        "objectenapi.enabled",
+        "catalogiapi.enabled",
+        "documentenapis.enabled",
+        "besluitenapi.enabled",
+        "zakenapi.enabled",
+        "taak.enabled",
+        "openproduct.enabled",
+    ],
+    havingValue = "true",
 )
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openproduct.enabled", "objectenapi.enabled", "taak.enabled", "zakenapi.enabled"], havingValue = "true")
 class OpenProductAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenProductClient::class)

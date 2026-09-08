@@ -77,6 +77,8 @@
 * 3.1.x
     * Backend Libraries
         * [3.1.0](release-notes/3.1.x/backend-libraries/3.1.0.md)
+    * App
+        * [3.1.0](release-notes/3.1.x/app/3.1.0.md)
 
 ## Contributing to NL portal
 

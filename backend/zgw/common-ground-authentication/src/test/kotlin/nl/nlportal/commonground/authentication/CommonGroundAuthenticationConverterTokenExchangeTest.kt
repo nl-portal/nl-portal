@@ -85,7 +85,7 @@ internal class CommonGroundAuthenticationConverterTokenExchangeTest {
 
     @Test
     fun `v2 sends subject_token_type and omits the audience when it is not configured`() {
-        val request = exchangeAndRecord(keycloakConfig(TokenExchangeVersion.V2, null))
+        val request = exchangeAndRecord(keycloakConfig(TokenExchangeVersion.V2, ""))
         val form = request.parseFormBody()
 
         assertEquals("urn:ietf:params:oauth:token-type:access_token", form["subject_token_type"])
@@ -110,7 +110,7 @@ internal class CommonGroundAuthenticationConverterTokenExchangeTest {
 
     @Test
     fun `v1 without an audience fails before any request is made`() {
-        val converter = CommonGroundAuthenticationConverter(decoder, keycloakConfig(TokenExchangeVersion.V1, null))
+        val converter = CommonGroundAuthenticationConverter(decoder, keycloakConfig(TokenExchangeVersion.V1, ""))
 
         val exception =
             assertFailsWith<IllegalArgumentException> {
@@ -132,7 +132,7 @@ internal class CommonGroundAuthenticationConverterTokenExchangeTest {
                 .setHeader("Content-Type", "application/json")
                 .setBody("""{"error":"invalid_request","error_description":"Requested audience not available"}"""),
         )
-        val converter = CommonGroundAuthenticationConverter(decoder, keycloakConfig(TokenExchangeVersion.V2, null))
+        val converter = CommonGroundAuthenticationConverter(decoder, keycloakConfig(TokenExchangeVersion.V2, ""))
 
         assertFailsWith<Exception> { converter.tokenExchange(jwt()).block() }
     }
@@ -154,7 +154,7 @@ internal class CommonGroundAuthenticationConverterTokenExchangeTest {
 
     private fun keycloakConfig(
         version: TokenExchangeVersion,
-        audience: String?,
+        audience: String,
     ) = KeycloakConfig(
         resource = "gzac-portal-m2m",
         audience = audience,

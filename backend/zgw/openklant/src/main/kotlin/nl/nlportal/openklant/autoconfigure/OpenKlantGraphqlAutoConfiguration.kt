@@ -21,10 +21,12 @@ import nl.nlportal.openklant.graphql.KlantContactQuery
 import nl.nlportal.openklant.graphql.PartijMutation
 import nl.nlportal.openklant.graphql.PartijQuery
 import nl.nlportal.openklant.service.OpenKlant2Service
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
+@AutoConfiguration(after = [OpenKlantAutoConfiguration::class])
 @ConditionalOnProperty(prefix = "nl-portal.config", name = ["openklant2.enabled"], havingValue = "true")
 class OpenKlantGraphqlAutoConfiguration {
     @Bean
