@@ -37,6 +37,7 @@ export interface UploadedFile {
 interface PortalFileUploadProps {
   id: string;
   label?: string;
+  hideLabel?: boolean;
   context: object;
   multiple: boolean;
   onChange: (fileList: UploadedFile[]) => void;
@@ -50,6 +51,7 @@ interface PortalFileUploadProps {
 const PortalFileUpload = ({
   id,
   label,
+  hideLabel,
   context,
   multiple,
   onChange,
@@ -155,7 +157,7 @@ const PortalFileUpload = ({
 
   return (
     <FormField invalid={error}>
-      {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
+      {!hideLabel && label && <FormLabel htmlFor={id}>{label}</FormLabel>}
       {error && (
         <Alert
           close={() => {
@@ -207,6 +209,8 @@ class FormIoUploader extends FieldComponent {
   constructor(component: any, options: any, data: any) {
     super(component, options, data);
     this.reactRoot = null;
+
+    this.noField = true;
 
     if (this.component.multipleFiles === undefined) {
       this.component.multipleFiles = true;
@@ -274,6 +278,7 @@ class FormIoUploader extends FieldComponent {
         <PortalFileUpload
           id={`${this.component.id}-${this.component.key}`}
           label={this.component.label}
+          hideLabel={this.component.hideLabel}
           context={this.data}
           multiple={this.component.multipleFiles}
           onChange={this.onChangeHandler}
