@@ -1,23 +1,5 @@
 #!/bin/bash
-
+set -e
 echo ">>>>  NL Portal init script: Open Klant 2 <<<<"
-sleep 2
-while true
-do
-    if pg_isready -h $DB_HOST -q && python /app/src/manage.py migrate --check >/dev/null 2>&1
-        then
-            echo "Database ready."
-            echo "Attempting to create admin user:"
-            sleep 2
-            DJANGO_SUPERUSER_PASSWORD=admin python /app/src/manage.py createsuperuser --username=admin --email=admin@example.com --noinput || true
-            echo "Loading fixtures:"
-            sleep 2
-            python /app/src/manage.py loaddata configuration partijen klantcontacten
-            break
-        else
-            echo "Database is not ready. Retrying in 10 seconds."
-            sleep 10
-    fi
-done
-
+python /app/src/manage.py loaddata configuration partijen klantcontacten
 echo ">>>> Done <<<<"
