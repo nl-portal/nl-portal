@@ -8,8 +8,8 @@ Het formaat van een verzoek is gestandaardiseerd in een JSON formaat. Het verzoe
 
 ### Sequence diagram
 
-Indien er documenten (enkelvoudig zaakinformatieobject) horen bij een verzoek, dan worden deze eerst vastgelegd in via de Documenten API. Vervolgens wordt het verzoek ingediend, met daarin verwijzingen naar de bijbehorende documenten. De vastlegging vindt plaats in de Objecten API. _Note: mogelijk wordt deze in de toekomst vervangen door een verzoeken API._
+Indien er documenten (enkelvoudig zaakinformatieobject) horen bij een verzoek, dan worden deze eerst vastgelegd in via de Documenten API. Vervolgens wordt het verzoek ingediend, met daarin verwijzingen naar de bijbehorende documenten. De vastlegging vindt plaats in de Open Object. _Note: mogelijk wordt deze in de toekomst vervangen door een verzoeken API._
 
-De Objecten API notificeert de notificatie componenten, die het juiste component in het achterliggende landschap notificeert.
+De Open Object notificeert de notificatie componenten, die het juiste component in het achterliggende landschap notificeert.
 
 ![sequence-diagram-verzoek](img/sequence-diagram-verzoek.png)_Sequence diagram 'verzoek'_

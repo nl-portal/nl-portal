@@ -13,8 +13,7 @@ services:
             - "5432:5432" # NL Portal Database port
             - "8082:8082" # Keycloak port
             - "8001:8001" # OpenZaak
-            - "8010:8010" # Objecten API
-            - "8011:8011" # Objecttypen API
+            - "8010:8010" # Open Object
             - "8012:8012" # Open Notificaties
             - "8014:8014" # OpenKlant 2
             - "8015:8015" # OpenProduct
@@ -182,9 +181,9 @@ services:
             - POSTGRES_PASSWORD=openklant
             - POSTGRES_DB=openklant
 
-    nl-portal-objecten-api:
-        image: maykinmedia/objects-api:3.6.2
-        container_name: nl-portal-objecten-api
+    nl-portal-open-object:
+        image: maykinmedia/open-object:4.1.1
+        container_name: nl-portal-open-object
         platform: linux/amd64
         network_mode: "service:localhost"
         profiles:
@@ -196,7 +195,7 @@ services:
             - CORS_ALLOW_ALL_ORIGINS=true
             - SECRET_KEY=${SECRET_KEY:-1(@f(-6s_u(5fd&1sg^uvu2s(c-9sapw)1era8q&)g)h@cwxxg}
             - DJANGO_SETTINGS_MODULE=objects.conf.docker
-            - DB_HOST=nl-portal-objecten-api-database
+            - DB_HOST=nl-portal-open-object-database
             - DEBUG=true
             - TWO_FACTOR_FORCE_OTP_ADMIN=False
             - TWO_FACTOR_PATCH_ADMIN=False
@@ -208,31 +207,33 @@ services:
             - CELERY_RESULT_EXPIRES=3600
             - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/5
             - CELERY_LOGLEVEL=DEBUG
+            - SITE_DOMAIN=localhost:8010
+            - OTEL_SERVICE_NAME=open-object
         depends_on:
-            - nl-portal-objecten-api-database
+            - nl-portal-open-object-database
             - nl-portal-redis
         volumes:
-            - ./imports/objects-api/init:/app/init
+            - ./imports/open-object/init:/app/init
         command: sh /app/init/start.sh
 
-    nl-portal-objecten-api-celery:
-        image: maykinmedia/objects-api:3.6.2
-        container_name: nl-portal-objecten-api-celery
+    nl-portal-open-object-celery:
+        image: maykinmedia/open-object:4.1.1
+        container_name: nl-portal-open-object-celery
         platform: linux/amd64
         network_mode: "service:localhost"
         profiles:
             - zgw
             - objecten
         depends_on:
-            - nl-portal-objecten-api
-            - nl-portal-objecten-api-database
+            - nl-portal-open-object
+            - nl-portal-open-object-database
             - nl-portal-redis
         command: /celery_worker.sh
         environment: *objects-env
 
-    nl-portal-objecten-api-database:
+    nl-portal-open-object-database:
         image: postgis/postgis:15-3.5
-        container_name: nl-portal-objecten-api-database
+        container_name: nl-portal-open-object-database
         platform: linux/amd64
         profiles:
             - zgw
@@ -242,9 +243,9 @@ services:
             - POSTGRES_PASSWORD=objects
             - POSTGRES_DB=objects
 
-    nl-portal-objecten-api-import:
-        image: maykinmedia/objects-api:3.6.2
-        container_name: nl-portal-objects-api-import
+    nl-portal-open-object-import:
+        image: maykinmedia/open-object:4.1.1
+        container_name: nl-portal-open-object-import
         platform: linux/amd64
         profiles:
             - zgw
@@ -253,66 +254,11 @@ services:
         network_mode: "service:localhost"
         command: sh init/init.sh
         volumes:
-            - ./imports/objects-api/fixtures:/app/src/objects/fixtures
-            - ./imports/objects-api/init:/app/init
+            - ./imports/open-object/fixtures:/app/src/objects/fixtures
+            - ./imports/open-object/init:/app/init
         depends_on:
-            - nl-portal-objecten-api
-            - nl-portal-objecten-api-database
-
-    nl-portal-objecttypen-api:
-        image: maykinmedia/objecttypes-api:2.3.0
-        container_name: nl-portal-objecttypen-api
-        platform: linux/amd64
-        profiles:
-            - zgw
-            - objecten
-        network_mode: "service:localhost"
-        environment: &objecttypes-env
-            - UWSGI_PORT=8011
-            - CORS_ALLOW_ALL_ORIGINS=true
-            - SECRET_KEY=${SECRET_KEY:-fgv=c0hz&tl*8*3m3893@m+1pstrvidc9e^5@fpspmg%cy$$15d}
-            - DJANGO_SETTINGS_MODULE=objecttypes.conf.docker
-            - DB_HOST=nl-portal-objecttypen-api-database
-            - DB_USER=objecttypes
-            - DB_PASSWORD=objecttypes
-            - CACHE_AXES=nl-portal-redis:6379/6
-            - CACHE_DEFAULT=nl-portal-redis:6379/6
-            - ALLOWED_HOSTS=localhost,host.docker.internal,172.17.0.1
-            - TWO_FACTOR_FORCE_OTP_ADMIN=False
-            - TWO_FACTOR_PATCH_ADMIN=False
-            - DISABLE_2FA=true
-            - DEBUG=true
-        depends_on:
-            - nl-portal-objecttypen-api-database
-            - nl-portal-redis
-
-    nl-portal-objecttypen-api-database:
-        image: postgres:15
-        container_name: nl-portal-objecttypen-api-database
-        profiles:
-            - zgw
-            - objecten
-        environment:
-            - POSTGRES_USER=objecttypes
-            - POSTGRES_PASSWORD=objecttypes
-            - POSTGRES_DB=objecttypes
-
-    nl-portal-objecttypen-api-import:
-        image: maykinmedia/objecttypes-api:2.3.0
-        container_name: nl-portal-objecttypen-api-import
-        platform: linux/amd64
-        profiles:
-            - zgw
-            - objecten
-        environment: *objecttypes-env
-        network_mode: "service:localhost"
-        command: sh init/init.sh
-        volumes:
-            - ./imports/objecttypes-api/fixtures:/app/src/objecttypes/fixtures
-            - ./imports/objecttypes-api/init:/app/init
-        depends_on:
-            - nl-portal-objecttypen-api
-            - nl-portal-objecttypen-api-database
+            - nl-portal-open-object
+            - nl-portal-open-object-database
 
     nl-portal-open-notificaties:
         image: openzaak/open-notificaties:1.16.2

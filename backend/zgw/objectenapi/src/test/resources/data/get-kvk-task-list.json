@@ -6,7 +6,7 @@
         {
             "url": "http://localhost:8010/api/v2/objects/2d94fedb-3d99-43c4-b333-f04e0ccfe78a",
             "uuid": "2d94fedb-3d99-43c4-b333-f04e0ccfe78a",
-            "type": "http://localhost:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
+            "type": "http://localhost:8010/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35",
             "record": {
                 "index": 1,
                 "typeVersion": 1,
