@@ -19,6 +19,7 @@ import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
 import nl.nlportal.core.frontend.service.FrontendConfigurationService
 import nl.nlportal.core.frontend.web.rest.FrontendConfigurationResource
+import nl.nlportal.core.frontend.web.rest.PingResource
 import nl.nlportal.core.util.Mapper
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -51,4 +52,8 @@ class CoreAutoConfiguration {
     fun frontendConfigurationResource(
         frontendConfigurationService: FrontendConfigurationService,
     ) = FrontendConfigurationResource(frontendConfigurationService)
+
+    @Bean
+    @ConditionalOnMissingBean(PingResource::class)
+    fun pingResource(): PingResource = PingResource()
 }
