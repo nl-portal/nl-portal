@@ -17,13 +17,17 @@ package nl.nlportal.openklant.autoconfigure
 
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
 import nl.nlportal.openklant.service.OpenKlant2Service
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
+@AutoConfiguration
 @EnableConfigurationProperties(
     OpenKlantModuleConfiguration::class,
 )
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openklant2.enabled"], havingValue = "true")
 class OpenKlantAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenKlant2KlantinteractiesClient::class)

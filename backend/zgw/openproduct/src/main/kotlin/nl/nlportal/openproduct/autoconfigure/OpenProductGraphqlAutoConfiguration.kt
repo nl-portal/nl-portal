@@ -33,7 +33,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 
-@AutoConfiguration
+@AutoConfiguration(after = [OpenProductAutoConfiguration::class])
 @ConditionalOnBean(OpenProductService::class)
 class OpenProductGraphqlAutoConfiguration {
     @Bean

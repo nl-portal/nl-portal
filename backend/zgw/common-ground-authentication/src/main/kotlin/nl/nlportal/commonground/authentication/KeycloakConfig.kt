@@ -18,18 +18,20 @@ package nl.nlportal.commonground.authentication
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "nl-portal.authentication.keycloak")
-data class KeycloakConfig(
-    var resource: String = "",
-    var audience: String? = null,
-    var credentials: KeycloakCredentials = KeycloakCredentials(""),
-    var tokenExchangeVersion: TokenExchangeVersion = TokenExchangeVersion.V1,
-) {
-    data class KeycloakCredentials(
-        var secret: String = "",
-    )
+data class KeycloakConfig
+    @JvmOverloads
+    constructor(
+        var resource: String = "",
+        var audience: String = "",
+        var credentials: KeycloakCredentials = KeycloakCredentials(""),
+        var tokenExchangeVersion: TokenExchangeVersion = TokenExchangeVersion.V1,
+    ) {
+        data class KeycloakCredentials(
+            var secret: String = "",
+        )
 
-    enum class TokenExchangeVersion {
-        V1,
-        V2,
+        enum class TokenExchangeVersion {
+            V1,
+            V2,
+        }
     }
-}

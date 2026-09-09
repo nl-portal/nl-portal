@@ -56,7 +56,15 @@ class ProductAutoConfiguration {
     @Bean
     @ConditionalOnProperty(
         prefix = "nl-portal.config",
-        name = ["product.enabled", "objectenapi.enabled", "zakenapi.enabled"],
+        name = [
+            "objectenapi.enabled",
+            "catalogiapi.enabled",
+            "documentenapis.enabled",
+            "besluitenapi.enabled",
+            "zakenapi.enabled",
+            "taak.enabled",
+            "product.enabled",
+        ],
         havingValue = "true",
     )
     fun productService(

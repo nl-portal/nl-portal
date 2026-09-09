@@ -1,6 +1,6 @@
 # Standard token exchange (v2)
 
-Dit is de aanbevolen manier om de token exchange van de NL Portal in te richten. Deze pagina beschrijft één complete doelconfiguratie. Draai je nog op de legacy variant, kijk dan bij [Legacy token exchange (v1)](keycloak-token-exchange-v1.md); de stappen om over te stappen staan in de release notes van 3.1.0.
+Dit is de aanbevolen manier om de token exchange van de NL Portal in te richten. Deze pagina beschrijft één complete doelconfiguratie. Draai je nog op de [legacy variant](keycloak-token-exchange-v1.md), dan hoef je die niet eerst af te breken: [Migratie van v1 naar v2](#migratie-van-v1-naar-v2) beschrijft de overstap zonder downtime.
 
 Vereist Keycloak 26.2 of nieuwer, en NL Portal backend libraries 3.1.0 of nieuwer.
 
@@ -90,6 +90,59 @@ De backend property en de Keycloak configuratie horen bij elkaar. Zet je alleen 
 Inloggen dat blijft werken is **geen** bewijs dat je op v2 zit. Een v2-verzoek tegen een realm die nog op v1 staat wordt door de legacy engine gewoon afgehandeld. Controleer daarom aan de Keycloak kant: staat de schakelaar Standard token exchange aan op de m2m client, dan draait deze variant.
 
 De omgekeerde richting is wel hard: een v1-verzoek tegen een v2 client wordt geweigerd.
+
+## Migratie van v1 naar v2
+
+Vereist Keycloak 26.2 of nieuwer en NL Portal 3.1.0 of nieuwer. De volgorde is zo gekozen dat de
+portal blijft werken terwijl je bezig bent: stap 1 tot en met 3 zijn toevoegingen aan het realm die
+de legacy flow niet raken, en pas stap 4 zet de backend om.
+
+1. Richt de client scope met de `aanvrager` mappers in en koppel die als default scope aan de m2m
+   client. Zie [Stap 1](#stap-1-client-scope-met-de-aanvrager-mappers). De mappers staan bij v1 op
+   de doelclient; je maakt hier een tweede exemplaar en laat het origineel voorlopig staan.
+2. Voeg de audience mappers toe. Zie [Stap 2](#stap-2-audience-mappers). Verplicht voor v2, en
+   zonder gevolgen voor v1.
+3. Zet op de m2m client de schakelaar **Standard token exchange** aan. Zie
+   [Stap 3](#stap-3-standard-token-exchange-aanzetten). Zolang `token-exchange:v1` in `KC_FEATURES`
+   staat blijven beide varianten naast elkaar werken.
+4. Zet de backend om en deploy:
+
+   ```yaml
+   nl-portal:
+       authentication:
+           keycloak:
+               token-exchange-version: v2
+   ```
+
+   of met de environment variabele van de app image:
+
+   ```
+   KEYCLOAK_TOKEN_EXCHANGE_VERSION=v2
+   ```
+
+   **Haal in dezelfde stap `KEYCLOAK_TOKEN_EXCHANGE_AUDIENCE` weg, of maak hem leeg.** De v1 waarde
+   is de doelclient, en die is in v2 ongeldig: Keycloak antwoordt dan
+   `Requested audience not available`. Zonder waarde bepaalt de m2m client zelf de claims, wat in
+   deze opzet de bedoeling is.
+
+5. Controleer of inloggen werkt, en of Mijn Gegevens nog BRP gegevens toont. Dat laatste bewijst dat
+   de `aanvrager.bsn` claim uit de nieuwe client scope komt.
+6. Ruim op, in deze volgorde: verwijder de token exchange permission op de doelclient, verwijder de
+   doelclient zelf, verwijder de oude `aanvrager` mappers, en haal daarna `token-exchange:v1` en
+   `admin-fine-grained-authz:v1` uit `KC_FEATURES`. Vanaf dat moment is Fine-Grained Admin
+   Permissions v2 beschikbaar op deze Keycloak.
+
+### Terugdraaien
+
+Zet `token-exchange-version` terug op `v1` en zet `KEYCLOAK_TOKEN_EXCHANGE_AUDIENCE` terug op de
+doelclient. De Keycloak configuratie uit stap 1 tot en met 3 mag blijven staan. Dit werkt zolang
+stap 6 nog niet is uitgevoerd.
+
+### Let op bij stap 5
+
+Dat inloggen blijft werken bewijst niet dat je op v2 zit. Zet je alleen de property om zonder stap 1
+tot en met 3, dan handelt de legacy engine het verzoek gewoon af en merk je niets. De controle die
+wel iets zegt is de schakelaar Standard token exchange op de m2m client, zoals hierboven beschreven.
 
 ## Foutmeldingen
 

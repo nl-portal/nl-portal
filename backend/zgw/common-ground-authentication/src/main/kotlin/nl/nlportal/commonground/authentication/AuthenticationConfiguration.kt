@@ -47,7 +47,7 @@ class AuthenticationConfiguration {
         val audience = keycloakConfig.audience
         when (keycloakConfig.tokenExchangeVersion) {
             KeycloakConfig.TokenExchangeVersion.V1 ->
-                if (audience.isNullOrBlank()) {
+                if (audience.isBlank()) {
                     logger.warn {
                         "Token exchange is configured for V1 but nl-portal.authentication.keycloak.audience " +
                             "is not set. V1 requires an audience naming the target client, and every exchange " +
@@ -56,7 +56,7 @@ class AuthenticationConfiguration {
                 }
 
             KeycloakConfig.TokenExchangeVersion.V2 ->
-                if (!audience.isNullOrBlank()) {
+                if (audience.isNotBlank()) {
                     logger.info {
                         "V2 token exchange will request audience '$audience'. It must be an audience the " +
                             "client '${keycloakConfig.resource}' can already produce."

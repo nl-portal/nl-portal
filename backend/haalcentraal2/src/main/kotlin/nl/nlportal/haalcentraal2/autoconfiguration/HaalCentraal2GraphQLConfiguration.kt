@@ -20,10 +20,12 @@ import nl.nlportal.haalcentraal2.graphql.HaalCentraal2BewoningQuery
 import nl.nlportal.haalcentraal2.graphql.HaalCentraal2BrpQuery
 import nl.nlportal.haalcentraal2.graphql.HaalCentraal2GemachtigdeQuery
 import nl.nlportal.haalcentraal2.service.HaalCentraal2Service
+import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 
+@AutoConfiguration(after = [HaalCentraal2AutoConfiguration::class])
 @ConditionalOnProperty(prefix = "nl-portal.config", name = ["haalcentraal2.enabled"], havingValue = "true")
 class HaalCentraal2GraphQLConfiguration {
     @Bean
