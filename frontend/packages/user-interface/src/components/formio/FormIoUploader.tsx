@@ -210,7 +210,7 @@ class FormIoUploader extends FieldComponent {
     super(component, options, data);
     this.reactRoot = null;
 
-    (this as any).noField = true;
+    this.noField = true;
 
     if (this.component.multipleFiles === undefined) {
       this.component.multipleFiles = true;
