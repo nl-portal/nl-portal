@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":zgw:documenten-api"))
     implementation(project(":zgw:berichten"))
     implementation(project(":zgw:besluiten"))
+    implementation(project(":afspraken"))
     implementation(project(":payment-direct"))
     implementation(project(":zgw:zaken"))
     implementation(project(":zgw:openproduct"))

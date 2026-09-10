@@ -15,6 +15,8 @@
  */
 import {
   AccountPage,
+  AppointmentDetailsPage,
+  AppointmentsPage,
   CaseDetailsPage,
   CasesPage,
   EditContactInfoPage,
@@ -72,6 +74,22 @@ export const routes = [
         path: paths.task(),
         handle: { label: "breadcrumb.tasks.details" },
         element: <TaskDetailsPage />,
+      },
+    ],
+  },
+  {
+    path: paths.appointments,
+    handle: { label: "breadcrumb.appointments" },
+    children: [
+      {
+        index: true,
+        handle: { label: "breadcrumb.appointments" },
+        element: <AppointmentsPage />,
+      },
+      {
+        path: paths.appointment(),
+        handle: { label: "breadcrumb.appointments.details" },
+        element: <AppointmentDetailsPage />,
       },
     ],
   },

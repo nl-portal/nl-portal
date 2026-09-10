@@ -1,18 +1,3 @@
-/*
- * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
- *
- * Licensed under EUPL, Version 1.2 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 import { Paths } from "@nl-portal/nl-portal-user-interface";
 
 export const paths: Paths = {
@@ -25,12 +10,26 @@ export const paths: Paths = {
   messages: "/berichten",
   message: (id = ":id") => `/berichten/bericht/${id}`,
   products: "/producten",
-  themeOverview: (slug = ":slug") => `/${slug}`,
-  themeList: (slug = ":slug", productTypeSlug = ":productTypeSlug") =>
-    `/${slug}/${productTypeSlug}/lijst`,
-  themeDetails: (slug = ":slug", id = ":id") => `/${slug}/${id}`,
-  themeHistory: (slug = ":slug", id = ":id") => `/${slug}/${id}/geschiedenis`,
-  themeMutate: (slug = ":slug", id = ":id") => `/${slug}/${id}/wijzigen`,
+  themeOverview: (themeSlug: string) => `/${themeSlug}`,
+  themeList: (themeSlug: string, productTypeSlug = ":productTypeSlug") =>
+    `/${themeSlug}/${productTypeSlug}/lijst`,
+  themeDetails: (
+    themeSlug: string,
+    productTypeSlug = ":productTypeSlug",
+    id = ":id",
+  ) => `/${themeSlug}/${productTypeSlug}/${id}`,
+  themeHistory: (
+    themeSlug: string,
+    productTypeSlug = ":productTypeSlug",
+    id = ":id",
+  ) => `/${themeSlug}/${productTypeSlug}/${id}/geschiedenis`,
+  themeMutate: (
+    themeSlug: string,
+    productTypeSlug = ":productTypeSlug",
+    id = ":id",
+  ) => `/${themeSlug}/${productTypeSlug}/${id}/wijzigen`,
+  appointments: "/afspraken",
+  appointment: (id = ":id") => `/afspraken/afspraak/${id}`,
   account: "/account",
   changeContactInfo: (type = ":type") => `/account/wijzig/${type}`,
 };
