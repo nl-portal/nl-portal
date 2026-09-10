@@ -16,11 +16,11 @@ Via het Configuration Panel kun je alle backend modules in- en uitschakelen en c
 | Catalogi API | Zaaktypen en informatieobjecttypen |
 | Documenten APIs | Documentopslag (meerdere configuraties mogelijk) |
 | Besluiten API | Besluiten bij zaken |
-| Objecten API | Objectregistratie voor taken en berichten |
+| Open Object | Objectregistratie voor taken en berichten |
 | OpenKlant 2 | Klantgegevens en contactmomenten |
 | HaalCentraal BRP v2 | Persoonsgegevens uit de BRP |
 | HaalCentraal HR | Bedrijfsgegevens uit het Handelsregister |
-| Taak | Externe taken via Objecten API |
+| Taak | Externe taken via Open Object |
 | Berichten | Berichtenfunctionaliteit |
 | Product | Productweergave |
 | OpenProduct | Koppeling met OpenProduct API |

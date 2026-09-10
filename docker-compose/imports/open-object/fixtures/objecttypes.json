@@ -1,0 +1,1116 @@
+[
+{
+    "model": "core.objecttype",
+    "pk": 1,
+    "fields": {
+        "uuid": "4b5f4fba-0746-11ed-b939-0242ac120002",
+        "name": "FormIO",
+        "name_plural": "FormIO",
+        "description": "",
+        "data_classification": "open",
+        "maintainer_organization": "",
+        "maintainer_department": "",
+        "contact_person": "",
+        "contact_email": "",
+        "source": "",
+        "update_frequency": "unknown",
+        "provider_organization": "",
+        "documentation_url": "",
+        "labels": {},
+        "created_at": "2026-01-07",
+        "modified_at": "2026-01-07",
+        "allow_geometry": true
+    }
+},
+    {
+        "model": "core.objecttypeversion",
+        "pk": 1,
+        "fields": {
+            "object_type": 1,
+            "version": 1,
+            "created_at": "2022-07-19",
+            "modified_at": "2022-07-19",
+            "published_at": "2022-07-19",
+            "json_schema": {
+                "title": "ObjectType FormIO",
+                "type": "object",
+                "examples": [
+                    {
+                        "formDefinition": {
+                            "display": "form",
+                            "settings": {
+                                "pdf": {
+                                    "id": "1ec0f8ee-6685-5d98-a847-26f67b67d6f0",
+                                    "src": "https://files.form.io/pdf/5692b91fd1028f01000407e3/file/1ec0f8ee-6685-5d98-a847-26f67b67d6f0"
+                                }
+                            },
+                            "components": [
+                                {
+                                    "label": "Firstname",
+                                    "tableView": true,
+                                    "key": "firstname",
+                                    "type": "textfield",
+                                    "input": true
+                                },
+                                {
+                                    "type": "button",
+                                    "label": "Send",
+                                    "key": "submit",
+                                    "disableOnInvalid": true,
+                                    "input": true,
+                                    "tableView": false
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "required": [
+                    "formDefinition"
+                ],
+                "properties": {
+                    "formDefinition": {
+                        "type": "object",
+                        "additionalProperties": true
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "status": "draft"
+        }
+    },
+{
+    "model": "core.objecttype",
+    "pk": 2,
+    "fields": {
+        "uuid": "b4a617af-6969-45e8-9afd-d51e170716d5",
+        "name": "Taak V2",
+        "name_plural": "Taak V2",
+        "description": "",
+        "data_classification": "open",
+        "maintainer_organization": "",
+        "maintainer_department": "",
+        "contact_person": "",
+        "contact_email": "",
+        "source": "",
+        "update_frequency": "unknown",
+        "provider_organization": "",
+        "documentation_url": "",
+        "labels": {},
+        "created_at": "2026-01-07",
+        "modified_at": "2026-01-07",
+        "allow_geometry": true
+    }
+},
+    {
+        "model": "core.objecttypeversion",
+        "pk": 2,
+        "fields": {
+            "object_type": 2,
+            "version": 1,
+            "created_at": "2024-04-23",
+            "modified_at": "2024-04-23",
+            "published_at": "2024-04-23",
+            "json_schema": {
+                "type": "object",
+                "title": "ObjectType Taak V2",
+                "description": "Externe klant taak schema V1.1.1",
+                "required": [
+                    "titel",
+                    "status",
+                    "soort",
+                    "identificatie",
+                    "verwerker_taak_id",
+                    "eigenaar"
+                ],
+                "properties": {
+                    "titel": {
+                        "type": "string",
+                        "description": "Weergave naam van de taak. Max 1 zin"
+                    },
+                    "status": {
+                        "enum": [
+                            "open",
+                            "afgerond",
+                            "verwerkt",
+                            "gesloten"
+                        ],
+                        "type": "string",
+                        "description": "Status van de taak. Open: Taak kan worden gestart. Afgerond: Taak is uitgevoerd door gebruiker maar nog niet verwerkt. Verwerkt: Taak is verwerkt door ZAC. Gesloten: Taak is gearchiveerd."
+                    },
+                    "verloopdatum": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Optioneel: Verloopdatum van de taak"
+                    },
+                    "identificatie": {
+                        "type": "object",
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "type": {
+                                        "const": "bsn"
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "pattern": "^[0-9]+$"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "const": "kvk"
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "pattern": "^[0-9]+$"
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "not": {
+                                            "anyOf": [
+                                                {
+                                                    "const": "bsn"
+                                                },
+                                                {
+                                                    "const": "kvk"
+                                                }
+                                            ]
+                                        },
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ],
+                        "description": "KVK of BSN waaraan de taak gericht is. Kan uitgebreid worden met andere types"
+                    },
+                    "verwerker_taak_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Een UUID waarmee een ZAC een link kan leggen tussen de taak en zijn eigen administratie"
+                    },
+                    "koppeling": {
+                        "type": "object",
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "registratie": {
+                                        "const": "zaak"
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            {
+                                "properties": {
+                                    "registratie": {
+                                        "const": "product"
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "format": "uuid"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            {
+                                "properties": {
+                                    "registratie": {
+                                        "not": {
+                                            "anyOf": [
+                                                {
+                                                    "const": "zaak"
+                                                },
+                                                {
+                                                    "const": "product"
+                                                }
+                                            ]
+                                        },
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                },
+                                "additionalProperties": false
+                            }
+                        ],
+                        "description": "Optioneel: Zaak of Product UUID waaraan de taak verbonden is"
+                    },
+                    "eigenaar": {
+                        "type": "string",
+                        "description": "Een identificatie van de eigenaar / aanmaker van de taak. Gebruikt voor filtering ed."
+                    },
+                    "soort": {
+                        "$ref": "#/$defs/soort"
+                    },
+                    "url": {
+                        "$ref": "#/$defs/url"
+                    },
+                    "portaalformulier": {
+                        "$ref": "#/$defs/portaalformulier"
+                    },
+                    "ogonebetaling": {
+                        "$ref": "#/$defs/ogonebetaling"
+                    }
+                },
+                "$defs": {
+                    "soort": {
+                        "enum": [
+                            "url",
+                            "portaalformulier",
+                            "ogonebetaling"
+                        ],
+                        "type": "string",
+                        "description": "Soort taak. Bijhorende taak specifieke informatie staat in een object met dezelfde naam in deze json"
+                    },
+                    "url": {
+                        "type": "object",
+                        "properties": {
+                            "uri": {
+                                "type": "string",
+                                "format": "uri"
+                            }
+                        },
+                        "required": [
+                            "uri"
+                        ],
+                        "additionalProperties": false,
+                        "description": "Een link naar een externe resource. Als hier op deze taak geklikt word, word de gebruiker doorgestuurd naar deze link"
+                    },
+                    "portaalformulier": {
+                        "type": "object",
+                        "properties": {
+                            "formulier": {
+                                "oneOf": [
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "soort": {
+                                                "const": "url"
+                                            },
+                                            "value": {
+                                                "type": "string",
+                                                "format": "uri"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "soort": {
+                                                "const": "id"
+                                            },
+                                            "value": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "description": "Identificatie van bijhorend (formIO) formulier. Kan URL zijn voor externe opslag of ID voor locale opslag."
+                            },
+                            "data": {
+                                "type": "object",
+                                "additionalProperties": true
+                            },
+                            "verzonden_data": {
+                                "type": "object",
+                                "additionalProperties": true
+                            }
+                        },
+                        "required": [
+                            "formulier"
+                        ],
+                        "additionalProperties": false,
+                        "description": "Een taak die uitgevoerd kan worden binnen het desbetreffende portaal"
+                    },
+                    "ogonebetaling": {
+                        "type": "object",
+                        "properties": {
+                            "bedrag": {
+                                "type": "number",
+                                "minimum": 0,
+                                "multipleOf": 0.01
+                            },
+                            "betaalkenmerk": {
+                                "type": "string"
+                            },
+                            "pspid": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "bedrag",
+                            "betaalkenmerk",
+                            "pspid"
+                        ],
+                        "additionalProperties": false,
+                        "description": "Een betaling die via het portaal met Ogone / Ingenico wordt voldaan"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+{
+    "model": "core.objecttype",
+    "pk": 3,
+    "fields": {
+        "uuid": "78731088-430f-49fd-9a4c-80ddd42ded28",
+        "name": "Bericht",
+        "name_plural": "Bericht",
+        "description": "",
+        "data_classification": "open",
+        "maintainer_organization": "",
+        "maintainer_department": "",
+        "contact_person": "",
+        "contact_email": "",
+        "source": "",
+        "update_frequency": "unknown",
+        "provider_organization": "",
+        "documentation_url": "",
+        "labels": {},
+        "created_at": "2026-01-07",
+        "modified_at": "2026-01-07",
+        "allow_geometry": true
+    }
+},
+    {
+        "model": "core.objecttypeversion",
+        "pk": 3,
+        "fields": {
+            "object_type": 3,
+            "version": 1,
+            "created_at": "2024-07-18",
+            "modified_at": "2024-07-18",
+            "published_at": "2024-07-18",
+            "json_schema": {
+                "$id": "bericht-v1.schema.json",
+                "title": "Bericht",
+                "type": "object",
+                "examples": [
+                    {
+                        "identificatie": {
+                            "type": "bsn",
+                            "value": "999990755"
+                        },
+                        "publicatiedatum": "2024-07-18T00:00:00Z",
+                        "onderwerp": "Bericht over uw buurt.",
+                        "berichtTekst": "Er zijn werkzaamheden komende week in uw buurt. U kunt meer over dit lezen op de volgende website: https://example.com",
+                        "referentie": "ZAAK-2024-0000000001",
+                        "handelingsperspectief": "informatie ontvangen",
+                        "einddatumHandelingstermijn": "2024-10-31T00:00:00Z",
+                        "geopend": false,
+                        "berichtType": "notificatie",
+                        "bijlages": [
+                            "https://example.com/documenten/api/v1/enkelvoudiginformatieobjecten/1"
+                        ]
+                    }
+                ],
+                "required": [
+                    "onderwerp",
+                    "berichtTekst",
+                    "publicatiedatum",
+                    "einddatumHandelingstermijn",
+                    "referentie",
+                    "handelingsperspectief",
+                    "geopend",
+                    "berichtType",
+                    "identificatie",
+                    "bijlages"
+                ],
+                "properties": {
+                    "identificatie": {
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "const": "bsn"
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "pattern": "^[0-9]+$"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "const": "kvk"
+                                    },
+                                    "value": {
+                                        "type": "string",
+                                        "pattern": "^[0-9]+$"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "not": {
+                                            "anyOf": [
+                                                {
+                                                    "const": "bsn"
+                                                },
+                                                {
+                                                    "const": "kvk"
+                                                }
+                                            ]
+                                        },
+                                        "type": "string"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "publicatiedatum": {
+                        "type": "string",
+                        "title": "Publicatiedatum",
+                        "description": "De publicatiedatum van het bericht."
+                    },
+                    "onderwerp": {
+                        "type": "string",
+                        "title": "Onderwerp",
+                        "description": "Het onderwerp van het bericht."
+                    },
+                    "berichtTekst": {
+                        "type": "string",
+                        "title": "Bericht tekst",
+                        "description": "De tekstuele inhoud van het bericht."
+                    },
+                    "referentie": {
+                        "type": "string",
+                        "title": "Referentie",
+                        "description": "Berichtreferentie"
+                    },
+                    "handelingsperspectief": {
+                        "type": "string",
+                        "title": "Handelingsperspectief",
+                        "description": "Benodigde reactie van de geadresseerde (bijv: betalen, informatie verstrekken)",
+                        "enum": [
+                            "betalen",
+                            "informatie verstrekken",
+                            "informatie ontvangen"
+                        ]
+                    },
+                    "einddatumHandelingstermijn": {
+                        "type": "string",
+                        "title": "Einddatum handelingstermijn",
+                        "description": "Termijn waarbinnen de geadresseerde moet reageren"
+                    },
+                    "geopend": {
+                        "type": "boolean",
+                        "title": "Is geopend",
+                        "description": "Het bericht is door de geadresseerde geopend of nog niet geopend"
+                    },
+                    "berichtType": {
+                        "type": "string",
+                        "title": "Bericht type",
+                        "description": "Het type van het bericht",
+                        "enum": [
+                            "notificatie",
+                            "betaalverzoek",
+                            "uitnodiging",
+                            "verzoek"
+                        ]
+                    },
+                    "bijlages": {
+                        "type": "array",
+                        "default": [],
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "description": "Lijst met URLs van de bijlagen in een Documenten API"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "status": "draft"
+        }
+    },
+{
+    "model": "core.objecttype",
+    "pk": 4,
+    "fields": {
+        "uuid": "10b88cbd-5b9e-4e25-8635-eda8fe5ad227",
+        "name": "PDCProductType",
+        "name_plural": "PDCProductType",
+        "description": "",
+        "data_classification": "open",
+        "maintainer_organization": "",
+        "maintainer_department": "",
+        "contact_person": "",
+        "contact_email": "",
+        "source": "",
+        "update_frequency": "unknown",
+        "provider_organization": "",
+        "documentation_url": "",
+        "labels": {},
+        "created_at": "2026-01-07",
+        "modified_at": "2026-01-07",
+        "allow_geometry": true
+    }
+},
+    {
+        "model": "core.objecttypeversion",
+        "pk": 4,
+        "fields": {
+            "object_type": 4,
+            "version": 1,
+            "created_at": "2026-01-07",
+            "modified_at": "2026-01-07",
+            "published_at": "2026-01-07",
+            "json_schema": {
+                "type": "object",
+                "title": "PDCProductType",
+                "$schema": "http://json-schema.org/draft-07/schema",
+                "examples": [
+                    {
+                        "naam": "voorbeeldType",
+                        "CIMCode": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116",
+                        "subtypes": {
+                            "tijdelijk": "Tijdelijk contract",
+                            "doorlopend": "Doorlopend contract"
+                        },
+                        "statussen": {
+                            "actief": "Actief",
+                            "inaanvraag": "In aanvraag"
+                        },
+                        "zaaktypen": [],
+                        "parameters": {
+                            "verhuurdagen": "30",
+                            "emandatecategorie": "erfpacht"
+                        },
+                        "omschrijving": "Dit is een voorbeeld van een productType",
+                        "eigenschappen": {
+                            "contractnummer": "Contract nummer"
+                        },
+                        "prefillmapping": {
+                            "watkanikregelen": {
+                                "variabelen": {
+                                    "belastingzaken-aanslag": {
+                                        "aanslagnummer": "$.aanslagBiljet.aanslagNummer"
+                                    }
+                                },
+                                "formulierUrl": "https://openformulieren-zgw.test.denhaag.nl/bezwaar-maken/startpagina"
+                            }
+                        },
+                        "beslistabelmapping": {
+                            "watkanikregelen": {
+                                "key": "watkanikregelenDmn",
+                                "variabelen": {
+                                    "product": [
+                                        {
+                                            "name": "status",
+                                            "regex": "$.status",
+                                            "classType": "String"
+                                        },
+                                        {
+                                            "name": "identificatie",
+                                            "regex": "$.rollen.initiator.identificatie",
+                                            "classType": "String"
+                                        },
+                                        {
+                                            "name": "product",
+                                            "classType": "Json"
+                                        }
+                                    ],
+                                    "producttype": [
+                                        {
+                                            "name": "contractnummer",
+                                            "regex": "$.eigenschappen.contractnummer",
+                                            "classType": "String"
+                                        }
+                                    ],
+                                    "belasting-aanslag": [
+                                        {
+                                            "name": "status",
+                                            "regex": "$.status",
+                                            "classType": "String"
+                                        },
+                                        {
+                                            "name": "identificatie",
+                                            "regex": "$.rollen.initiator.identificatie",
+                                            "classType": "String"
+                                        },
+                                        {
+                                            "name": "product",
+                                            "classType": "Json"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ],
+                "required": [
+                    "naam",
+                    "statussen",
+                    "omschrijving"
+                ],
+                "properties": {
+                    "naam": {
+                        "type": "string",
+                        "description": "Naam van dit Type product (Geen spaties&speciale tekens)"
+                    },
+                    "CIMCode": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Productcode uit bijhorend product in de CIM catalogus"
+                    },
+                    "subtypes": {
+                        "type": "object",
+                        "description": "Subtypen die dit product kan hebben. Key = ID (Geen spaties&speciale tekens), value = Human readable status",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "statussen": {
+                        "type": "object",
+                        "description": "Statussen die dit product kan hebben. Key = ID (Geen spaties&speciale tekens), value = Human readable status",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "zaaktypen": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "Lijst van ZaakTypen UUIDs die bij dit product horen. Kan gebruikt worden voor een thema pagina filter om bijhorende zaken weer te geven"
+                    },
+                    "parameters": {
+                        "type": "object",
+                        "description": "Optioneel: Exta parameters die voor alle zaken van dit type gelden (statisch). Deze kunnen gebruikt worden door UIs/portalen voor het weergeven van default waardes, bijvoorbeeld 'verhuurdagen'. Key = ID (Geen spaties&speciale tekens), value = Waarde van de parameter",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "omschrijving": {
+                        "type": "string",
+                        "description": "Optioneel: Extra omschrijving van dit product"
+                    },
+                    "eigenschappen": {
+                        "type": "object",
+                        "description": "Optioneel: Exta eigenschappen die bij een zaak gezet kunnen worden. Deze kunnen gebruikt worden door UIs/portalen voor het weergeven van extra informatie. De waarde wordt in de productinstantie gezet. Key = ID (Geen spaties&speciale tekens), value = Human readable beschrijving",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "prefillmapping": {
+                        "type": "object",
+                        "description": "Bevat een formulier link naar het te prefillen formulier en daarbij een Map<Key, Prefill> prefill, waar de key is object type, zoals product of productDetails",
+                        "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                                "formulierUrl",
+                                "variabelen"
+                            ],
+                            "properties": {
+                                "variabelen": {
+                                    "type": "object",
+                                    "description": "Variabele om te mappen. Key is data source, inhoud is camunda variabele met als value een jsonpath. Zie https://www.baeldung.com/guide-to-jayway-jsonpath.",
+                                    "additionalProperties": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "formulierUrl": {
+                                    "type": "string",
+                                    "format": "uri",
+                                    "description": "URL naar het formulier waar naar geforward moet worden"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "beslistabelmapping": {
+                        "type": "object",
+                        "description": "Links naar beslistabellen die gebruikt kunnen worden voor een beslissing in het process. Key = naam van beslistabel (Geen spaties&speciale tekens), value = URI naar beslistabel REST service. Zie: https://docs.camunda.org/rest/camunda-bpm-platform/7.20/#tag/Decision-Definition/operation/evaluateDecisionByKey",
+                        "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                                "key",
+                                "variabelen"
+                            ],
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "description": "Het descission ID in camunda"
+                                },
+                                "variabelen": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "name",
+                                                "classType"
+                                            ],
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "De naam van de variabele in Camunda"
+                                                },
+                                                "regex": {
+                                                    "type": "string",
+                                                    "description": "Mapping van json object. Regex word opgezocht in gegeven source en onder variabele 'naam' gezet. Zie https://www.baeldung.com/guide-to-jayway-jsonpath."
+                                                },
+                                                "value": {
+                                                    "type": "string",
+                                                    "description": "A static value"
+                                                },
+                                                "classType": {
+                                                    "enum": [
+                                                        "Json",
+                                                        "String",
+                                                        "Integer",
+                                                        "Double",
+                                                        "Boolean",
+                                                        "Date",
+                                                        "Long"
+                                                    ],
+                                                    "type": "string",
+                                                    "description": "Soort variabele. https://docs.camunda.org/manual/7.21/user-guide/dmn-engine/data-types/ . JSON word niet aangeraden maar word 1 op 1 doorgespeeld naar de engine."
+                                                }
+                                            },
+                                            "additionalProperties": false
+                                        }
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "description": "Product Type uit het PDC. Beschrijft producten van een bepaald type.",
+                "additionalProperties": false
+            },
+            "status": "draft"
+        }
+    },
+{
+    "model": "core.objecttype",
+    "pk": 5,
+    "fields": {
+        "uuid": "d5ae0ab0-fd6d-40a2-87ae-54d11a85d3d8",
+        "name": "PDCProductInstantie",
+        "name_plural": "PDCProductInstantie",
+        "description": "",
+        "data_classification": "open",
+        "maintainer_organization": "",
+        "maintainer_department": "",
+        "contact_person": "",
+        "contact_email": "",
+        "source": "",
+        "update_frequency": "unknown",
+        "provider_organization": "",
+        "documentation_url": "",
+        "labels": {},
+        "created_at": "2026-01-07",
+        "modified_at": "2026-01-07",
+        "allow_geometry": true
+    }
+},
+    {
+        "model": "core.objecttypeversion",
+        "pk": 5,
+        "fields": {
+            "object_type": 5,
+            "version": 1,
+            "created_at": "2026-01-07",
+            "modified_at": "2026-01-07",
+            "published_at": "2026-01-07",
+            "json_schema": {
+                "type": "object",
+                "title": "PDCProductInstantie",
+                "$schema": "http://json-schema.org/draft-07/schema",
+                "examples": [
+                    {
+                        "naam": "voorbeelInstantie",
+                        "taken": [
+                            "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
+                        ],
+                        "zaken": [
+                            "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
+                        ],
+                        "rollen": {
+                            "initiator": {
+                                "identificatie": "123456789",
+                                "betrokkeneType": "natuurlijkpersoon"
+                            }
+                        },
+                        "status": "actief",
+                        "subtype": "doorlopend",
+                        "geldigTot": "2024-12-31T00:00:00+00:00",
+                        "geldigVan": "2024-01-01T00:00:00+00:00",
+                        "documenten": [
+                            "https://openzaak.mijngemeente.nl/documenten/api/v1/enkelvoudiginformatieobjecten/7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
+                        ],
+                        "eigenschappen": {
+                            "contractnummer": "123456"
+                        },
+                        "PDCProductType": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
+                    }
+                ],
+                "required": [
+                    "PDCProductType",
+                    "naam",
+                    "status"
+                ],
+                "properties": {
+                    "naam": {
+                        "type": "string",
+                        "description": "Naam van deze product instantie"
+                    },
+                    "taken": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "Lijst van UUIDs van gekoppelde taken"
+                    },
+                    "zaken": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "Lijst van UUIDs van gekoppelde zaken"
+                    },
+                    "rollen": {
+                        "type": "object",
+                        "description": "Lijst van rollen. ZGW RolType is naam van de map",
+                        "additionalProperties": {
+                            "type": "object",
+                            "required": [
+                                "betrokkeneType",
+                                "identificatie"
+                            ],
+                            "properties": {
+                                "identificatie": {
+                                    "type": "string"
+                                },
+                                "betrokkeneType": {
+                                    "enum": [
+                                        "natuurlijkpersoon",
+                                        "nietnatuurlijkpersoon",
+                                        "vestiging",
+                                        "organisatorischeeenheid",
+                                        "medewerker"
+                                    ],
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Status van het product. Komt overeen met key uit ProductType statussen lijst"
+                    },
+                    "subtype": {
+                        "type": "string",
+                        "description": "Subtype van het product. Komt overeen met key uit ProductType subtypes lijst"
+                    },
+                    "geldigTot": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Einde van de geldigheid van dit product"
+                    },
+                    "geldigVan": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Start van de geldigheid van dit product"
+                    },
+                    "documenten": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uri"
+                        },
+                        "description": "Lijst van links naar gekoppelde documenten / informatieobjecten"
+                    },
+                    "eigenschappen": {
+                        "type": "object",
+                        "description": "Eigenschap waardes van dit product. `Key = ID van status uit productType, value = de waarde van de eigenschap`. Kunnen door portaal worden gebruikt om bijv. een productenlijst te tonen met extra kolommen.",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    },
+                    "PDCProductType": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "UUID van bijhorend productType"
+                    }
+                },
+                "description": "Product instantie uit het PDC. Bevat generieke metadata over een product instantie.",
+                "additionalProperties": false
+            },
+            "status": "draft"
+        }
+    },
+{
+    "model": "core.objecttype",
+    "pk": 6,
+    "fields": {
+        "uuid": "41778685-f876-4f74-ab54-b04ff23524b8",
+        "name": "PDCVerbruiksObject",
+        "name_plural": "PDCVerbruiksObject",
+        "description": "",
+        "data_classification": "open",
+        "maintainer_organization": "",
+        "maintainer_department": "",
+        "contact_person": "",
+        "contact_email": "",
+        "source": "",
+        "update_frequency": "unknown",
+        "provider_organization": "",
+        "documentation_url": "",
+        "labels": {},
+        "created_at": "2026-01-07",
+        "modified_at": "2026-01-07",
+        "allow_geometry": true
+    }
+},
+    {
+        "model": "core.objecttypeversion",
+        "pk": 6,
+        "fields": {
+            "object_type": 6,
+            "version": 1,
+            "created_at": "2026-01-07",
+            "modified_at": "2026-01-07",
+            "published_at": "2026-01-07",
+            "json_schema": {
+                "type": "object",
+                "title": "PDCverbruiksObject",
+                "$schema": "http://json-schema.org/draft-07/schema",
+                "examples": [
+                    {
+                        "data": {
+                            "mijnExtraData": "abc",
+                            "Een genest object": {
+                                "nogMeer": "data"
+                            }
+                        },
+                        "soort": "gemeldeVerhuur",
+                        "productInstantie": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
+                    }
+                ],
+                "required": [
+                    "soort",
+                    "productInstantie",
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "description": "Vrij veld voor verbruiksobject data"
+                    },
+                    "soort": {
+                        "type": "string",
+                        "description": "Soort / type verbruiksobject. Alle verbruiksobjecten van het zelfde soort hebben hetzelfde type"
+                    },
+                    "productInstantie": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "UUID van bijhorend PDCProductInstantie"
+                    }
+                },
+                "description": "Product verbruik details van een instantie uit het PDC. Bevat product data die vaak aangepast moet worden. Bijvoorbeeld een log van gebruikte tijdsvakken",
+                "additionalProperties": false
+            },
+            "status": "draft"
+        }
+    },
+{
+    "model": "token.permission",
+    "pk": 1,
+    "fields": {
+        "token_auth": 1,
+        "object_type": 1,
+        "mode": "read_and_write",
+        "use_fields": false,
+        "fields": {}
+    }
+},
+{
+    "model": "token.permission",
+    "pk": 2,
+    "fields": {
+        "token_auth": 1,
+        "object_type": 2,
+        "mode": "read_and_write",
+        "use_fields": false,
+        "fields": {}
+    }
+},
+{
+    "model": "token.permission",
+    "pk": 3,
+    "fields": {
+        "token_auth": 1,
+        "object_type": 3,
+        "mode": "read_and_write",
+        "use_fields": false,
+        "fields": {}
+    }
+},
+{
+    "model": "token.permission",
+    "pk": 4,
+    "fields": {
+        "token_auth": 1,
+        "object_type": 4,
+        "mode": "read_and_write",
+        "use_fields": false,
+        "fields": {}
+    }
+},
+{
+    "model": "token.permission",
+    "pk": 5,
+    "fields": {
+        "token_auth": 1,
+        "object_type": 5,
+        "mode": "read_and_write",
+        "use_fields": false,
+        "fields": {}
+    }
+},
+{
+    "model": "token.permission",
+    "pk": 6,
+    "fields": {
+        "token_auth": 1,
+        "object_type": 6,
+        "mode": "read_and_write",
+        "use_fields": false,
+        "fields": {}
+    }
+}
+]

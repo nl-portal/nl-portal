@@ -19,7 +19,7 @@ pluginManager.withPlugin("maven-publish") {
             withType(MavenPublication::class.java) {
                 pom {
                     getName().set("Objects API module")
-                    getDescription().set("The Objects API provides functionality to connect with the Objecten API")
+                    getDescription().set("The Objects API provides functionality to connect with the Open Object")
                     developers {
                         developer {
                             getId().set("team-nl-portal")

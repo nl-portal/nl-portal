@@ -1,6 +1,6 @@
 # Connectiviteit
 
-NL Portal koppelt met alle common ground systemen op laag 1 zoals OpenZaak en de Objecten API. Het koppelen van deze systemen verloopt altijd op ongeveer dezelfde manier:
+NL Portal koppelt met alle common ground systemen op laag 1 zoals OpenZaak en de Open Object. Het koppelen van deze systemen verloopt altijd op ongeveer dezelfde manier:
 
 1. In het aan te sluiten systeem moet een api account aangemaakt worden voor NL Portal
 2. In NL Portal configureer je de url van het aan te sluiten systeem en de gegevens van het bij stap 1 aangemaakte account

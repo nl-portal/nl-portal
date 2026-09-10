@@ -22,7 +22,7 @@ helm repo update
 
 ### Backend: module-configuratie
 
-De functionele modules van de backend (onder andere Zaken API, Catalogi API, Documenten APIs, Objecten API, OpenKlant 2, HaalCentraal BRP (`haalcentraal2`) en Handelsregister (`haalcentraal_hr`), Berichten, Taak, Prefill, DMN, OpenProduct, betalingen en virusscan) worden per module aangezet met een enable-vlag. Alle modules staan standaard uit.
+De functionele modules van de backend (onder andere Zaken API, Catalogi API, Documenten APIs, Open Object, OpenKlant 2, HaalCentraal BRP (`haalcentraal2`) en Handelsregister (`haalcentraal_hr`), Berichten, Taak, Prefill, DMN, OpenProduct, betalingen en virusscan) worden per module aangezet met een enable-vlag. Alle modules staan standaard uit.
 
 Elke module heeft daarnaast eigen properties die met hetzelfde patroon worden gezet: `NLPORTAL_CONFIG_<MODULE>_PROPERTIES_<PROPERTY>`. Bijvoorbeeld voor de Zaken API:
 
@@ -33,7 +33,7 @@ NLPORTAL_CONFIG_ZAKENAPI_PROPERTIES_CLIENTID=nl-portal
 NLPORTAL_CONFIG_ZAKENAPI_PROPERTIES_SECRET=<secret>
 ```
 
-**Let op:** de zaken-functionaliteit vereist dat de Zaken API, Catalogi API én Objecten API modules alle drie enabled zijn.
+**Let op:** de zaken-functionaliteit vereist dat de Zaken API, Catalogi API én Open Object modules alle drie enabled zijn.
 
 Alle module properties, inclusief de optionele, zijn met inline documentatie te vinden in `docker-compose/imports/backend.env` in de monorepo.
 
