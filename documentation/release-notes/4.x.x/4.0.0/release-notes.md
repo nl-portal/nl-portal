@@ -11,6 +11,7 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 * Den Haag-componenten bijgewerkt naar de laatste versie.
 * Er is een optie toegevoegd om het zoeken naar klantcontact(en) te beperken op basis van de referentie van het gekoppelde object. Hiermee kunnen implementaties het zoeken naar contacten beperken tot contacten die zijn gekoppeld aan een OpenZaak-zaak, een OpenProduct-product of beide.
 * Voor monitoring tools is er een ping endpoint beschikbaar gekomen `GET /api/public/ping`, response is platte tekst. Dit endpoint is standaard uit gezet. Via property kan deze aangezet worden via `nl-portal.support.ping-endpoint.enabled=true` of via .env `NLPORTAL_SUPPORT_PINGENDPOINT_ENABLED=false` 
+* Samenvoeging van Objecttype API en Objecten API in Open Object in docker compose en fixtures samengevoegd
 
 ## Bugfixes
 
