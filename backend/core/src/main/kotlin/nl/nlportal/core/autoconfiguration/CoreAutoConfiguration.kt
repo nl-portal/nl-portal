@@ -19,9 +19,11 @@ import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
 import nl.nlportal.core.frontend.service.FrontendConfigurationService
 import nl.nlportal.core.frontend.web.rest.FrontendConfigurationResource
+import nl.nlportal.core.frontend.web.rest.PingResource
 import nl.nlportal.core.util.Mapper
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import tools.jackson.databind.json.JsonMapper
@@ -51,4 +53,9 @@ class CoreAutoConfiguration {
     fun frontendConfigurationResource(
         frontendConfigurationService: FrontendConfigurationService,
     ) = FrontendConfigurationResource(frontendConfigurationService)
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal.support", name = ["ping-endpoint.enabled"], havingValue = "true")
+    @ConditionalOnMissingBean(PingResource::class)
+    fun pingResource(): PingResource = PingResource()
 }
