@@ -15,8 +15,23 @@
  */
 package nl.nlportal.product.domain
 
+import com.fasterxml.jackson.annotation.JsonValue
+
 @Deprecated("Use instead openproduct functionality")
 data class ProductRol(
-    val betrokkeneType: String,
+    val betrokkeneType: BetrokkeneType,
     val identificatie: String,
 )
+
+enum class BetrokkeneType(
+    @JsonValue val value: String,
+) {
+    VESTIGING("vestiging"),
+    NATUURLIJKPERSOON("natuurlijkpersoon"),
+    NIETNATUURLIJKPERSOON("nietnatuurlijkpersoon"),
+    MEDEWERKER("medewerker"),
+    ORGANISATORISCHEEENHEID("organisatorischeeenheid"),
+    ;
+
+    override fun toString(): String = this.value
+}

@@ -28,12 +28,12 @@ import {
 import { skipToken, useQuery } from "@apollo/client/react";
 import TasksList from "../components/TasksList";
 import CasesList from "../components/CasesList";
-import { useParams } from "react-router";
 import DescriptionList from "../components/DescriptionList";
-import DecisionsList from "../components/DecisionsList";
 import React from "react";
 import { DataMappingItem } from "../interfaces/product-types";
 import { getProductValue } from "../utils/get-product-value";
+import ProductDecisionsList from "../components/ProductDecisionList";
+import useRequiredParams from "../hooks/useRequiredParams";
 
 interface ThemeDetailsPageProps {
   children?:
@@ -54,7 +54,7 @@ const ThemeDetailsPage = ({
   productSettings,
 }: ThemeDetailsPageProps) => {
   const intl = useIntl();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useRequiredParams<{ id: string }>();
   const openProduct = useQuery(
     GetOpenProductDocument,
     id
@@ -94,7 +94,11 @@ const ThemeDetailsPage = ({
         titleTranslationId={null}
         tasks={taken}
       />
-      <DecisionsList loading={loading} decisions={product?.decisions} />
+      <ProductDecisionsList
+        loading={loading}
+        productId={id}
+        decisions={product?.decisions}
+      />
       <CasesList
         loading={loading}
         error={Boolean(error)}

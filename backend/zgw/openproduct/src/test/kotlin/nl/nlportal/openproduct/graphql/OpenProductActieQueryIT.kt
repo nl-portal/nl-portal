@@ -22,12 +22,14 @@ import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -47,6 +49,7 @@ import org.springframework.test.context.DynamicPropertySource
 class OpenProductActieQueryIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val openProductModuleConfiguration: OpenProductModuleConfiguration,
+    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     companion object {
         @JvmStatic
@@ -60,6 +63,7 @@ class OpenProductActieQueryIT(
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.openproduct.properties.product-type-api-url") { url }
             propsRegistry.add("nl-portal.config.openproduct.properties.product-api-url") { url }
+            propsRegistry.add("nl-portal.config.objectenapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -83,6 +87,7 @@ class OpenProductActieQueryIT(
         url = server?.url("/").toString()
         openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
         openProductModuleConfiguration.properties.productApiUrl = URI(url)
+        objectsApiClientConfig.properties.url = URI(url)
     }
 
     @Test
@@ -137,6 +142,36 @@ class OpenProductActieQueryIT(
             assertEquals("https://openformulieren-zgw.test.denhaag.nl/bezwaarschrift-overige-gemeentelijke-belastingen/startpagina", responseBody.requiredAt("/0/action/value")?.stringValue())
         }
 
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get actie prefill`() {
+        val responseBody =
+            httpGraphQlTester
+                .document(readFileAsString("/config/graphql/getOpenProductActiePrefill.gql"))
+                .execute()
+                .errors()
+                .verify()
+                .path("getOpenProductActiePrefill")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("f9d7f166-bcea-4448-a984-4e717e558458", responseBody.requiredAt("/objectId")?.stringValue())
+        assertEquals("http://localhost:9000/engine-rest/decision-definition/key/alg-belastingen", responseBody.requiredAt("/formulierUrl")?.stringValue())
+    }
+
+    @Test
+    @WithBurgerUser("569312864")
+    fun `get actie prefill not authorized for product`() {
+        httpGraphQlTester
+            .document(readFileAsString("/config/graphql/getOpenProductActiePrefill.gql"))
+            .execute()
+            .errors()
+            .satisfy { errors ->
+                assertEquals(1, errors.size)
+                assertTrue(errors[0].message!!.contains("401 UNAUTHORIZED \"Not authorized\""))
+            }
+    }
+
     private fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
@@ -159,6 +194,10 @@ class OpenProductActieQueryIT(
 
                             "POST /engine-rest/decision-definition/key/alg-belastingen/evaluate" -> {
                                 TestHelper.mockResponseFromFile("/config/data/get-dmn-decision.json")
+                            }
+
+                            "POST /api/v2/objects" -> {
+                                TestHelper.mockResponseFromFile("/config/data/get-prefill-object.json")
                             }
 
                             else -> {
