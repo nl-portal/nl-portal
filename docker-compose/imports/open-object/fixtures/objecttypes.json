@@ -1076,9 +1076,9 @@
         "fields": {
             "object_type": 7,
             "version": 1,
-            "created_at": "2026-01-07",
-            "modified_at": "2026-01-07",
-            "published_at": "2026-01-07",
+            "created_at": "2025-08-26",
+            "modified_at": "2025-08-26",
+            "published_at": "2025-08-26",
             "json_schema": {
                 "type": "object",
                 "title": "ForrmulierPrefill",
@@ -1087,8 +1087,8 @@
                     {
                         "nonce": "8713246dfs89a7",
                         "identificatie": {
-                            "type": "kvk",
-                            "value": "90002768"
+                            "type": "bsn",
+                            "value": "999994499"
                         },
                         "data": {
                             "mijnExtraData": "abc",
@@ -1232,4 +1232,3 @@
     }
 }
 ]
-,
