@@ -144,14 +144,14 @@ nl-portal:
         taak:
             enabled: true
             properties:
-                object-type-url: http://localhost:8011/api/v2/objecttypes/b4a617af-6969-45e8-9afd-d51e170716d5
+                object-type-url: http://localhost:8010/api/v2/objecttypes/b4a617af-6969-45e8-9afd-d51e170716d5
         berichten:
             enabled: true
             properties:
-                bericht-object-type-url: http://localhost:8011/api/v2/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
+                bericht-object-type-url: http://localhost:8010/api/v2/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28
         form:
             properties:
-                form-definition-object-type-url: http://localhost:8011/api/v2/objecttypes/4b5f4fba-0746-11ed-b939-0242ac120002
+                form-definition-object-type-url: http://localhost:8010/api/v2/objecttypes/4b5f4fba-0746-11ed-b939-0242ac120002
         openproduct:
             enabled: true
             properties:
@@ -161,10 +161,10 @@ nl-portal:
         product:
             enabled: true
             properties:
-                product-type-url: http://localhost:8011/api/v2/objecttypes/10b88cbd-5b9e-4e25-8635-eda8fe5ad227
-                product-instantie-type-url: http://localhost:8011/api/v2/objecttypes/d5ae0ab0-fd6d-40a2-87ae-54d11a85d3d8
-                product-details-type-url: http://localhost:8011/api/v2/objecttypes/7165a692-2632-4a5d-b8ba-e360dafc4bce
-                product-verbruiks-object-type-url: http://localhost:8011/api/v2/objecttypes/41778685-f876-4f74-ab54-b04ff23524b8
+                product-type-url: http://localhost:8010/api/v2/objecttypes/10b88cbd-5b9e-4e25-8635-eda8fe5ad227
+                product-instantie-type-url: http://localhost:8010/api/v2/objecttypes/d5ae0ab0-fd6d-40a2-87ae-54d11a85d3d8
+                product-details-type-url: http://localhost:8010/api/v2/objecttypes/7165a692-2632-4a5d-b8ba-e360dafc4bce
+                product-verbruiks-object-type-url: http://localhost:8010/api/v2/objecttypes/41778685-f876-4f74-ab54-b04ff23524b8
         dmn:
             enabled: true
             properties:
@@ -172,7 +172,7 @@ nl-portal:
         prefill:
             enabled: true
             properties:
-                type-url: http://localhost:8011/api/v2/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
+                type-url: http://localhost:8010/api/v2/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
         payment:
             direct:
                 enabled: true

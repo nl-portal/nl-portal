@@ -58,7 +58,7 @@ nl-portal:
         taak:
             enabled: true
             properties:
-                object-type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
+                object-type-url: "http://host.docker.internal:8010/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
         openklant:
             enabled: true
             properties:
@@ -68,10 +68,10 @@ nl-portal:
         product:
             enabled: true
             properties:
-                product-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35
-                product-instantie-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34
-                product-details-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36
-                product-verbruiks-object-type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
+                product-type-url: http://host.docker.internal:8010/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb35
+                product-instantie-type-url: http://host.docker.internal:8010/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34
+                product-details-type-url: http://host.docker.internal:8010/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb36
+                product-verbruiks-object-type-url: http://host.docker.internal:8010/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
         dmn:
             enabled: true
             properties:
@@ -79,7 +79,7 @@ nl-portal:
         prefill:
             enabled: true
             properties:
-                type-url: http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
+                type-url: http://host.docker.internal:8010/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb37
 
 spring:
     liquibase:

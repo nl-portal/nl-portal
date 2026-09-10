@@ -15,11 +15,11 @@ nl-portal:
                 token: 0000000000000000000000000000000000000000
         form:
             properties:
-                form-definition-object-type-url: "http://localhost:8011/api/v1/objecttypes/form-definition-type"
+                form-definition-object-type-url: "http://localhost:8010/api/v1/objecttypes/form-definition-type"
         taak:
             enabled: true
             properties:
-                object-type-url: "http://localhost:8011/api/v1/objecttypes/3c24cab6-4346-4c7d-912b-e34a1e9e21bf"
+                object-type-url: "http://localhost:8010/api/v1/objecttypes/3c24cab6-4346-4c7d-912b-e34a1e9e21bf"
         documentenapis:
             enabled: true
             properties:

@@ -34,7 +34,7 @@
         "uuid": "9d39dc09-7cc5-4fd7-854e-c66300e5be85",
         "slug": "objects-api",
         "api_type": "orc",
-        "api_root": "http://localhost:8011/api/v2/",
+        "api_root": "http://localhost:8010/api/v2/",
         "api_connection_check_path": "",
         "auth_type": "api_key",
         "client_id": "",

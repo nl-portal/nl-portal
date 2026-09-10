@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo ">>>>  NL Portal init script: Objecttypes API <<<<"
+echo ">>>>  NL Portal init script: Open Objects <<<<"
 sleep 2
 while true
 do
@@ -12,7 +12,7 @@ do
             DJANGO_SUPERUSER_PASSWORD=admin python /app/src/manage.py createsuperuser --username=admin --email=admin@example.com --noinput
             echo "Loading fixtures:"
             sleep 2
-            python /app/src/manage.py loaddata configuration objecttypes
+            python /app/src/manage.py loaddata configuration objecttypes objects
             break
         else
             echo "Database is not ready. Retrying in 10 seconds."
