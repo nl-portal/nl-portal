@@ -122,7 +122,7 @@ services:
             - POSTGRES_DB=openzaak
 
     nl-portal-openklant-2:
-        image: maykinmedia/open-klant:2.18.0
+        image: maykinmedia/open-klant:2.18.1
         container_name: nl-portal-openklant-2
         profiles:
             - zgw
@@ -154,7 +154,7 @@ services:
         command: sh /app/init/start.sh
 
     nl-portal-openklant-2-import:
-        image: maykinmedia/open-klant:2.18.0
+        image: maykinmedia/open-klant:2.18.1
         container_name: nl-portal-openklant-2-import
         profiles:
             - zgw
@@ -182,7 +182,7 @@ services:
             - POSTGRES_DB=openklant
 
     nl-portal-open-object:
-        image: maykinmedia/open-object:4.1.1
+        image: maykinmedia/open-object:4.2.1
         container_name: nl-portal-open-object
         platform: linux/amd64
         network_mode: "service:localhost"
@@ -217,7 +217,7 @@ services:
         command: sh /app/init/start.sh
 
     nl-portal-open-object-celery:
-        image: maykinmedia/open-object:4.1.1
+        image: maykinmedia/open-object:4.2.1
         container_name: nl-portal-open-object-celery
         platform: linux/amd64
         network_mode: "service:localhost"
@@ -244,7 +244,7 @@ services:
             - POSTGRES_DB=objects
 
     nl-portal-open-object-import:
-        image: maykinmedia/open-object:4.1.1
+        image: maykinmedia/open-object:4.2.1
         container_name: nl-portal-open-object-import
         platform: linux/amd64
         profiles:
@@ -350,7 +350,7 @@ services:
             -   objecten
 
     nl-portal-openproduct:
-        image: maykinmedia/open-product:1.8.0
+        image: maykinmedia/open-product:1.9.0
         container_name: nl-portal-openproduct
         profiles:
             - zgw
@@ -381,7 +381,7 @@ services:
             - DISABLE_2FA=true
 
     nl-portal-openproduct-import:
-        image: maykinmedia/open-product:1.8.0
+        image: maykinmedia/open-product:1.9.0
         container_name: nl-portal-openproduct-import
         platform: linux/amd64
         profiles:
@@ -399,7 +399,7 @@ services:
             - nl-portal-redis
 
     nl-portal-openproduct-celery:
-        image: maykinmedia/open-product:1.8.0
+        image: maykinmedia/open-product:1.9.0
         container_name: nl-portal-openproduct-celery
         platform: linux/amd64
         network_mode: "service:localhost"
