@@ -142,7 +142,8 @@ shippable app); changing a library rebuilds it and the app hot-reloads. Full con
 ### Starting up supporting services only
 To run only the supporting services (e.g. when running the application from your IDE),
 leave `RUN_MODE` at its default (`sources`), which starts no app container. Two options:
-- Including all ZGW related services, like Open Zaak, Open Klant, Objects API and Objecttypes API
+- Including all ZGW related services, like Open Zaak, Open Klant and Open Object (Objects API and
+  Objecttypes API, served together by one container)
 - Keycloak and database only
 
 #### Including all ZGW related services
@@ -218,29 +219,43 @@ All demo data is seeded as model-serialized Django fixtures loaded with `manage.
 `migrate`. There is no raw SQL seeding: nothing is mounted into a service's postgres container at
 `/docker-entrypoint-initdb.d/`.
 
-Every service uses the same wiring: the app container runs the image's default `/start.sh` (which runs
-`migrate`), and a dedicated `*-import` sidecar reuses the service image, mounts
-`imports/<service>/fixtures` into the image's app package and `imports/<service>/init`, and runs an
-init script that creates the `admin`/`admin` superuser and `loaddata`s the fixtures. This applies to
-`openzaak`, `objecten`, `objecttypen`, `open-notificaties`, `openproduct`, and `openklant-2`. The
-`openproduct` import sidecar additionally loads the UPL reference list via
+Every service uses the same wiring: the app container runs the image's own default `/start.sh`, which
+applies migrations and creates the `admin`/`admin` superuser from the image's
+`<SERVICE>_SUPERUSER_USERNAME` / `_EMAIL` / `_PASSWORD` env triplet. A dedicated `*-import` sidecar
+reuses the service image, mounts `imports/<service>/fixtures` into the image's app package and
+`imports/<service>/init`, and runs `imports/<service>/init/init.sh`, which only `loaddata`s the
+fixtures. Every import container uses that same path and script name. This applies to `openzaak`,
+`open-object`, `open-notificaties`, `openproduct`, and `openklant-2`. The `openproduct` import sidecar
+additionally loads the UPL reference list via
 `manage.py load_upl --file imports/openproduct/init/UPL-actueel.csv`.
+
+No service overrides the image's launcher. The exact name of the port and password env vars differs
+per image, so check the image's own `/start.sh` before changing them:
+
+| Service | Port var | Superuser password var |
+|---|---|---|
+| `openzaak` | `OPENZAAK_PORT` | `DJANGO_SUPERUSER_PASSWORD` |
+| `openklant-2` | `OPENKLANT_PORT` | not supported, see below |
+| `open-object` | `OPENOBJECT_PORT` | `OBJECTS_SUPERUSER_PASSWORD` |
+| `open-notificaties` | `OPENNOTIFICATIES_PORT` | `DJANGO_SUPERUSER_PASSWORD` |
+| `openproduct` | `OPENPRODUCT_PORT` | `OPENPRODUCT_SUPERUSER_PASSWORD` |
+
+`openklant-2` is the one exception. Its image has no superuser hook in `/start.sh` at all, and its
+`createinitialsuperuser` command generates a random password and mails it. Its `admin` user is
+therefore seeded like any other row, from the committed `imports/openklant-2/fixtures/admin_user.json`
+fixture.
 
 Each import sidecar gates on `python /app/src/manage.py migrate --check` before seeding: it is
 read-only and exits 0 only once every migration in the pinned image is applied, so the load never
-races ahead of migrations and needs no hardcoded per-image sentinel table.
+races ahead of migrations and needs no hardcoded per-image sentinel table. This poll is required
+because none of the pinned `open-*` images ship a Dockerfile `HEALTHCHECK`, so
+`depends_on: condition: service_healthy` is not available to gate the sidecars. Verify with
+`docker image inspect <image> --format '{{json .Config.Healthcheck}}'` before assuming otherwise; the
+healthchecks mentioned in the upstream changelogs are the celery worker liveness probes, not the app
+image.
 
 Because fixtures are model-serialized, a minor image bump that only adds nullable columns imports
 without changes.
-
-> **Temporary workaround - `openproduct` app launcher.** The `openproduct` app container does not run
-> the plain default `/start.sh`; it runs `imports/openproduct/init/start.sh`, a thin wrapper that is
-> identical to the image's `/start.sh` except it `unset`s `UWSGI_PORT` before `exec uwsgi` (and does no
-> seeding). This works around a bug in `maykinmedia/open-product`: its `/start.sh` reads `UWSGI_PORT`
-> into a shell variable but leaves it exported, so uwsgi's `--strict` mode aborts on the auto-mapped
-> `port` directive (`[strict-mode] unknown config directive: port`). Once the ability to set
-> `UWSGI_PORT` is fixed upstream (issue to be lodged with Maykin), drop `start.sh` and revert the app
-> container to the default `/start.sh` like the other services.
 
 ### Regenerating fixtures
 
@@ -251,6 +266,19 @@ docker compose --profile <profile> up -d
 docker compose exec <service> python /app/src/manage.py dumpdata <apps> --indent 2 -o <fixture.json>
 ```
 Copy the resulting JSON into `imports/<service>/fixtures/` and commit it.
+
+`imports/openklant-2/fixtures/admin_user.json` is a `dumpdata accounts.user` artifact of the
+`admin`/`admin` superuser, with `last_login` nulled and `date_joined` pinned to a fixed timestamp so
+the file stays diff-stable across regenerations. Regenerate it the same way if openklant's user model
+changes:
+```shell
+docker compose exec nl-portal-openklant-2 sh -c \
+  'DJANGO_SUPERUSER_PASSWORD=admin python src/manage.py createsuperuser \
+     --noinput --username admin --email admin@example.org'
+docker compose exec nl-portal-openklant-2 python src/manage.py dumpdata accounts.user --indent 2
+```
+The same file is used by the openklant integration-test stack at
+`backend/docker-resources/imports/openklant-2/fixtures/admin_user.json`; keep the two in sync.
 
 ## Known issues
 
