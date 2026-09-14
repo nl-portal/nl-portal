@@ -72,6 +72,11 @@ nl-portal:
                     allowedMethods: "*"
         endpoints:
             unsecured: /api/public/**
+
+    config:
+        afspraken:
+            enabled: true
+            api-url: ${NLPORTAL_CONFIG_AFSPRAKEN_APIURL:http://localhost:8100}
     frontend:
         modules-whitelist:
             - zakenapi
