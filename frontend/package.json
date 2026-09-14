@@ -42,7 +42,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.11.0",
     "husky": "9.1.7",
-    "lint-staged": "17.5.0",
+    "lint-staged": "17.5.1",
     "npm-check-updates": "^23.1.0",
     "prettier": "3.9.6",
     "rollup-plugin-peer-deps-external": "2.2.4",
@@ -55,5 +55,5 @@
     "node": ">=24.0.0",
     "pnpm": ">=11.0.0 <12"
   },
-  "packageManager": "pnpm@11.26.0"
+  "packageManager": "pnpm@11.27.0"
 }
