@@ -1,0 +1,15 @@
+**/build
+!app/build
+!app/build/libs
+!app/build/libs/app.jar
+.gradle
+.kotlin
+/out
+*/out
+**/bin
+.vscode
+.idea
+**/.DS_Store
+Thumbs.db
+Dockerfile
+.dockerignore

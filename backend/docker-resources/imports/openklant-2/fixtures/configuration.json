@@ -1,0 +1,35 @@
+[
+  {
+    "model": "mozilla_django_oidc_db.oidcclient",
+    "pk": 1,
+    "fields": {
+      "identifier": "admin-oidc",
+      "enabled": false,
+      "oidc_provider": null,
+      "oidc_rp_client_id": "",
+      "oidc_rp_client_secret": "",
+      "oidc_rp_scopes_list": "[\"openid\", \"email\", \"profile\"]",
+      "oidc_rp_sign_algo": "RS256",
+      "oidc_rp_idp_sign_key": "",
+      "oidc_keycloak_idp_hint": "",
+      "userinfo_claims_source": "userinfo_endpoint",
+      "check_op_availability": false,
+      "options": {}
+    }
+  },
+  {
+    "model": "token.tokenauth",
+    "pk": 2,
+    "fields": {
+      "identifier": "test_token",
+      "token": "ac045222c9e7cde8120b48735560f9b920bb58cd",
+      "contact_person": "Admin",
+      "email": "admin@example.com",
+      "organization": "",
+      "last_modified": "2024-09-06T07:26:53.703Z",
+      "created": "2024-09-06T07:26:53.703Z",
+      "application": "",
+      "administration": ""
+    }
+  }
+]
