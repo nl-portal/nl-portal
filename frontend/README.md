@@ -71,6 +71,26 @@ Only `packages/api` runs codegen (`pnpm codegen`), generating typed hooks from t
 generated output is committed, so consumers reuse it without regenerating. Regeneration requires the
 GraphQL endpoint (the backend) to be reachable.
 
+## PWA assets
+
+Both app packages ship PWA icons and splash screens in `public/pwa`, generated from
+`src/assets/pwa-logo.svg`. The output is committed (56 files per package), so installing and
+building never regenerate it.
+
+Regenerate only after changing the source logo, from `packages/app` or `packages/app-dev`:
+
+```shell
+pnpm generate-pwa-assets
+```
+
+The generator (`pwa-asset-generator`) is deliberately **not** a dependency; the script fetches it
+on demand via `pnpm dlx`. Regenerating therefore needs network access and downloads a headless
+Chromium, while a normal `pnpm install` stays free of the puppeteer tree.
+
+The run also rewrites the icon and splash-screen `<head>` links in `index.html` and the `icons`
+entries in `public/manifest.json`, so review those two files in the diff alongside the images.
+Run it in both app packages so the shippable app and the dev app stay in sync.
+
 ## Consuming snapshot builds
 
 Every push to `main` publishes the libraries as **snapshot** tarballs to a public S3 bucket.

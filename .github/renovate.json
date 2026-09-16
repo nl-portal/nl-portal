@@ -9,6 +9,10 @@
     "automerge": false,
     "dependencyDashboard": true,
     "minimumReleaseAge": "1 day",
+    "lockFileMaintenance": {
+        "enabled": true,
+        "schedule": ["* 18-23 * * 0"]
+    },
     "packageRules": [
         {
             "description": "Only allow minor, patch and digest updates; major upgrades are handled manually.",
