@@ -7,8 +7,10 @@ services:
       ports:
           - "9007:8000"
       depends_on:
-          - openklant-2-db
-          - redis
+          openklant-2-db:
+              condition: service_healthy
+          redis:
+              condition: service_started
       environment:
           - OTEL_SDK_DISABLED=true
           - DJANGO_SETTINGS_MODULE=openklant.conf.docker
@@ -37,6 +39,12 @@ services:
           - POSTGRES_USER=openklant
           - POSTGRES_PASSWORD=openklant
           - POSTGRES_DB=openklant
+      healthcheck:
+          test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U openklant -d openklant"]
+          interval: 2s
+          timeout: 3s
+          retries: 30
+          start_period: 5s
 
   redis:
       image: redis:8.10.1
