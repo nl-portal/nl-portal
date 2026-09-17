@@ -1,18 +1,3 @@
-/*
- * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
- *
- * Licensed under EUPL, Version 1.2 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 import "react-loading-skeleton/dist/skeleton.css";
 
 export { default as ActionsList } from "./components/ActionsList";
@@ -38,6 +23,7 @@ export { default as PortalLink } from "./components/PortalLink";
 export { default as TableList } from "./components/TableList";
 export { default as Table } from "./components/Table";
 export * from "./components/Table";
+export { default as AppointmentsList } from "./components/AppointmentsList";
 export { default as TasksList } from "./components/TasksList";
 export { default as SectionHeader } from "./components/SectionHeader";
 export { default as Skeleton } from "./components/Skeleton";
@@ -50,13 +36,15 @@ export * from "./interfaces/paths";
 export * from "./interfaces/themes";
 
 export { default as useDownload } from "./hooks/useDownload";
-export { default as usePayment } from "./hooks/usePayment";
-export { default as usePaymentRegistration } from "./hooks/usePaymentRegistration";
-export * from "./hooks/usePaymentRegistration";
+export { default as useOgonePayment } from "./hooks/useOgonePayment";
+export { default as useOgonePaymentRegistration } from "./hooks/useOgonePaymentRegistration";
+export * from "./hooks/useOgonePaymentRegistration";
 export { default as useInput } from "./hooks/useInput";
 export * from "./hooks/useInput";
 
 export { default as AccountPage } from "./pages/AccountPage";
+export { default as AppointmentsPage } from "./pages/AppointmentsPage";
+export { default as AppointmentDetailsPage } from "./pages/AppointmentDetailsPage";
 export { default as CaseDetailsPage } from "./pages/CaseDetailsPage";
 export { default as CasesPage } from "./pages/CasesPage";
 export { default as EditContactInfoPage } from "./pages/EditContactInfoPage";
