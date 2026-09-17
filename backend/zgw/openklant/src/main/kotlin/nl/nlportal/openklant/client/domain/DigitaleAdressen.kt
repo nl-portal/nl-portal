@@ -63,7 +63,10 @@ enum class OpenKlant2DigitaleAdressenFilters(
 ) : OpenKlant2Filters {
     PAGE("page"),
     PAGE_SIZE("pageSize"),
-    VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("verstrektDoorPartij__partijIdentificator__objectId"),
+    VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_OBJECTID("verstrektDoorPartij__partijIdentificator__objectId"),
+    VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_CODEOBJECTTYPE("verstrektDoorPartij__partijIdentificator__codeObjecttype"),
+    VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_CODEREGISTER("verstrektDoorPartij__partijIdentificator__codeRegister"),
+    VERSTREKTDOORPARTIJ_PARTIJ_IDENTIFICATOR_CODESOORTOBJECTID("verstrektDoorPartij__partijIdentificator__codeSoortObjectId"),
     REFERENTIE("referentie"),
     ISGEVERIFIEERD("isGeverifieerd"),
     ISSTANDAARDADRES("isStandaardAdres"),

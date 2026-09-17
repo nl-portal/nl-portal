@@ -17,6 +17,7 @@ package nl.nlportal.openklant.graphql
 
 import tools.jackson.databind.JsonNode
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -128,5 +129,28 @@ class OpenKlant2DigitaleAdresQueryIT(
             // then
             verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any(), any())
             assertTrue(responseBody.isEmpty)
+        }
+
+    @Test
+    @WithBedrijfUser("14127293")
+    fun `should find DigitaleAdressen for authenticated bedrijf`() =
+        runTest {
+            // when
+            val responseBody =
+                httpGraphQlTester
+                    .document(TestHelper.readFileAsString("/config/graphql/getUserDigitaleAdressen.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getUserDigitaleAdressen")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            // then
+            verify(openKlant2Service, times(1)).findDigitaleAdressen(any(), any(), any())
+
+            assertNotNull(responseBody)
+            assertEquals("TELEFOONNUMMER", responseBody.get(0)?.get("type")?.stringValue())
+            assertEquals("0701234568", responseBody.get(0)?.get("waarde")?.stringValue())
         }
 }
