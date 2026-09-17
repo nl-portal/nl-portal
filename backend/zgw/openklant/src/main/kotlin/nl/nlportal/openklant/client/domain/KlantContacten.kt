@@ -78,7 +78,10 @@ enum class OpenKlant2KlantcontactenFilters(
 ) : OpenKlant2Filters {
     PAGE("page"),
     PAGE_SIZE("pageSize"),
-    HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODE_OBJECTID("hadBetrokkene__wasPartij__partijIdentificator__objectId"),
+    HADBETROKKENE_PARTIJ_IDENTIFICATOR_OBJECTID("hadBetrokkene__wasPartij__partijIdentificator__objectId"),
+    HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODEOBJECTTYPE("hadBetrokkene__wasPartij__partijIdentificator__codeObjecttype"),
+    HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODEREGISTER("hadBetrokkene__wasPartij__partijIdentificator__codeRegister"),
+    HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODESOORTOBJECTID("hadBetrokkene__wasPartij__partijIdentificator__codeSoortObjectId"),
     ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_OBJECTID("onderwerpobject__onderwerpobjectidentificatorObjectId"),
     ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODEOBJECTTYPE("onderwerpobject__onderwerpobjectidentificatorCodeObjecttype"),
     ONDERWERPOBJECT_ONDERWERPOBJECTIDENTIFICATOR_CODESOORTOBJECTID("onderwerpobject__onderwerpobjectidentificatorCodeSoortObjectId"),

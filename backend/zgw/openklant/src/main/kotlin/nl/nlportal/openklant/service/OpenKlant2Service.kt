@@ -463,7 +463,10 @@ class OpenKlant2Service(
             is BurgerAuthentication -> {
                 listOf(
                     OpenKlant2KlantcontactenFilters.PAGE to 1,
-                    OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODE_OBJECTID to authentication.userId,
+                    OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODEREGISTER to PartijIdentificatorCodeRegister.BRP.register,
+                    OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODEOBJECTTYPE to PartijIdentificatorCodeType.NATUURLIJKPERSOON.type,
+                    OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODESOORTOBJECTID to PartijIdentificatorCodeSoort.BSN.soort,
+                    OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_OBJECTID to authentication.userId,
                 )
             }
 
@@ -472,12 +475,18 @@ class OpenKlant2Service(
                 if (vestigingsNummer != null) {
                     listOf(
                         OpenKlant2KlantcontactenFilters.PAGE to 1,
-                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODE_OBJECTID to vestigingsNummer,
+                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODEREGISTER to PartijIdentificatorCodeRegister.HR.register,
+                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODEOBJECTTYPE to PartijIdentificatorCodeType.VESTIGING.type,
+                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODESOORTOBJECTID to PartijIdentificatorCodeSoort.VESTIGINGSNUMMER.soort,
+                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_OBJECTID to vestigingsNummer,
                     )
                 } else {
                     listOf(
                         OpenKlant2KlantcontactenFilters.PAGE to 1,
-                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODE_OBJECTID to authentication.userId,
+                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODEREGISTER to PartijIdentificatorCodeRegister.HR.register,
+                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODEOBJECTTYPE to PartijIdentificatorCodeType.NIETNATUURLIJKPERSOON.type,
+                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_CODESOORTOBJECTID to PartijIdentificatorCodeSoort.KVKNUMMER.soort,
+                        OpenKlant2KlantcontactenFilters.HADBETROKKENE_PARTIJ_IDENTIFICATOR_OBJECTID to authentication.userId,
                     )
                 }
             }
