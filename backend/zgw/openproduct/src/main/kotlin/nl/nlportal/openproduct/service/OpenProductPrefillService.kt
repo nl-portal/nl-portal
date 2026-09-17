@@ -101,7 +101,7 @@ class OpenProductPrefillService(
         val prefill =
             OpenProductPrefillObject(
                 nonce = nonce,
-                identificatie = getPrefillIndentificatio(authentication = authentication),
+                identificatie = getPrefillIndentificatie(authentication = authentication),
                 data = Mapper.get().readValue(json, ObjectNode::class.java),
             )
         val createRequest =
@@ -129,7 +129,7 @@ class OpenProductPrefillService(
      * @param: themas, all published themas
      * @return: OpenProductPrefillObjectIdentificatie
      */
-    private fun getPrefillIndentificatio(authentication: CommonGroundAuthentication): OpenProductPrefillObjectIdentificatie =
+    private fun getPrefillIndentificatie(authentication: CommonGroundAuthentication): OpenProductPrefillObjectIdentificatie =
         when (authentication) {
             is BurgerAuthentication -> {
                 OpenProductPrefillObjectIdentificatie(
