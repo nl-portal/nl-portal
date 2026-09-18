@@ -51,10 +51,10 @@ enum class OpenKlant2PartijIdentificatorenFilters(
     @Deprecated("will be removed in a future release.")
     ANDERE_PARTIJ_IDENTIFICATOR("anderePartijIdentificator"),
     PAGE("page"),
-    PARTIJ_IDENTIFICATOR_CODE_OBJECTTYPE("partijIdentificatorCodeObjecttype"),
-    PARTIJ_IDENTIFICATOR_CODE_SOORT_OBJECT_ID("partijIdentificatorCodeSoortObjectId"),
-    PARTIJ_IDENTIFICATOR_OBJECT_ID("partijIdentificatorObjectId"),
-    PARTIJ_IDENTIFICATOR_CODE_REGISTER("partijIdentificatorCodeRegister"),
+    PARTIJ_IDENTIFICATOR_CODEOBJECTTYPE("partijIdentificatorCodeObjecttype"),
+    PARTIJ_IDENTIFICATOR_CODESOORTOBJECTID("partijIdentificatorCodeSoortObjectId"),
+    PARTIJ_IDENTIFICATOR_OBJECTID("partijIdentificatorObjectId"),
+    PARTIJ_IDENTIFICATOR_CODEREGISTER("partijIdentificatorCodeRegister"),
     ;
 
     override fun toString() = this.value
