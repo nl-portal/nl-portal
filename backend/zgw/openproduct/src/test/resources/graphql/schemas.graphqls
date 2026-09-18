@@ -70,6 +70,8 @@ type Query {
     # Get decision by actie naam
     getOpenProductActieDecision(productId: UUID!, naam: String!): [JSON!]!
 
+    getOpenProductActiePrefill(productId: UUID!, naam: String!):OpenProductPrefillResponse
+
     # Get all acties
     getOpenProductActies(pageNumber: Int, pageSize: Int): ActiesPage!
 
@@ -849,6 +851,12 @@ type BesluitType {
     toelichting: String
     url: String!
     zaaktypen: [String!]!
+}
+
+type OpenProductPrefillResponse {
+    objectId: UUID
+    hash: String
+    formulierUrl: String
 }
 
 scalar PositiveFloat

@@ -676,6 +676,17 @@
     }
   },
   {
+    "model": "producttypen.actie",
+    "pk": 3,
+    "fields": {
+      "uuid": "5c2aee07-1703-417a-aad5-e796fc352b32",
+      "naam": "prefill-actie",
+      "producttype": 1,
+      "direct_url": "https://openformulieren-zgw.test.denhaag.nl/bericht-of-antwoord-voor-de-directeur-gemeentebelastingen",
+      "mapping": null
+    }
+  },
+  {
     "model": "producttypen.bestand",
     "pk": 1,
     "fields": {
