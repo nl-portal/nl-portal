@@ -149,6 +149,53 @@ internal class HandelsregisterQueryIT(
         assertEquals("Maarten Trompstraat 2 6372VR Landgraaf", responseBody.requiredAt("/embedded/vestiging/adressen/0/volledigAdres")?.stringValue())
     }
 
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "90012768",
+        vestigingsNummer = "990000262128",
+    )
+    fun getKvkDataWithVestigingNotFound() {
+        val query =
+            """
+            query {
+                getBedrijf {
+                    naam
+                    embedded{
+                        eigenaar {
+                            rechtsvorm
+                        }
+                        vestiging {
+                            eersteHandelsnaam
+                            adressen {
+                                straatnaam
+                                huisnummer
+                                postbusnummer
+                                postcode
+                                plaats
+                                volledigAdres
+                            }
+                        }
+                    }
+                }
+            }
+            """.trimIndent()
+
+        val responseBody =
+            httpGraphQlTester
+                .document(query)
+                .execute()
+                .errors()
+                .verify()
+                .path("getBedrijf")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("Test bedrijf", responseBody.get("naam").stringValue())
+        assertEquals("Eenmanszaak", responseBody.requiredAt("/embedded/eigenaar/rechtsvorm")?.stringValue())
+        assertEquals("Test bedrijf", responseBody.requiredAt("/embedded/vestiging/eersteHandelsnaam")?.stringValue())
+        assertEquals("Postbus 1000 2260BA LEIDSCHENDAM", responseBody.requiredAt("/embedded/vestiging/adressen/0/volledigAdres")?.stringValue())
+    }
+
     private fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {

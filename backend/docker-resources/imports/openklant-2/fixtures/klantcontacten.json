@@ -294,6 +294,42 @@
     }
   },
   {
+    "model": "klantinteracties.betrokkene",
+    "pk": 301,
+    "fields": {
+      "bezoekadres_nummeraanduiding_id": "0000000000000001",
+      "bezoekadres_straatnaam": "",
+      "bezoekadres_huisnummer": 1,
+      "bezoekadres_huisnummertoevoeging": "",
+      "bezoekadres_postcode": "",
+      "bezoekadres_stad": "",
+      "bezoekadres_adresregel1": "damrak 1 1001XX Amsterdam",
+      "bezoekadres_adresregel2": "",
+      "bezoekadres_adresregel3": "",
+      "bezoekadres_land": "nl",
+      "correspondentieadres_nummeraanduiding_id": "0000000000000001",
+      "correspondentieadres_straatnaam": "",
+      "correspondentieadres_huisnummer": 1,
+      "correspondentieadres_huisnummertoevoeging": "",
+      "correspondentieadres_postcode": "",
+      "correspondentieadres_stad": "",
+      "correspondentieadres_adresregel1": "damrak 1 1001XX Amsterdam",
+      "correspondentieadres_adresregel2": "",
+      "correspondentieadres_adresregel3": "",
+      "correspondentieadres_land": "nl",
+      "contactnaam_voorletters": "D",
+      "contactnaam_voornaam": "Donald",
+      "contactnaam_voorvoegsel_achternaam": "",
+      "contactnaam_achternaam": "Duck",
+      "uuid": "12971d56-5233-4716-8941-2c7f75c54a06",
+      "partij": 101,
+      "klantcontact": 400,
+      "rol": "klant",
+      "organisatienaam": "",
+      "initiator": true
+    }
+  },
+  {
     "model": "klantinteracties.onderwerpobject",
     "pk": 1,
     "fields": {
@@ -386,6 +422,21 @@
       "soort_digitaal_adres": "telefoonnummer",
       "is_standaard_adres": false,
       "adres": "0701234567",
+      "omschrijving": "",
+      "referentie": "portaal",
+      "verificatie_datum": null
+    }
+  },
+  {
+    "model": "klantinteracties.digitaaladres",
+    "pk": 503,
+    "fields": {
+      "uuid": "87b1b13d-8dc7-467e-a38f-3208834596a3",
+      "partij": 101,
+      "betrokkene": 301,
+      "soort_digitaal_adres": "telefoonnummer",
+      "is_standaard_adres": false,
+      "adres": "0701234568",
       "omschrijving": "",
       "referentie": "portaal",
       "verificatie_datum": null
