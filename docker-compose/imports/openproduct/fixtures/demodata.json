@@ -711,7 +711,7 @@
     "fields": {
       "language_code": "nl",
       "master": 1,
-      "content": "test data",
+      "content": "| Naam | {{product.naam}} |\n| - | - |\n| Startdatum | {{product.start_datum| date: \"%d-%m-%Y\"}} |\n| Einddatum | {{product.eind_datum | date: \"%d-%m-%Y\"}} |",
       "aanvullende_informatie": ""
     }
   },
@@ -721,7 +721,7 @@
     "fields": {
       "language_code": "en",
       "master": 1,
-      "content": "test data English",
+      "content": "| Name | {{product.naam}} |\n| - | - |\n| Startdate | {{product.start_datum| date: \"%d-%m-%Y\"}} |\n| Enddate | {{product.eind_datum | date: \"%d-%m-%Y\"}} |",
       "aanvullende_informatie": ""
     }
   },
