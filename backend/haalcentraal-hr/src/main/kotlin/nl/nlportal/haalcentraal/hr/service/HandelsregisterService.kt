@@ -20,6 +20,7 @@ import nl.nlportal.commonground.authentication.BedrijfAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.haalcentraal.hr.client.HandelsregisterClient
 import nl.nlportal.haalcentraal.hr.domain.MaatschappelijkeActiviteit
+import nl.nlportal.haalcentraal.hr.domain.Vestiging
 
 class HandelsregisterService(
     private val handelsregisterClient: HandelsregisterClient,
@@ -57,13 +58,28 @@ class HandelsregisterService(
 
             if (!vestigingsNummer.isNullOrBlank()) {
                 // set vestiging based of vestigingsnummer in vestiging
-                kvkData.embedded?.vestiging = handelsregisterClient.getVestiging(vestigingsNummer)
+                getVestigingsData(
+                    vestigingsNummer = vestigingsNummer,
+                )?.let {
+                    kvkData.embedded?.vestiging = it
+                }
             }
             return kvkData
         } catch (ex: Exception) {
             logger.error { "Something went wrong while getting information of a company: ${ex.message}" }
         }
 
+        return null
+    }
+
+    suspend fun getVestigingsData(
+        vestigingsNummer: String,
+    ): Vestiging? {
+        try {
+            return handelsregisterClient.getVestiging(vestigingsNummer)
+        } catch (ex: Exception) {
+            logger.error { "Something went wrong while getting information of a company vestiging: ${ex.message}" }
+        }
         return null
     }
 
