@@ -204,6 +204,7 @@ const FieldComponent = Components.components.field;
 
 class FormIoUploader extends FieldComponent {
   private reactRoot: Root | null;
+  private pendingUploads = new Set<Promise<void>>();
   static globalOidcToken = "";
 
   constructor(component: any, options: any, data: any) {
@@ -238,7 +239,9 @@ class FormIoUploader extends FieldComponent {
     Components.addComponent("portalFileUpload", FormIoUploader);
   };
 
-  static emptyValue = []; // set empty value to force formio to accept arrays as valid input value for this field type
+  get emptyValue(): UploadedFile[] {
+    return [];
+  }
 
   static setOidcToken = (oidcToken: string) => {
     FormIoUploader.globalOidcToken = oidcToken;
@@ -247,16 +250,26 @@ class FormIoUploader extends FieldComponent {
   static getOidcToken = () => FormIoUploader.globalOidcToken;
 
   onChangeHandler = (files: UploadedFile[]) => {
+    if (this.shouldConditionallyClear()) return;
+
     this.updateValue(files, undefined);
   };
 
   onUploadStartHandler = (upload: Promise<void>) => {
+    this.pendingUploads.add(upload);
     this.emit("fileUploadingStart", upload);
   };
 
   onUploadEndHandler = (upload: Promise<void>) => {
+    if (!this.pendingUploads.delete(upload)) return;
+
     this.emit("fileUploadingEnd", upload);
   };
+
+  deleteValue() {
+    super.deleteValue();
+    this.pendingUploads?.forEach(this.onUploadEndHandler);
+  }
 
   render() {
     return super.render(`<div ref="react"></div>`);
