@@ -1,0 +1,11 @@
+query {
+    getOpenProductActiePrefill(
+        naam: "watkanikregelen-belastingen",
+        productId: "694242af-d906-470b-b7e1-eb3527886854"
+        )
+    {
+        objectId,
+        hash,
+        formulierUrl
+    }
+}

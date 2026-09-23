@@ -20,26 +20,30 @@ import SectionHeader from "./SectionHeader";
 import Skeleton from "react-loading-skeleton";
 import PortalLink from "./PortalLink";
 
+export interface Decisions {
+  type: {
+    value: string;
+  };
+  action: {
+    value: string;
+  };
+  text: {
+    value: string;
+  };
+}
+
 interface Props {
   loading: boolean;
   titleTranslationId?: string | null;
-  decisions?: {
-    type: {
-      value: string;
-    };
-    action: {
-      value: string;
-    };
-    text: {
-      value: string;
-    };
-  }[];
+  decisions?: Decisions[];
+  onPrefillClick: (key: string) => void;
 }
 
 const DecisionsList = ({
   loading,
   titleTranslationId = "decisionsList.title",
   decisions,
+  onPrefillClick,
 }: Props) => {
   const intl = useIntl();
   const labels = useActionLabels();
@@ -66,6 +70,21 @@ const DecisionsList = ({
     <section>
       <SectionHeader title={title} />
       {decisions.map((decision) => {
+        if (decision.type.value === "PREFILL") {
+          return (
+            <ActionSingle
+              key={decision.action.value}
+              link="#redirect"
+              labels={labels}
+              onClick={(e) => {
+                e.preventDefault();
+                onPrefillClick(decision.action.value);
+              }}
+            >
+              {decision.text.value}
+            </ActionSingle>
+          );
+        }
         if (decision.type.value === "LINK" || decision.type.value === "INTERN")
           return (
             <ActionSingle
