@@ -17,6 +17,7 @@ package nl.nlportal.openproduct.graphql
 
 import java.net.URI
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.openproduct.TestHelper
@@ -121,7 +122,56 @@ class OpenProductQueryIT(
 
     @Test
     @WithBurgerUser("569312863")
-    fun `get product`() =
+    fun `get product voor burger`() =
+        runTest {
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProduct.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProduct")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/url")?.stringValue())
+            assertEquals("2025-04-30", responseBody.requiredAt("/startDatum")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.stringValue())
+            assertEquals(30, responseBody.requiredAt("/verbruiksobject/uren")?.intValue())
+            assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.stringValue())
+            assertEquals("Very important task", responseBody.requiredAt("/taken/0/titel")?.stringValue())
+        }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+    )
+    fun `get product voor bedrijf`() =
+        runTest {
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProduct.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProduct")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/url")?.stringValue())
+            assertEquals("2025-04-30", responseBody.requiredAt("/startDatum")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.stringValue())
+            assertEquals(30, responseBody.requiredAt("/verbruiksobject/uren")?.intValue())
+            assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.stringValue())
+            assertEquals("Very important task", responseBody.requiredAt("/taken/0/titel")?.stringValue())
+        }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+        vestigingsNummer = "990000262129",
+    )
+    fun `get product voor bedrijf met vestiging`() =
         runTest {
             val responseBody =
                 httpGraphQlTester
