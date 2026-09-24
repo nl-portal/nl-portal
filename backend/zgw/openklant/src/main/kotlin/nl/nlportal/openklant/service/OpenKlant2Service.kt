@@ -79,14 +79,9 @@ class OpenKlant2Service(
     }
 
     suspend fun createPartijWithIdentificator(
-        authentication: CommonGroundAuthentication,
+        partijIdentificator: OpenKlant2PartijIdentificator,
         partij: OpenKlant2Partij,
     ): OpenKlant2Partij? {
-        val partijIdentificator =
-            OpenKlant2PartijIdentificator(
-                partijIdentificator =
-                    createPartijIndicator(authentication),
-            )
         val partijResponse =
             try {
                 openKlant2Client
@@ -101,28 +96,9 @@ class OpenKlant2Service(
                                         .copy(
                                             identificeerdePartij = OpenKlant2IdentificeerdePartij(it.uuid!!),
                                         ),
-                                ).also {
-                                    val vestigingsNummer = authentication.getVestigingsNummer()
-                                    if (vestigingsNummer != null) {
-                                        openKlant2Client
-                                            .path<PartijIdentificatoren>()
-                                            .create(
-                                                OpenKlant2PartijIdentificator(
-                                                    identificeerdePartij = OpenKlant2IdentificeerdePartij(it.identificeerdePartij?.uuid!!),
-                                                    subIdentificatorVan = OpenKlant2SubIdentificatorVan(it.uuid!!),
-                                                    partijIdentificator =
-                                                        OpenKlant2Identificator(
-                                                            objectId = vestigingsNummer,
-                                                            codeSoortObjectId = PartijIdentificatorCodeSoort.VESTIGINGSNUMMER.soort,
-                                                            codeObjecttype = PartijIdentificatorCodeType.VESTIGING.type,
-                                                            codeRegister = PartijIdentificatorCodeRegister.HR.register,
-                                                        ),
-                                                ),
-                                            )
-                                    }
-                                }
+                                )
                         } catch (ex: WebClientResponseException) {
-                            logger.error(ex) { "Failed to create PartijIdentificator" }
+                            logger.error(ex) { "Failed to create PartijIdentificator: ${ex.responseBodyAsString}" }
                             openKlant2Client.path<Partijen>().delete(it.uuid!!)
                             throw ex
                         }
@@ -131,8 +107,65 @@ class OpenKlant2Service(
                 logger.error(ex) { "Failed to create Partij: ${ex.responseBodyAsString}" }
                 return null
             }
+        return getPartij(partijResponse.uuid!!)
+    }
 
-        return partijResponse
+    suspend fun createPartijWithIdentificator(
+        authentication: CommonGroundAuthentication,
+        partij: OpenKlant2Partij,
+    ): OpenKlant2Partij? {
+        var partijIdentificator =
+            OpenKlant2PartijIdentificator(
+                partijIdentificator =
+                    createPartijIndicator(authentication),
+            )
+
+        val vestigingsNummer = authentication.getVestigingsNummer()
+        // if vestigingsnummer is not null, find the partijIdentificator of the kvknummer or create it (including a partij)
+        if (vestigingsNummer != null) {
+            val partijIdentificatorKvk =
+                findPartijIdentificatoren(
+                    listOf(
+                        OpenKlant2PartijIdentificatorenFilters.PAGE to 1,
+                        OpenKlant2PartijIdentificatorenFilters.PARTIJ_IDENTIFICATOR_CODEREGISTER to PartijIdentificatorCodeRegister.HR.register,
+                        OpenKlant2PartijIdentificatorenFilters.PARTIJ_IDENTIFICATOR_CODEOBJECTTYPE to PartijIdentificatorCodeType.NIETNATUURLIJKPERSOON.type,
+                        OpenKlant2PartijIdentificatorenFilters.PARTIJ_IDENTIFICATOR_CODESOORTOBJECTID to PartijIdentificatorCodeSoort.KVKNUMMER.soort,
+                        OpenKlant2PartijIdentificatorenFilters.PARTIJ_IDENTIFICATOR_OBJECTID to authentication.userId,
+                    ),
+                )?.firstOrNull()
+
+            if (partijIdentificatorKvk == null) {
+                // if partij identificator of kvk could not be found, make one including the partij
+                val partijKvk =
+                    createPartijWithIdentificator(
+                        partijIdentificator =
+                            OpenKlant2PartijIdentificator(
+                                partijIdentificator =
+                                    OpenKlant2Identificator(
+                                        objectId = authentication.userId,
+                                        codeSoortObjectId = PartijIdentificatorCodeSoort.KVKNUMMER.soort,
+                                        codeObjecttype = PartijIdentificatorCodeType.NIETNATUURLIJKPERSOON.type,
+                                        codeRegister = PartijIdentificatorCodeRegister.HR.register,
+                                    ),
+                            ),
+                        partij = partij,
+                    )
+                partijIdentificator =
+                    partijIdentificator.copy(
+                        subIdentificatorVan = OpenKlant2SubIdentificatorVan(partijKvk?.partijIdentificatoren?.first()?.uuid!!),
+                    )
+            } else {
+                partijIdentificator =
+                    partijIdentificator.copy(
+                        subIdentificatorVan = OpenKlant2SubIdentificatorVan(partijIdentificatorKvk.uuid!!),
+                    )
+            }
+        }
+
+        return createPartijWithIdentificator(
+            partijIdentificator = partijIdentificator,
+            partij = partij,
+        )
     }
 
     suspend fun updatePartij(
@@ -204,6 +237,12 @@ class OpenKlant2Service(
                 }
             }
 
+        return findPartijIdentificatoren(searchFilters)
+    }
+
+    suspend fun findPartijIdentificatoren(
+        searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, Any>>,
+    ): List<OpenKlant2PartijIdentificator>? {
         try {
             return openKlant2Client.path<PartijIdentificatoren>().get(searchFilters)
         } catch (ex: WebClientResponseException) {
@@ -248,7 +287,7 @@ class OpenKlant2Service(
     ): OpenKlant2DigitaleAdres? {
         var userPartijId =
             findPartijIdentificatoren(authentication)
-                ?.singleOrNull { it.partijIdentificator?.objectId == authentication.userId }
+                ?.firstOrNull()
                 ?.identificeerdePartij
                 ?.uuid
 
@@ -416,12 +455,22 @@ class OpenKlant2Service(
             }
 
             is BedrijfAuthentication -> {
-                OpenKlant2Identificator(
-                    objectId = authentication.userId,
-                    codeSoortObjectId = PartijIdentificatorCodeSoort.KVKNUMMER.soort,
-                    codeObjecttype = PartijIdentificatorCodeType.NIETNATUURLIJKPERSOON.type,
-                    codeRegister = PartijIdentificatorCodeRegister.HR.register,
-                )
+                val vestigingsNummer = authentication.getVestigingsNummer()
+                if (vestigingsNummer != null) {
+                    OpenKlant2Identificator(
+                        objectId = vestigingsNummer,
+                        codeSoortObjectId = PartijIdentificatorCodeSoort.VESTIGINGSNUMMER.soort,
+                        codeObjecttype = PartijIdentificatorCodeType.VESTIGING.type,
+                        codeRegister = PartijIdentificatorCodeRegister.HR.register,
+                    )
+                } else {
+                    OpenKlant2Identificator(
+                        objectId = authentication.userId,
+                        codeSoortObjectId = PartijIdentificatorCodeSoort.KVKNUMMER.soort,
+                        codeObjecttype = PartijIdentificatorCodeType.NIETNATUURLIJKPERSOON.type,
+                        codeRegister = PartijIdentificatorCodeRegister.HR.register,
+                    )
+                }
             }
 
             else -> {

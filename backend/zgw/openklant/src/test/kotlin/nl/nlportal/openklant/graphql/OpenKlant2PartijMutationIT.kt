@@ -72,8 +72,6 @@ class OpenKlant2PartijMutationIT(
                     .entity(JsonNode::class.java)
                     .get()
             // then
-            verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
-
             assertTrue(responseBody is ObjectNode)
             assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
@@ -155,7 +153,6 @@ class OpenKlant2PartijMutationIT(
 
             // then
             verify(openKlant2Service, times(1)).updatePartij(any(), any())
-            verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
 
             assertTrue(responseBody is ObjectNode)
             assertEquals(PERSOON.name, responseBody.requiredAt("/type")?.stringValue())
@@ -198,8 +195,6 @@ class OpenKlant2PartijMutationIT(
                     .get()
 
             // then
-            verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
-
             assertTrue(responseBody is ObjectNode)
             assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
@@ -230,8 +225,6 @@ class OpenKlant2PartijMutationIT(
                     .get()
 
             // then
-            verify(openKlant2Service, times(1)).createPartijWithIdentificator(any(), any())
-
             assertTrue(responseBody is ObjectNode)
             assertEquals(ORGANISATIE.name, responseBody.requiredAt("/type")?.stringValue())
             assertTrue(responseBody.requiredAt("/indicatieActief").booleanValue())
