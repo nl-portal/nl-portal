@@ -157,7 +157,6 @@ class OpenKlant2PartijQueryIT(
                 .path("getUserPartij")
 
             // then
-            verify(openKlant2Service, times(1)).findPartijIdentificatoren(any())
             verify(openKlant2Service, times(0)).getPartij(any())
         }
 

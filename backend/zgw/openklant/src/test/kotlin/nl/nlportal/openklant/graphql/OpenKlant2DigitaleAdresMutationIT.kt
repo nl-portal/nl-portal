@@ -18,6 +18,7 @@ package nl.nlportal.openklant.graphql
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openklant.graphql.domain.DigitaleAdresType
 import nl.nlportal.openklant.service.OpenKlant2Service
