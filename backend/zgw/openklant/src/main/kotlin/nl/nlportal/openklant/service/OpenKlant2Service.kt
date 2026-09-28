@@ -110,7 +110,7 @@ class OpenKlant2Service(
         return getPartij(partijResponse.uuid!!)
     }
 
-    suspend fun createPartijWithIdentificator(
+    suspend fun createPartijWithIdentificatorFromAuthentication(
         authentication: CommonGroundAuthentication,
         partij: OpenKlant2Partij,
     ): OpenKlant2Partij? {
@@ -195,10 +195,10 @@ class OpenKlant2Service(
         }
 
         logger.warn { "Failed to update Partij: No existing Partij found. Creating new Partij" }
-        return createPartijWithIdentificator(authentication, partij)
+        return createPartijWithIdentificatorFromAuthentication(authentication, partij)
     }
 
-    suspend fun findPartijIdentificatoren(authentication: CommonGroundAuthentication): List<OpenKlant2PartijIdentificator>? {
+    suspend fun findPartijIdentificatorenFromAuthentication(authentication: CommonGroundAuthentication): List<OpenKlant2PartijIdentificator>? {
         val searchFilters: List<Pair<OpenKlant2PartijIdentificatorenFilters, Any>> =
             when (authentication) {
                 is BurgerAuthentication -> {
@@ -286,7 +286,7 @@ class OpenKlant2Service(
         digitaleAdres: OpenKlant2DigitaleAdres,
     ): OpenKlant2DigitaleAdres? {
         var userPartijId =
-            findPartijIdentificatoren(authentication)
+            findPartijIdentificatorenFromAuthentication(authentication)
                 ?.firstOrNull()
                 ?.identificeerdePartij
                 ?.uuid
@@ -294,7 +294,7 @@ class OpenKlant2Service(
         if (userPartijId == null) {
             logger.debug { "Authenticated User does not have a Partij, let's create a new partij" }
             val partij =
-                createPartijWithIdentificator(
+                createPartijWithIdentificatorFromAuthentication(
                     authentication = authentication,
                     partij =
                         OpenKlant2Partij(
