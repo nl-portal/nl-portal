@@ -38,7 +38,7 @@ class PartijQuery(
         val authentication: CommonGroundAuthentication = authentication
         val userPartijen =
             openklant2Service
-                .findPartijIdentificatoren(authentication)
+                .findPartijIdentificatorenFromAuthentication(authentication)
                 ?.mapNotNull { it.identificeerdePartij?.uuid }
 
         if (userPartijen == null || partijId !in userPartijen) return null
