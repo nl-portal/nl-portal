@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@apollo/client": "4.3.0",
-    "@gemeente-denhaag/design-tokens": "1.4.3",
+    "@gemeente-denhaag/design-tokens": "1.5.0",
     "@gemeente-denhaag/icons": "4.2.2",
     "@nl-portal/nl-portal-api": "workspace:*",
     "@nl-portal/nl-portal-authentication": "workspace:*",
