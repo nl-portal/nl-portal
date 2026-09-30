@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 import { AnchorHTMLAttributes, useCallback, useContext, useMemo } from "react";
-import { HeaderLogic, HeaderLogicProps } from "@gemeente-denhaag/header";
+import {
+  Header as HeaderComponent,
+  HeaderProps as HeaderComponentProps,
+} from "@gemeente-denhaag/header";
 import { LocaleContext } from "@nl-portal/nl-portal-localization";
 import { UIMatch, useMatches } from "react-router";
 import { useIntl } from "react-intl";
@@ -23,12 +26,14 @@ import AppContext from "../contexts/AppContext";
 import PortalLink from "./PortalLink";
 import RouterContext from "../contexts/RouterContext";
 import UserContext from "../contexts/UserContext";
+import { Paths } from "../interfaces/paths";
 
 type HeaderProps = {
   logo?: AnchorHTMLAttributes<HTMLAnchorElement>;
+  paths: Paths;
 };
 
-const Header = ({ logo }: HeaderProps) => {
+const Header = ({ logo, paths }: HeaderProps) => {
   const { logout } = useLogout();
   const { currentLocale, setCurrentLocale, supportedLocales } =
     useContext(LocaleContext);
@@ -120,6 +125,7 @@ const Header = ({ logo }: HeaderProps) => {
             id: `pageTitles.${item.titleTranslationKey}`,
           }),
           href: item.path,
+          icon: item.icon,
         };
         if (item.hasMessagesCount) {
           return { badgeCounter: messagesCount, ...navItem };
@@ -138,7 +144,7 @@ const Header = ({ logo }: HeaderProps) => {
     id: "menu.authorized-login-label",
   });
 
-  const headerProps: HeaderLogicProps = {
+  const headerProps: HeaderComponentProps = {
     userprofileMenu: {
       label: (
         <>
@@ -163,10 +169,14 @@ const Header = ({ logo }: HeaderProps) => {
       navigation: [mijnDenHaagMobileMenu],
       Link: PortalLink,
     },
+    userButton: {
+      href: paths.account,
+      CustomLink: PortalLink,
+    },
   };
 
   return (
-    <HeaderLogic
+    <HeaderComponent
       {...headerProps}
       logo={logo}
       languageSwitcherMenu={languageSwitcherMenu}

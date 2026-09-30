@@ -33,7 +33,7 @@ class PartijMutation(
         @Argument partijRequest: PartijRequest,
     ): PartijResponse? {
         val partij =
-            openklant2Service.createPartijWithIdentificator(
+            openklant2Service.createPartijWithIdentificatorFromAuthentication(
                 authentication = authentication,
                 partij = partijRequest.asOpenKlant2Partij(),
             )
