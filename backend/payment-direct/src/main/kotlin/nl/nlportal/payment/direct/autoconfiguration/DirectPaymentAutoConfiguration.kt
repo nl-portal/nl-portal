@@ -21,6 +21,7 @@ import nl.nlportal.payment.direct.client.DirectPaymentClient
 import nl.nlportal.payment.direct.graphql.DirectPaymentMutation
 import nl.nlportal.payment.direct.graphql.DirectPaymentQuery
 import nl.nlportal.payment.direct.service.DirectPaymentService
+import nl.nlportal.payment.direct.service.DirectPaymentWebhookService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -48,13 +49,22 @@ class DirectPaymentAutoConfiguration {
     @ConditionalOnMissingBean(DirectPaymentService::class)
     fun directPaymentService(
         directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
-        objectsApiClient: ObjectsApiClient,
         directPaymentClient: DirectPaymentClient,
     ): DirectPaymentService =
         DirectPaymentService(
-            directPaymentModuleConfiguration,
-            objectsApiClient,
-            directPaymentClient,
+            directPaymentModuleConfiguration = directPaymentModuleConfiguration,
+            directPaymentClient = directPaymentClient,
+        )
+
+    @Bean
+    @ConditionalOnMissingBean(DirectPaymentWebhookService::class)
+    fun directPaymentWebhookService(
+        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+        objectsApiClient: ObjectsApiClient,
+    ): DirectPaymentWebhookService =
+        DirectPaymentWebhookService(
+            directPaymentModuleConfiguration = directPaymentModuleConfiguration,
+            objectsApiClient = objectsApiClient,
         )
 
     @Bean
@@ -65,5 +75,5 @@ class DirectPaymentAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DirectPaymentController::class)
-    fun directPaymentController(directPaymentService: DirectPaymentService): DirectPaymentController = DirectPaymentController(directPaymentService)
+    fun directPaymentController(directPaymentWebhookService: DirectPaymentWebhookService): DirectPaymentController = DirectPaymentController(directPaymentWebhookService)
 }
