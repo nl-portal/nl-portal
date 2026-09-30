@@ -113,7 +113,7 @@ const Layout = ({
       <HelmetProvider>
         <PageWrapper>
           <PageHeader>
-            {customHeader || <Header logo={headerLogo} />}
+            {customHeader || <Header logo={headerLogo} paths={paths} />}
           </PageHeader>
           <ResponsiveContent className="denhaag-page-content denhaag-responsive-content--sidebar">
             <Menu />
