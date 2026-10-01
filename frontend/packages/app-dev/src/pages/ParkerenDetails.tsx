@@ -23,8 +23,11 @@ import {
   OpenProductProduct,
 } from "@nl-portal/nl-portal-api";
 import { capitalizeFirstLetter, currencyFormat } from "../util/product-format";
+import { useContext } from "react";
+import { LocaleContext } from "@nl-portal/nl-portal-localization";
 
 const ParkerenDetails = () => {
+  const { currentLocale } = useContext(LocaleContext);
   // const { formatDate } = useDateFormatter();
   // const { slug = "parkeren", productTypeSlug = "vergunningen" } = useParams<{
   //   slug: string;
@@ -66,7 +69,8 @@ const ParkerenDetails = () => {
         const product = data?.getOpenProduct as OpenProductProduct | undefined;
         const template =
           product?.content?.find(
-            (content: OpenProductContentElement) => content.taal === "nl",
+            (content: OpenProductContentElement) =>
+              content.taal === currentLocale.split("-")[0],
           )?.content ?? "";
 
         return (
