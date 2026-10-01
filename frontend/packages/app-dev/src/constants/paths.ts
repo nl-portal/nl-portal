@@ -24,6 +24,8 @@ export const paths: Paths = {
   task: (id = ":id") => `/taken/taak/${id}`,
   messages: "/berichten",
   message: (id = ":id") => `/berichten/bericht/${id}`,
+  appointments: "/afspraken",
+  appointment: (id = ":id") => `/afspraken/afspraak/${id}`,
   products: "/producten",
   themeOverview: (slug = ":slug") => `/${slug}`,
   themeList: (slug = ":slug", productTypeSlug = ":productTypeSlug") =>
