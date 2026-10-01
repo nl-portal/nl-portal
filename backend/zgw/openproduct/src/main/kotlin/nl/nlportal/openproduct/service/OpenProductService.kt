@@ -721,23 +721,31 @@ class OpenProductService(
      */
     suspend fun getProductTypeContent(productTypeId: UUID): List<OpenProductContentElement>? {
         try {
+            val contenElementList = mutableListOf<OpenProductContentElement>()
             val searchVariables =
-                mutableListOf<Pair<OpenProductContentElementsFilters, Any>>(
+                listOf<Pair<OpenProductContentElementsFilters, Any>>(
                     OpenProductContentElementsFilters.PAGE to 1,
                     OpenProductContentElementsFilters.PAGE_SIZE to 999,
                     OpenProductContentElementsFilters.PRODUCTTYPE_UUID to productTypeId,
                 )
-            val contenElements = openProductTypeClient
-                .path<ContentElements>()
-                .get(
-                    searchFilters = searchVariables
-                ).results
-            if (openProductConfigurationProperties.productContentLabel != null) {
-                return contenElements.filter {
-                    it.labels?.contains(openProductConfigurationProperties.productContentLabel) == true
+            openProductConfigurationProperties.productContentLabelLanguage?.forEach {
+                val contenElements =
+                    openProductTypeClient
+                        .path<ContentElements>()
+                        .get(
+                            searchFilters = searchVariables,
+                            language = it.language,
+                        ).results
+                if (openProductConfigurationProperties.productContentLabel != null) {
+                    contenElementList.addAll(
+                        contenElements.filter { ce ->
+                            ce.labels?.contains(openProductConfigurationProperties.productContentLabel) == true
+                        },
+                    )
                 }
             }
-            return contenElements
+
+            return contenElementList
         } catch (e: Exception) {
             logger.error { "Error getting producttype content with id: $productTypeId with cause: " + e.message }
         }

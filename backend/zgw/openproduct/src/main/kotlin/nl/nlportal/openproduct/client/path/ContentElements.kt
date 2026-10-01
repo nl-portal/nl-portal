@@ -24,13 +24,17 @@ import org.springframework.web.reactive.function.client.awaitBody
 import java.util.UUID
 import nl.nlportal.openproduct.client.domain.OpenProductContentElement
 import nl.nlportal.openproduct.client.domain.OpenProductContentElementsFilters
+import nl.nlportal.openproduct.client.domain.OpenProductLanguage
 
 class ContentElements(
     val client: OpenProductTypeClient,
 ) : OpenProductPath() {
     override val path: String = "/content"
 
-    suspend fun get(searchFilters: List<Pair<OpenProductContentElementsFilters, Any>>? = null): ResultPage<OpenProductContentElement> =
+    suspend fun get(
+        searchFilters: List<Pair<OpenProductContentElementsFilters, Any>>? = null,
+        language: String,
+    ): ResultPage<OpenProductContentElement> =
         client
             .webClient
             .get()
@@ -39,6 +43,8 @@ class ContentElements(
                     .path(path)
                     .applyFilters(searchFilters)
                 uriBuilder.build()
+            }.headers {
+                it.add("Accept-Language", language)
             }.accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
