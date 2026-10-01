@@ -20,11 +20,7 @@
             "productInstantie": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
           }
         ],
-        "required": [
-          "soort",
-          "productInstantie",
-          "data"
-        ],
+        "required": ["soort", "productInstantie", "data"],
         "properties": {
           "data": {
             "type": "object",
@@ -52,9 +48,7 @@
       "naam": "parkeervergunning-dataobject",
       "schema": {
         "type": "object",
-        "required": [
-          "uren"
-        ],
+        "required": ["uren"],
         "properties": {
           "uren": {
             "type": "number"
@@ -82,9 +76,7 @@
       "naam": "belastingzaken-dataobject",
       "schema": {
         "type": "object",
-        "required": [
-          "uren"
-        ],
+        "required": ["uren"],
         "properties": {
           "uren": {
             "type": "number"
@@ -114,11 +106,7 @@
             "productInstantie": "7d9cd6c2-8147-46f2-9ae9-c67e8213c116"
           }
         ],
-        "required": [
-          "soort",
-          "productInstantie",
-          "data"
-        ],
+        "required": ["soort", "productInstantie", "data"],
         "properties": {
           "data": {
             "type": "object",
@@ -157,17 +145,10 @@
             "tweedeVoorkeurslocatie": "Standplaats Het Anker"
           }
         ],
-        "required": [
-          "status",
-          "inschrijfdatum",
-          "eersteVoorkeurslocatie"
-        ],
+        "required": ["status", "inschrijfdatum", "eersteVoorkeurslocatie"],
         "properties": {
           "status": {
-            "enum": [
-              "ingeschreven",
-              "uitgeschreven"
-            ],
+            "enum": ["ingeschreven", "uitgeschreven"],
             "type": "string",
             "description": "Status van de inschrijving."
           },
@@ -214,16 +195,10 @@
             "uitschrijfdatum": "2026-02-24T00:00:00+02:00"
           }
         ],
-        "required": [
-          "status",
-          "inschrijfdatum"
-        ],
+        "required": ["status", "inschrijfdatum"],
         "properties": {
           "status": {
-            "enum": [
-              "ingeschreven",
-              "uitgeschreven"
-            ],
+            "enum": ["ingeschreven", "uitgeschreven"],
             "type": "string",
             "description": "Status van de inschrijving."
           },
@@ -365,18 +340,10 @@
       "interne_opmerkingen": "",
       "publicatie_start_datum": "2026-07-27",
       "publicatie_eind_datum": null,
-      "themas": [
-        3
-      ],
-      "organisaties": [
-        1
-      ],
-      "contacten": [
-        1
-      ],
-      "locaties": [
-        1
-      ]
+      "themas": [3],
+      "organisaties": [1],
+      "contacten": [1],
+      "locaties": [1]
     }
   },
   {
@@ -397,9 +364,7 @@
       "interne_opmerkingen": "Stadspas Den Haag",
       "publicatie_start_datum": "2026-07-27",
       "publicatie_eind_datum": null,
-      "themas": [
-        5
-      ],
+      "themas": [5],
       "organisaties": [],
       "contacten": [],
       "locaties": []
@@ -423,9 +388,7 @@
       "interne_opmerkingen": "Belastingzaken",
       "publicatie_start_datum": "2026-07-27",
       "publicatie_eind_datum": null,
-      "themas": [
-        4
-      ],
+      "themas": [4],
       "organisaties": [],
       "contacten": [],
       "locaties": []
@@ -449,9 +412,7 @@
       "interne_opmerkingen": "intern",
       "publicatie_start_datum": "2026-07-27",
       "publicatie_eind_datum": null,
-      "themas": [
-        5
-      ],
+      "themas": [5],
       "organisaties": [],
       "contacten": [],
       "locaties": []
@@ -475,9 +436,7 @@
       "interne_opmerkingen": "intern",
       "publicatie_start_datum": "2026-07-27",
       "publicatie_eind_datum": null,
-      "themas": [
-        8
-      ],
+      "themas": [8],
       "organisaties": [],
       "contacten": [],
       "locaties": []
@@ -501,9 +460,7 @@
       "interne_opmerkingen": "woonwagenstandplaats",
       "publicatie_start_datum": "2026-07-27",
       "publicatie_eind_datum": null,
-      "themas": [
-        7
-      ],
+      "themas": [7],
       "organisaties": [],
       "contacten": [],
       "locaties": []
@@ -700,9 +657,7 @@
       "uuid": "bcc4ba4e-8022-447f-8ffd-d65781a51d24",
       "producttype": 1,
       "thema": null,
-      "labels": [
-        1
-      ]
+      "labels": [1]
     }
   },
   {
@@ -711,7 +666,7 @@
     "fields": {
       "language_code": "nl",
       "master": 1,
-      "content": "| Naam | {{product.naam}} |\n| - | - |\n| Startdatum | {{product.start_datum| date: \"%d-%m-%Y\"}} |\n| Einddatum | {{product.eind_datum | date: \"%d-%m-%Y\"}} |",
+      "content": "<DescriptionList titleTranslationId=\"Dit is een test\" items='[{\"title\":\"Naam\",\"detail\":\"{{ naam | escape }}\"},{\"title\":\"Status\",\"detail\":\"{{ status | escape }}\"}]'></DescriptionList>",
       "aanvullende_informatie": ""
     }
   },
@@ -721,7 +676,7 @@
     "fields": {
       "language_code": "en",
       "master": 1,
-      "content": "| Name | {{product.naam}} |\n| - | - |\n| Startdate | {{product.start_datum| date: \"%d-%m-%Y\"}} |\n| Enddate | {{product.eind_datum | date: \"%d-%m-%Y\"}} |",
+      "content": "<DescriptionList titleTranslationId=\"This is a test\" items='[{\"title\":\"Name\",\"detail\":\"{{ naam | escape }}\"},{\"title\":\"Status\",\"detail\":\"{{ status | escape }}\"}]'></DescriptionList>",
       "aanvullende_informatie": ""
     }
   },
@@ -862,9 +817,7 @@
               "datetimeStart": "2025-01-26T12:00:00.000Z"
             }
           ],
-          "kentekens": [
-            "DB754K"
-          ],
+          "kentekens": ["DB754K"],
           "beschikbareDagdelen": "39"
         },
         "soort": "milieuzoneOldtimerPeriodes",
@@ -1201,18 +1154,10 @@
       "interne_opmerkingen": "Bezoekersvergunning",
       "publicatie_start_datum": "2026-07-27",
       "publicatie_eind_datum": null,
-      "themas": [
-        3
-      ],
-      "organisaties": [
-        1
-      ],
-      "contacten": [
-        1
-      ],
-      "locaties": [
-        1
-      ]
+      "themas": [3],
+      "organisaties": [1],
+      "contacten": [1],
+      "locaties": [1]
     }
   },
   {
@@ -1241,9 +1186,7 @@
               "datetimeStart": "2025-02-26T12:00:00.000Z"
             }
           ],
-          "kentekens": [
-            "ZV123B"
-          ],
+          "kentekens": ["ZV123B"],
           "beschikbareDagdelen": "20"
         },
         "soort": "milieuzoneOldtimerPeriodes",
