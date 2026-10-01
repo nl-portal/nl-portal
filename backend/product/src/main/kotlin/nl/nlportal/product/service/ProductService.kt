@@ -163,14 +163,18 @@ class ProductService(
         isOpen: Boolean? = null,
     ): List<Zaak> {
         val productType = getProductType(productTypeId, productName)
-
-        if (productType?.zaaktypen == null || productType.zaaktypen.isEmpty()) {
+        val zaakTypes = productType?.zaaktypen
+        if (zaakTypes.isNullOrEmpty()) {
             return emptyList()
         }
 
-        val zaakTypes = productType.zaaktypen
+        val filteredZaakTypes =
+            authenticationMachtigingsDienstService.filterAllowedZaakTypes(
+                authentication = authentication,
+                zaakTypeUUIDs = zaakTypes.toList(),
+            )
 
-        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
+        if (filteredZaakTypes.isEmpty()) {
             return emptyList()
         }
 
@@ -180,7 +184,7 @@ class ProductService(
                 page = pageNumber,
                 pageSize = pageSize,
                 isOpen = isOpen,
-                zaakTypeUUIDs = zaakTypes.toList(),
+                zaakTypeUUIDs = filteredZaakTypes,
             ).content
     }
 

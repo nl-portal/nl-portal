@@ -971,13 +971,19 @@ class OpenProductService(
                     id = it.uuid,
                     language = language,
                 )?.zaaktypen?.forEach { zaakType ->
-                    zaakTypes.add(CoreUtils.extractId(zaakType.url!!))
+                    zaakTypes.add(extractId(zaakType.url!!))
                 }
             }
         }
 
         // 3. get Zaken with filters
-        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
+        val filteredZaakTypes =
+            authenticationMachtigingsDienstService.filterAllowedZaakTypes(
+                authentication = authentication,
+                zaakTypeUUIDs = zaakTypes.toList(),
+            )
+
+        if (filteredZaakTypes.isEmpty()) {
             return emptyList()
         }
 
@@ -987,7 +993,7 @@ class OpenProductService(
                 page = 1,
                 pageSize = pageSize,
                 isOpen = isOpen,
-                zaakTypeUUIDs = zaakTypes.toList(),
+                zaakTypeUUIDs = filteredZaakTypes,
             ).content
     }
 
