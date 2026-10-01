@@ -674,7 +674,7 @@
     "fields": {
       "language_code": "nl",
       "master": 1,
-      "content": "<DescriptionList titleTranslationId=\"Dit is een test\" items='[{\"title\":\"Naam\",\"detail\":\"{{ naam | escape }}\"},{\"title\":\"Status\",\"detail\":\"{{ status | escape }}\"}]'></DescriptionList>",
+      "content": "<DescriptionList titleTranslationId=\"Dit is een test\" items='[{\"title\":\"Naam\",\"detail\":\"{{ naam | escape }}\"},{\"title\":\"Startdatum\",\"detail\":\"{{ startDatum | date | escape }}\"},{\"title\":\"Einddatum\",\"detail\":\"{{ eindDatum | date | escape }}\"},{\"title\":\"Status\",\"detail\":\"{{ status | capitalize | escape }}\"},{\"title\":\"Prijs\",\"detail\":\"{{ prijs | currency | escape }}\"}]'></DescriptionList>",
       "aanvullende_informatie": ""
     }
   },
@@ -684,7 +684,7 @@
     "fields": {
       "language_code": "en",
       "master": 1,
-      "content": "<DescriptionList titleTranslationId=\"This is a test\" items='[{\"title\":\"Name\",\"detail\":\"{{ naam | escape }}\"},{\"title\":\"Status\",\"detail\":\"{{ status | escape }}\"}]'></DescriptionList>",
+      "content": "<DescriptionList titleTranslationId=\"This is a test\" items='[{\"title\":\"Name\",\"detail\":\"{{ naam | escape }}\"},{\"title\":\"Start date\",\"detail\":\"{{ startDatum | date | escape }}\"},{\"title\":\"End date\",\"detail\":\"{{ eindDatum | date | escape }}\"},{\"title\":\"Status\",\"detail\":\"{{ status | capitalize | escape }}\"},{\"title\":\"Price\",\"detail\":\"{{ prijs | currency | escape }}\"}]'></DescriptionList>",
       "aanvullende_informatie": ""
     }
   },
