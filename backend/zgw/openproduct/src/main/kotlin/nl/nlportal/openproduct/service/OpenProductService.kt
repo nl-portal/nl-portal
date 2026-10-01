@@ -26,6 +26,7 @@ import nl.nlportal.core.util.CoreUtils
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration.OpenProductConfigurationProperties
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.client.domain.OpenProductActie
@@ -35,6 +36,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductBestandenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductContact
 import nl.nlportal.openproduct.client.domain.OpenProductContactenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductContentElement
+import nl.nlportal.openproduct.client.domain.OpenProductContentElementsFilters
 import nl.nlportal.openproduct.client.domain.OpenProductLink
 import nl.nlportal.openproduct.client.domain.OpenProductLinksFilters
 import nl.nlportal.openproduct.client.domain.OpenProductLocatie
@@ -58,6 +60,7 @@ import nl.nlportal.openproduct.client.domain.ResultPage
 import nl.nlportal.openproduct.client.path.Acties
 import nl.nlportal.openproduct.client.path.Bestanden
 import nl.nlportal.openproduct.client.path.Contacten
+import nl.nlportal.openproduct.client.path.ContentElements
 import nl.nlportal.openproduct.client.path.Links
 import nl.nlportal.openproduct.client.path.Locaties
 import nl.nlportal.openproduct.client.path.Organisaties
@@ -90,6 +93,7 @@ class OpenProductService(
     private val zakenApiService: ZakenApiService,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     private val documentenApiService: DocumentenApiService,
+    private val openProductConfigurationProperties: OpenProductConfigurationProperties,
 ) {
     /**
      * Get published themas
@@ -717,9 +721,31 @@ class OpenProductService(
      */
     suspend fun getProductTypeContent(productTypeId: UUID): List<OpenProductContentElement>? {
         try {
-            return openProductTypeClient.path<ProductTypes>().get(
-                id = productTypeId,
-            )
+            val contenElementList = mutableListOf<OpenProductContentElement>()
+            val searchVariables =
+                listOf<Pair<OpenProductContentElementsFilters, Any>>(
+                    OpenProductContentElementsFilters.PAGE to 1,
+                    OpenProductContentElementsFilters.PAGE_SIZE to 999,
+                    OpenProductContentElementsFilters.PRODUCTTYPE_UUID to productTypeId,
+                )
+            openProductConfigurationProperties.productContentLabelLanguage?.forEach {
+                val contenElements =
+                    openProductTypeClient
+                        .path<ContentElements>()
+                        .get(
+                            searchFilters = searchVariables,
+                            language = it.language,
+                        ).results
+                if (openProductConfigurationProperties.productContentLabel != null) {
+                    contenElementList.addAll(
+                        contenElements.filter { ce ->
+                            ce.labels?.contains(openProductConfigurationProperties.productContentLabel) == true
+                        },
+                    )
+                }
+            }
+
+            return contenElementList
         } catch (e: Exception) {
             logger.error { "Error getting producttype content with id: $productTypeId with cause: " + e.message }
         }
