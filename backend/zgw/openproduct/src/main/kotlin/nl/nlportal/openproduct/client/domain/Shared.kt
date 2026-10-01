@@ -26,15 +26,6 @@ data class OpenProductUrl(
     val urn: String? = null,
 )
 
-data class OpenProductContentElement(
-    val uuid: UUID,
-    val labels: List<String>? = emptyList(),
-    @JsonProperty("aanvullende_informatie")
-    val aanvullendeInformatie: String? = null,
-    val content: String,
-    val taal: String,
-)
-
 enum class OpenProductToegestaneStatus(
     @JsonValue val status: String,
 ) {

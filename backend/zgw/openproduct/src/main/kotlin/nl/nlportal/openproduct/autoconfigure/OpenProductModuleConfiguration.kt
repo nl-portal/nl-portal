@@ -42,6 +42,7 @@ class OpenProductModuleConfiguration {
         var productApiUrl: URI? = null
         var productTypeApiUrl: URI? = null
         var token: String? = null
+        var productContentLabel: String? = null
         var dmn: OpenProductDmnConfigurationProperties = OpenProductDmnConfigurationProperties()
 
         class OpenProductDmnConfigurationProperties {

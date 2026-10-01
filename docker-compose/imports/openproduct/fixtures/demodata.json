@@ -693,6 +693,14 @@
     }
   },
   {
+    "model": "producttypen.contentlabel",
+    "pk": 2,
+    "fields": {
+      "uuid": "2e65b45e-4c7f-4b6c-bb8d-7ec848b5030e",
+      "naam": "klantportaal"
+    }
+  },
+  {
     "model": "producttypen.contentelement",
     "pk": 1,
     "fields": {
@@ -701,7 +709,8 @@
       "producttype": 1,
       "thema": null,
       "labels": [
-        1
+        1,
+        2
       ]
     }
   },
