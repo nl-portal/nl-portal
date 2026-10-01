@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import { useEffect, useState, type ReactNode } from "react";
+import { useIntl, type IntlShape } from "react-intl";
 import { renderTemplate } from "../utils/liquid/renderTemplate";
 import { parseComponents } from "../utils/liquid/parseComponents";
 
@@ -25,18 +26,20 @@ export interface LiquidParserProps {
 }
 
 const LiquidParser = ({ template, data, onError }: LiquidParserProps) => {
+  const intl = useIntl();
   const [result, setResult] = useState<{
     template: string;
     data: Record<string, unknown>;
     content: ReactNode;
+    intl: IntlShape;
   }>();
 
   useEffect(() => {
     let active = true;
-    renderTemplate(template, data)
+    renderTemplate(template, data, intl)
       .then((html) => {
         if (active)
-          setResult({ template, data, content: parseComponents(html) });
+          setResult({ template, data, intl, content: parseComponents(html) });
       })
       .catch((error: unknown) => {
         if (!active) return;
@@ -46,9 +49,11 @@ const LiquidParser = ({ template, data, onError }: LiquidParserProps) => {
     return () => {
       active = false;
     };
-  }, [template, data, onError]);
+  }, [template, data, intl, onError]);
 
-  return result?.template === template && result.data === data
+  return result?.template === template &&
+    result.data === data &&
+    result.intl === intl
     ? result.content
     : null;
 };

@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { liquid } from "./engine";
+import type { IntlShape } from "react-intl";
+import { createLiquidEngine } from "./engine";
 
 export async function renderTemplate(
   template: string,
   data: Record<string, unknown>,
+  intl: IntlShape,
 ) {
-  return liquid.parseAndRender(template, data);
+  return createLiquidEngine(intl).parseAndRender(template, data);
 }

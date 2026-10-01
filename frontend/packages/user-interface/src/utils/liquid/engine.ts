@@ -14,8 +14,34 @@
  * limitations under the License.
  */
 import { Liquid } from "liquidjs";
+import type { IntlShape } from "react-intl";
+import { currencyFormat } from "../../constants/currency-format";
 
-export const liquid = new Liquid({
-  strictVariables: true,
-  strictFilters: true,
-});
+export const LIQUID_FORMATTERS = {
+  date: (intl: IntlShape, value: unknown) =>
+    intl.formatDate(value as Parameters<IntlShape["formatDate"]>[0], {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
+  currency: (
+    intl: IntlShape,
+    value: unknown,
+    currency = currencyFormat.currency,
+  ) => intl.formatNumber(value as number, { ...currencyFormat, currency }),
+};
+
+export function createLiquidEngine(intl: IntlShape) {
+  const liquid = new Liquid({
+    strictVariables: true,
+    strictFilters: true,
+  });
+
+  for (const [name, formatter] of Object.entries(LIQUID_FORMATTERS)) {
+    liquid.registerFilter(name, (value: unknown, ...args: string[]) =>
+      formatter(intl, value, ...args),
+    );
+  }
+
+  return liquid;
+}
