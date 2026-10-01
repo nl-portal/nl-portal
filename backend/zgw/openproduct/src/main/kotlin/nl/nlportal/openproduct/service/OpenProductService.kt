@@ -742,6 +742,8 @@ class OpenProductService(
                             ce.labels?.contains(openProductConfigurationProperties.productContentLabel) == true
                         },
                     )
+                } else {
+                    contenElementList.addAll(contenElements)
                 }
             }
 
