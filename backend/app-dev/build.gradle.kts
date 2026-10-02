@@ -58,8 +58,6 @@ dependencies {
     testImplementation("org.springframework.graphql:spring-graphql-test")
 }
 
-// This module is the shipped application: produce a runnable Spring Boot fat jar,
-// disable the plain jar, and never publish it to Maven.
 tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
     enabled = true
     archiveFileName.set("app.jar")
