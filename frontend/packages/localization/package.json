@@ -28,7 +28,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@gemeente-denhaag/utils": "3.1.1",
+    "@gemeente-denhaag/utils": "3.1.2",
     "deepmerge": "^4.3.1",
     "react-intl": "^10.1.23"
   },
