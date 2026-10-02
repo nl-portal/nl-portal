@@ -28,6 +28,8 @@
 * [Connectiviteit](configuratie/connectiviteit.md)
 * [Deployment guide](configuratie/deployment-guide.md)
 * [Keycloak configuratie](configuratie/keycloak.md)
+  * [Standard token exchange (v2)](configuratie/keycloak-token-exchange-v2.md)
+  * [Legacy token exchange (v1)](configuratie/keycloak-token-exchange-v1.md)
 
 ## Support en resources
 
