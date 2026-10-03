@@ -37,6 +37,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import java.nio.charset.Charset
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+import nl.nlportal.payment.direct.service.DirectPaymentWebhookService
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
@@ -105,9 +106,9 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add(DirectPaymentService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            DirectPaymentService.HEADER_X_GCS_KEYID,
+            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
         webTestClient
@@ -171,9 +172,9 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add(DirectPaymentService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            DirectPaymentService.HEADER_X_GCS_KEYID,
+            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
         webTestClient
@@ -233,9 +234,9 @@ internal class DirectPaymentControllerIT(
                 ?.webhookApiSecret
                 .toString()
         val headers = HttpHeaders()
-        headers.add(DirectPaymentService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            DirectPaymentService.HEADER_X_GCS_KEYID,
+            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
         webTestClient
@@ -299,9 +300,9 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add(DirectPaymentService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            DirectPaymentService.HEADER_X_GCS_KEYID,
+            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
         webTestClient
