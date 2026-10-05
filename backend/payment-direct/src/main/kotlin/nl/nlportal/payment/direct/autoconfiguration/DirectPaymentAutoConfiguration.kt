@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(DirectPaymentModuleConfiguration::class)
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "payment.direct.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["payment.direct.enabled"], havingValue = "true")
 class DirectPaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(DirectPaymentClient::class)
@@ -58,6 +58,7 @@ class DirectPaymentAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DirectPaymentWebhookService::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled"], havingValue = "true")
     fun directPaymentWebhookService(
         directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
         objectsApiClient: ObjectsApiClient,
@@ -75,5 +76,6 @@ class DirectPaymentAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DirectPaymentController::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled"], havingValue = "true")
     fun directPaymentController(directPaymentWebhookService: DirectPaymentWebhookService): DirectPaymentController = DirectPaymentController(directPaymentWebhookService)
 }
