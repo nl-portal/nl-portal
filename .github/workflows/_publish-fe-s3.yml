@@ -45,7 +45,9 @@ jobs:
                     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_FRONTEND_SECRET_ACCESS_KEY }}
                     AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
                     VERSION: ${{ inputs.version }}
-                run: aws s3 cp --recursive --exclude "*" --include "*.tgz" . "s3://${BUCKET}/${VERSION}/"
+                # Never descend into node_modules: pnpm links skipped optional platform packages back to the
+                # workspace root, which makes the tree infinitely recursive for anything that follows symlinks.
+                run: aws s3 cp --recursive --no-follow-symlinks --exclude "*" --include "*.tgz" --exclude "node_modules/*" . "s3://${BUCKET}/${VERSION}/"
             -   name: Log location
                 env:
                     VERSION: ${{ inputs.version }}
