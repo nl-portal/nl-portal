@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+rootProject.name = "backend"
+
 pluginManagement {
     val kotlinVersion: String =
         providers.gradleProperty("kotlinVersion").get()

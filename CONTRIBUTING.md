@@ -4,21 +4,26 @@ Thank you for your interest in contributing to NL Portal. This repository is a m
 the backend libraries + application, the frontend libraries + application, the local development
 stack and the documentation. Backend and frontend release at a single, shared version.
 
-When contributing, please first discuss the change you wish to make with the maintainers by creating 
-a Request for Change or Bug report in the 
-[NL Portal Issues](https://github.com/nl-portal/nl-portal-issues/issues) repository.
-
 ## Ownership
 
 This project is owned by [Ritense](https://ritense.com/) and developed together with its community.
 
 ## How to contribute
 
-1. Open an RFC (bigger features) or an issue (smaller tasks/bugs) and let it be discussed.
-2. Create a branch off `main` (see [Branch model](#branch-model)).
-3. Write the code, with tests, following the existing style of the surrounding code.
-4. Open a pull request against the relevant branch.
-5. A maintainer reviews; once approved and green, it is squash-merged.
+1. **Open an issue first.** Every pull request needs a linked issue in
+   [NL Portal Issues](https://github.com/nl-portal/nl-portal-issues/issues): an RFC for a bigger
+   feature, a bug report or task for smaller work. For anything beyond a small fix, let a
+   maintainer weigh in before you start building. A pull request without a linked issue may be
+   closed without review. Typos, documentation fixes and dependency bumps are exempt.
+2. **Fork, or branch.** External contributors work on a branch in their own fork; contributors
+   with write access branch directly in this repository. See [Branch model](#branch-model) for
+   which line your change starts from and how to name the branch.
+3. **Write the code**, with tests, following the style of the surrounding code.
+4. **Open the pull request** against the branch your change targets. Filling in the pull request
+   template is mandatory, and the title must be a valid
+   [Conventional Commit](https://www.conventionalcommits.org/) because it becomes the
+   squash-merge commit. Link the issue in the `Closes #` line.
+5. A maintainer reviews. Once approved and green, it is squash-merged.
 
 ## Branch model
 
