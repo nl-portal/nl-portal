@@ -11,6 +11,16 @@ De NL Portal images (`ghcr.io/nl-portal/nl-portal-backend` en `ghcr.io/nl-portal
 
 De backend variabelen volgen de Spring Boot relaxed binding naamconventie: de property `nl-portal.config.zakenapi.properties.url` wordt de environment variabele `NLPORTAL_CONFIG_ZAKENAPI_PROPERTIES_URL`.
 
+**Let op bij properties met koppeltekens in meerdere delen.** Relaxed binding accepteert twee schrijfwijzen, maar je moet er consequent één aanhouden: vervang *elk* koppelteken door een underscore, óf laat *elk* koppelteken weg. Een mengvorm wordt **stilzwijgend genegeerd** — geen foutmelding, geen waarschuwing, de property houdt gewoon zijn standaardwaarde. Voor `nl-portal.authentication.keycloak.token-exchange-version`:
+
+| Schrijfwijze | Environment variabele | Werkt |
+| ------------ | --------------------- | ----- |
+| elk koppelteken wordt `_` | `NL_PORTAL_AUTHENTICATION_KEYCLOAK_TOKEN_EXCHANGE_VERSION` | ja |
+| elk koppelteken weggelaten | `NLPORTAL_AUTHENTICATION_KEYCLOAK_TOKENEXCHANGEVERSION` | ja |
+| mengvorm | `NLPORTAL_AUTHENTICATION_KEYCLOAK_TOKEN_EXCHANGE_VERSION` | **nee** |
+
+Bij properties waarvan alleen het voorste deel een koppelteken heeft — zoals `nl-portal.authentication.keycloak.resource` — vallen beide schrijfwijzen samen en speelt dit niet. Gebruik bij voorkeur de variabelen van de app image (zoals `KEYCLOAK_TOKEN_EXCHANGE_VERSION`), dan loop je hier niet tegenaan.
+
 ### Deployen met Helm (Kubernetes)
 
 Voor Kubernetes-omgevingen zijn er officiële Helm charts beschikbaar in de [helm-charts repository](https://github.com/nl-portal/helm-charts). Deze repository bevat charts voor de NL Portal backend, frontend en het Configuratiepaneel (backend en frontend). De beschikbare configuratiewaarden per chart, installatie-instructies en de changelogs met migratie-instructies per versie staan in de README van die repository.
@@ -54,4 +64,4 @@ NLPORTAL_FRONTEND_PROPERTIES_OVERVIEWMAINTENANCEALERTTEXTNL=Deze omgeving is tij
 
 Zie [Eigen vormgeving](eigen-vormgeving.md) voor `themeClass` en theming.
 
-Zie de [Keycloak configuratie](keycloak.md) pagina voor het instellen van de bijbehorende clients in Keycloak.
+Zie de [Keycloak configuratie](keycloak.md) pagina voor het instellen van de bijbehorende clients in Keycloak. Kies daar ook de variant van de token exchange: [standard (v2)](keycloak-token-exchange-v2.md) voor nieuwe omgevingen, of [legacy (v1)](keycloak-token-exchange-v1.md) — de standaardwaarde — voor bestaande.

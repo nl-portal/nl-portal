@@ -15,6 +15,7 @@
  */
 package nl.nlportal.commonground.authentication
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.portal.authentication.service.PortalAuthenticationConverter
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -38,8 +39,44 @@ class AuthenticationConfiguration {
 
     @Order(value = 0)
     @Bean
+    @Suppress("DEPRECATION")
     fun commonGroundAuthenticationConverter(
         reactiveJwtDecoder: ReactiveJwtDecoder,
         keycloakConfig: KeycloakConfig,
-    ): PortalAuthenticationConverter = CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloakConfig)
+    ): PortalAuthenticationConverter {
+        if (keycloakConfig.resource.isBlank()) {
+            logger.debug { "No Keycloak client configured, skipping token exchange configuration checks" }
+            return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloakConfig)
+        }
+
+        logger.info { "Keycloak token exchange mode: ${keycloakConfig.tokenExchangeVersion}" }
+
+        when (keycloakConfig.tokenExchangeVersion) {
+            KeycloakConfig.TokenExchangeVersion.V1 -> {
+                require(keycloakConfig.audience.isNotBlank()) {
+                    CommonGroundAuthenticationConverter.AUDIENCE_REQUIRED_MESSAGE
+                }
+                logger.warn {
+                    "Keycloak legacy (v1) token exchange is deprecated. The default changes to v2 in 5.0 " +
+                        "and v1 is removed in a later release. " +
+                        "See documentation/configuratie/keycloak-token-exchange-v2.md"
+                }
+            }
+
+            KeycloakConfig.TokenExchangeVersion.V2 -> {
+                if (keycloakConfig.audience.isNotBlank()) {
+                    logger.info {
+                        "Keycloak token exchange v2 is configured with audience '${keycloakConfig.audience}'. " +
+                            "Ensure the m2m client can issue this audience; a value carried over from v1 will be rejected."
+                    }
+                }
+            }
+        }
+
+        return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloakConfig)
+    }
+
+    companion object {
+        val logger = KotlinLogging.logger {}
+    }
 }
