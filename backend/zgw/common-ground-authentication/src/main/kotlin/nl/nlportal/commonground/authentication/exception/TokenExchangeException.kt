@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.gradle.kotlin.dsl.`kotlin-dsl`
+package nl.nlportal.commonground.authentication.exception
 
-plugins {
-    `kotlin-dsl`
-    id("com.diffplug.spotless") version "8.10.3"
-}
-
-repositories {
-    mavenCentral()
-}
-
-spotless {
-    kotlin {
-        ktlint()
-        licenseHeaderFile(rootDir.parentFile.resolve("licenses/kt.template"), "\\w.*")
-    }
-    kotlinGradle {
-        target("*.gradle.kts")
-        ktlint()
-        licenseHeaderFile(
-            rootDir.parentFile.resolve("licenses/kts.template"),
-            "\\w.*",
-        )
-    }
-}
+class TokenExchangeException : RuntimeException("Token exchange failed")
