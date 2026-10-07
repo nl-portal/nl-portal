@@ -17,23 +17,27 @@ package nl.nlportal.commonground.authentication
 
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
 import nl.nlportal.core.util.Mapper
 import org.springframework.core.io.ResourceLoader
-import java.util.UUID
 import tools.jackson.core.type.TypeReference
 
 class AuthenticationMachtigingsDienstService(
     val authenticationMachtingsDienstConfig: AuthenticationMachtigingsDienstConfig,
     resourceLoader: ResourceLoader,
 ) {
-    var authenticationMachtingDiensten: List<AuthenticationMachtigingsDienst> = emptyList()
+    var authenticationMachtingDiensten: MutableList<AuthenticationMachtigingsDienst> = mutableListOf()
 
     init {
         try {
+            // first load the new machtigingsdienst configurations from the configurations properties
+            authenticationMachtingDiensten.addAll(authenticationMachtingsDienstConfig.getMachtigingsDienstListFromConfiguration())
+
+            // second load the machtigingsdienst from a resource url, to make it backwards compatible
             if (authenticationMachtingsDienstConfig.resourceUrl != null) {
-                val json = resourceLoader.getResource(authenticationMachtingsDienstConfig.resourceUrl).getContentAsString(Charsets.UTF_8)
+                val json = resourceLoader.getResource(authenticationMachtingsDienstConfig.resourceUrl!!).getContentAsString(Charsets.UTF_8)
                 logger.debug { "Machtigingsdiensten is loaded: $json" }
-                this.authenticationMachtingDiensten = Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {})
+                this.authenticationMachtingDiensten.addAll(Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {}))
             }
         } catch (ex: Exception) {
             logger.warn { "Could not load json from ${authenticationMachtingsDienstConfig.resourceUrl} with reason ${ex.message}" }
@@ -53,9 +57,8 @@ class AuthenticationMachtigingsDienstService(
         }
         val zaakTypeList = mutableListOf<UUID>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
-            val machtigingsDienst = getAuthenticationMachtingDienst(it)
-            if (machtigingsDienst != null) {
-                zaakTypeList.addAll(machtigingsDienst.zaakTypes)
+            getAuthenticationMachtingDienst(it)?.let {
+                zaakTypeList.addAll(it.zaakTypes)
             }
         }
 
@@ -76,9 +79,8 @@ class AuthenticationMachtigingsDienstService(
         }
         val taakTypeList = mutableListOf<String>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
-            val machtigingsDienst = getAuthenticationMachtingDienst(it)
-            if (machtigingsDienst != null) {
-                taakTypeList.addAll(machtigingsDienst.taakTypes)
+            getAuthenticationMachtingDienst(it)?.let {
+                taakTypeList.addAll(it.taakTypes)
             }
         }
         return when {
@@ -88,6 +90,27 @@ class AuthenticationMachtigingsDienstService(
 
             else -> {
                 taakTypeList
+            }
+        }
+    }
+
+    fun productTypes(authentication: CommonGroundAuthentication): List<UUID>? {
+        if (authentication !is BedrijfAuthentication) {
+            return null
+        }
+        val productTypeList = mutableListOf<UUID>()
+        authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
+            getAuthenticationMachtingDienst(it)?.let {
+                productTypeList.addAll(it.productTypes)
+            }
+        }
+        return when {
+            productTypeList.isEmpty() -> {
+                null
+            }
+
+            else -> {
+                productTypeList
             }
         }
     }
@@ -112,24 +135,28 @@ class AuthenticationMachtigingsDienstService(
         authentication: CommonGroundAuthentication,
         zaakTypeUUIDs: List<UUID>,
     ): Boolean {
-        if (authentication !is BedrijfAuthentication) {
-            return true
-        }
-        val zaaktypes = zaakTypes(authentication)
-
-        val allowedZaaktypes = mutableSetOf<UUID>()
-
-        if (!zaaktypes.isNullOrEmpty()) {
-            zaakTypeUUIDs.forEach {
-                if (zaaktypes.contains(it)) {
-                    allowedZaaktypes.add(it)
-                }
-            }
-
-            return allowedZaaktypes.isNotEmpty()
+        val allowedZaakTypes =
+            filterAllowedZaakTypes(
+                authentication = authentication,
+                zaakTypeUUIDs = zaakTypeUUIDs,
+            )
+        if (allowedZaakTypes.isEmpty()) {
+            return false
         }
 
         return true
+    }
+
+    fun filterAllowedZaakTypes(
+        authentication: CommonGroundAuthentication,
+        zaakTypeUUIDs: List<UUID>,
+    ): List<UUID> {
+        val zaaktypes = zaakTypes(authentication)
+        if (authentication !is BedrijfAuthentication || zaaktypes.isNullOrEmpty()) {
+            return zaakTypeUUIDs
+        }
+
+        return zaakTypeUUIDs.filter { it in zaaktypes }
     }
 
     fun isAllowedTaakType(
@@ -143,6 +170,46 @@ class AuthenticationMachtigingsDienstService(
 
         if (!taaktypes.isNullOrEmpty()) {
             return taaktypes.contains(taakType)
+        }
+
+        return true
+    }
+
+    fun isAllowedProductType(
+        authentication: CommonGroundAuthentication,
+        productTypeUUID: UUID,
+    ): Boolean {
+        if (authentication !is BedrijfAuthentication) {
+            return true
+        }
+        val productTypes = productTypes(authentication)
+
+        if (!productTypes.isNullOrEmpty()) {
+            return productTypes.contains(productTypeUUID)
+        }
+
+        return true
+    }
+
+    fun isAllowedProductTypes(
+        authentication: CommonGroundAuthentication,
+        productTypeUUIDs: List<UUID>,
+    ): Boolean {
+        if (authentication !is BedrijfAuthentication) {
+            return true
+        }
+        val productTypes = productTypes(authentication)
+
+        val allowedProductTypes = mutableSetOf<UUID>()
+
+        if (!productTypes.isNullOrEmpty()) {
+            productTypeUUIDs.forEach {
+                if (productTypes.contains(it)) {
+                    allowedProductTypes.add(it)
+                }
+            }
+
+            return allowedProductTypes.isNotEmpty()
         }
 
         return true

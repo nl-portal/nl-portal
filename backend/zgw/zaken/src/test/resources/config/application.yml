@@ -50,6 +50,15 @@ nl-portal:
     authentication:
         machtingsdienst:
             resource-url: classpath:machtigingsdiensten.json
+            configurations:
+                test:
+                    uuid: 0781d1a1-0644-44fd-802e-96f6b588b472
+                    naam: test
+                    zaak-types:
+                        - c8783fd1-0a49-41e1-a8e7-9a3d3e39951f
+                        - e599a114-c3fc-4f70-b36e-02ffff1bab4a
+                    taak-types:
+                      - test
 
 spring:
     security:

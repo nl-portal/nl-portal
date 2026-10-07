@@ -63,6 +63,7 @@ enum class OpenProductThemasFilters(
     UPDATE_DATUM("update_datum"),
     UPDATE_DATUM_GTE("update_datum__gte"),
     UPDATE_DATUM_LTE("update_datum__lte"),
+    PRODUCTTYPEN_UUID_IN("producttypen__uuid__in"),
     ;
 
     override fun toString() = this.value
