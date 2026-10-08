@@ -1,0 +1,211 @@
+/*
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
+ *
+ * Licensed under EUPL, Version 1.2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { Component, ReactNode, useEffect, useState } from "react";
+import { FormattedMessage, IntlProvider, useIntl } from "react-intl";
+import { Heading } from "@gemeente-denhaag/heading";
+import { Header } from "@gemeente-denhaag/header";
+import { Paragraph } from "@gemeente-denhaag/paragraph";
+import { Button } from "@gemeente-denhaag/button";
+import { Link } from "@gemeente-denhaag/link";
+import { StylesProvider } from "@gemeente-denhaag/stylesprovider";
+import { Page, PageHeader } from "@gemeente-denhaag/page";
+import { ResponsiveContent } from "@gemeente-denhaag/responsive-content";
+import "@gemeente-denhaag/button-group";
+import {
+  DEFAULT_LOCALES,
+  DEFAULT_MESSAGES,
+  Messages,
+} from "@nl-portal/nl-portal-localization";
+import PageGrid from "../components/PageGrid";
+import FullscreenSkeleton from "../components/FullscreenSkeleton";
+import {
+  loadFrontendConfig,
+  applyFrontendTheme,
+} from "../utils/frontend-config";
+
+interface Props {
+  customMessages?: Messages;
+  headerLogo?: ReactNode;
+  customHeader?: ReactNode;
+  restUri?: string;
+}
+
+class ErrorHeaderBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    return this.state.hasError ? this.props.fallback : this.props.children;
+  }
+}
+
+const getLocale = () => {
+  let locale = document.documentElement.lang;
+
+  try {
+    locale = localStorage.getItem("NL_PORTAL_LANG") || locale;
+  } catch {
+    // Storage can be unavailable, including when it caused the original error.
+  }
+
+  return locale.toLowerCase().startsWith("en")
+    ? DEFAULT_LOCALES.ENGLISH
+    : DEFAULT_LOCALES.DUTCH;
+};
+
+const ErrorPageContent = ({
+  headerLogo,
+  customHeader,
+  restUri,
+}: Omit<Props, "customMessages">) => {
+  const intl = useIntl();
+  const [logoUrl, setLogoUrl] = useState<string>();
+  const [isLoadingTheme, setIsLoadingTheme] = useState(Boolean(restUri));
+  const title = intl.formatMessage({
+    id: "unexpectedError.title",
+    defaultMessage: "Er ging iets mis",
+  });
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  useEffect(() => {
+    if (!restUri) return;
+
+    const loadTheme = async () => {
+      try {
+        const features = await loadFrontendConfig(restUri);
+
+        applyFrontendTheme(features);
+        setLogoUrl(
+          typeof features.theme?.logo === "string"
+            ? features.theme.logo
+            : undefined,
+        );
+      } catch (err) {
+        console.warn("Failed to load error-page theme:", err);
+      } finally {
+        setIsLoadingTheme(false);
+      }
+    };
+
+    void loadTheme();
+  }, [restUri]);
+
+  if (isLoadingTheme) return <FullscreenSkeleton />;
+
+  const logo = {
+    href: "/",
+    children: logoUrl ? <img src={logoUrl} alt="" /> : headerLogo,
+    "aria-label": "NL Portal",
+  };
+
+  const defaultHeader = <Header logo={logo} />;
+
+  return (
+    <StylesProvider lang={intl.locale.split("-")[0]}>
+      <Page>
+        <PageHeader>
+          {customHeader ? (
+            <ErrorHeaderBoundary fallback={defaultHeader}>
+              {customHeader}
+            </ErrorHeaderBoundary>
+          ) : (
+            defaultHeader
+          )}
+        </PageHeader>
+        <ResponsiveContent className="denhaag-page-content">
+          <main
+            id="main-content"
+            className="denhaag-page-content__main"
+            aria-labelledby="unexpected-error-title"
+          >
+            <PageGrid variant="small">
+              <Heading level={1} id="unexpected-error-title">
+                {title}
+              </Heading>
+              <Paragraph>
+                <FormattedMessage
+                  id="unexpectedError.description"
+                  defaultMessage="We kunnen deze pagina op dit moment niet tonen. Probeer de pagina opnieuw te laden of ga naar de overzichtspagina."
+                />
+              </Paragraph>
+              <Paragraph>
+                <FormattedMessage
+                  id="unexpectedError.unsaved"
+                  defaultMessage="Niet-opgeslagen wijzigingen kunnen verloren zijn gegaan."
+                />
+              </Paragraph>
+              <div className="denhaag-button-group">
+                <Button type="button" onClick={() => window.location.reload()}>
+                  <FormattedMessage
+                    id="unexpectedError.reload"
+                    defaultMessage="Pagina opnieuw laden"
+                  />
+                </Button>
+                <Link href="/">
+                  <FormattedMessage
+                    id="unexpectedError.home"
+                    defaultMessage="Naar de overzichtspagina"
+                  />
+                </Link>
+              </div>
+              <Paragraph>
+                <FormattedMessage
+                  id="unexpectedError.help"
+                  defaultMessage="Blijft het probleem bestaan? Probeer het later opnieuw."
+                />
+              </Paragraph>
+            </PageGrid>
+          </main>
+        </ResponsiveContent>
+      </Page>
+    </StylesProvider>
+  );
+};
+
+const UnexpectedErrorPage = ({
+  customMessages,
+  headerLogo,
+  customHeader,
+  restUri,
+}: Props) => {
+  const [locale] = useState(getLocale);
+
+  return (
+    <IntlProvider
+      locale={locale}
+      defaultLocale={DEFAULT_LOCALES.DUTCH}
+      messages={{ ...DEFAULT_MESSAGES[locale], ...customMessages?.[locale] }}
+    >
+      <ErrorPageContent
+        key={restUri}
+        headerLogo={headerLogo}
+        customHeader={customHeader}
+        restUri={restUri}
+      />
+    </IntlProvider>
+  );
+};
+
+export default UnexpectedErrorPage;

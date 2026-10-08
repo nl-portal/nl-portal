@@ -76,6 +76,15 @@ export const NL_NL_MESSAGES: Messages = {
     "modal.close": "Sluiten",
     "titles.currentCases": "Lopende zaken",
     "titles.completedCases": "Afgeronde zaken",
+    "unexpectedError.title": "Er ging iets mis",
+    "unexpectedError.description":
+      "We kunnen deze pagina op dit moment niet tonen. Probeer de pagina opnieuw te laden of ga naar de overzichtspagina.",
+    "unexpectedError.unsaved":
+      "Niet-opgeslagen wijzigingen kunnen verloren zijn gegaan.",
+    "unexpectedError.reload": "Pagina opnieuw laden",
+    "unexpectedError.home": "Naar de overzichtspagina",
+    "unexpectedError.help":
+      "Blijft het probleem bestaan? Probeer het later opnieuw.",
     "noMatchPage.title": "Pagina niet gevonden",
     "noMatchPage.text":
       "De pagina die u zocht kon niet worden gevonden. Het is mogelijk verwijderd, hernoemd of bestond niet. U kunt informatie zoeken via de zoekfunctie bovenin of via de homepage. <link>Ga naar het overzicht.</link>",

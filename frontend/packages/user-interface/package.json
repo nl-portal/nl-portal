@@ -52,6 +52,7 @@
     "@gemeente-denhaag/form-fieldset": "3.2.2",
     "@gemeente-denhaag/form-label": "3.3.2",
     "@gemeente-denhaag/header": "^5.0.1",
+    "@gemeente-denhaag/heading": "2.2.2",
     "@gemeente-denhaag/icons": "4.3.0",
     "@gemeente-denhaag/link": "4.2.2",
     "@gemeente-denhaag/link-list": "^6.3.1",
