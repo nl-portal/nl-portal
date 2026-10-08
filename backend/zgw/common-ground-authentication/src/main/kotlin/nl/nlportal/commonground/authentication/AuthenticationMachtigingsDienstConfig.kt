@@ -29,7 +29,7 @@ class AuthenticationMachtigingsDienstConfig(
 
 class AuthenticationMachtigingsDienst(
     var uuid: UUID,
-    var naam: String,
+    var naam: String? = null,
     var zaakTypes: List<UUID> = listOf(),
     var productTypes: List<UUID> = listOf(),
     var taakTypes: List<String> = listOf(),

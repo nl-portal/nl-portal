@@ -119,41 +119,33 @@ class AuthenticationMachtigingsDienstService(
         authentication: CommonGroundAuthentication,
         zaakTypeUUID: UUID,
     ): Boolean {
-        if (authentication !is BedrijfAuthentication) {
+        val zaaktypes = zaakTypes(authentication)
+        if (authentication !is BedrijfAuthentication || zaaktypes.isNullOrEmpty()) {
             return true
         }
-        val zaaktypes = zaakTypes(authentication)
-
-        if (!zaaktypes.isNullOrEmpty()) {
-            return zaaktypes.contains(zaakTypeUUID)
-        }
-
-        return true
+        return zaaktypes.contains(zaakTypeUUID)
     }
 
     fun isAllowedZaakTypes(
         authentication: CommonGroundAuthentication,
         zaakTypeUUIDs: List<UUID>,
-    ): Boolean {
-        val allowedZaakTypes =
-            filterAllowedZaakTypes(
-                authentication = authentication,
-                zaakTypeUUIDs = zaakTypeUUIDs,
-            )
-        if (allowedZaakTypes.isEmpty()) {
-            return false
-        }
-
-        return true
-    }
+    ): Boolean =
+        filterAllowedZaakTypes(
+            authentication = authentication,
+            zaakTypeUUIDs = zaakTypeUUIDs,
+        ).isNotEmpty()
 
     fun filterAllowedZaakTypes(
         authentication: CommonGroundAuthentication,
-        zaakTypeUUIDs: List<UUID>,
+        zaakTypeUUIDs: List<UUID>?,
     ): List<UUID> {
         val zaaktypes = zaakTypes(authentication)
         if (authentication !is BedrijfAuthentication || zaaktypes.isNullOrEmpty()) {
-            return zaakTypeUUIDs
+            return zaakTypeUUIDs ?: emptyList()
+        }
+
+        if (zaakTypeUUIDs.isNullOrEmpty()) {
+            return zaaktypes
         }
 
         return zaakTypeUUIDs.filter { it in zaaktypes }
@@ -163,56 +155,49 @@ class AuthenticationMachtigingsDienstService(
         authentication: CommonGroundAuthentication,
         taakType: String,
     ): Boolean {
-        if (authentication !is BedrijfAuthentication) {
+        val taaktypes = taakTypes(authentication)
+        if (authentication !is BedrijfAuthentication || taaktypes.isNullOrEmpty()) {
             return true
         }
-        val taaktypes = taakTypes(authentication)
 
-        if (!taaktypes.isNullOrEmpty()) {
-            return taaktypes.contains(taakType)
-        }
-
-        return true
+        return taaktypes.contains(taakType)
     }
 
     fun isAllowedProductType(
         authentication: CommonGroundAuthentication,
         productTypeUUID: UUID,
     ): Boolean {
-        if (authentication !is BedrijfAuthentication) {
+        val productTypes = productTypes(authentication)
+        if (authentication !is BedrijfAuthentication || productTypes.isNullOrEmpty()) {
             return true
         }
-        val productTypes = productTypes(authentication)
 
-        if (!productTypes.isNullOrEmpty()) {
-            return productTypes.contains(productTypeUUID)
-        }
-
-        return true
+        return productTypes.contains(productTypeUUID)
     }
 
     fun isAllowedProductTypes(
         authentication: CommonGroundAuthentication,
-        productTypeUUIDs: List<UUID>,
-    ): Boolean {
-        if (authentication !is BedrijfAuthentication) {
-            return true
-        }
+        productTypeUUIDs: List<UUID>? = emptyList(),
+    ): Boolean =
+        filterAllowedProductTypes(
+            authentication = authentication,
+            productTypeUUIDs = productTypeUUIDs,
+        ).isNotEmpty()
+
+    fun filterAllowedProductTypes(
+        authentication: CommonGroundAuthentication,
+        productTypeUUIDs: List<UUID>?,
+    ): List<UUID> {
         val productTypes = productTypes(authentication)
-
-        val allowedProductTypes = mutableSetOf<UUID>()
-
-        if (!productTypes.isNullOrEmpty()) {
-            productTypeUUIDs.forEach {
-                if (productTypes.contains(it)) {
-                    allowedProductTypes.add(it)
-                }
-            }
-
-            return allowedProductTypes.isNotEmpty()
+        if (authentication !is BedrijfAuthentication || productTypes.isNullOrEmpty()) {
+            return productTypeUUIDs ?: emptyList()
         }
 
-        return true
+        if (productTypeUUIDs.isNullOrEmpty()) {
+            return productTypes
+        }
+
+        return productTypeUUIDs.filter { it in productTypes }
     }
 
     companion object {

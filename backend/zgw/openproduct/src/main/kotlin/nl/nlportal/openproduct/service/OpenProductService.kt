@@ -789,7 +789,7 @@ class OpenProductService(
         productTypeCode: String? = null,
         productTypeId: String? = null,
         productTypeCodes: List<String>? = null,
-        productTypeIds: List<String>? = null,
+        productTypeIds: List<UUID>? = null,
     ): ResultPage<OpenProductProduct> {
         val searchVariables =
             mutableListOf(
@@ -820,13 +820,16 @@ class OpenProductService(
             searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID to it)
         }
 
-        authenticationMachtigingsDienstService.productTypes(authentication)?.let { productTypes ->
-            productTypeIds?.filter { UUID.fromString(it) in productTypes }
+        val allowedProductTypes =
+            authenticationMachtigingsDienstService.filterAllowedProductTypes(
+                authentication = authentication,
+                productTypeUUIDs = productTypeIds,
+            )
+
+        if (allowedProductTypes.isNotEmpty()) {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID_IN to allowedProductTypes.joinToString(","))
         }
 
-        productTypeIds?.let {
-            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID_IN to it.joinToString(","))
-        }
         return openProductClient.path<Producten>().get(
             searchFilters = searchVariables,
         )

@@ -170,7 +170,12 @@ class ProductService(
 
         val zaakTypes = productType.zaaktypen
 
-        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
+        val filteredZaakTypes =
+            authenticationMachtigingsDienstService.filterAllowedZaakTypes(
+                authentication = authentication,
+                zaakTypeUUIDs = zaakTypes.toList(),
+            )
+        if (filteredZaakTypes.isEmpty()) {
             return emptyList()
         }
 
@@ -180,7 +185,7 @@ class ProductService(
                 page = pageNumber,
                 pageSize = pageSize,
                 isOpen = isOpen,
-                zaakTypeUUIDs = zaakTypes.toList(),
+                zaakTypeUUIDs = filteredZaakTypes.toList(),
             ).content
     }
 
