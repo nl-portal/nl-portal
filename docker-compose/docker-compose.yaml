@@ -17,6 +17,7 @@ services:
             - "8012:8012" # Open Notificaties
             - "8014:8014" # OpenKlant 2
             - "8015:8015" # OpenProduct
+            - "8016:8016" # OpenVTB
             - "5010:5010" # Haalcentraal BRP
             - "5011:5011" # Haalcentraal Bewoning
             - "3310:3310" # ClamAV virus scan
@@ -507,6 +508,78 @@ services:
             POSTGRES_DB: nl-portal-config
         volumes:
             - nl-portal-configuration-panel-database-data:/var/lib/postgres # persist data even if container shuts down
+
+    nl-portal-openvtb:
+        image: maykinmedia/open-vtb:0.2.0
+        container_name: nl-portal-openvtb
+        profiles:
+            - zgw
+            - openvtb
+        platform: linux/amd64
+        network_mode: "service:localhost"
+        depends_on:
+            - nl-portal-openvtb-database
+            - nl-portal-redis
+        environment: &open-vtb-env
+            - OPENVTB_PORT=8016
+            - OTEL_SDK_DISABLED=true
+            - DJANGO_SETTINGS_MODULE=openvtb.conf.docker
+            - SECRET_KEY=${SECRET_KEY:-django-insecure-@4wj9(+*bu7*v&%on7+e_8!d1ckl%r=6+sz#d2!pw^@lb0+=}
+            - DB_NAME=openvtb
+            - DB_USER=openvtb
+            - DB_PASSWORD=openvtb
+            - DB_HOST=nl-portal-openvtb-database
+            - DB_PORT=5432
+            - CACHE_DEFAULT=nl-portal-redis:6379/9
+            - CACHE_AXES=nl-portal-redis:6379/11
+            - CELERY_BROKER_URL=redis://nl-portal-redis:6379/10
+            - CELERY_RESULT_BACKEND=redis://nl-portal-redis:6379/10
+            - ALLOWED_HOSTS=*
+            - DISABLE_2FA=true
+            - OPENVTB_SUPERUSER_USERNAME=admin
+            - OPENVTB_SUPERUSER_EMAIL=admin@example.org
+            - OPENVTB_SUPERUSER_PASSWORD=admin
+
+    nl-portal-openvtb-import:
+        image: maykinmedia/open-vtb:0.2.0
+        container_name: nl-portal-openvtb-import
+        platform: linux/amd64
+        profiles:
+            - zgw
+            - openvtb
+        environment: *open-vtb-env
+        network_mode: "service:localhost"
+        command: sh init/init.sh
+        volumes:
+            - ./imports/openvtb/fixtures:/app/src/openvtb/fixtures
+            - ./imports/openvtb/init:/app/init
+        depends_on:
+            - nl-portal-openvtb
+            - nl-portal-openvtb-database
+            - nl-portal-redis
+
+    nl-portal-openvtb-celery:
+        image: maykinmedia/open-vtb:0.2.0
+        container_name: nl-portal-openvtb-celery
+        platform: linux/amd64
+        network_mode: "service:localhost"
+        profiles:
+            - zgw
+            - openvtb
+        command: /celery_worker.sh
+        environment: *open-vtb-env
+
+    nl-portal-openvtb-database:
+        image: postgis/postgis:17-3.5
+        platform: linux/amd64
+        container_name: nl-portal-openvtb-database
+        profiles:
+            - zgw
+            - openvtb
+        environment:
+            - POSTGRES_USER=${DB_USER:-openvtb}
+            - POSTGRES_PASSWORD=${DB_PASSWORD:-openvtb}
+            - POSTGRES_DB=openvtb
 
 volumes:
     nl-portal-database-data:
