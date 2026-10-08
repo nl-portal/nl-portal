@@ -121,7 +121,7 @@ services:
             - POSTGRES_DB=openzaak
 
     nl-portal-openklant-2:
-        image: maykinmedia/open-klant:2.18.1
+        image: maykinmedia/open-klant:2.19.0
         container_name: nl-portal-openklant-2
         profiles:
             - zgw
@@ -151,7 +151,7 @@ services:
             - ./imports/openklant-2/fixtures:/app/src/openklant/fixtures
 
     nl-portal-openklant-2-import:
-        image: maykinmedia/open-klant:2.18.1
+        image: maykinmedia/open-klant:2.19.0
         container_name: nl-portal-openklant-2-import
         profiles:
             - zgw
@@ -258,7 +258,7 @@ services:
             - nl-portal-open-object-database
 
     nl-portal-open-notificaties:
-        image: openzaak/open-notificaties:1.16.2
+        image: openzaak/open-notificaties:1.17.0
         container_name: nl-portal-open-notificaties
         platform: linux/amd64
         network_mode: "service:localhost"
@@ -291,7 +291,7 @@ services:
             - DISABLE_2FA=true
 
     nl-portal-open-notificaties-import:
-        image: openzaak/open-notificaties:1.16.2
+        image: openzaak/open-notificaties:1.17.0
         container_name: nl-portal-open-notificaties-import
         platform: linux/amd64
         network_mode: "service:localhost"
@@ -308,7 +308,7 @@ services:
         environment: *notificaties-env
 
     nl-portal-open-notificaties-celery:
-        image: openzaak/open-notificaties:1.16.2
+        image: openzaak/open-notificaties:1.17.0
         container_name: nl-portal-open-notificaties-celery
         platform: linux/amd64
         network_mode: "service:localhost"

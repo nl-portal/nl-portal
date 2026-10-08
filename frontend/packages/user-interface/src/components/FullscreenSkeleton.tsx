@@ -44,7 +44,7 @@ const FullscreenSkeleton = () => {
     <div className={style["fullscreen-skeleton"]}>
       <div className={style["header"]}>
         <ResponsiveContent>
-          <Skeleton width={130} height={40} />
+          <Skeleton className={style["logo"]} width={130} height={"100%"} />
         </ResponsiveContent>
       </div>
       <div className={style["breadcrumb"]} />
