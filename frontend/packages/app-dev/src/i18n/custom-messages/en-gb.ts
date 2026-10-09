@@ -59,5 +59,22 @@ export const EN_GB_MESSAGES: Messages = {
       "The application is currently undergoing maintenance. Functionality may be limited or not work as intended. Please check back later.",
     "auth.inactive.text":
       "You have been idle for too long. You will soon be automatically logged out of the secure environment. If you have entered any data, it will be lost. Click 'Stay logged in' to continue or 'Log out' to stop.",
+    "appointmentsList.title": "My appointments",
+    "appointmentsList.viewAll": "View all appointments",
+    "appointmentsList.empty": "No appointments found",
+    "appointmentsList.fetchError":
+      "Something went wrong, please try again later.",
+    "pageTitles.appointments": "My appointments",
+    "appointments.loading": "Loading appointments…",
+    "appointments.error":
+      "An error occurred while retrieving your appointments.",
+    "appointments.empty": "You have no upcoming appointments.",
+    "appointments.notFound": "Appointment not found.",
+    "appointments.location": "Location:",
+    "appointments.aanmeldkenmerk": "Check-in code:",
+    "appointments.onlineLink": "Online meeting link:",
+    "appointments.activities": "Activities:",
+    "appointments.bringAlong": "Bring along",
+    "appointments.contact": "Contact:",
   },
 };

@@ -1,18 +1,3 @@
-/*
- * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
- *
- * Licensed under EUPL, Version 1.2 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" basis,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 import { DEFAULT_LOCALES } from "../default-locales";
 import { Messages } from "../../interfaces/messages";
 
@@ -34,6 +19,7 @@ export const NL_NL_MESSAGES: Messages = {
     "pageTitles.task": "Taak",
     "pageTitles.editContactInfo": "Contactgegevens",
     "pageTitles.editNotifications": "Meldingen",
+    "pageTitles.appointments": "Mijn afspraken",
     "pageTitles.belastingzaken": "Belastingzaken",
     "pageTitles.parkeren": "Parkeren",
     "pageTitles.inkomensondersteuning": "Inkomensondersteuning",
@@ -67,6 +53,8 @@ export const NL_NL_MESSAGES: Messages = {
     "breadcrumb.parkeren.details": "Details",
     "breadcrumb.inkomensondersteuning": "Inkomensondersteuning",
     "breadcrumb.inkomensondersteuning.details": "Details",
+    "breadcrumb.appointments": "Mijn afspraken",
+    "breadcrumb.appointments.details": "Details",
     "breadcrumb.noMatch": "Pagina niet gevonden",
     "language-switcher.title": "Kies uw voorkeurstaal",
     "language-switcher.shortname.en-GB": "EN",
@@ -330,7 +318,6 @@ export const NL_NL_MESSAGES: Messages = {
     "form.success.text": "Uw aanvraag is succesvol verwerkt.",
     "form.error.title": "Er is iets misgegaan",
     "form.error.text": "Probeer het later opnieuw.",
-    "quickLinks.title": "Snel naar",
     "footer.legal.privacy": "Privacy",
     "footer.legal.privacy.url":
       "https://www.denhaag.nl/nl/algemene-privacyverklaring/",
@@ -358,5 +345,15 @@ export const NL_NL_MESSAGES: Messages = {
       "Er is een fout opgetreden tijdens het uploaden van het bestand.",
     "formio.fileUpload.text": "Sleep uw bestand hier of",
     "formio.fileUpload.buttonLabel": "Kies een bestand",
+    "appointments.loading": "Afspraken worden geladen...",
+    "appointments.error": "Er is een fout opgetreden bij het ophalen van uw afspraken.",
+    "appointments.empty": "U heeft geen afspraken.",
+    "appointments.notFound": "Afspraak niet gevonden.",
+    "appointments.onlineLink": "Deelnamelink:",
+    "appointments.aanmeldkenmerk": "Aanmeldkenmerk:",
+    "appointments.location": "Locatie:",
+    "appointments.activities": "Wat staat er gepland:",
+    "appointments.bringAlong": "Wat meenemen",
+    "appointments.contact": "Contact:",
   },
 };
