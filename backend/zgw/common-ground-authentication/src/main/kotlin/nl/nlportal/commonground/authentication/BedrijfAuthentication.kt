@@ -40,7 +40,7 @@ class BedrijfAuthentication(
     override fun getUrn(): String {
         var urn = URN_PREFIX + URN_SEPERATOR + URN_HR_PREFIX + URN_SEPERATOR + URN_KVKNUMMER_PREFIX + URN_SEPERATOR + getKvkNummer()
         val vestigingsNummer = getVestigingsNummer()
-        if(vestigingsNummer != null) {
+        if (vestigingsNummer != null) {
             return urn + URN_SEPERATOR + VESTIGINGNUMMER_KEY + URN_SEPERATOR + vestigingsNummer
         }
 
