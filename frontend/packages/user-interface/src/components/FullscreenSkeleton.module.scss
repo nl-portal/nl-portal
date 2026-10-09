@@ -14,12 +14,8 @@
     var(--denhaag-header-md-height) + var(--breadcrumb-height)
   );
 
-  @include mixins.breakpoint(tablet) {
-    --header-height: var(--denhaag-header-sm-height);
-  }
-
   @include mixins.breakpoint(desktop) {
-    --header-height: var(--denhaag-header-md-height);
+    --header-height: var(--denhaag-header-lg-height);
   }
 
   &::after {
@@ -47,6 +43,14 @@
       height: 100%;
       display: flex;
       align-items: center;
+    }
+  }
+
+  .logo {
+    height: var(--denhaag-header-logo-height);
+
+    @include mixins.breakpoint(desktop) {
+      height: var(--denhaag-header-logo-lg-height);
     }
   }
 
