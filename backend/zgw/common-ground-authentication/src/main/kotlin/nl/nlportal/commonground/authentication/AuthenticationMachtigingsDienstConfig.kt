@@ -19,7 +19,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.util.UUID
 
 @ConfigurationProperties(prefix = "nl-portal.authentication.machtingsdienst")
-data class AuthenticationMachtigingsDienstConfig(
-    val resourceUrl: String? = null,
-    val allMachtigingUuid: UUID? = null,
+class AuthenticationMachtigingsDienstConfig(
+    var resourceUrl: String? = null,
+    var allMachtigingUuid: UUID? = null,
+    var configurations: Map<String, AuthenticationMachtigingsDienst> = emptyMap(),
+) {
+    fun getMachtigingsDienstListFromConfiguration(): List<AuthenticationMachtigingsDienst> = configurations.values.toList()
+}
+
+class AuthenticationMachtigingsDienst(
+    var uuid: UUID,
+    var naam: String? = null,
+    var zaakTypes: List<UUID> = listOf(),
+    var productTypes: List<UUID> = listOf(),
+    var taakTypes: List<String> = listOf(),
 )

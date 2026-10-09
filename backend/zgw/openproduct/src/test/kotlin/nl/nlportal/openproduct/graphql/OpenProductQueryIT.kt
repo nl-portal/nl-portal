@@ -121,6 +121,30 @@ class OpenProductQueryIT(
         }
 
     @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+        machtigingsDienst = "0781d1a1-0644-44fd-802e-96f6b588b471",
+    )
+    fun `get producten for bedrijf met machtigingsdienst`() =
+        runTest {
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProducten.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProducten")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(4, responseBody.get("totalElements")?.intValue())
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/content/0/url")?.stringValue())
+            assertEquals("2025-04-30", responseBody.requiredAt("/content/0/startDatum")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/producttype/code")?.stringValue())
+            assertEquals(30, responseBody.requiredAt("/content/0/verbruiksobject/uren")?.intValue())
+        }
+
+    @Test
     @WithBurgerUser("569312863")
     fun `get product voor burger`() =
         runTest {
@@ -147,6 +171,31 @@ class OpenProductQueryIT(
         kvkNummer = "569312863",
     )
     fun `get product voor bedrijf`() =
+        runTest {
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProduct.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProduct")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals("http://localhost:8070/producten/api/v1/producten/694242af-d906-470b-b7e1-eb3527886854/", responseBody.requiredAt("/url")?.stringValue())
+            assertEquals("2025-04-30", responseBody.requiredAt("/startDatum")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.stringValue())
+            assertEquals(30, responseBody.requiredAt("/verbruiksobject/uren")?.intValue())
+            assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.stringValue())
+            assertEquals("Very important task", responseBody.requiredAt("/taken/0/titel")?.stringValue())
+        }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+        machtigingsDienst = "0781d1a1-0644-44fd-802e-96f6b588b472",
+    )
+    fun `get product voor bedrijf met machtigingsdienst`() =
         runTest {
             val responseBody =
                 httpGraphQlTester

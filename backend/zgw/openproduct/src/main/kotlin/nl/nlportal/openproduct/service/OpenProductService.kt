@@ -99,6 +99,7 @@ class OpenProductService(
      * @return: Result of themas
      */
     suspend fun getThemas(
+        authentication: CommonGroundAuthentication,
         pageNumber: Int,
         pageSize: Int,
         extraSearchVariables: List<Pair<OpenProductThemasFilters, Any>> = emptyList(),
@@ -113,6 +114,10 @@ class OpenProductService(
 
             if (extraSearchVariables.isNotEmpty()) {
                 searchVariables.addAll(extraSearchVariables)
+            }
+
+            authenticationMachtigingsDienstService.productTypes(authentication)?.let {
+                searchVariables.add(OpenProductThemasFilters.PRODUCTTYPEN_UUID_IN to it.joinToString(","))
             }
 
             return openProductTypeClient.path<Themas>().get(searchVariables)
@@ -130,7 +135,14 @@ class OpenProductService(
      * Get only published hoofd themas
      * @return: List of hoofd themas
      */
-    suspend fun getHoofdThemas(): List<OpenProductThema> = getThemas(1, 999).results.filter { it.hoofdThema == null }
+    suspend fun getHoofdThemas(
+        authentication: CommonGroundAuthentication,
+    ): List<OpenProductThema> =
+        getThemas(
+            authentication = authentication,
+            pageNumber = 1,
+            pageSize = 999,
+        ).results.filter { it.hoofdThema == null }
 
     /**
      * Get published hoofd themas based of the products of the authenticated user
@@ -152,6 +164,7 @@ class OpenProductService(
                 val hoofdThemas = mutableSetOf<OpenProductThema>()
                 val themas =
                     getThemas(
+                        authentication = authentication,
                         pageNumber = 1,
                         pageSize = 999,
                     ).results
@@ -186,9 +199,16 @@ class OpenProductService(
      * Get hierarchy of all published themas
      * @return: List of thema hierarchy
      */
-    suspend fun getThemasHierarchy(): List<OpenProductThemaHierarchy> {
+    suspend fun getThemasHierarchy(
+        authentication: CommonGroundAuthentication,
+    ): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
-        val themas = getThemas(1, 999).results
+        val themas =
+            getThemas(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = 999,
+            ).results
         val hoofdThemas = themas.filter { it.hoofdThema == null }
 
         hoofdThemas.forEach {
@@ -208,11 +228,29 @@ class OpenProductService(
      * @param: id, uuid of the thema
      * @return: thema of null
      */
-    suspend fun getThema(id: UUID): OpenProductThema? {
+    suspend fun getThema(
+        authentication: CommonGroundAuthentication,
+        id: UUID,
+    ): OpenProductThema? {
         try {
-            return openProductTypeClient.path<Themas>().get(
-                id = id,
-            )
+            val thema =
+                openProductTypeClient.path<Themas>().get(
+                    id = id,
+                )
+
+            if (thema == null) {
+                return null
+            }
+
+            if (!authenticationMachtigingsDienstService.isAllowedProductTypes(
+                    authentication = authentication,
+                    productTypeUUIDs = thema.producttypen.map { it.uuid },
+                )
+            ) {
+                throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this thema")
+            }
+
+            return thema
         } catch (e: Exception) {
             logger.error { "Error getting thema with id: $id with cause: " + e.message }
         }
@@ -224,14 +262,20 @@ class OpenProductService(
      * @param: id, uuid of thema
      * @return: List of thema hierarchy
      */
-    suspend fun getThemaHierarchy(id: UUID): List<OpenProductThemaHierarchy> {
+    suspend fun getThemaHierarchy(
+        authentication: CommonGroundAuthentication,
+        id: UUID,
+    ): List<OpenProductThemaHierarchy> {
         try {
             val thema =
                 openProductTypeClient.path<Themas>().get(
                     id = id,
                 )
             if (thema != null) {
-                return buildThemaHierachy(thema = thema)
+                return buildThemaHierachy(
+                    authentication = authentication,
+                    thema = thema,
+                )
             }
         } catch (e: Exception) {
             logger.error { "Error building thema hierarchy id: $id with cause: " + e.message }
@@ -745,7 +789,7 @@ class OpenProductService(
         productTypeCode: String? = null,
         productTypeId: String? = null,
         productTypeCodes: List<String>? = null,
-        productTypeIds: List<String>? = null,
+        productTypeIds: List<UUID>? = null,
     ): ResultPage<OpenProductProduct> {
         val searchVariables =
             mutableListOf(
@@ -776,8 +820,14 @@ class OpenProductService(
             searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID to it)
         }
 
-        productTypeIds?.let {
-            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID_IN to it.joinToString(","))
+        val allowedProductTypes =
+            authenticationMachtigingsDienstService.filterAllowedProductTypes(
+                authentication = authentication,
+                productTypeUUIDs = productTypeIds,
+            )
+
+        if (allowedProductTypes.isNotEmpty()) {
+            searchVariables.add(OpenProductProductenFilters.PRODUCTTYPE_UUID_IN to allowedProductTypes.joinToString(","))
         }
 
         return openProductClient.path<Producten>().get(
@@ -800,11 +850,22 @@ class OpenProductService(
                     id = id,
                 )
 
+            if (product == null) {
+                return null
+            }
+
             if (isAuthorizedForProduct(
                     authentication = authentication,
-                    product = product!!,
+                    product = product,
                 )
             ) {
+                if (!authenticationMachtigingsDienstService.isAllowedProductType(
+                        authentication = authentication,
+                        productTypeUUID = product.producttype.uuid,
+                    )
+                ) {
+                    throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied to this thema")
+                }
                 return product
             }
 
@@ -833,7 +894,11 @@ class OpenProductService(
         themaId: UUID,
     ): List<OpenProductProduct> {
         try {
-            val thema = getThema(id = themaId)
+            val thema =
+                getThema(
+                    authentication = authentication,
+                    id = themaId,
+                )
             if (thema == null) {
                 throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Could not find thema with id: $themaId")
             }
@@ -944,6 +1009,7 @@ class OpenProductService(
             if (themas.isEmpty()) {
                 themasAll.addAll(
                     getThemas(
+                        authentication = authentication,
                         pageNumber = 1,
                         pageSize = 999,
                     ).results,
@@ -976,7 +1042,12 @@ class OpenProductService(
         }
 
         // 3. get Zaken with filters
-        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
+        val filteredZaakTypes =
+            authenticationMachtigingsDienstService.filterAllowedZaakTypes(
+                authentication = authentication,
+                zaakTypeUUIDs = zaakTypes.toList(),
+            )
+        if (filteredZaakTypes.isEmpty()) {
             return emptyList()
         }
 
@@ -986,7 +1057,7 @@ class OpenProductService(
                 page = 1,
                 pageSize = pageSize,
                 isOpen = isOpen,
-                zaakTypeUUIDs = zaakTypes.toList(),
+                zaakTypeUUIDs = filteredZaakTypes,
             ).content
     }
 
@@ -1005,6 +1076,7 @@ class OpenProductService(
     ): List<TaakV2> {
         val themas =
             getThemas(
+                authentication = authentication,
                 pageNumber = 1,
                 pageSize = 999,
             ).results
@@ -1403,9 +1475,17 @@ class OpenProductService(
      * @param: thema
      * @return: list of thema hierarchy
      */
-    private suspend fun buildThemaHierachy(thema: OpenProductThema): List<OpenProductThemaHierarchy> {
+    private suspend fun buildThemaHierachy(
+        authentication: CommonGroundAuthentication,
+        thema: OpenProductThema,
+    ): List<OpenProductThemaHierarchy> {
         val themasHierarchy = mutableListOf<OpenProductThemaHierarchy>()
-        val themas = getThemas(1, 999).results
+        val themas =
+            getThemas(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = 999,
+            ).results
 
         themasHierarchy.add(
             searchSubThemasHierarchy(

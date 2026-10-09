@@ -17,23 +17,27 @@ package nl.nlportal.commonground.authentication
 
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
 import nl.nlportal.core.util.Mapper
 import org.springframework.core.io.ResourceLoader
-import java.util.UUID
 import tools.jackson.core.type.TypeReference
 
 class AuthenticationMachtigingsDienstService(
     val authenticationMachtingsDienstConfig: AuthenticationMachtigingsDienstConfig,
     resourceLoader: ResourceLoader,
 ) {
-    var authenticationMachtingDiensten: List<AuthenticationMachtigingsDienst> = emptyList()
+    var authenticationMachtingDiensten: MutableList<AuthenticationMachtigingsDienst> = mutableListOf()
 
     init {
         try {
+            // first load the new machtigingsdienst configurations from the configurations properties
+            authenticationMachtingDiensten.addAll(authenticationMachtingsDienstConfig.getMachtigingsDienstListFromConfiguration())
+
+            // second load the machtigingsdienst from a resource url, to make it backwards compatible
             if (authenticationMachtingsDienstConfig.resourceUrl != null) {
-                val json = resourceLoader.getResource(authenticationMachtingsDienstConfig.resourceUrl).getContentAsString(Charsets.UTF_8)
+                val json = resourceLoader.getResource(authenticationMachtingsDienstConfig.resourceUrl!!).getContentAsString(Charsets.UTF_8)
                 logger.debug { "Machtigingsdiensten is loaded: $json" }
-                this.authenticationMachtingDiensten = Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {})
+                this.authenticationMachtingDiensten.addAll(Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {}))
             }
         } catch (ex: Exception) {
             logger.warn { "Could not load json from ${authenticationMachtingsDienstConfig.resourceUrl} with reason ${ex.message}" }
@@ -53,9 +57,8 @@ class AuthenticationMachtigingsDienstService(
         }
         val zaakTypeList = mutableListOf<UUID>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
-            val machtigingsDienst = getAuthenticationMachtingDienst(it)
-            if (machtigingsDienst != null) {
-                zaakTypeList.addAll(machtigingsDienst.zaakTypes)
+            getAuthenticationMachtingDienst(it)?.let {
+                zaakTypeList.addAll(it.zaakTypes)
             }
         }
 
@@ -76,9 +79,8 @@ class AuthenticationMachtigingsDienstService(
         }
         val taakTypeList = mutableListOf<String>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
-            val machtigingsDienst = getAuthenticationMachtingDienst(it)
-            if (machtigingsDienst != null) {
-                taakTypeList.addAll(machtigingsDienst.taakTypes)
+            getAuthenticationMachtingDienst(it)?.let {
+                taakTypeList.addAll(it.taakTypes)
             }
         }
         return when {
@@ -92,60 +94,110 @@ class AuthenticationMachtigingsDienstService(
         }
     }
 
+    fun productTypes(authentication: CommonGroundAuthentication): List<UUID>? {
+        if (authentication !is BedrijfAuthentication) {
+            return null
+        }
+        val productTypeList = mutableListOf<UUID>()
+        authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
+            getAuthenticationMachtingDienst(it)?.let {
+                productTypeList.addAll(it.productTypes)
+            }
+        }
+        return when {
+            productTypeList.isEmpty() -> {
+                null
+            }
+
+            else -> {
+                productTypeList
+            }
+        }
+    }
+
     fun isAllowedZaakType(
         authentication: CommonGroundAuthentication,
         zaakTypeUUID: UUID,
     ): Boolean {
-        if (authentication !is BedrijfAuthentication) {
+        val zaaktypes = zaakTypes(authentication)
+        if (authentication !is BedrijfAuthentication || zaaktypes.isNullOrEmpty()) {
             return true
         }
-        val zaaktypes = zaakTypes(authentication)
-
-        if (!zaaktypes.isNullOrEmpty()) {
-            return zaaktypes.contains(zaakTypeUUID)
-        }
-
-        return true
+        return zaaktypes.contains(zaakTypeUUID)
     }
 
     fun isAllowedZaakTypes(
         authentication: CommonGroundAuthentication,
         zaakTypeUUIDs: List<UUID>,
-    ): Boolean {
-        if (authentication !is BedrijfAuthentication) {
-            return true
-        }
+    ): Boolean =
+        filterAllowedZaakTypes(
+            authentication = authentication,
+            zaakTypeUUIDs = zaakTypeUUIDs,
+        ).isNotEmpty()
+
+    fun filterAllowedZaakTypes(
+        authentication: CommonGroundAuthentication,
+        zaakTypeUUIDs: List<UUID>?,
+    ): List<UUID> {
         val zaaktypes = zaakTypes(authentication)
-
-        val allowedZaaktypes = mutableSetOf<UUID>()
-
-        if (!zaaktypes.isNullOrEmpty()) {
-            zaakTypeUUIDs.forEach {
-                if (zaaktypes.contains(it)) {
-                    allowedZaaktypes.add(it)
-                }
-            }
-
-            return allowedZaaktypes.isNotEmpty()
+        if (authentication !is BedrijfAuthentication || zaaktypes.isNullOrEmpty()) {
+            return zaakTypeUUIDs ?: emptyList()
         }
 
-        return true
+        if (zaakTypeUUIDs.isNullOrEmpty()) {
+            return zaaktypes
+        }
+
+        return zaakTypeUUIDs.filter { it in zaaktypes }
     }
 
     fun isAllowedTaakType(
         authentication: CommonGroundAuthentication,
         taakType: String,
     ): Boolean {
-        if (authentication !is BedrijfAuthentication) {
+        val taaktypes = taakTypes(authentication)
+        if (authentication !is BedrijfAuthentication || taaktypes.isNullOrEmpty()) {
             return true
         }
-        val taaktypes = taakTypes(authentication)
 
-        if (!taaktypes.isNullOrEmpty()) {
-            return taaktypes.contains(taakType)
+        return taaktypes.contains(taakType)
+    }
+
+    fun isAllowedProductType(
+        authentication: CommonGroundAuthentication,
+        productTypeUUID: UUID,
+    ): Boolean {
+        val productTypes = productTypes(authentication)
+        if (authentication !is BedrijfAuthentication || productTypes.isNullOrEmpty()) {
+            return true
         }
 
-        return true
+        return productTypes.contains(productTypeUUID)
+    }
+
+    fun isAllowedProductTypes(
+        authentication: CommonGroundAuthentication,
+        productTypeUUIDs: List<UUID>? = emptyList(),
+    ): Boolean =
+        filterAllowedProductTypes(
+            authentication = authentication,
+            productTypeUUIDs = productTypeUUIDs,
+        ).isNotEmpty()
+
+    fun filterAllowedProductTypes(
+        authentication: CommonGroundAuthentication,
+        productTypeUUIDs: List<UUID>?,
+    ): List<UUID> {
+        val productTypes = productTypes(authentication)
+        if (authentication !is BedrijfAuthentication || productTypes.isNullOrEmpty()) {
+            return productTypeUUIDs ?: emptyList()
+        }
+
+        if (productTypeUUIDs.isNullOrEmpty()) {
+            return productTypes
+        }
+
+        return productTypeUUIDs.filter { it in productTypes }
     }
 
     companion object {
