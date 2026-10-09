@@ -103,6 +103,8 @@ abstract class CommonGroundAuthentication(
     )
     fun machtigingsDienstUUID(): UUID? = machtigingsDienstUUIDs()?.get(0)
 
+    override fun getUrn() = URN_PREFIX
+
     override fun getUserRepresentation() = "${this.userType.uppercase()}:${this.userId}"
 }
 
@@ -112,3 +114,8 @@ const val AANVRAGER_KEY = "aanvrager"
 const val VESTIGINGNUMMER_KEY = "vestigingsnummer"
 const val GEMACHTIGDE_KEY = "gemachtigde"
 const val MACHTIGINGSDIENST_KEY = "urn:etoegang:core:ServiceUUID"
+const val URN_PREFIX = "urn:nld"
+const val URN_HR_PREFIX = "hr"
+const val URN_KVKNUMMER_PREFIX = "kvknummer"
+const val URN_BRP_PREFIX = "brp"
+const val URN_SEPERATOR = ":"

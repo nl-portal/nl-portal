@@ -26,6 +26,7 @@ open class PortalAuthentication(
     val userId: String,
 ) : JwtAuthenticationToken(jwt, authorities) {
     open fun getUserRepresentation() = "Portal"
+    open fun getUrn() = ""
 }
 
 const val SUB_KEY = "sub"
