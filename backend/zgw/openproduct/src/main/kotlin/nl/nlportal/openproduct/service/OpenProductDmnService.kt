@@ -116,11 +116,9 @@ class OpenProductDmnService(
                         source = Mapper.get().writeValueAsString(product),
                     ),
                 )
-            }
 
-            // add the static mapping
-            // handle the configured static variables
-            if (actie.mapping != null) {
+                // add the static mapping
+                // handle the configured static variables
                 actie.mapping[ACTIE_MAPPING_KEY_STATIC]?.let {
                     variablesMapping.putAll(
                         mapActieMappingVariables(

@@ -1577,6 +1577,13 @@ export type OpenProductOrganisatie = {
   uuid: Scalars['UUID']['output'];
 };
 
+export type OpenProductPrefillResponse = {
+  __typename?: 'OpenProductPrefillResponse';
+  formulierUrl?: Maybe<Scalars['String']['output']>;
+  hash?: Maybe<Scalars['String']['output']>;
+  objectId?: Maybe<Scalars['UUID']['output']>;
+};
+
 export type OpenProductPrijs = {
   __typename?: 'OpenProductPrijs';
   actiefVanaf: Scalars['Date']['output'];
@@ -1981,6 +1988,7 @@ export type Query = {
   getOpenProductActie?: Maybe<OpenProductActie>;
   /**  Get decision by actie naam */
   getOpenProductActieDecision: Array<Scalars['JSON']['output']>;
+  getOpenProductActiePrefill?: Maybe<OpenProductPrefillResponse>;
   /**  Get all acties */
   getOpenProductActies: ActiesPage;
   /**  Get a bestand */
@@ -2124,6 +2132,12 @@ export type QueryGetOpenProductActieArgs = {
 
 
 export type QueryGetOpenProductActieDecisionArgs = {
+  naam: Scalars['String']['input'];
+  productId: Scalars['UUID']['input'];
+};
+
+
+export type QueryGetOpenProductActiePrefillArgs = {
   naam: Scalars['String']['input'];
   productId: Scalars['UUID']['input'];
 };

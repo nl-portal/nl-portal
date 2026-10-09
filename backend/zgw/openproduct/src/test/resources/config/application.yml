@@ -10,6 +10,8 @@ nl-portal:
                 token: ac045222c9e7cde8120b48735560f9b920bb58cd
                 product-api-url: http://localhost:9070/producten/api/v1
                 product-type-api-url: http://localhost:9070/producttypen/api/v1
+                prefill:
+                    type-url: "http://host.docker.internal:8011/api/v1/objecttypes/3e852115-277a-4570-873a-9a64be3aeb34"
         catalogiapi:
             enabled: true
             properties:
