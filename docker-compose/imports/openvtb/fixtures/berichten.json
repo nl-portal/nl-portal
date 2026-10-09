@@ -1,0 +1,91 @@
+[
+  {
+    "model": "berichten.berichttype",
+    "pk": 1,
+    "fields": {
+      "uuid": "d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+      "handelings_perspectief": "betalen",
+      "mijn_overheid_berichtenbox": true,
+      "mijn_overheid_berichtenbox_type": "Test",
+      "verantwoordelijke_organisatie": "urn:maykin:test:product:1"
+    }
+  },
+  {
+    "model": "berichten.bericht",
+    "pk": 1,
+    "fields": {
+      "uuid": "85af56b8-02a2-4f71-9f63-f8675312a351",
+      "onderwerp": "Bericht burger",
+      "bericht_tekst": "Long text",
+      "publicatiedatum": "2026-08-27T10:22:33Z",
+      "is_gepubliceerd": true,
+      "referentie": "",
+      "ontvanger": "urn:nld:brp.bsn:999993847",
+      "bericht_type": 1,
+      "einddatum_handelings_termijn": "2027-08-27T10:23:08Z",
+      "is_gerelateerd_aan": []
+    }
+  },
+  {
+    "model": "berichten.bericht",
+    "pk": 2,
+    "fields": {
+      "uuid": "e4a71422-96ca-4b80-8465-f33f7d63047c",
+      "onderwerp": "Bericht bedrijf",
+      "bericht_tekst": "Long text",
+      "publicatiedatum": "2026-11-27T10:22:33Z",
+      "is_gepubliceerd": true,
+      "referentie": "",
+      "ontvanger": "urn:nld:hr:kvknummer:14127293",
+      "bericht_type": 1,
+      "einddatum_handelings_termijn": "2027-08-27T10:23:08Z",
+      "is_gerelateerd_aan": []
+    }
+  },
+  {
+    "model": "berichten.bericht",
+    "pk": 3,
+    "fields": {
+      "uuid": "ed85f556-5d8c-4c9b-84e4-f6bbceb83ec6",
+      "onderwerp": "Bericht bedrijf met vestiging",
+      "bericht_tekst": "Long text",
+      "publicatiedatum": "2026-11-27T10:22:33Z",
+      "is_gepubliceerd": true,
+      "referentie": "",
+      "ontvanger": "urn:nld:hr:kvknummer:14127293:vestigingsnummer:000037143557",
+      "bericht_type": 1,
+      "einddatum_handelings_termijn": "2027-08-27T10:23:08Z",
+      "is_gerelateerd_aan": []
+    }
+  },
+  {
+    "model": "berichten.bijlagetype",
+    "pk": 1,
+    "fields": {
+      "uuid": "aa970071-1da9-451c-ac87-7019ebf12633",
+      "bericht_type": 1,
+      "informatie_objecttype": "urn:maykin:test:type:1",
+      "omschrijving": "test 1"
+    }
+  },
+  {
+    "model": "berichten.bijlagetype",
+    "pk": 2,
+    "fields": {
+      "uuid": "18eb7ae4-106a-4775-80c1-b1b449be325b",
+      "bericht_type": 1,
+      "informatie_objecttype": "urn:maykin:test:type:2",
+      "omschrijving": "test 2"
+    }
+  },
+  {
+    "model": "berichten.bijlage",
+    "pk": 1,
+    "fields": {
+      "uuid": "7c8d3611-364d-4b4a-a5bc-8e25d9ec85c7",
+      "bericht": 1,
+      "informatie_object": "urn:maykin:bijlage:1",
+      "omschrijving": "test"
+    }
+  }
+]
