@@ -39,7 +39,6 @@ deploy:
           - haalcentraal2/build/sonatypeCentralStaging
           - messaging/build/sonatypeCentralStaging
           - payment-direct/build/sonatypeCentralStaging
-          - payment/build/sonatypeCentralStaging
           - portal-authentication/build/sonatypeCentralStaging
           - product/build/sonatypeCentralStaging
           - zgw/berichten/build/sonatypeCentralStaging
@@ -72,7 +71,6 @@ deploy:
           - haalcentraal2/build/sonatypeCentralStaging
           - messaging/build/sonatypeCentralStaging
           - payment-direct/build/sonatypeCentralStaging
-          - payment/build/sonatypeCentralStaging
           - portal-authentication/build/sonatypeCentralStaging
           - product/build/sonatypeCentralStaging
           - zgw/berichten/build/sonatypeCentralStaging
