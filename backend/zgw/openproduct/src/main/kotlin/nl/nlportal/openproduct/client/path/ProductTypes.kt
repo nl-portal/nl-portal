@@ -68,7 +68,7 @@ class ProductTypes(
             .retrieve()
             .awaitBody()
 
-    suspend fun get(id: UUID): List<OpenProductContentElement> =
+    suspend fun get(id: UUID): ResultPage<OpenProductContentElement> =
         client
             .webClient
             .get()

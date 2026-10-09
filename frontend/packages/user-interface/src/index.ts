@@ -27,6 +27,8 @@ export { default as Header } from "./components/Header";
 export * from "./components/Header";
 export { default as Heading } from "./components/Heading";
 export * from "./components/Heading";
+export { default as LiquidParser } from "./components/LiquidParser";
+export * from "./components/LiquidParser";
 export { default as Layout } from "./components/Layout";
 export { default as LinkList } from "./components/LinkList";
 export * from "./components/LinkList";
