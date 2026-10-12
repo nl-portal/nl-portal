@@ -19,7 +19,9 @@ import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.openproduct.client.domain.OpenProductActie
+import nl.nlportal.openproduct.client.domain.OpenProductPrefillResponse
 import nl.nlportal.openproduct.service.OpenProductDmnService
+import nl.nlportal.openproduct.service.OpenProductPrefillService
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -31,6 +33,7 @@ import tools.jackson.databind.node.ObjectNode
 class OpenProductActieQuery(
     val openProductService: OpenProductService,
     val openProductDmnService: OpenProductDmnService,
+    val openProductPrefillService: OpenProductPrefillService,
 ) {
     @QueryMapping
     suspend fun getOpenProductActies(
@@ -72,4 +75,16 @@ class OpenProductActieQuery(
 
         return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
     }
+
+    @QueryMapping
+    suspend fun getOpenProductActiePrefill(
+        authentication: CommonGroundAuthentication,
+        @Argument productId: UUID,
+        @Argument naam: String,
+    ): OpenProductPrefillResponse =
+        openProductPrefillService.prefill(
+            authentication = authentication,
+            naam = naam,
+            productId = productId,
+        )
 }
