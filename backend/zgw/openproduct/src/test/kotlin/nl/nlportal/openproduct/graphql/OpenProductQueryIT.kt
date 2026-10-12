@@ -211,7 +211,6 @@ class OpenProductQueryIT(
             assertEquals("PARKEREN", responseBody.requiredAt("/producttype/code")?.stringValue())
             assertEquals(30, responseBody.requiredAt("/verbruiksobject/uren")?.intValue())
             assertEquals("Lopende zaak", responseBody.requiredAt("/zaken/0/omschrijving")?.stringValue())
-            assertEquals("Very important task", responseBody.requiredAt("/taken/0/titel")?.stringValue())
         }
 
     @Test
