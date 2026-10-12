@@ -48,6 +48,7 @@ class VTBBerichtenService(
                     VTBBerichtFilters.PAGE to pageNumber.toString(),
                     VTBBerichtFilters.PAGE_SIZE to pageSize.toString(),
                     VTBBerichtFilters.ONTVANGER to authentication.getUrn(),
+                    VTBBerichtFilters.PUBLICATIEDATUM_LTE to LocalDateTime.now().toString(),
                 )
 
             isOnGeopend?.let {

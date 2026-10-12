@@ -43,6 +43,7 @@ enum class VTBBerichtFilters(
     GEOPENDOP_NULL("geopendOp__isnull "),
     ONTVANGER("ontvanger"),
     PUBLICATIEDATUM_GTE("publicatiedatum__gte"),
+    PUBLICATIEDATUM_LTE("publicatiedatum__lte"),
     ;
 
     override fun toString() = this.value
