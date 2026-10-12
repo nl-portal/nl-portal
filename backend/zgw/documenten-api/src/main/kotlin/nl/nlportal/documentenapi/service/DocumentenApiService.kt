@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import nl.nlportal.commonground.authentication.URN_HR_PREFIX
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.client.DocumentApisConfig.DocumentenApisConfigProperties
 import nl.nlportal.documentenapi.client.DocumentenApiClient
@@ -108,4 +109,21 @@ class DocumentenApiService(
             document.status in documentenApisConfigProperties.statusWhitelist &&
                 document.vertrouwelijkheidaanduiding in documentenApisConfigProperties.vertrouwelijkheidsaanduidingWhitelist
         }
+
+    fun translateDocumentUrnToUrl(
+        documentUrn: String,
+    ): String {
+        val splitURN = documentUrn.split(":")
+
+        require(splitURN.size == 8) { "Invalid document Urn format." }
+
+        val documentApi = splitURN[3]
+        val path = splitURN[5]
+        val uuid = splitURN[7]
+
+        val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
+        return documentenApiConfig.url + "/" + path + "/" + uuid
+
+
+    }
 }

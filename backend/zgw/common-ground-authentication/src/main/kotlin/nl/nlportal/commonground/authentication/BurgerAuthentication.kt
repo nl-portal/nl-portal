@@ -36,5 +36,5 @@ class BurgerAuthentication(
 
     override fun getUserRepresentation() = "BSN:${getBsn()}"
 
-    override fun getUrn() = URN_PREFIX + URN_SEPERATOR + URN_BRP_PREFIX + URN_SEPERATOR + BSN_KEY + URN_SEPERATOR + getBsn()
+    override fun getUrn() = URN_PREFIX + URN_SEPERATOR + URN_BRP_PREFIX + URN_SEPERATOR + URN_BSN_PREFIX + URN_SEPERATOR + getBsn()
 }

@@ -41,7 +41,7 @@ class BedrijfAuthentication(
         var urn = URN_PREFIX + URN_SEPERATOR + URN_HR_PREFIX + URN_SEPERATOR + URN_KVKNUMMER_PREFIX + URN_SEPERATOR + getKvkNummer()
         val vestigingsNummer = getVestigingsNummer()
         if (vestigingsNummer != null) {
-            return urn + URN_SEPERATOR + VESTIGINGNUMMER_KEY + URN_SEPERATOR + vestigingsNummer
+            return urn + URN_SEPERATOR + URN_VESTIGINGNUMMER_PREFIX + URN_SEPERATOR + vestigingsNummer
         }
 
         return urn
