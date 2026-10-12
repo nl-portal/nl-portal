@@ -663,4 +663,116 @@ object TestHelper {
            ]
          }
         """.trimIndent()
+
+    val objectenApiVTBBerichtResponse =
+        """
+        {
+  "url": "http://localhost:8016/berichten/api/v1/berichten/85af56b8-02a2-4f71-9f63-f8675312a351",
+  "urn": "urn:maykin:berichten:bericht:85af56b8-02a2-4f71-9f63-f8675312a351",
+  "uuid": "85af56b8-02a2-4f71-9f63-f8675312a351",
+  "onderwerp": "Bericht burger",
+  "berichtTekst": "Long text",
+  "publicatiedatum": "2026-08-27T10:22:33Z",
+  "referentie": "",
+  "ontvanger": "urn:nld:brp.bsn:999993847",
+  "geopendOp": null,
+  "berichtType": "http://localhost:8016/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+  "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+  "isGerelateerdAan": [],
+  "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+  "bijlagen": [
+    {
+      "informatieObject": "urn:maykin:bijlage:1",
+      "omschrijving": "test"
+    }
+  ]
+}
+        """.trimIndent()
+
+    val objectenApiVTBBerichtenResultPage =
+        """
+        {
+  "count": 3,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "url": "http://localhost:8016/berichten/api/v1/berichten/85af56b8-02a2-4f71-9f63-f8675312a351",
+      "urn": "urn:maykin:berichten:bericht:85af56b8-02a2-4f71-9f63-f8675312a351",
+      "uuid": "85af56b8-02a2-4f71-9f63-f8675312a351",
+      "onderwerp": "Bericht burger",
+      "berichtTekst": "Long text",
+      "publicatiedatum": "2026-08-27T10:22:33Z",
+      "referentie": "",
+      "ontvanger": "urn:nld:brp.bsn:999993847",
+      "geopendOp": null,
+      "berichtType": "http://localhost:8016/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+      "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+      "isGerelateerdAan": [],
+      "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+      "bijlagen": [
+        {
+          "informatieObject": "urn:maykin:bijlage:1",
+          "omschrijving": "test"
+        }
+      ]
+    },
+    {
+      "url": "http://localhost:8016/berichten/api/v1/berichten/e4a71422-96ca-4b80-8465-f33f7d63047c",
+      "urn": "urn:maykin:berichten:bericht:e4a71422-96ca-4b80-8465-f33f7d63047c",
+      "uuid": "e4a71422-96ca-4b80-8465-f33f7d63047c",
+      "onderwerp": "Bericht bedrijf",
+      "berichtTekst": "Long text",
+      "publicatiedatum": "2026-11-27T10:22:33Z",
+      "referentie": "",
+      "ontvanger": "urn:nld:hr:kvknummer:14127293",
+      "geopendOp": null,
+      "berichtType": "http://localhost:8016/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+      "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+      "isGerelateerdAan": [],
+      "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+      "bijlagen": []
+    },
+    {
+      "url": "http://localhost:8016/berichten/api/v1/berichten/ed85f556-5d8c-4c9b-84e4-f6bbceb83ec6",
+      "urn": "urn:maykin:berichten:bericht:ed85f556-5d8c-4c9b-84e4-f6bbceb83ec6",
+      "uuid": "ed85f556-5d8c-4c9b-84e4-f6bbceb83ec6",
+      "onderwerp": "Bericht bedrijf met vestiging",
+      "berichtTekst": "Long text",
+      "publicatiedatum": "2026-11-27T10:22:33Z",
+      "referentie": "",
+      "ontvanger": "urn:nld:hr:kvknummer:14127293:vestigingsnummer:000037143557",
+      "geopendOp": null,
+      "berichtType": "http://localhost:8016/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+      "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+      "isGerelateerdAan": [],
+      "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+      "bijlagen": []
+    }
+  ]
+}
+        """.trimIndent()
+
+    val objectenApiVTBBerichtTypeResponse =
+        """
+        {
+          "url": "http://localhost:8016/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "urn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "uuid": "d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "bijlageTypen": [
+            {
+              "informatieObjecttype": "urn:maykin:test:type:1",
+              "omschrijving": "test 1"
+            },
+            {
+              "informatieObjecttype": "urn:maykin:test:type:2",
+              "omschrijving": "test 2"
+            }
+          ],
+          "handelingsPerspectief": "betalen",
+          "mijnOverheidBerichtenbox": true,
+          "mijnOverheidBerichtenboxType": "Test",
+          "verantwoordelijkeOrganisatie": "urn:maykin:test:product:1"
+        }
+        """.trimIndent()
 }

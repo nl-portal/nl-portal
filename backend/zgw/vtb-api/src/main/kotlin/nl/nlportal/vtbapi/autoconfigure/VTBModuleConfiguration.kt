@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.vtbapi.autoconfiguration
+package nl.nlportal.vtbapi.autoconfigure
 
 import java.net.URI
 import org.springframework.boot.context.properties.ConfigurationProperties

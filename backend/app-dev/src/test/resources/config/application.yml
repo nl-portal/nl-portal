@@ -187,3 +187,8 @@ nl-portal:
             toggles:
                 theme-api-enabled: false
                 message-count-enabled: false
+        vtbapi:
+            enabled: true
+            properties:
+                url: http://localhost:8016
+                token: ac045222c9e7cde8120b48735560f9b920bb58cd

@@ -17,7 +17,7 @@ package nl.nlportal.vtbapi.client.domain
 
 interface VTBFilters
 
-data class Bijlage(
+data class VTBBijlage(
     val informatieObject: String,
     val omschrijving: String? = null,
 )

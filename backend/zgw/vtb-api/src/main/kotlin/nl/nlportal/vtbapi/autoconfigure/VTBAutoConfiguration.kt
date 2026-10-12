@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.vtbapi.autoconfiguration
+package nl.nlportal.vtbapi.autoconfigure
 
 import nl.nlportal.vtbapi.client.VTBClient
+import nl.nlportal.vtbapi.service.VTBBerichtenService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -33,5 +34,14 @@ class VTBAutoConfiguration {
     ): VTBClient =
         VTBClient(
             vtbModuleConfigurationProperties = vtbModuleConfiguration.properties,
+        )
+
+    @Bean
+    @ConditionalOnMissingBean(VTBBerichtenService::class)
+    fun vtbBerichtenService(
+        vtbClient: VTBClient,
+    ): VTBBerichtenService =
+        VTBBerichtenService(
+            vtbClient = vtbClient,
         )
 }

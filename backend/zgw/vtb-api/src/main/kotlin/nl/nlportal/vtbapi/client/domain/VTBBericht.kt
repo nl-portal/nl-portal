@@ -32,7 +32,7 @@ class VTBBericht(
     val berichtType: String,
     val isGerelateerdAan: List<IsGerelateerdAan>? = emptyList(),
     val einddatumHandelingsTermijn: LocalDateTime? = null,
-    val bijlagen: List<Bijlage> = emptyList(),
+    val bijlagen: List<VTBBijlage> = emptyList(),
 )
 
 data class IsGerelateerdAan(

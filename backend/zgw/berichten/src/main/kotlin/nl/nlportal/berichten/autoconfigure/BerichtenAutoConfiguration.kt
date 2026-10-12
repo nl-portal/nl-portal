@@ -21,6 +21,7 @@ import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.berichten.web.rest.BerichtDocumentResource
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.vtbapi.service.VTBBerichtenService
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -37,11 +38,13 @@ class BerichtenAutoConfiguration {
         objectenApiService: ObjectenApiService,
         documentenApiService: DocumentenApiService,
         berichtenConfigurationProperties: BerichtenConfiguration,
+        vtbBerichtenService: VTBBerichtenService?,
     ): BerichtenService =
         BerichtenService(
             objectenApiService = objectenApiService,
             berichtenConfigurationProperties = berichtenConfigurationProperties.properties,
             documentenApiService = documentenApiService,
+            vtbBerichtenService = vtbBerichtenService,
         )
 
     @Bean

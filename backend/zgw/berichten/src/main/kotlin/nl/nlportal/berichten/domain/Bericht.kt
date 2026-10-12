@@ -31,80 +31,13 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 data class Bericht(
     val id: UUID? = null,
     val berichtTekst: String,
-    val berichtType: BerichtType? = null,
+    var berichtType: BerichtType,
     val bijlages: List<String>? = emptyList(),
-    val einddatumHandelingstermijn: LocalDateTime? = null,
+    val einddatumHandelingstermijn: LocalDateTime,
     var geopend: Boolean,
-    val handelingsperspectief: BerichtHandelingsperspectief? = null,
+    val handelingsperspectief: BerichtHandelingsperspectief,
     val identificatie: BerichtIdentificatie,
     val onderwerp: String,
-    val publicatiedatum: LocalDateTime? = null,
+    val publicatiedatum: LocalDateTime,
     val referentie: String? = null,
-) {
-    companion object {
-        fun fromBerichtObject(
-            berichtObject: BerichtObject,
-        ): Bericht =
-            Bericht(
-                id = berichtObject.id,
-                berichtTekst = berichtObject.berichtTekst,
-                berichtType = berichtObject.berichtType,
-                bijlages = berichtObject.bijlages,
-                einddatumHandelingstermijn = berichtObject.einddatumHandelingstermijn,
-                geopend = berichtObject.geopend,
-                publicatiedatum = berichtObject.publicatiedatum,
-                referentie = berichtObject.referentie,
-                onderwerp = berichtObject.onderwerp,
-                identificatie = berichtObject.identificatie,
-                handelingsperspectief = berichtObject.handelingsperspectief,
-            )
-
-        fun fromVTBBericht(
-            authentication: CommonGroundAuthentication,
-            vtbBericht: VTBBericht,
-        ): Bericht =
-            Bericht(
-                id = vtbBericht.uuid,
-                berichtTekst = vtbBericht.berichtTekst,
-                // berichtType = berichtObject.berichtType,
-                // bijlages = berichtObject.bijlages,
-                einddatumHandelingstermijn = vtbBericht.einddatumHandelingsTermijn,
-                geopend = vtbBericht.geopendOp != null,
-                publicatiedatum = vtbBericht.publicatiedatum,
-                referentie = vtbBericht.referentie,
-                onderwerp = vtbBericht.onderwerp,
-                identificatie = mapAuthentication(authentication),
-            )
-
-        fun mapAuthentication(
-            authentication: CommonGroundAuthentication,
-        ): BerichtIdentificatie =
-            when (authentication) {
-                is BurgerAuthentication -> {
-                    BerichtIdentificatie(
-                        type = authentication.userType,
-                        value = authentication.userId,
-                    )
-                }
-
-                is BedrijfAuthentication -> {
-                    val vestigingsNummer = authentication.getVestigingsNummer()
-                    if (vestigingsNummer != null) {
-                        BerichtIdentificatie(
-                            type = VESTIGINGNUMMER_KEY,
-                            value = vestigingsNummer,
-                        )
-                    } else {
-                        BerichtIdentificatie(
-                            type = authentication.userType,
-                            value = authentication.userId,
-                        )
-                    }
-                }
-
-                else -> {
-                    throw IllegalArgumentException("Authentication not supported")
-                }
-            }
-    }
-}
+)

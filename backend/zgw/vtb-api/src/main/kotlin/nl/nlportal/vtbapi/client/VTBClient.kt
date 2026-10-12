@@ -18,7 +18,7 @@ package nl.nlportal.vtbapi.client
 import io.netty.handler.logging.LogLevel
 import kotlin.reflect.full.primaryConstructor
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.vtbapi.autoconfiguration.VTBModuleConfiguration.VTBModuleConfigurationProperties
+import nl.nlportal.vtbapi.autoconfigure.VTBModuleConfiguration.VTBModuleConfigurationProperties
 import nl.nlportal.vtbapi.client.path.VTBPath
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.http.codec.json.JacksonJsonDecoder

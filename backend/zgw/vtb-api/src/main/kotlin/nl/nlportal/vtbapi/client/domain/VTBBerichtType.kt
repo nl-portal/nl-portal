@@ -18,7 +18,7 @@ package nl.nlportal.vtbapi.client.domain
 import com.fasterxml.jackson.annotation.JsonValue
 
 data class VTBBerichtType(
-    val bijlageType: List<Bijlage>,
+    val bijlageType: List<VTBBijlage>,
     val handelingsPerspectief: HandelingsPerspectief,
     val mijnOverheidBerichtenbox: Boolean = false,
     val mijnOverheidBerichtenboxType: String? = null,
