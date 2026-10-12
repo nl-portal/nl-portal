@@ -163,18 +163,17 @@ class ProductService(
         isOpen: Boolean? = null,
     ): List<Zaak> {
         val productType = getProductType(productTypeId, productName)
-
+        val zaakTypes = productType?.zaaktypen
         if (productType?.zaaktypen == null || productType.zaaktypen.isEmpty()) {
             return emptyList()
         }
-
-        val zaakTypes = productType.zaaktypen
 
         val filteredZaakTypes =
             authenticationMachtigingsDienstService.filterAllowedZaakTypes(
                 authentication = authentication,
                 zaakTypeUUIDs = zaakTypes.toList(),
             )
+
         if (filteredZaakTypes.isEmpty()) {
             return emptyList()
         }
