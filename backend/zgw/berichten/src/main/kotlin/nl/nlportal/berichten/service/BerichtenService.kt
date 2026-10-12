@@ -36,6 +36,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import java.util.UUID
+import nl.nlportal.berichten.domain.BerichtObject
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.service.DocumentenApiService
 
@@ -44,18 +45,12 @@ class BerichtenService(
     private val documentenApiService: DocumentenApiService,
     private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
 ) {
-    suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int {
-        val searchParameters =
-            listOf(
-                ObjectSearchParameter("geopend", STRING_CONTAINS, "false"),
-                ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
-                ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
-                ObjectSearchParameter("publicatiedatum", LOWER_THAN_OR_EQUAL_TO, LocalDate.now().toString()),
-            )
-        val results = getBerichten(1, 1, searchParameters)
-
-        return results.count
-    }
+    suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int =
+        getBerichtObjecten(
+            authentication = authentication,
+            pageNumber = 1,
+            pageSize = 1,
+        ).count
 
     suspend fun getBericht(
         authentication: CommonGroundAuthentication,
@@ -106,7 +101,7 @@ class BerichtenService(
         }
 
         val bijlageUrl =
-            bericht.bijlages.firstOrNull { extractId(it) == documentId }
+            bericht.bijlages?.firstOrNull { extractId(it) == documentId }
                 ?: run {
                     logger.debug {
                         "Access denied to document $documentId on bericht $berichtId for user ${authentication.userId}"
@@ -131,12 +126,34 @@ class BerichtenService(
             },
         )
 
-    suspend fun getBerichtenPage(
+    suspend fun getBerichten(
         authentication: CommonGroundAuthentication,
         pageNumber: Int,
         pageSize: Int,
         onderwerp: String?,
     ): BerichtenPage {
+        val resultPage =
+            getBerichtObjecten(
+                authentication = authentication,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+                onderwerp = onderwerp,
+            )
+
+        return BerichtenPage.fromResultPageBerichtObjecten(
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            resultPage = resultPage,
+        )
+    }
+
+    private suspend fun getBerichtObjecten(
+        authentication: CommonGroundAuthentication,
+        pageNumber: Int,
+        pageSize: Int,
+        onderwerp: String? = null,
+        ongeopend: Boolean? = null,
+    ): ResultPage<ObjectsApiObject<BerichtObject>> {
         // fix because ObjectsAPI filter LTE only accept dates, not date-time
         val filterPublicationDate = LocalDate.now().plusDays(1)
         val searchParameters =
@@ -155,35 +172,19 @@ class BerichtenService(
                 ),
             )
         }
-        val results = getBerichten(pageNumber, pageSize, searchParameters)
 
-        return results.toBerichtenPage(pageNumber, pageSize)
-    }
-
-    private suspend fun getBerichten(
-        pageNumber: Int,
-        pageSize: Int,
-        searchParameters: List<ObjectSearchParameter> = emptyList(),
-    ) = objectenApiService
-        .getObjects<Bericht>(
-            objectSearchParameters = searchParameters,
-            objectTypeUrl = berichtenConfigurationProperties.berichtObjectTypeUrl,
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-        )
-
-    private fun ResultPage<ObjectsApiObject<Bericht>>.toBerichtenPage(
-        pageNumber: Int,
-        pageSize: Int,
-    ): BerichtenPage {
-        val berichten = results.map { it.record.data.copy(id = it.uuid) }.sortedByDescending { it.publicatiedatum }
-
-        return BerichtenPage(
-            number = pageNumber,
-            size = pageSize,
-            content = berichten,
-            totalElements = count,
-        )
+        ongeopend?.let {
+            searchParameters.add(
+                ObjectSearchParameter("geopend", STRING_CONTAINS, "false"),
+            )
+        }
+        return objectenApiService
+            .getObjects<BerichtObject>(
+                objectSearchParameters = searchParameters,
+                objectTypeUrl = berichtenConfigurationProperties.berichtObjectTypeUrl!!,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+            )
     }
 
     companion object {

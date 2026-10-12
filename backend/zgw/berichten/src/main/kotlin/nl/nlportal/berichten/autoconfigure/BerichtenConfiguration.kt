@@ -23,6 +23,17 @@ class BerichtenConfiguration {
     var properties: BerichtenConfigurationProperties = BerichtenConfigurationProperties()
 
     class BerichtenConfigurationProperties {
-        var berichtObjectTypeUrl: String = ""
+        var berichtObjectTypeUrl: String? = null
+
+        @Suppress("DEPRECATION")
+        var berichtOrigin: BerichtenOrigin = BerichtenOrigin.OPENOBJECT
+    }
+
+    enum class BerichtenOrigin {
+        @Deprecated(
+            "Berichten origin. The default changes to VTB in 5.0 and OPENOBJECT is removed in a later release.",
+        )
+        OPENOBJECT,
+        VTB,
     }
 }

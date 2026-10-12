@@ -17,8 +17,12 @@ package nl.nlportal.vtbapi.client.domain
 
 import com.fasterxml.jackson.annotation.JsonValue
 import java.time.LocalDateTime
+import java.util.UUID
 
 class VTBBericht(
+    val uuid: UUID,
+    val url: String,
+    val urn: String,
     val onderwerp: String,
     val berichtTekst: String,
     val publicatiedatum: LocalDateTime? = null,
