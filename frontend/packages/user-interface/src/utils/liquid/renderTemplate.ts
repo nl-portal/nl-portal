@@ -14,12 +14,36 @@
  * limitations under the License.
  */
 import type { IntlShape } from "react-intl";
+import { cloneElement, isValidElement, type ReactNode } from "react";
+import { Context, toPromise, type Emitter } from "liquidjs";
 import { createLiquidEngine } from "./engine";
+import { decodeLiquidText } from "./decodeLiquidText";
 
 export async function renderTemplate(
   template: string,
   data: Record<string, unknown>,
   intl: IntlShape,
-) {
-  return createLiquidEngine(intl).parseAndRender(template, data);
+): Promise<ReactNode[]> {
+  const liquid = createLiquidEngine(intl);
+  const nodes: ReactNode[] = [];
+  let text = "";
+  const flushText = () => {
+    if (text.trim()) nodes.push(decodeLiquidText(text));
+    text = "";
+  };
+  const emitter: Emitter = {
+    buffer: "",
+    write(value: unknown) {
+      if (isValidElement(value)) {
+        flushText();
+        nodes.push(cloneElement(value, { key: nodes.length }));
+      } else if (value !== null && value !== undefined) text += String(value);
+    },
+  };
+  const ctx = new Context(data, liquid.options, {}, { liquid });
+  await toPromise(
+    liquid.renderer.renderTemplates(liquid.parse(template), ctx, emitter),
+  );
+  flushText();
+  return nodes;
 }

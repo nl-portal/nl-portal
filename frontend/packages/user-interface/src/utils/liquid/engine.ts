@@ -15,21 +15,8 @@
  */
 import { Liquid } from "liquidjs";
 import type { IntlShape } from "react-intl";
-import { currencyFormat } from "../../constants/currency-format";
-import { shortDateOptions } from "@gemeente-denhaag/utils";
-
-export const LIQUID_FORMATTERS = {
-  date: (intl: IntlShape, value: unknown) =>
-    intl.formatDate(
-      value as Parameters<IntlShape["formatDate"]>[0],
-      shortDateOptions,
-    ),
-  currency: (
-    intl: IntlShape,
-    value: unknown,
-    currency = currencyFormat.currency,
-  ) => intl.formatNumber(value as number, { ...currencyFormat, currency }),
-};
+import { registerComponents } from "./components";
+import { registerFormatters } from "./formatters";
 
 export function createLiquidEngine(intl: IntlShape) {
   const liquid = new Liquid({
@@ -37,11 +24,7 @@ export function createLiquidEngine(intl: IntlShape) {
     strictFilters: true,
   });
 
-  for (const [name, formatter] of Object.entries(LIQUID_FORMATTERS)) {
-    liquid.registerFilter(name, (value: unknown, ...args: string[]) =>
-      formatter(intl, value, ...args),
-    );
-  }
-
+  registerFormatters(liquid, intl);
+  registerComponents(liquid);
   return liquid;
 }

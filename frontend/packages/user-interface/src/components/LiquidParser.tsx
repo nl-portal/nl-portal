@@ -16,7 +16,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useIntl, type IntlShape } from "react-intl";
 import { renderTemplate } from "../utils/liquid/renderTemplate";
-import { parseComponents } from "../utils/liquid/parseComponents";
 
 export interface LiquidParserProps {
   loading?: boolean;
@@ -37,9 +36,8 @@ const LiquidParser = ({ template, data, onError }: LiquidParserProps) => {
   useEffect(() => {
     let active = true;
     renderTemplate(template, data, intl)
-      .then((html) => {
-        if (active)
-          setResult({ template, data, intl, content: parseComponents(html) });
+      .then((content) => {
+        if (active) setResult({ template, data, intl, content });
       })
       .catch((error: unknown) => {
         if (!active) return;
