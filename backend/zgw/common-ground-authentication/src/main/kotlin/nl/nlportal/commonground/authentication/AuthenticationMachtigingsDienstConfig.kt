@@ -22,14 +22,14 @@ import java.util.UUID
 class AuthenticationMachtigingsDienstConfig(
     var resourceUrl: String? = null,
     var allMachtigingUuid: UUID? = null,
-    var configurations: Map<String, AuthenticationMachtigingsDienst> = emptyMap(),
+    var configurations: List<AuthenticationMachtigingsDienst> = emptyList(),
 ) {
-    fun getMachtigingsDienstListFromConfiguration(): List<AuthenticationMachtigingsDienst> = configurations.values.toList()
+    fun getMachtigingsDienstListFromConfiguration(): List<AuthenticationMachtigingsDienst> = configurations
 }
 
 class AuthenticationMachtigingsDienst(
     var uuid: UUID,
-    var naam: String? = null,
+    var naam: String,
     var zaakTypes: List<UUID> = listOf(),
     var productTypes: List<UUID> = listOf(),
     var taakTypes: List<String> = listOf(),
