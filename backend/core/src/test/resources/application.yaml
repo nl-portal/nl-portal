@@ -51,6 +51,7 @@ nl-portal:
       open-product-enabled: true
       my-inhabitant-count-enabled: false
       cases-contact-moments-enabled: true
+      vtb-berichten-enabled: true
 ---
 spring:
   config:

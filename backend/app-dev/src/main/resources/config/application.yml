@@ -213,6 +213,7 @@ nl-portal:
             cases-contact-moments-enabled: true
             overview-intro-enabled: true
             overview-maintenance-alert-enabled: true
+            vtb-berichten-enabled: true
         modules-whitelist:
             - zakenapi
             - product
