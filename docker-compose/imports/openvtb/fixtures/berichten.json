@@ -20,7 +20,7 @@
       "publicatiedatum": "2026-08-27T10:22:33Z",
       "is_gepubliceerd": true,
       "referentie": "",
-      "ontvanger": "urn:nld:brp.bsn:999993847",
+      "ontvanger": "urn:nld:brp:bsn:nummer:999993847",
       "bericht_type": 1,
       "einddatum_handelings_termijn": "2027-08-27T10:23:08Z",
       "is_gerelateerd_aan": []
@@ -36,7 +36,7 @@
       "publicatiedatum": "2026-11-27T10:22:33Z",
       "is_gepubliceerd": true,
       "referentie": "",
-      "ontvanger": "urn:nld:hr:kvknummer:14127293",
+      "ontvanger": "urn:nld:hr:kvk:nummer:14127293",
       "bericht_type": 1,
       "einddatum_handelings_termijn": "2027-08-27T10:23:08Z",
       "is_gerelateerd_aan": []
@@ -52,7 +52,7 @@
       "publicatiedatum": "2026-11-27T10:22:33Z",
       "is_gepubliceerd": true,
       "referentie": "",
-      "ontvanger": "urn:nld:hr:kvknummer:14127293:vestigingsnummer:000037143557",
+      "ontvanger": "urn:nld:hr:kvk:nummer:14127293:vestiging:nummer:000037143557",
       "bericht_type": 1,
       "einddatum_handelings_termijn": "2027-08-27T10:23:08Z",
       "is_gerelateerd_aan": []
