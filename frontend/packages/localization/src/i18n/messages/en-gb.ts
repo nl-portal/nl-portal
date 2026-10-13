@@ -79,10 +79,7 @@ export const EN_GB_MESSAGES: Messages = {
     "noMatchPage.title": "Page not found",
     "unexpectedError.title": "Something went wrong",
     "unexpectedError.description":
-      "We cannot display this page right now. Try reloading the page or go to the home page.",
-    "unexpectedError.unsaved": "Unsaved changes may have been lost.",
-    "unexpectedError.reload": "Reload page",
-    "unexpectedError.home": "Go to the home page",
+      "We cannot display this page right now. Try reloading the page or go to the <link>home page</link>.",
     "unexpectedError.help": "If the problem persists, please try again later.",
     "noMatchPage.text":
       "The page you were looking for could not be found. It may have been deleted, renamed, or did not exist. You can search for information via the search function at the top or via the homepage. <link>Go to the overview.</link>",

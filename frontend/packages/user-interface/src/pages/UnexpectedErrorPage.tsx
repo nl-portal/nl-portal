@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Component, ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { FormattedMessage, IntlProvider, useIntl } from "react-intl";
 import { Heading } from "@gemeente-denhaag/heading";
 import { Header } from "@gemeente-denhaag/header";
 import { Paragraph } from "@gemeente-denhaag/paragraph";
-import { Button } from "@gemeente-denhaag/button";
 import { Link } from "@gemeente-denhaag/link";
 import { StylesProvider } from "@gemeente-denhaag/stylesprovider";
 import { Page, PageHeader } from "@gemeente-denhaag/page";
 import { ResponsiveContent } from "@gemeente-denhaag/responsive-content";
-import "@gemeente-denhaag/button-group";
 import {
   DEFAULT_LOCALES,
   DEFAULT_MESSAGES,
   Messages,
 } from "@nl-portal/nl-portal-localization";
+import { ErrorBoundary } from "react-error-boundary";
 import PageGrid from "../components/PageGrid";
 import FullscreenSkeleton from "../components/FullscreenSkeleton";
 import {
@@ -43,28 +42,13 @@ interface Props {
   restUri?: string;
 }
 
-class ErrorHeaderBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
-  { hasError: boolean }
-> {
-  state = { hasError: false };
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-
-  render() {
-    return this.state.hasError ? this.props.fallback : this.props.children;
-  }
-}
-
 const getLocale = () => {
   let locale = document.documentElement.lang;
 
   try {
     locale = localStorage.getItem("NL_PORTAL_LANG") || locale;
-  } catch {
-    // Storage can be unavailable, including when it caused the original error.
+  } catch (err) {
+    console.warn("Failed to read locale from localStorage:", err);
   }
 
   return locale.toLowerCase().startsWith("en")
@@ -97,13 +81,9 @@ const ErrorPageContent = ({
         const features = await loadFrontendConfig(restUri);
 
         applyFrontendTheme(features);
-        setLogoUrl(
-          typeof features.theme?.logo === "string"
-            ? features.theme.logo
-            : undefined,
-        );
+        setLogoUrl(features.theme?.logo);
       } catch (err) {
-        console.warn("Failed to load error-page theme:", err);
+        console.warn("Failed to load error page theme:", err);
       } finally {
         setIsLoadingTheme(false);
       }
@@ -123,73 +103,47 @@ const ErrorPageContent = ({
   const defaultHeader = <Header logo={logo} />;
 
   return (
-    <StylesProvider lang={intl.locale.split("-")[0]}>
-      <Page>
-        <PageHeader>
-          {customHeader ? (
-            <ErrorHeaderBoundary fallback={defaultHeader}>
-              {customHeader}
-            </ErrorHeaderBoundary>
-          ) : (
-            defaultHeader
-          )}
-        </PageHeader>
-        <ResponsiveContent className="denhaag-page-content">
-          <main
-            id="main-content"
-            className="denhaag-page-content__main"
-            aria-labelledby="unexpected-error-title"
-          >
-            <PageGrid variant="small">
-              <Heading level={1} id="unexpected-error-title">
-                {title}
-              </Heading>
-              <Paragraph>
-                <FormattedMessage
-                  id="unexpectedError.description"
-                  defaultMessage="We kunnen deze pagina op dit moment niet tonen. Probeer de pagina opnieuw te laden of ga naar de overzichtspagina."
-                />
-              </Paragraph>
-              <Paragraph>
-                <FormattedMessage
-                  id="unexpectedError.unsaved"
-                  defaultMessage="Niet-opgeslagen wijzigingen kunnen verloren zijn gegaan."
-                />
-              </Paragraph>
-              <div className="denhaag-button-group">
-                <Button type="button" onClick={() => window.location.reload()}>
-                  <FormattedMessage
-                    id="unexpectedError.reload"
-                    defaultMessage="Pagina opnieuw laden"
-                  />
-                </Button>
-                <Link href="/">
-                  <FormattedMessage
-                    id="unexpectedError.home"
-                    defaultMessage="Naar de overzichtspagina"
-                  />
-                </Link>
-              </div>
-              <Paragraph>
-                <FormattedMessage
-                  id="unexpectedError.help"
-                  defaultMessage="Blijft het probleem bestaan? Probeer het later opnieuw."
-                />
-              </Paragraph>
-            </PageGrid>
-          </main>
-        </ResponsiveContent>
-      </Page>
-    </StylesProvider>
+    <Page>
+      <PageHeader>
+        {customHeader ? (
+          <ErrorBoundary fallback={defaultHeader}>{customHeader}</ErrorBoundary>
+        ) : (
+          defaultHeader
+        )}
+      </PageHeader>
+      <ResponsiveContent className="denhaag-page-content">
+        <main
+          id="main-content"
+          className="denhaag-page-content__main"
+          aria-labelledby="unexpected-error-title"
+        >
+          <PageGrid variant="small">
+            <Heading level={1} id="unexpected-error-title">
+              {title}
+            </Heading>
+            <Paragraph>
+              <FormattedMessage
+                id="unexpectedError.description"
+                defaultMessage="We kunnen deze pagina op dit moment niet tonen. Probeer de pagina opnieuw te laden of <link>ga naar de overzichtspagina</link>."
+                values={{
+                  link: (chunks) => <Link href="/">{chunks}</Link>,
+                }}
+              />
+            </Paragraph>
+            <Paragraph>
+              <FormattedMessage
+                id="unexpectedError.help"
+                defaultMessage="Blijft het probleem bestaan? Probeer het later opnieuw."
+              />
+            </Paragraph>
+          </PageGrid>
+        </main>
+      </ResponsiveContent>
+    </Page>
   );
 };
 
-const UnexpectedErrorPage = ({
-  customMessages,
-  headerLogo,
-  customHeader,
-  restUri,
-}: Props) => {
+const UnexpectedErrorPage = ({ customMessages, ...pageProps }: Props) => {
   const [locale] = useState(getLocale);
 
   return (
@@ -198,12 +152,9 @@ const UnexpectedErrorPage = ({
       defaultLocale={DEFAULT_LOCALES.DUTCH}
       messages={{ ...DEFAULT_MESSAGES[locale], ...customMessages?.[locale] }}
     >
-      <ErrorPageContent
-        key={restUri}
-        headerLogo={headerLogo}
-        customHeader={customHeader}
-        restUri={restUri}
-      />
+      <StylesProvider lang={locale.split("-")[0]}>
+        <ErrorPageContent {...pageProps} />
+      </StylesProvider>
     </IntlProvider>
   );
 };

@@ -78,11 +78,7 @@ export const NL_NL_MESSAGES: Messages = {
     "titles.completedCases": "Afgeronde zaken",
     "unexpectedError.title": "Er ging iets mis",
     "unexpectedError.description":
-      "We kunnen deze pagina op dit moment niet tonen. Probeer de pagina opnieuw te laden of ga naar de overzichtspagina.",
-    "unexpectedError.unsaved":
-      "Niet-opgeslagen wijzigingen kunnen verloren zijn gegaan.",
-    "unexpectedError.reload": "Pagina opnieuw laden",
-    "unexpectedError.home": "Naar de overzichtspagina",
+      "We kunnen deze pagina op dit moment niet tonen. Probeer de pagina opnieuw te laden of ga naar de <link>overzichtspagina</link>.",
     "unexpectedError.help":
       "Blijft het probleem bestaan? Probeer het later opnieuw.",
     "noMatchPage.title": "Pagina niet gevonden",
