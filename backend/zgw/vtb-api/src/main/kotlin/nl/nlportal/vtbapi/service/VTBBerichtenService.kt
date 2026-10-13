@@ -20,21 +20,30 @@ import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.Any
 import kotlin.Pair
+import kotlinx.coroutines.flow.Flow
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils
+import nl.nlportal.core.util.CoreUtils.extractId
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.vtbapi.client.VTBClient
 import nl.nlportal.vtbapi.client.domain.ResultPage
 import nl.nlportal.vtbapi.client.domain.VTBBericht
 import nl.nlportal.vtbapi.client.domain.VTBBerichtFilters
 import nl.nlportal.vtbapi.client.domain.VTBBerichtType
 import nl.nlportal.vtbapi.client.domain.VTBBerichtUpdate
+import nl.nlportal.vtbapi.client.domain.VTBBijlage
 import nl.nlportal.vtbapi.client.path.VTBBerichtTypes
 import nl.nlportal.vtbapi.client.path.VTBBerichten
+import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 class VTBBerichtenService(
-    val vtbClient: VTBClient,
+    private val vtbClient: VTBClient,
+    private val documentenApiService: DocumentenApiService,
 ) {
     suspend fun getBerichten(
         authentication: CommonGroundAuthentication,
@@ -78,8 +87,14 @@ class VTBBerichtenService(
     suspend fun getBericht(
         authentication: CommonGroundAuthentication,
         id: UUID,
-    ): VTBBericht {
-        val bericht = vtbClient.path<VTBBerichten>().get(id)
+    ): VTBBericht? {
+        val bericht =
+            try {
+                vtbClient.path<VTBBerichten>().get(id)
+            } catch (e: Exception) {
+                logger.error { "Error getting berichten with cause: " + e.message }
+                null
+            } ?: return null
 
         if (bericht.ontvanger != authentication.getUrn()) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized for this Bericht")
@@ -106,10 +121,68 @@ class VTBBerichtenService(
 
     suspend fun getBerichtType(url: String): VTBBerichtType =
         vtbClient.path<VTBBerichtTypes>().get(
-            id = CoreUtils.extractId(url),
+            id = extractId(url),
         )
+
+    suspend fun getDocumenten(
+        identificatie: String,
+        bijlages: List<VTBBijlage>,
+    ): List<Document> =
+        documentenApiService.filterDocuments(
+            bijlages.map {
+                documentenApiService
+                    .getDocumentWithUrn(it.informatieObject)
+                    .copy(identificatie = identificatie)
+            },
+        )
+
+    suspend fun getBerichtDocumentContent(
+        authentication: CommonGroundAuthentication,
+        berichtId: UUID,
+        documentId: UUID,
+    ): Pair<Document, Flow<DataBuffer>>? {
+        val vtbBericht =
+            getBericht(
+                authentication = authentication,
+                id = berichtId,
+            ) ?: return null
+
+        if (vtbBericht.geopendOp == null) {
+            logger.debug {
+                "Access denied to document $documentId on bericht $berichtId for user ${authentication.userId}"
+            }
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, ACCESS_DENIED)
+        }
+
+        val bijlage =
+            vtbBericht.bijlagen.firstOrNull { documentenApiService.getDocumentUUIDFromURN(it.informatieObject) == documentId }
+                ?: run {
+                    logger.debug {
+                        "Access denied to document $documentId on bericht $berichtId for user ${authentication.userId}"
+                    }
+                    throw ResponseStatusException(HttpStatus.UNAUTHORIZED, ACCESS_DENIED)
+                }
+
+        val (documentApi, documentId) =
+            documentenApiService.getDocumentApiAndUUIDFromURN(
+                documentUrn = bijlage.informatieObject,
+            )
+
+        val document =
+            documentenApiService.getDocument(
+                documentId = documentId,
+                documentApi = documentApi,
+            )
+        val content =
+            documentenApiService.getDocumentContentStreaming(
+                documentId = documentId,
+                documentApi = documentApi,
+            )
+        return document to content
+    }
 
     companion object {
         val logger = KotlinLogging.logger {}
+        const val ACCESS_DENIED = "Access denied for this Bericht"
     }
 }

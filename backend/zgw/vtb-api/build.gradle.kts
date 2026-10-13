@@ -23,6 +23,7 @@ dependencies {
     api(project(":core"))
     api(project(":portal-authentication"))
     api(project(":zgw:common-ground-authentication"))
+    api(project(":zgw:documenten-api"))
 
     implementation(Dependencies.springBootStarter)
     implementation(Dependencies.kotlinCoroutines)

@@ -15,6 +15,7 @@
  */
 package nl.nlportal.vtbapi.autoconfigure
 
+import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.vtbapi.client.VTBClient
 import nl.nlportal.vtbapi.service.VTBBerichtenService
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -25,7 +26,7 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(VTBModuleConfiguration::class)
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["vtbapi.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["vtbapi.enabled", "documentenapis.enabled"], havingValue = "true")
 class VTBAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(VTBClient::class)
@@ -40,8 +41,10 @@ class VTBAutoConfiguration {
     @ConditionalOnMissingBean(VTBBerichtenService::class)
     fun vtbBerichtenService(
         vtbClient: VTBClient,
+        documentenApiService: DocumentenApiService,
     ): VTBBerichtenService =
         VTBBerichtenService(
             vtbClient = vtbClient,
+            documentenApiService = documentenApiService,
         )
 }

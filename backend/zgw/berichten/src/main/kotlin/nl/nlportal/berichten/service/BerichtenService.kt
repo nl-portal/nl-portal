@@ -16,39 +16,31 @@
 package nl.nlportal.berichten.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.time.LocalDate
+import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import nl.nlportal.berichten.autoconfigure.BerichtenConfiguration.BerichtenConfigurationProperties
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.graphql.BerichtenPage
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO
 import nl.nlportal.zgw.objectenapi.domain.Comparator.LOWER_THAN_OR_EQUAL_TO
 import nl.nlportal.zgw.objectenapi.domain.Comparator.STRING_CONTAINS
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
-import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.time.LocalDate
-import java.util.UUID
-import nl.nlportal.berichten.autoconfigure.BerichtenConfiguration.BerichtenOrigin
-import nl.nlportal.berichten.graphql.VTBBerichtenPage
-import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.documentenapi.service.DocumentenApiService
-import nl.nlportal.vtbapi.client.domain.VTBBericht
-import nl.nlportal.vtbapi.client.domain.VTBBijlage
-import nl.nlportal.vtbapi.service.VTBBerichtenService
 
 class BerichtenService(
     private val objectenApiService: ObjectenApiService,
     private val documentenApiService: DocumentenApiService,
     private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
-    private val vtbBerichtenService: VTBBerichtenService? = null,
 ) {
     suspend fun getBerichten(
         authentication: CommonGroundAuthentication,
@@ -127,46 +119,6 @@ class BerichtenService(
         return updatedObjectsApiBericht?.record?.data?.copy(id = id)
     }
 
-    suspend fun getVTBBerichten(
-        authentication: CommonGroundAuthentication,
-        pageNumber: Int,
-        pageSize: Int,
-    ): VTBBerichtenPage {
-        val resultPage =
-            vtbBerichtenService?.getBerichten(
-                authentication = authentication,
-                pageNumber = pageNumber,
-                pageSize = pageSize,
-            )
-        if (resultPage != null) {
-            return VTBBerichtenPage.fromResultPage(
-                pageNumber = pageNumber,
-                pageSize = pageSize,
-                resultPage = resultPage,
-            )
-        }
-        return VTBBerichtenPage(
-            number = pageNumber,
-            size = pageSize,
-            totalElements = 0,
-            content = emptyList(),
-        )
-    }
-
-    suspend fun getUnopenedVTBBerichtenCount(authentication: CommonGroundAuthentication): Int =
-        vtbBerichtenService?.getUnopenedBerichtenCount(
-            authentication = authentication,
-        ) ?: 0
-
-    suspend fun getVTBBericht(
-        authentication: CommonGroundAuthentication,
-        id: UUID,
-    ): VTBBericht? =
-        vtbBerichtenService?.getBericht(
-            authentication = authentication,
-            id = id,
-        )
-
     suspend fun getBerichtDocumentContent(
         authentication: CommonGroundAuthentication,
         berichtId: UUID,
@@ -212,18 +164,6 @@ class BerichtenService(
             bijlages.map {
                 documentenApiService
                     .getDocument(it)
-                    .copy(identificatie = identificatie)
-            },
-        )
-
-    suspend fun getVTBDocumenten(
-        identificatie: String,
-        bijlages: List<VTBBijlage>,
-    ): List<Document> =
-        documentenApiService.filterDocuments(
-            bijlages.map {
-                documentenApiService
-                    .getDocumentWithUrn(it.informatieObject)
                     .copy(identificatie = identificatie)
             },
         )

@@ -121,21 +121,6 @@ class DocumentenApiService(
                 document.vertrouwelijkheidaanduiding in documentenApisConfigProperties.vertrouwelijkheidsaanduidingWhitelist
         }
 
-    fun translateDocumentUrnToUrl(
-        documentUrn: String,
-    ): String {
-        val splitURN = documentUrn.split(":")
-
-        require(splitURN.size == 8) { "Invalid document Urn format." }
-
-        val documentApi = splitURN[3]
-        val path = splitURN[5]
-        val uuid = splitURN[7]
-
-        val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
-        return documentenApiConfig.url + "/" + path + "/" + uuid
-    }
-
     fun getDocumentApiAndUUIDFromURN(
         documentUrn: String,
     ): Pair<String, UUID> {
@@ -149,4 +134,8 @@ class DocumentenApiService(
         documentenApisConfigProperties.getConfig(documentApi)
         return documentApi to UUID.fromString(uuid)
     }
+
+    fun getDocumentUUIDFromURN(
+        documentUrn: String,
+    ): UUID = getDocumentApiAndUUIDFromURN(documentUrn).second
 }

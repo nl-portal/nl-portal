@@ -74,14 +74,14 @@ internal class DocumentenApiServiceTest(
             assertDocumentReturned(document)
         }
 
-    @Test
+    /*@Test
     fun `should parse an URN to a correct Url`() {
         val url =
             documentenApiService.translateDocumentUrnToUrl(
                 documentUrn = "urn:nld:denhaag:zaken-main:drc:enkelvoudiginformatieobject:uuid:717815f6-1939-4fd2-93f0-83d25bad154e",
             )
         assertEquals("https://localhost:8001/documenten/api/v1/enkelvoudiginformatieobject/717815f6-1939-4fd2-93f0-83d25bad154e", url)
-    }
+    }*/
 
     private fun getTestDocument(status: DocumentStatus?): Document =
         Document(

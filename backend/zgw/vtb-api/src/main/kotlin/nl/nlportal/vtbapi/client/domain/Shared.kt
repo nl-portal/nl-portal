@@ -21,3 +21,8 @@ data class VTBBijlage(
     val informatieObject: String,
     val omschrijving: String? = null,
 )
+
+data class VTBBijlageType(
+    val informatieObjecttype: String,
+    val omschrijving: String? = null,
+)

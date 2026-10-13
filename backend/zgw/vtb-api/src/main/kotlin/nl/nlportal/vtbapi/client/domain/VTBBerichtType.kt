@@ -18,14 +18,14 @@ package nl.nlportal.vtbapi.client.domain
 import com.fasterxml.jackson.annotation.JsonValue
 
 data class VTBBerichtType(
-    val bijlageType: List<VTBBijlage>,
-    val handelingsPerspectief: HandelingsPerspectief,
+    val bijlageTypen: List<VTBBijlageType>,
+    val handelingsPerspectief: VTBHandelingsPerspectief,
     val mijnOverheidBerichtenbox: Boolean = false,
     val mijnOverheidBerichtenboxType: String? = null,
     val verantwoordelijkeOrganisatie: String,
 )
 
-enum class HandelingsPerspectief(
+enum class VTBHandelingsPerspectief(
     @JsonValue val value: String,
 ) {
     BETALEN("betalen"),
