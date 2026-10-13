@@ -66,7 +66,6 @@ const ErrorPageContent = ({
   const [isLoadingTheme, setIsLoadingTheme] = useState(Boolean(restUri));
   const title = intl.formatMessage({
     id: "unexpectedError.title",
-    defaultMessage: "Er ging iets mis",
   });
 
   useEffect(() => {
@@ -124,17 +123,13 @@ const ErrorPageContent = ({
             <Paragraph>
               <FormattedMessage
                 id="unexpectedError.description"
-                defaultMessage="We kunnen deze pagina op dit moment niet tonen. Probeer de pagina opnieuw te laden of <link>ga naar de overzichtspagina</link>."
                 values={{
                   link: (chunks) => <Link href="/">{chunks}</Link>,
                 }}
               />
             </Paragraph>
             <Paragraph>
-              <FormattedMessage
-                id="unexpectedError.help"
-                defaultMessage="Blijft het probleem bestaan? Probeer het later opnieuw."
-              />
+              <FormattedMessage id="unexpectedError.help" />
             </Paragraph>
           </PageGrid>
         </main>
