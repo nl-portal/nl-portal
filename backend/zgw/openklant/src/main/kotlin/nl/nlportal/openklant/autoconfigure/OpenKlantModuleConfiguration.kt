@@ -44,6 +44,7 @@ class OpenKlantModuleConfiguration {
         class KlantContactCodeRegster {
             var zaak: String? = null
             var product: String? = null
+            var bericht: String? = null
         }
     }
 }
