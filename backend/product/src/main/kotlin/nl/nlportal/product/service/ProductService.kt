@@ -309,7 +309,7 @@ class ProductService(
 
     suspend fun getProductTypes(authentication: CommonGroundAuthentication): List<ProductType> {
         // if user has a machtigingsdienst in their authentication return an empty list
-        if (authenticationMachtigingsDienstService.hasMachtingDienst(authentication)) {
+        if (authenticationMachtigingsDienstService.hasMachtingsDienst(authentication)) {
             return emptyList()
         }
 

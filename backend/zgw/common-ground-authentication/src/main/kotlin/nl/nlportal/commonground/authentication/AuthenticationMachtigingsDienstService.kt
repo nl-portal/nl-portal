@@ -26,30 +26,30 @@ class AuthenticationMachtigingsDienstService(
     val authenticationMachtingsDienstConfig: AuthenticationMachtigingsDienstConfig,
     resourceLoader: ResourceLoader,
 ) {
-    var authenticationMachtingDiensten: MutableList<AuthenticationMachtigingsDienst> = mutableListOf()
+    var authenticationMachtingsDiensten: MutableList<AuthenticationMachtigingsDienst> = mutableListOf()
 
     init {
         try {
             // first load the new machtigingsdienst configurations from the configurations properties
-            authenticationMachtingDiensten.addAll(authenticationMachtingsDienstConfig.getMachtigingsDienstListFromConfiguration())
+            authenticationMachtingsDiensten.addAll(authenticationMachtingsDienstConfig.getMachtigingsDienstListFromConfiguration())
 
             // second load the machtigingsdienst from a resource url, to make it backwards compatible
             if (authenticationMachtingsDienstConfig.resourceUrl != null) {
                 val json = resourceLoader.getResource(authenticationMachtingsDienstConfig.resourceUrl!!).getContentAsString(Charsets.UTF_8)
                 logger.debug { "Machtigingsdiensten is loaded: $json" }
-                this.authenticationMachtingDiensten.addAll(Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {}))
+                this.authenticationMachtingsDiensten.addAll(Mapper.get().readValue(json, object : TypeReference<List<AuthenticationMachtigingsDienst>>() {}))
             }
         } catch (ex: Exception) {
             logger.warn { "Could not load json from ${authenticationMachtingsDienstConfig.resourceUrl} with reason ${ex.message}" }
         }
     }
 
-    fun getAuthenticationMachtingDienst(uuid: UUID?): AuthenticationMachtigingsDienst? {
+    fun getAuthenticationMachtingsDienst(uuid: UUID?): AuthenticationMachtigingsDienst? {
         if (uuid == null) return null
-        return authenticationMachtingDiensten.find { it.uuid == uuid }
+        return authenticationMachtingsDiensten.find { it.uuid == uuid }
     }
 
-    fun hasMachtingDienst(authentication: CommonGroundAuthentication): Boolean = authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid) != null
+    fun hasMachtingsDienst(authentication: CommonGroundAuthentication): Boolean = authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid) != null
 
     fun zaakTypes(authentication: CommonGroundAuthentication): List<UUID>? {
         if (authentication !is BedrijfAuthentication) {
@@ -57,7 +57,7 @@ class AuthenticationMachtigingsDienstService(
         }
         val zaakTypeList = mutableListOf<UUID>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
-            getAuthenticationMachtingDienst(it)?.let {
+            getAuthenticationMachtingsDienst(it)?.let {
                 zaakTypeList.addAll(it.zaakTypes)
             }
         }
@@ -79,7 +79,7 @@ class AuthenticationMachtigingsDienstService(
         }
         val taakTypeList = mutableListOf<String>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
-            getAuthenticationMachtingDienst(it)?.let {
+            getAuthenticationMachtingsDienst(it)?.let {
                 taakTypeList.addAll(it.taakTypes)
             }
         }
@@ -100,7 +100,7 @@ class AuthenticationMachtigingsDienstService(
         }
         val productTypeList = mutableListOf<UUID>()
         authentication.machtigingsDienstUUIDs(authenticationMachtingsDienstConfig.allMachtigingUuid)?.forEach {
-            getAuthenticationMachtingDienst(it)?.let {
+            getAuthenticationMachtingsDienst(it)?.let {
                 productTypeList.addAll(it.productTypes)
             }
         }
