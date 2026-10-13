@@ -56,9 +56,7 @@ type FeaturesResponse = Omit<Features, "properties" | "toggles"> & {
 export const loadFrontendConfig = async (
   restUri: string,
 ): Promise<Features> => {
-  const response = await fetch(
-    `${restUri.replace(/\/+$/, "")}/public/frontend`,
-  );
+  const response = await fetch(`${restUri}/public/frontend`);
 
   if (!response.ok) {
     throw new Error(`Frontend config request failed: ${response.status}`);
