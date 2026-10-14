@@ -614,6 +614,7 @@ class OpenKlant2Service(
         when (identificatorType) {
             OnderwerpObjectIndentificatorType.PRODUCT -> openKlantConfigurationProperties.klantContactCodeRegister?.product
             OnderwerpObjectIndentificatorType.ZAAK -> openKlantConfigurationProperties.klantContactCodeRegister?.zaak
+            OnderwerpObjectIndentificatorType.BERICHT -> openKlantConfigurationProperties.klantContactCodeRegister?.bericht
             else -> null
         }
 

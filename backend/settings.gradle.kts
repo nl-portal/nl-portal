@@ -80,4 +80,5 @@ include(
     "zgw:verificatie",
     "product",
     "zgw:zaken",
+    "zgw:vtb-api",
 )
