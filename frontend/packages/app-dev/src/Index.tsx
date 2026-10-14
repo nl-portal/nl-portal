@@ -20,6 +20,8 @@ import { RouterProvider } from "@nl-portal/nl-portal-user-interface";
 import { routes } from "./constants/routes";
 import verifyConfig from "./util/verify-config";
 import { menuItems } from "./constants/menu-items.tsx";
+import { CUSTOM_MESSAGES } from "./i18n/custom-messages/custom-messages";
+import { HeaderLogo } from "./components/HeaderLogo.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   verifyConfig() ? (
@@ -27,6 +29,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       element={<App />}
       routes={routes}
       navigationItems={menuItems}
+      errorPage={{
+        customMessages: CUSTOM_MESSAGES,
+        headerLogo: <HeaderLogo />,
+      }}
     />
   ) : null,
 );
