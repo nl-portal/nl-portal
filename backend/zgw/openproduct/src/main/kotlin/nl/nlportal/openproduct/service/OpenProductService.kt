@@ -1043,12 +1043,7 @@ class OpenProductService(
         }
 
         // 3. get Zaken with filters
-        val filteredZaakTypes =
-            authenticationMachtigingsDienstService.filterAllowedZaakTypes(
-                authentication = authentication,
-                zaakTypeUUIDs = zaakTypes.toList(),
-            )
-        if (filteredZaakTypes.isEmpty()) {
+        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
             return emptyList()
         }
 
@@ -1058,7 +1053,7 @@ class OpenProductService(
                 page = 1,
                 pageSize = pageSize,
                 isOpen = isOpen,
-                zaakTypeUUIDs = filteredZaakTypes,
+                zaakTypeUUIDs = zaakTypes.toList(),
             ).content
     }
 
