@@ -674,7 +674,7 @@
     "fields": {
       "language_code": "nl",
       "master": 1,
-      "content": "{% description-list title: \"Dit is een test\" %}\nNaam | {{ naam | escape }}\nStartdatum | {{ startDatum | date | escape }}\nEinddatum | {{ eindDatum | date | escape }}\nStatus | {{ status | capitalize | escape }}\nPrijs | {{ prijs | currency | escape }}\n{% enddescription-list %}",
+      "content": "{% description-list title: \"Dit is een test\" %}\nNaam | {{ naam | escape }}\nStartdatum | {{ startDatum | date | escape }}\nEinddatum | {{ eindDatum | date | escape }}\nStatus | {{ status | capitalize | escape }}\nPrijs | {{ prijs | currency | escape }}\n{% enddescription-list %}\n\n{% table title: \"Dit is een tabel\" %}\nOmschrijving | Bedrag\n**[Aanvraag parkeervergunning](/parkeren/vergunningen/{{ uuid }})** | {{ prijs | currency | escape }}\nWijzigen kenteken | [{{ 10 | currency | escape }}](/parkeren/vergunningen/{{ uuid }}/wijzigen)\n[Vervangende pas](/parkeren/vergunningen/{{ uuid }}/wijzigen) | {{ 5 | currency | escape }}\n{% endtable %}",
       "aanvullende_informatie": ""
     }
   },
@@ -684,7 +684,7 @@
     "fields": {
       "language_code": "en",
       "master": 1,
-      "content": "{% description-list title: \"This is a test\" %}\nName | {{ naam | escape }}\nStart date | {{ startDatum | date | escape }}\nEnd date | {{ eindDatum | date | escape }}\nStatus | {{ status | capitalize | escape }}\nPrice | {{ prijs | currency | escape }}\n{% enddescription-list %}",
+      "content": "{% description-list title: \"This is a test\" %}\nName | {{ naam | escape }}\nStart date | {{ startDatum | date | escape }}\nEnd date | {{ eindDatum | date | escape }}\nStatus | {{ status | capitalize | escape }}\nPrice | {{ prijs | currency | escape }}\n{% enddescription-list %}\n\n{% table title: \"This is a table\" %}\nDescription | Amount\n**[Parking permit application](/parkeren/vergunningen/{{ uuid }})** | {{ prijs | currency | escape }}\nChange registration number | [{{ 10 | currency | escape }}](/parkeren/vergunningen/{{ uuid }}/wijzigen)\n[Replacement card](/parkeren/vergunningen/{{ uuid }}/wijzigen) | {{ 5 | currency | escape }}\n{% endtable %}",
       "aanvullende_informatie": ""
     }
   },

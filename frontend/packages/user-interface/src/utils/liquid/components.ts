@@ -26,16 +26,18 @@ import {
   type TopLevelToken,
   type Template,
 } from "liquidjs";
+import { tableDefinition } from "./components/table";
 import { descriptionListDefinition } from "./components/description-list";
 
 export type LiquidComponentDefinition = {
   component: ElementType;
   props: Record<string, string>;
-  body: { prop: string; parse: (body: string) => unknown };
+  body: { parse: (body: string) => Record<string, unknown> };
 };
 
 const LIQUID_COMPONENTS: Record<string, LiquidComponentDefinition> = {
   "description-list": descriptionListDefinition,
+  table: tableDefinition,
 };
 
 export function registerComponents(liquid: Liquid) {
@@ -70,9 +72,7 @@ export function registerComponents(liquid: Liquid) {
             this.templates,
             ctx,
           )) as string;
-          const props: Record<string, unknown> = {
-            [definition.body.prop]: definition.body.parse(body),
-          };
+          const props = definition.body.parse(body);
           for (const [name, target] of Object.entries(definition.props)) {
             if (Object.prototype.hasOwnProperty.call(args, name))
               props[target] = args[name];

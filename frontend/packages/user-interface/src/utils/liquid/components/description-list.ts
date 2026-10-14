@@ -62,5 +62,5 @@ export const descriptionListDefinition: LiquidComponentDefinition = {
   props: {
     title: "titleTranslationId",
   },
-  body: { prop: "items", parse: descriptionItems },
+  body: { parse: (body) => ({ items: descriptionItems(body) }) },
 };

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 export const REGEX_PATTERNS: { [key: string]: RegExp } = {
+  externalLink: /^(https?:|tel:|mailto:|\/\/)/i,
+  urlProtocol: /^[a-z][a-z\d+.-]*:/i,
   emailadres:
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
   telefoonnummer: /^(0[1-9][0-9]{8}|\+[0-9]{9,15}|00[0-9]{7,13})$/,
