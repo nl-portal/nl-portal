@@ -112,31 +112,24 @@ class AuthenticationMachtigingsDienstService(
         authentication: CommonGroundAuthentication,
         zaakTypeUUIDs: List<UUID>,
     ): Boolean {
-        val allowedZaakTypes =
-            filterAllowedZaakTypes(
-                authentication = authentication,
-                zaakTypeUUIDs = zaakTypeUUIDs,
-            )
-        if (allowedZaakTypes.isEmpty()) {
-            return false
+        if (authentication !is BedrijfAuthentication) {
+            return true
+        }
+        val zaaktypes = zaakTypes(authentication)
+
+        val allowedZaaktypes = mutableSetOf<UUID>()
+
+        if (!zaaktypes.isNullOrEmpty()) {
+            zaakTypeUUIDs.forEach {
+                if (zaaktypes.contains(it)) {
+                    allowedZaaktypes.add(it)
+                }
+            }
+
+            return allowedZaaktypes.isNotEmpty()
         }
 
         return true
-    }
-
-    fun filterAllowedZaakTypes(
-        authentication: CommonGroundAuthentication,
-        zaakTypeUUIDs: List<UUID>,
-    ): List<UUID> {
-        if (authentication !is BedrijfAuthentication) {
-            return zaakTypeUUIDs
-        }
-
-        val zaaktypes = zaakTypes(authentication)
-        if (zaaktypes.isNullOrEmpty()) {
-            return zaakTypeUUIDs
-        }
-        return zaakTypeUUIDs.filter { it in zaaktypes }
     }
 
     fun isAllowedTaakType(
