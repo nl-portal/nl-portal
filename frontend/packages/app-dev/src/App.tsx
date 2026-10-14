@@ -36,6 +36,9 @@ const authenticationMethods = {
 };
 
 const App = () => {
+  if (new URLSearchParams(window.location.search).has("crashTest")) {
+    throw new Error("TEST_ONLY_CRASH");
+  }
   return (
     <div>
       <LocalizationProvider customMessages={CUSTOM_MESSAGES}>
