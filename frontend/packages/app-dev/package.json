@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@apollo/client": "4.3.1",
-    "@gemeente-denhaag/design-tokens": "1.5.0",
+    "@gemeente-denhaag/design-tokens": "1.6.0",
     "@gemeente-denhaag/icons": "4.3.0",
     "@gemeente-denhaag/link": "4.2.2",
     "@gemeente-denhaag/status-badge": "^2.0.0",
