@@ -18,6 +18,7 @@ package nl.nlportal.openproduct.graphql
 import tools.jackson.databind.JsonNode
 import java.net.URI
 import kotlinx.coroutines.test.runTest
+import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.readFileAsString
@@ -96,6 +97,29 @@ class OpenProductThemaQueryIT(
     @Test
     @WithBurgerUser("569312863")
     fun `get themas`() =
+        runTest {
+            val responseBody =
+                httpGraphQlTester
+                    .document(readFileAsString("/config/graphql/getOpenProductThemas.gql"))
+                    .execute()
+                    .errors()
+                    .verify()
+                    .path("getOpenProductThemas")
+                    .entity(JsonNode::class.java)
+                    .get()
+
+            assertEquals(4, responseBody.get("totalElements")?.intValue())
+            assertEquals("Parkeren", responseBody.requiredAt("/content/0/naam")?.stringValue())
+            assertEquals("Parkeervergunning", responseBody.requiredAt("/content/0/producttypen/0/uniformeProductNaam")?.stringValue())
+            assertEquals("PARKEREN", responseBody.requiredAt("/content/0/producttypen/0/code")?.stringValue())
+        }
+
+    @Test
+    @WithBedrijfUser(
+        kvkNummer = "569312863",
+        machtigingsDienst = "0781d1a1-0644-44fd-802e-96f6b588b472",
+    )
+    fun `get themas voor bedrijf met machtingsdienst`() =
         runTest {
             val responseBody =
                 httpGraphQlTester
