@@ -32,7 +32,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       errorPage={{
         customMessages: CUSTOM_MESSAGES,
         headerLogo: <HeaderLogo />,
-        restUri: window.REST_URI,
       }}
     />
   ) : null,

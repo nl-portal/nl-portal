@@ -39,7 +39,6 @@ interface Props {
   customMessages?: Messages;
   headerLogo?: ReactNode;
   customHeader?: ReactNode;
-  restUri?: string;
 }
 
 const getLocale = () => {
@@ -59,11 +58,12 @@ const getLocale = () => {
 const ErrorPageContent = ({
   headerLogo,
   customHeader,
-  restUri,
 }: Omit<Props, "customMessages">) => {
   const intl = useIntl();
   const [logoUrl, setLogoUrl] = useState<string>();
-  const [isLoadingTheme, setIsLoadingTheme] = useState(Boolean(restUri));
+  const [isLoadingTheme, setIsLoadingTheme] = useState(
+    Boolean(window.REST_URI),
+  );
   const title = intl.formatMessage({
     id: "unexpectedError.title",
   });
@@ -73,11 +73,11 @@ const ErrorPageContent = ({
   }, [title]);
 
   useEffect(() => {
-    if (!restUri) return;
+    if (!window.REST_URI) return;
 
     const loadTheme = async () => {
       try {
-        const features = await loadFrontendConfig(restUri);
+        const features = await loadFrontendConfig(window.REST_URI);
 
         applyFrontendTheme(features);
         setLogoUrl(features.theme?.logo);
@@ -89,7 +89,7 @@ const ErrorPageContent = ({
     };
 
     void loadTheme();
-  }, [restUri]);
+  }, []);
 
   if (isLoadingTheme) return <FullscreenSkeleton />;
 
@@ -120,17 +120,13 @@ const ErrorPageContent = ({
             <Heading level={1} id="unexpected-error-title">
               {title}
             </Heading>
-            <Paragraph>
-              <FormattedMessage
-                id="unexpectedError.description"
-                values={{
-                  link: (chunks) => <Link href="/">{chunks}</Link>,
-                }}
-              />
-            </Paragraph>
-            <Paragraph>
-              <FormattedMessage id="unexpectedError.help" />
-            </Paragraph>
+            <FormattedMessage
+              id="unexpectedError.description"
+              values={{
+                p: (chunks) => <Paragraph>{chunks}</Paragraph>,
+                link: (chunks) => <Link href="/">{chunks}</Link>,
+              }}
+            />
           </PageGrid>
         </main>
       </ResponsiveContent>
