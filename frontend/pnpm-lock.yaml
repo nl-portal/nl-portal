@@ -75,7 +75,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
 
   packages/api:
     dependencies:
@@ -136,7 +136,7 @@ importers:
         version: 5.1.2(rolldown@1.2.8)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
       wait-on:
         specifier: ^9.1.0
         version: 9.5.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -147,8 +147,8 @@ importers:
         specifier: 4.3.1
         version: 4.3.1(graphql@17.0.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@gemeente-denhaag/design-tokens':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.0
+        version: 1.6.0
       '@gemeente-denhaag/icons':
         specifier: 4.3.0
         version: 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -230,7 +230,7 @@ importers:
         version: 8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1)
       vitest:
         specifier: 4.1.11
-        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
       wait-on:
         specifier: 9.5.1
         version: 9.5.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -241,8 +241,8 @@ importers:
         specifier: 4.3.1
         version: 4.3.1(graphql@17.0.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rxjs@7.8.2)
       '@gemeente-denhaag/design-tokens':
-        specifier: 1.5.0
-        version: 1.5.0
+        specifier: 1.6.0
+        version: 1.6.0
       '@gemeente-denhaag/icons':
         specifier: 4.3.0
         version: 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -330,7 +330,7 @@ importers:
         version: 8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1)
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
       wait-on:
         specifier: 9.5.1
         version: 9.5.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -391,7 +391,7 @@ importers:
         version: 5.1.2(rolldown@1.2.8)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
 
   packages/localization:
     dependencies:
@@ -437,7 +437,7 @@ importers:
         version: 5.1.2(rolldown@1.2.8)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
 
   packages/user-interface:
     dependencies:
@@ -505,8 +505,8 @@ importers:
         specifier: 3.3.2
         version: 3.3.2(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/header':
-        specifier: ^5.0.1
-        version: 5.0.1(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^5.1.1
+        version: 5.1.1(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/heading':
         specifier: 2.2.2
         version: 2.2.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -669,7 +669,7 @@ importers:
         version: 5.1.2(rolldown@1.2.8)(supports-color@10.2.2)(typescript@6.0.3)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+        version: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
       wait-on:
         specifier: ^9.1.0
         version: 9.5.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
@@ -1103,8 +1103,8 @@ packages:
       react: 18 || 19
       react-dom: 18 || 19
 
-  '@gemeente-denhaag/breadcrumb@5.2.0':
-    resolution: {integrity: sha512-O2cp4l/S2uN8b80DDjO9lHROWH6kn91hJE0y6OjYicEZzN4tKr/T44Kln5Gx7i8tu9Vuh9G2d9Ws6fYKY3J42Q==}
+  '@gemeente-denhaag/breadcrumb@5.3.1':
+    resolution: {integrity: sha512-DLjVqtncY/rL290p5aaFW+N26yiu3/cXzYxhOYtb5+4Ic5epSt1JfFLOgJ+mNqofvT0ISnvG3nwlc3AO5/qY7A==}
     peerDependencies:
       react: 18 || 19
       react-dom: 18 || 19
@@ -1120,6 +1120,12 @@ packages:
 
   '@gemeente-denhaag/button@3.1.3':
     resolution: {integrity: sha512-IKqCA2HePfPni0seA7DqBUh0qNhfBX7cAzvdrqYY9MolHsuboSXiKZ2AD+E32Izw+eVEij+CZXA187Y9siw17A==}
+    peerDependencies:
+      react: 18 || 19
+      react-dom: 18 || 19
+
+  '@gemeente-denhaag/button@3.2.0':
+    resolution: {integrity: sha512-wl64XP9ER92qwQEUSZ1fWV98cnCgddMizR06iIqEjypcx/j/0/uDzzOxFeeuNHRXLCroyz2TciIM7Ti1o+O1vw==}
     peerDependencies:
       react: 18 || 19
       react-dom: 18 || 19
@@ -1154,8 +1160,8 @@ packages:
       react: 18 || 19
       react-dom: 18 || 19
 
-  '@gemeente-denhaag/design-tokens@1.5.0':
-    resolution: {integrity: sha512-GN9Y6EUNH09AgilRh0Kp3SkigErSpkmNwW2yJwKEgU5VQMP5AZOX+34s4xd7qsVY8BwhABgxDQS4URxWGhSBHQ==}
+  '@gemeente-denhaag/design-tokens@1.6.0':
+    resolution: {integrity: sha512-BbzOMEW6HRGbCRj0+w71PhlyJpcAb8JjsOghMKkqZqxexMdHXTOK1aK1q377wXvptnkNRBQl8HgobzbJTInoxA==}
 
   '@gemeente-denhaag/file-upload@1.1.3':
     resolution: {integrity: sha512-fUGcLemtKwHF048STDdsliO5jgBaabEeaIXIYU/RABeoTdd8FaOD8NuyKabGyfDA1c8Q4PC1cx7lTDAcb5SQRg==}
@@ -1211,8 +1217,8 @@ packages:
       react: 18 || 19
       react-dom: 18 || 19
 
-  '@gemeente-denhaag/header@5.0.1':
-    resolution: {integrity: sha512-EIkTTHYwd19GhFyMXkvKQUXG6/RG4uwTLx3kJ1B4Lp3WaqgA+3ko6yTSGLlPaxiz3ZujrWPOVh3kpSJsyRoiyw==}
+  '@gemeente-denhaag/header@5.1.1':
+    resolution: {integrity: sha512-23T3ikBQHkTfjaqrodGk4nsgdwSpdKaHC/IGoYBZq0npVD5yqoJnaceN7lXtVc9esYe8ILDVGVagFZ0SwKUbCw==}
     peerDependencies:
       react: 18 || 19
       react-dom: 18 || 19
@@ -1265,8 +1271,8 @@ packages:
       react: 18 || 19
       react-dom: 18 || 19
 
-  '@gemeente-denhaag/menu@4.3.1':
-    resolution: {integrity: sha512-A0/Zr1NoU8+Iip6KSPGyYZo/sySDpkEiRaLUEMgfC9kylNJLzKMljpODqbuAeQM1AbOPzQDxp/p0p+bumcwWVw==}
+  '@gemeente-denhaag/menu@4.4.0':
+    resolution: {integrity: sha512-fCAC20lQlYqL8HADs4XX9jsJ/osqJAITbsDFdcf1Eu1xftragmGDaHgasEnq+GmDFTjHH9wBnx6lVp894go3aA==}
     peerDependencies:
       react: 18 || 19
       react-dom: 18 || 19
@@ -7035,7 +7041,7 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 
-  '@gemeente-denhaag/breadcrumb@5.2.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@gemeente-denhaag/breadcrumb@5.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@gemeente-denhaag/icons': 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/link': 4.2.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -7057,6 +7063,13 @@ snapshots:
       - '@babel/runtime'
 
   '@gemeente-denhaag/button@3.1.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+    dependencies:
+      '@gemeente-denhaag/icons': 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      clsx: 2.1.1
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
+
+  '@gemeente-denhaag/button@3.2.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       '@gemeente-denhaag/icons': 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       clsx: 2.1.1
@@ -7108,7 +7121,7 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 
-  '@gemeente-denhaag/design-tokens@1.5.0': {}
+  '@gemeente-denhaag/design-tokens@1.6.0': {}
 
   '@gemeente-denhaag/file-upload@1.1.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
@@ -7195,10 +7208,10 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 
-  '@gemeente-denhaag/header@5.0.1(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@gemeente-denhaag/header@5.1.1(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
-      '@gemeente-denhaag/breadcrumb': 5.2.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@gemeente-denhaag/button': 3.1.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@gemeente-denhaag/breadcrumb': 5.3.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@gemeente-denhaag/button': 3.2.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/header-logo': 3.1.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/heading': 2.2.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/iconbutton': 3.2.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -7206,7 +7219,7 @@ snapshots:
       '@gemeente-denhaag/language-switcher': 3.2.3(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/link': 4.2.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/link-list': 6.3.3(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@gemeente-denhaag/menu': 4.3.1(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@gemeente-denhaag/menu': 4.4.0(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/paragraph': 2.2.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/responsive-content': 2.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/sheet': 4.1.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -7279,9 +7292,9 @@ snapshots:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 
-  '@gemeente-denhaag/menu@4.3.1(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@gemeente-denhaag/menu@4.4.0(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
-      '@gemeente-denhaag/button': 3.1.3(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@gemeente-denhaag/button': 3.2.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/icons': 4.3.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/language-switcher': 3.2.3(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/number-badge': 2.2.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -8287,7 +8300,7 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
     optionalDependencies:
-      vitest: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+      vitest: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
 
   '@testing-library/react@16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
@@ -9970,7 +9983,7 @@ snapshots:
       obug: 2.1.4
       std-env: 4.2.0
       tinyrainbow: 3.1.1
-      vitest: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+      vitest: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
 
   '@vitest/expect@4.1.11':
     dependencies:
@@ -10016,7 +10029,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.1
-      vitest: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
+      vitest: 4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1)
 
   '@vitest/utils@4.1.11':
     dependencies:
@@ -12765,7 +12778,7 @@ snapshots:
       sass: 1.105.1
       yaml: 2.9.1
 
-  vitest@4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jsdom@30.1.2)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1)):
+  vitest@4.1.11(@types/node@26.1.0)(@vitest/coverage-v8@4.1.11)(@vitest/ui@4.1.11)(jiti@2.7.0)(jsdom@30.1.2)(sass@1.105.1)(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))(yaml@2.9.1):
     dependencies:
       '@vitest/expect': 4.1.11
       '@vitest/mocker': 4.1.11(vite@8.3.2(@types/node@26.1.0)(jiti@2.7.0)(sass@1.105.1)(yaml@2.9.1))
@@ -12793,7 +12806,18 @@ snapshots:
       '@vitest/ui': 4.1.11(vitest@4.1.11)
       jsdom: 30.1.2
     transitivePeerDependencies:
+      - '@vitejs/devtools'
+      - esbuild
+      - jiti
+      - less
       - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - yaml
 
   vm-browserify@1.1.2: {}
 
