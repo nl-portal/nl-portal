@@ -128,11 +128,14 @@ class AuthenticationMachtigingsDienstService(
         authentication: CommonGroundAuthentication,
         zaakTypeUUIDs: List<UUID>,
     ): List<UUID> {
-        val zaaktypes = zaakTypes(authentication)
-        if (authentication !is BedrijfAuthentication || zaaktypes.isNullOrEmpty()) {
+        if (authentication !is BedrijfAuthentication) {
             return zaakTypeUUIDs
         }
 
+        val zaaktypes = zaakTypes(authentication)
+        if (zaaktypes.isNullOrEmpty()) {
+            return zaakTypeUUIDs
+        }
         return zaakTypeUUIDs.filter { it in zaaktypes }
     }
 
