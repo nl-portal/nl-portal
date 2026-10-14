@@ -57,10 +57,10 @@ function descriptionItems(body: string) {
  * Prijs | {{ prijs | currency | escape }}
  * {% enddescription-list %}
  */
-export const descriptionListDefinition = {
+export const descriptionListDefinition: LiquidComponentDefinition = {
   component: DescriptionList,
   props: {
     title: "titleTranslationId",
   },
   body: { prop: "items", parse: descriptionItems },
-} satisfies LiquidComponentDefinition;
+};
