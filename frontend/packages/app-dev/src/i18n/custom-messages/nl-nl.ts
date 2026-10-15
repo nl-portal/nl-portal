@@ -60,5 +60,22 @@ export const NL_NL_MESSAGES: Messages = {
       "De applicatie ondergaat momenteel onderhoud. Functionaliteit kan beperkt zijn of niet werken zoals verwacht. Probeer het later opnieuw.",
     "auth.inactive.text":
       "U bent te lang inactief geweest. U wordt binnenkort automatisch uitgelogd uit de beveiligde omgeving. Als u gegevens heeft ingevuld, dan gaan deze verloren. Klik op 'Ingelogd blijven' om verder te gaan of op 'Uitloggen' om te stoppen.",
+    "appointmentsList.title": "Mijn afspraken",
+    "appointmentsList.viewAll": "Bekijk alle afspraken",
+    "appointmentsList.empty": "Geen afspraken gevonden",
+    "appointmentsList.fetchError":
+      "Er ging iets niet goed, probeer het later opnieuw.",
+    "pageTitles.appointments": "Mijn afspraken",
+    "appointments.loading": "Afspraken worden geladen…",
+    "appointments.error":
+      "Er is een fout opgetreden bij het ophalen van uw afspraken.",
+    "appointments.empty": "U heeft geen aankomende afspraken.",
+    "appointments.notFound": "Afspraak niet gevonden.",
+    "appointments.location": "Locatie:",
+    "appointments.aanmeldkenmerk": "Aanmeldkenmerk:",
+    "appointments.onlineLink": "Deelnamelink:",
+    "appointments.activities": "Activiteiten:",
+    "appointments.bringAlong": "Meenemen",
+    "appointments.contact": "Contact:",
   },
 };

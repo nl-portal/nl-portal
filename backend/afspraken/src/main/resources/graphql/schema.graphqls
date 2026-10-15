@@ -1,0 +1,62 @@
+extend type Query {
+    getAfspraken(
+        identificaties: [IdentificatieInput!]!
+        van: String
+        tot: String
+    ): AfsprakenResultaat!
+
+    getAfspraak(id: ID!): AfspraakDetail
+}
+
+type AfspraakOverzicht {
+    afspraakIdentificatie: ID!
+    onderwerp: String!
+    geplandAanvangsmoment: String!
+    geplandEindmoment: String!
+}
+
+type AfspraakLocatie {
+    naam: String!
+    bezoekadres: AfspraakAdres
+}
+
+type AfspraakAdres {
+    adresregel1: String!
+    adresregel2: String!
+}
+
+type Activiteit {
+    naamActiviteitsoort: String!
+    aantal: Int!
+    aanduidingWatMeeTeNemen: String
+}
+
+type ContactInformatie {
+    naam: String!
+    emailadres: String!
+    telefoonnummer: String!
+    adres: AfspraakAdres!
+}
+
+type AfspraakDetail {
+    afspraakIdentificatie: ID!
+    afspraakSoort: String!
+    onderwerp: String!
+    geplandAanvangsmoment: String!
+    geplandEindmoment: String!
+    aanmeldkenmerkAlfanumeriek: String
+    onlineAdres: String
+    afspraakLocatie: AfspraakLocatie
+    activiteiten: [Activiteit!]!
+    contactInformatie: ContactInformatie!
+}
+
+input IdentificatieInput {
+    type: String!
+    waarde: String!
+}
+
+type AfsprakenResultaat {
+    afspraken: [AfspraakOverzicht!]!
+    totalCount: Int!
+}
