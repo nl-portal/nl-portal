@@ -31,6 +31,12 @@ object TestHelper {
             .setResponseCode(200)
             .setBody(readFileAsString(fileName))
 
+    fun mockResponse(body: String): MockResponse =
+        MockResponse()
+            .addHeader("Content-Type", "application/json; charset=utf-8")
+            .setResponseCode(200)
+            .setBody(body)
+
     fun readFileAsString(fileName: String): String = this::class.java.getResource(fileName).readText(Charsets.UTF_8)
 
     fun WebTestClient.ResponseSpec.verifyOnlyDataExists(basePath: String): WebTestClient.BodyContentSpec =
@@ -287,62 +293,148 @@ object TestHelper {
                 ]
             }
             """.trimIndent()
-
-        val klantContact =
-            """
-            {
-                "uuid":"33549ba5-95f0-44d2-9c63-776ec126bc55",
-                "url":"http://localhost:8007/klantinteracties/api/v1/klantcontacten/33549ba5-95f0-44d2-9c63-776ec126bc55",
-                "gingOverOnderwerpobjecten":[
-                   {
-                      "uuid":"896821a7-0e35-45a8-84d1-0f4f033ee7c5",
-                      "url":"http://localhost:8007/klantinteracties/api/v1/onderwerpobjecten/896821a7-0e35-45a8-84d1-0f4f033ee7c5"
-                   }
-                ],
-                "hadBetrokkenActoren":[
-                   {
-                      "uuid":"02d4cea3-ebf4-4826-956e-7a5ca1be85ca",
-                      "url":"http://localhost:8007/klantinteracties/api/v1/actoren/02d4cea3-ebf4-4826-956e-7a5ca1be85ca",
-                      "naam":"Jasmijn",
-                      "soortActor":"medewerker",
-                      "indicatieActief":true,
-                      "actoridentificator":{
-                         "objectId":"",
-                         "codeObjecttype":"",
-                         "codeRegister":"",
-                         "codeSoortObjectId":""
-                      },
-                      "actorIdentificatie":{
-                         "functie":"receptioniste",
-                         "emailadres":"jasmijn@email.com",
-                         "telefoonnummer":"693624816"
-                      }
-                   }
-                ],
-                "omvatteBijlagen":[
-                   
-                ],
-                "hadBetrokkenen":[
-                   {
-                      "uuid":"d5de314b-58a4-4d02-9d66-4e68e8927a90",
-                      "url":"http://localhost:8007/klantinteracties/api/v1/betrokkenen/d5de314b-58a4-4d02-9d66-4e68e8927a90"
-                   }
-                ],
-                "leiddeTotInterneTaken":[
-                   {
-                      "uuid":"58d26043-0cdc-4a46-9110-6acca6e200f2",
-                      "url":"http://localhost:8007/klantinteracties/api/v1/internetaken/58d26043-0cdc-4a46-9110-6acca6e200f2"
-                   }
-                ],
-                "nummer":"0000000001",
-                "kanaal":"E-mail",
-                "onderwerp":"Vraag over vergunningsaanvraag",
-                "inhoud":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit. Vestibulum tempus purus vitae vehicula blandit. Aliquam erat volutpat. Suspendisse potenti. Maecenas ultrices condimentum lorem, sit amet aliquet sem sagittis at. Aenean lorem neque, tincidunt at ultrices ut, condimentum sed dui. Quisque sagittis eros eget sapien tempor lobortis. Aliquam magna nisi, ultrices vitae condimentum quis, ullamcorper luctus nulla. Proin condimentum diam lobortis lacinia accumsan. Etiam gravida neque quis lectus facilisis eleifend. Proin finibus non sapien a feugiat. Vestibulum consequat felis vitae felis aliquam faucibus. Morbi pellentesque quam velit, sed interdum quam cursus sed. Curabitur suscipit nunc eu cursus cursus. Etiam suscipit massa vel mauris tristique, non tristique tortor eleifend.",
-                "indicatieContactGelukt":true,
-                "taal":"nld",
-                "vertrouwelijk":true,
-                "plaatsgevondenOp":"2024-03-06T11:02:24Z"
-             } 
-            """.trimIndent()
     }
+
+    val klantContact =
+        """
+        {
+            "uuid":"33549ba5-95f0-44d2-9c63-776ec126bc55",
+            "url":"http://localhost:9000/klantinteracties/api/v1/klantcontacten/33549ba5-95f0-44d2-9c63-776ec126bc55",
+            "gingOverOnderwerpobjecten":[
+               {
+                  "uuid":"896821a7-0e35-45a8-84d1-0f4f033ee7c5",
+                  "url":"http://localhost:9000/klantinteracties/api/v1/onderwerpobjecten/896821a7-0e35-45a8-84d1-0f4f033ee7c5"
+               }
+            ],
+            "hadBetrokkenActoren":[
+               {
+                  "uuid":"02d4cea3-ebf4-4826-956e-7a5ca1be85ca",
+                  "url":"http://localhost:8007/klantinteracties/api/v1/actoren/02d4cea3-ebf4-4826-956e-7a5ca1be85ca",
+                  "naam":"Jasmijn",
+                  "soortActor":"medewerker",
+                  "indicatieActief":true,
+                  "actoridentificator":{
+                     "objectId":"",
+                     "codeObjecttype":"",
+                     "codeRegister":"",
+                     "codeSoortObjectId":""
+                  },
+                  "actorIdentificatie":{
+                     "functie":"receptioniste",
+                     "emailadres":"jasmijn@email.com",
+                     "telefoonnummer":"693624816"
+                  }
+               }
+            ],
+            "omvatteBijlagen":[
+               {
+                    "uuid": "095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+                    "url": "http://localhost:9000/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f"
+               }
+            ],
+            "hadBetrokkenen":[
+               {
+                  "uuid":"d5de314b-58a4-4d02-9d66-4e68e8927a90",
+                  "url":"http://localhost:9000/klantinteracties/api/v1/betrokkenen/d5de314b-58a4-4d02-9d66-4e68e8927a90"
+               }
+            ],
+            "leiddeTotInterneTaken":[
+               {
+                  "uuid":"58d26043-0cdc-4a46-9110-6acca6e200f2",
+                  "url":"http://localhost:9000/klantinteracties/api/v1/internetaken/58d26043-0cdc-4a46-9110-6acca6e200f2"
+               }
+            ],
+            "nummer":"0000000001",
+            "kanaal":"E-mail",
+            "onderwerp":"Vraag over vergunningsaanvraag",
+            "inhoud":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut aliquam velit. Vestibulum tempus purus vitae vehicula blandit. Aliquam erat volutpat. Suspendisse potenti. Maecenas ultrices condimentum lorem, sit amet aliquet sem sagittis at. Aenean lorem neque, tincidunt at ultrices ut, condimentum sed dui. Quisque sagittis eros eget sapien tempor lobortis. Aliquam magna nisi, ultrices vitae condimentum quis, ullamcorper luctus nulla. Proin condimentum diam lobortis lacinia accumsan. Etiam gravida neque quis lectus facilisis eleifend. Proin finibus non sapien a feugiat. Vestibulum consequat felis vitae felis aliquam faucibus. Morbi pellentesque quam velit, sed interdum quam cursus sed. Curabitur suscipit nunc eu cursus cursus. Etiam suscipit massa vel mauris tristique, non tristique tortor eleifend.",
+            "indicatieContactGelukt":true,
+            "taal":"nld",
+            "vertrouwelijk":true,
+            "plaatsgevondenOp":"2024-03-06T11:02:24Z"
+         } 
+        """.trimIndent()
+
+    val handleDocumentResponse =
+        """
+        {
+           "url": "http://some.domain.com/enkelvoudiginformatieobjecten/095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+           "identificatie": "string",
+           "bronorganisatie": "string",
+           "creatiedatum": "2021-10-14",
+           "titel": "Een titel",
+           "vertrouwelijkheidaanduiding": "openbaar",
+           "auteur": "string",
+           "status": "definitief",
+           "formaat": ".pdf",
+           "taal": "str",
+           "versie": 0,
+           "beginRegistratie": "2021-10-14T12:27:43Z",
+           "bestandsnaam": "string",
+           "inhoud": "http://example.com",
+           "bestandsomvang": 0,
+           "link": "http://example.com",
+           "beschrijving": "string",
+           "ontvangstdatum": "2021-10-14",
+           "verzenddatum": "2021-10-14",
+           "indicatieGebruiksrecht": true,
+           "ondertekening": {
+             "soort": "analoog",
+             "datum": "2021-10-14"
+           },
+           "integriteit": {
+             "algoritme": "crc_16",
+             "waarde": "string",
+             "datum": "2021-10-14"
+           },
+           "informatieobjecttype": "http://example.com",
+           "locked": true,
+           "bestandsdelen": [
+             {
+               "url": "http://example.com",
+               "volgnummer": 0,
+               "omvang": 0,
+               "inhoud": "http://example.com",
+               "voltooid": true,
+               "lock": "string"
+             }
+           ]
+         }
+        """.trimIndent()
+
+    val handleKlantContactenResultPageResponse =
+        """
+        {
+
+            "count": 123,
+            "next": "http://api.example.org/accounts/?page=4",
+            "previous": "http://api.example.org/accounts/?page=2",
+            "results": [
+                {
+                    "uuid": "694242af-d906-470b-b7e1-eb3527886854",
+                    "url": "http://example.com",
+                    "gingOverOnderwerpobjecten": [],
+                    "hadBetrokkenActoren": [],
+                    "omvatteBijlagen": [],
+                    "hadBetrokkenen": [],
+                    "leiddeTotInterneTaken": [],
+                    "nummer": "string",
+                    "referentienummer": "string",
+                    "kanaal": "string",
+                    "onderwerp": "string",
+                    "inhoud": "string",
+                    "reactie": "string",
+                    "indicatieContactGelukt": true,
+                    "hoofdOnderwerpType": "http://example.com",
+                    "verdereActieOndernomen": false,
+                    "taal": "str",
+                    "vertrouwelijk": true,
+                    "plaatsgevondenOp": "2019-08-24T14:15:22Z",
+                    "metadata": {},
+                    "_expand": {}
+                }
+            ]
+
+        }
+        """.trimIndent()
 }
