@@ -44,6 +44,7 @@ interface PortalFileUploadProps {
   onUploadStart: (upload: Promise<void>) => void;
   onUploadEnd: (upload: Promise<void>) => void;
   informatieobjecttype?: string;
+  getBeschrijving?: () => string | undefined;
   initialValue?: UploadedFile[];
   taakId?: string;
 }
@@ -58,16 +59,20 @@ const PortalFileUpload = ({
   onUploadStart,
   onUploadEnd,
   informatieobjecttype,
+  getBeschrijving,
   initialValue = [],
   taakId,
 }: PortalFileUploadProps) => {
-  const [error, setError] = useState(false);
+  const [errorMessageId, setErrorMessageId] = useState<string | null>(null);
   const [fileList, setFileList] = useState<UploadedFile[]>(initialValue);
 
   const intl = useIntl();
 
-  const handleError = (tempId?: string) => {
-    setError(true);
+  const handleError = (
+    tempId?: string,
+    messageId = "formio.fileUpload.error",
+  ) => {
+    setErrorMessageId(messageId);
 
     if (tempId) {
       setFileList((prev) => prev.filter((item) => item.id !== tempId));
@@ -87,7 +92,7 @@ const PortalFileUpload = ({
   const uploadFile = (file: File) => {
     const restUri = sessionStorage.getItem("REST_URI");
     const uploadLink = `${restUri}/taak/${taakId}/document/content`;
-    setError(false);
+    setErrorMessageId(null);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -96,6 +101,11 @@ const PortalFileUpload = ({
         "informatieobjecttype",
         interpolateInformatieobjectUrl(informatieobjecttype),
       );
+    }
+
+    const beschrijving = getBeschrijving?.();
+    if (beschrijving) {
+      formData.append("beschrijving", beschrijving);
     }
 
     const tempId = crypto.randomUUID();
@@ -117,7 +127,13 @@ const PortalFileUpload = ({
     })
       .then(async (response) => {
         if (!response.ok) {
-          handleError(tempId);
+          const errorResponse = await response.json().catch(() => null);
+          handleError(
+            tempId,
+            errorResponse?.error === "BESCHRIJVING_TOO_LONG"
+              ? "formio.fileUpload.descriptionTooLong"
+              : undefined,
+          );
           return;
         }
 
@@ -128,7 +144,7 @@ const PortalFileUpload = ({
           size: file.size,
         };
 
-        setError(false);
+        setErrorMessageId(null);
 
         setFileList((prev) =>
           prev.map((item) =>
@@ -156,16 +172,16 @@ const PortalFileUpload = ({
   }, [fileList, onChange]);
 
   return (
-    <FormField invalid={error}>
+    <FormField invalid={errorMessageId !== null}>
       {!hideLabel && label && <FormLabel htmlFor={id}>{label}</FormLabel>}
-      {error && (
+      {errorMessageId && (
         <Alert
           close={() => {
-            setError(false);
+            setErrorMessageId(null);
           }}
           text={
             <Paragraph>
-              <FormattedMessage id="formio.fileUpload.error" />
+              <FormattedMessage id={errorMessageId} />
             </Paragraph>
           }
           title=""
@@ -235,6 +251,26 @@ class FormIoUploader extends FieldComponent {
     });
   }
 
+  static editForm = (...extend: any[]) =>
+    FieldComponent.editForm([
+      {
+        key: "data",
+        components: [
+          {
+            type: "textfield",
+            key: "beschrijvingPath",
+            label: "Beschrijving path",
+            input: true,
+            weight: 200,
+            placeholder: "e.g. bestanden.beschrijving",
+            tooltip:
+              "Dotted path into the form data whose value is stored as the description (beschrijving) of each uploaded document. Use a hidden field with a default value for a static description.",
+          },
+        ],
+      },
+      ...extend,
+    ]);
+
   static register: () => void = () => {
     Components.addComponent("portalFileUpload", FormIoUploader);
   };
@@ -264,6 +300,14 @@ class FormIoUploader extends FieldComponent {
     if (!this.pendingUploads.delete(upload)) return;
 
     this.emit("fileUploadingEnd", upload);
+  };
+
+  getBeschrijving = (): string | undefined => {
+    const path = this.component.beschrijvingPath;
+    if (!path) return undefined;
+
+    const value = get(this.rootValue, path);
+    return typeof value === "string" && value.trim() ? value : undefined;
   };
 
   deleteValue() {
@@ -298,6 +342,7 @@ class FormIoUploader extends FieldComponent {
           onUploadStart={this.onUploadStartHandler}
           onUploadEnd={this.onUploadEndHandler}
           informatieobjecttype={this.component.informatieobjecttype || ""}
+          getBeschrijving={this.getBeschrijving}
           initialValue={this.dataValue}
           taakId={this.options.taakId}
         />
