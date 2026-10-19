@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import React, { ReactNode, useMemo, useState } from "react";
+import React, { ComponentProps, ReactNode, useMemo, useState } from "react";
 import {
   createBrowserRouter,
   createMemoryRouter,
@@ -21,6 +21,7 @@ import {
 } from "react-router";
 import { RouterProvider as ReactRouterProvider } from "react-router/dom";
 import { NavigationItem } from "../interfaces/navigation-item";
+import UnexpectedErrorPage from "../pages/UnexpectedErrorPage";
 
 export interface RouterContextInterface {
   routes: RouteObject[];
@@ -38,6 +39,7 @@ interface Props {
   element: ReactNode;
   routes: RouteObject[];
   navigationItems: NavigationItem[][];
+  errorPage?: ComponentProps<typeof UnexpectedErrorPage>;
   test?: {
     initialIndex?: number;
     initialEntries?: string[];
@@ -48,6 +50,7 @@ export const RouterProvider = ({
   element,
   routes: initRoutes,
   navigationItems: initNavigationItems,
+  errorPage,
   test,
 }: Props) => {
   const [routes, setRoutes] = useState(initRoutes);
@@ -60,11 +63,15 @@ export const RouterProvider = ({
       element,
       children: routes,
       handle: { label: "breadcrumb.overview" },
+      errorElement: errorPage ? (
+        <UnexpectedErrorPage {...errorPage} />
+      ) : undefined,
     };
 
-    if (test) return createMemoryRouter([route], test);
-    return createBrowserRouter([route]);
-  }, [routes, element, test]);
+    return test
+      ? createMemoryRouter([route], test)
+      : createBrowserRouter([route]);
+  }, [routes, element, errorPage, test]);
 
   const updateRoutes = (newRoutes: RouteObject[]) => {
     setRoutes(newRoutes);

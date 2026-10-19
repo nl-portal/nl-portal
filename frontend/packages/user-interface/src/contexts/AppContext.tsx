@@ -34,41 +34,11 @@ import { stringToSlug } from "../utils/string-to-slug";
 import RouterContext from "./RouterContext";
 import UserContext from "./UserContext";
 import FullscreenSkeleton from "../components/FullscreenSkeleton";
-
-interface Features {
-  theme: {
-    logo: string;
-    style: string;
-  };
-  properties: {
-    custom: Record<string, string | number>;
-    messageCountPollingInterval: number;
-    myAddressChangeUrl: string;
-    myAddressResearchMoreInfoUrl: string;
-    myAddressResearchUrl: string;
-    myBrpChangeUrl: string;
-    myBrpConfidentiallyChangeUrl: string;
-    myGenderChangeUrl: string;
-    myNameChangeUrl: string;
-    overviewCurrentCasesPreviewLength: number;
-    overviewMaintenanceAlertTextEn: string;
-    overviewMaintenanceAlertTextNl: string;
-    overviewMaintenanceAlertTitleEn: string;
-    overviewMaintenanceAlertTitleNl: string;
-    themeClass: string;
-  };
-  toggles: {
-    custom: Record<string, boolean>;
-    casesContactMomentsEnabled: boolean;
-    casesPartialSearchEnabled: boolean;
-    casesResultExplanationEnabled: boolean;
-    messageCountEnabled: boolean;
-    myInhabitantCountEnabled: boolean;
-    openProductEnabled: boolean;
-    overviewIntroEnabled: boolean;
-    overviewMaintenanceAlertEnabled: boolean;
-  };
-}
+import {
+  Features,
+  loadFrontendConfig,
+  applyFrontendTheme,
+} from "../utils/frontend-config";
 
 type Themes =
   GetOpenProductHoofdThemasByProductenQuery["getOpenProductHoofdThemasByProducten"];
@@ -118,44 +88,15 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     if (features) return;
     startTransition(async () => {
       try {
-        const response = await fetch(`${restUri}/public/frontend`);
+        const json = await loadFrontendConfig(restUri);
 
-        if (!response.ok) {
-          console.warn("Theme features API failed:", response.status);
-          return;
-        }
-
-        const json = (await response.json()) as Features & {
-          properties: {
-            custom: string;
-          };
-          toggles: {
-            custom: string;
-          };
-        };
-        json.properties.custom = JSON.parse(json.properties.custom || "{}");
-        json.toggles.custom = JSON.parse(json.toggles.custom || "{}");
-
+        applyFrontendTheme(json);
         setFeatures(json);
-
-        const styleNode = document.createElement("style");
-        styleNode.nonce =
-          document.querySelector<HTMLMetaElement>("meta[name='csp-nonce']")
-            ?.content || "";
-        styleNode.textContent = json.theme.style;
-        document.head.appendChild(styleNode);
       } catch (err) {
         console.error("Failed to load features:", err);
       }
     });
-  }, [restUri, startTransition]);
-
-  useEffect(() => {
-    const themeClass = features?.properties.themeClass;
-    if (!themeClass) return;
-    document.documentElement.classList.add(themeClass);
-    return () => document.documentElement.classList.remove(themeClass);
-  }, [features]);
+  }, [features, restUri, startTransition]);
 
   const {
     loading: loadingThemes,

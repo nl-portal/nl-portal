@@ -27,6 +27,7 @@ import nl.nlportal.openproduct.graphql.OpenProductQuery
 import nl.nlportal.openproduct.graphql.OpenProductThemaQuery
 import nl.nlportal.openproduct.graphql.OpenProductTypeQuery
 import nl.nlportal.openproduct.service.OpenProductDmnService
+import nl.nlportal.openproduct.service.OpenProductPrefillService
 import nl.nlportal.openproduct.service.OpenProductService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -65,9 +66,11 @@ class OpenProductGraphqlAutoConfiguration {
     fun openProductActieQuery(
         openProductService: OpenProductService,
         openProductDmnService: OpenProductDmnService,
+        openProductPrefillService: OpenProductPrefillService,
     ) = OpenProductActieQuery(
         openProductService = openProductService,
         openProductDmnService = openProductDmnService,
+        openProductPrefillService = openProductPrefillService,
     )
 
     @Bean
