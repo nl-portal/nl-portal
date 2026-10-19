@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { FormattedDate, FormattedNumber } from "react-intl";
+import { FormattedDate, FormattedMessage, FormattedNumber } from "react-intl";
 import {
-  LiquidParser,
+  PortalLink,
+  TableList,
   ThemeDetailsPage,
 } from "@nl-portal/nl-portal-user-interface";
-import {
-  OpenProductContentElement,
-  OpenProductProduct,
-} from "@nl-portal/nl-portal-api";
+import { OpenProductProduct } from "@nl-portal/nl-portal-api";
 import { capitalizeFirstLetter, currencyFormat } from "../util/product-format";
-import { useContext } from "react";
-import { LocaleContext } from "@nl-portal/nl-portal-localization";
+import { useDateFormatter } from "@nl-portal/nl-portal-localization";
+import { useParams } from "react-router";
+import { Link } from "@gemeente-denhaag/link";
+import { paths } from "../constants/paths";
+import StatusBadge from "@gemeente-denhaag/status-badge";
 
 const ParkerenDetails = () => {
-  const { currentLocale } = useContext(LocaleContext);
-  // const { formatDate } = useDateFormatter();
-  // const { slug = "parkeren", productTypeSlug = "vergunningen" } = useParams<{
-  //   slug: string;
-  //   productTypeSlug: string;
-  // }>();
+  const { formatDate } = useDateFormatter();
+  const { slug = "parkeren", productTypeSlug = "vergunningen" } = useParams<{
+    slug: string;
+    productTypeSlug: string;
+  }>();
 
   return (
     <ThemeDetailsPage
@@ -67,20 +67,10 @@ const ParkerenDetails = () => {
     >
       {({ loading, data }) => {
         const product = data?.getOpenProduct as OpenProductProduct | undefined;
-        const template =
-          product?.content?.find(
-            (content: OpenProductContentElement) =>
-              content.taal === currentLocale.split("-")[0],
-          )?.content ?? "";
 
         return (
           <>
-            <LiquidParser
-              loading={loading}
-              template={template}
-              data={product ?? {}}
-            />
-            {/* {Boolean(product?.verbruiksobject) && (
+            {Boolean(product?.verbruiksobject) && (
               <TableList
                 loading={loading}
                 titleTranslationId={"Voertuigen"}
@@ -141,7 +131,7 @@ const ParkerenDetails = () => {
                   ],
                 )}
               />
-            )} */}
+            )}
           </>
         );
       }}
