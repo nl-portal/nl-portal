@@ -15,7 +15,7 @@ permissions:
 
 jobs:
     changes:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         outputs:
             backend: ${{ steps.filter.outputs.backend }}
             frontend: ${{ steps.filter.outputs.frontend }}
@@ -40,7 +40,7 @@ jobs:
     ci-required:
         needs: [changes, validate]
         if: always()
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             -   name: Aggregate result
                 env:

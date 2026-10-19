@@ -24,7 +24,7 @@ permissions:
 jobs:
     build-be:
         if: ${{ inputs.runBackend }}
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
             -   name: Set up JDK ${{ inputs.javaVersion }}
@@ -40,7 +40,7 @@ jobs:
 
     build-fe:
         if: ${{ inputs.runFrontend }}
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         steps:
             -   uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
             -   name: Set up Node.js ${{ inputs.nodeVersion }}

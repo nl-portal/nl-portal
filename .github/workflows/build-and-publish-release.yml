@@ -14,7 +14,7 @@ permissions:
 
 jobs:
     prepare:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         outputs:
             version: ${{ steps.v.outputs.version }}
             minor: ${{ steps.v.outputs.minor }}
@@ -87,7 +87,7 @@ jobs:
 
     gate:
         needs: [prepare, stage-be, stage-fe]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         environment: release
         steps:
             -   name: Approved
@@ -141,7 +141,7 @@ jobs:
 
     create-release:
         needs: [prepare, promote-be, publish-fe-npm, image-be, image-fe]
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         permissions:
             contents: write
         steps:

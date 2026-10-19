@@ -19,7 +19,7 @@ permissions:
 
 jobs:
     prepare:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         outputs:
             version: ${{ steps.v.outputs.version }}
         steps:

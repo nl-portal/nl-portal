@@ -15,7 +15,7 @@ permissions:
 
 jobs:
     publish:
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-26.04
         env:
             BUCKET: ${{ secrets.AWS_NPM_SNAPSHOTS_BUCKET }}
         steps:
