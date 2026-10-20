@@ -89,11 +89,11 @@ import org.springframework.web.server.ResponseStatusException
 class OpenProductService(
     private val openProductClient: OpenProductClient,
     private val openProductTypeClient: OpenProductTypeClient,
-    private val objectsApiTaskConfigProperties: TaakConfigProperties,
     private val zakenApiService: ZakenApiService,
     private val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
     private val documentenApiService: DocumentenApiService,
     private val taakService: TaakService,
+    private val openProductConfigurationProperties: OpenProductConfigurationProperties,
 ) {
     /**
      * Get published themas
