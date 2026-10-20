@@ -66,7 +66,6 @@ include(
     "zgw:openklant",
     "case",
     "data",
-    "messaging",
     "form",
     "haalcentraal-hr",
     "haalcentraal2",

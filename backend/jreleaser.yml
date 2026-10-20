@@ -37,7 +37,6 @@ deploy:
           - graphql/build/sonatypeCentralStaging
           - haalcentraal-hr/build/sonatypeCentralStaging
           - haalcentraal2/build/sonatypeCentralStaging
-          - messaging/build/sonatypeCentralStaging
           - payment-direct/build/sonatypeCentralStaging
           - portal-authentication/build/sonatypeCentralStaging
           - product/build/sonatypeCentralStaging
@@ -69,7 +68,6 @@ deploy:
           - graphql/build/sonatypeCentralStaging
           - haalcentraal-hr/build/sonatypeCentralStaging
           - haalcentraal2/build/sonatypeCentralStaging
-          - messaging/build/sonatypeCentralStaging
           - payment-direct/build/sonatypeCentralStaging
           - portal-authentication/build/sonatypeCentralStaging
           - product/build/sonatypeCentralStaging
