@@ -3,6 +3,14 @@ graphql:
         - "nl.nlportal"
 
 nl-portal:
+    authentication:
+        machtingsdienst:
+            configurations:
+                test:
+                    uuid: 0781d1a1-0644-44fd-802e-96f6b588b472
+                    naam: test
+                    product-types:
+                        - dee273e9-2aa8-40ae-84b7-cb7da3c075ba
     config:
         openproduct:
             enabled: true

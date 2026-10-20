@@ -62,7 +62,7 @@ class OpenProductQuery(
                     status = status?.let { OpenProductToegestaneStatus.valueOf(status.uppercase()) },
                     productTypeCode = productTypeCode,
                     productTypeId = productTypeId,
-                    productTypeIds = productTypeIds,
+                    productTypeIds = productTypeIds?.map { UUID.fromString(it) },
                     productTypeCodes = productTypeCodes,
                 ),
         )

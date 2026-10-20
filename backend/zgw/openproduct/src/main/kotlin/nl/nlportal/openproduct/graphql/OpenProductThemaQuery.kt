@@ -44,6 +44,7 @@ class OpenProductThemaQuery(
             pageSize = pageSize ?: 20,
             resultPage =
                 openProductService.getThemas(
+                    authentication = authentication,
                     pageNumber = pageNumber ?: 1,
                     pageSize = pageSize ?: 20,
                 ),
@@ -52,7 +53,10 @@ class OpenProductThemaQuery(
     @QueryMapping
     suspend fun getOpenProductHoofdThemas(
         authentication: CommonGroundAuthentication,
-    ): List<OpenProductThema> = openProductService.getHoofdThemas()
+    ): List<OpenProductThema> =
+        openProductService.getHoofdThemas(
+            authentication = authentication,
+        )
 
     @QueryMapping
     suspend fun getOpenProductHoofdThemasByProducten(
@@ -65,13 +69,20 @@ class OpenProductThemaQuery(
     @QueryMapping
     suspend fun getOpenProductThemasHierarchy(
         authentication: CommonGroundAuthentication,
-    ): List<OpenProductThemaHierarchy> = openProductService.getThemasHierarchy()
+    ): List<OpenProductThemaHierarchy> =
+        openProductService.getThemasHierarchy(
+            authentication = authentication,
+        )
 
     @QueryMapping
     suspend fun getOpenProductThemaHierarchy(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
-    ): List<OpenProductThemaHierarchy> = openProductService.getThemaHierarchy(id = id)
+    ): List<OpenProductThemaHierarchy> =
+        openProductService.getThemaHierarchy(
+            authentication = authentication,
+            id = id,
+        )
 
     @QueryMapping
     suspend fun getOpenProductThema(
@@ -80,6 +91,7 @@ class OpenProductThemaQuery(
     ): OpenProductThema? {
         val response =
             openProductService.getThema(
+                authentication = authentication,
                 id = id,
             )
         return response
