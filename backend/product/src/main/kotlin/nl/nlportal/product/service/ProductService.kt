@@ -164,27 +164,21 @@ class ProductService(
     ): List<Zaak> {
         val productType = getProductType(productTypeId, productName)
         val zaakTypes = productType?.zaaktypen
-        if (zaakTypes.isNullOrEmpty()) {
+        if (productType?.zaaktypen == null || productType.zaaktypen.isEmpty()) {
             return emptyList()
         }
 
-        val filteredZaakTypes =
-            authenticationMachtigingsDienstService.filterAllowedZaakTypes(
-                authentication = authentication,
-                zaakTypeUUIDs = zaakTypes.toList(),
-            )
-
-        if (filteredZaakTypes.isEmpty()) {
+        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
             return emptyList()
         }
 
         return zakenApiService
             .getZaken(
                 authentication = authentication,
-                page = pageNumber,
+                page = 1,
                 pageSize = pageSize,
                 isOpen = isOpen,
-                zaakTypeUUIDs = filteredZaakTypes,
+                zaakTypeUUIDs = zaakTypes.toList(),
             ).content
     }
 
@@ -309,7 +303,7 @@ class ProductService(
 
     suspend fun getProductTypes(authentication: CommonGroundAuthentication): List<ProductType> {
         // if user has a machtigingsdienst in their authentication return an empty list
-        if (authenticationMachtigingsDienstService.hasMachtingDienst(authentication)) {
+        if (authenticationMachtigingsDienstService.hasMachtingsDienst(authentication)) {
             return emptyList()
         }
 
