@@ -48,12 +48,15 @@ class OpenProductDmnService(
         val decisions = mutableListOf<Map<String, OpenProductDmnResponse>>()
 
         acties.forEach {
-            decisions.addAll(
-                getDecision(
-                    product = product,
-                    actie = it,
-                ),
-            )
+            // only get a DMN decision if mapping is not null. In the future we need to check if soort/type = DMN
+            if (it.mapping != null) {
+                decisions.addAll(
+                    getDecision(
+                        product = product,
+                        actie = it,
+                    ),
+                )
+            }
         }
 
         return decisions
