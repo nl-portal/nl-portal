@@ -15,28 +15,18 @@
  */
 package nl.nlportal.case.service
 
-import tools.jackson.databind.node.JsonNodeFactory
-import tools.jackson.databind.node.ObjectNode
 import nl.nlportal.case.BaseTest
-import nl.nlportal.case.domain.Case
-import nl.nlportal.case.domain.CaseDefinitionId
-import nl.nlportal.case.domain.CaseId
-import nl.nlportal.case.domain.Status
-import nl.nlportal.case.domain.Submission
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.messaging.`in`.UpdateExternalIdPortalCaseMessage
-import nl.nlportal.messaging.`in`.UpdateStatusPortalCaseMessage
 import org.assertj.core.api.Assertions.assertThat
 import org.everit.json.schema.ValidationException
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.springframework.security.core.Authentication
-import java.util.UUID
-import java.util.Optional
-import org.junit.jupiter.api.Test
+import tools.jackson.databind.node.ObjectNode
 
 class CaseServiceUnitTest : BaseTest() {
     lateinit var caseService: CaseService
@@ -49,7 +39,7 @@ class CaseServiceUnitTest : BaseTest() {
     fun setup() {
         baseSetUp()
         `when`(caseDefinitionService.findById(caseDefinition.caseDefinitionId)).thenReturn(caseDefinition)
-        caseService = CaseService(caseRepository, caseDefinitionService, sink)
+        caseService = CaseService(caseRepository, caseDefinitionService)
         `when`(authentication.name).thenReturn(user)
     }
 
@@ -128,78 +118,5 @@ class CaseServiceUnitTest : BaseTest() {
                 .path("firstName")
                 .stringValue(),
         ).isEqualTo("myName")
-    }
-
-    @Test
-    fun `should handle external case event`() {
-        val externalCaseCreatedEvent = UpdateExternalIdPortalCaseMessage(UUID.randomUUID(), "anExternalId")
-
-        val submissionData = JsonNodeFactory.instance.objectNode()
-        submissionData.put("key", "value")
-
-        `when`(caseRepository.findById(CaseId.existingId(externalCaseCreatedEvent.caseId))).thenReturn(
-            Optional.of(
-                Case(
-                    caseId = CaseId.existingId(externalCaseCreatedEvent.caseId),
-                    userId = "aUserName",
-                    caseDefinitionId = CaseDefinitionId.existingId("aCaseDefinition"),
-                    status = Status("in-progress"),
-                    submission = Submission(submissionData),
-                ),
-            ),
-        )
-
-        val case = caseService.updateExternalId(externalCaseCreatedEvent)
-
-        assertThat(case.externalId).isEqualTo(externalCaseCreatedEvent.externalId)
-    }
-
-    @Test
-    fun `should not handle external case event if caseId is not found`() {
-        val externalCaseCreatedEvent = UpdateExternalIdPortalCaseMessage(UUID.randomUUID(), "anExternalId")
-
-        assertThrows(NullPointerException::class.java) {
-            caseService.updateExternalId(externalCaseCreatedEvent)
-        }
-    }
-
-    @Test
-    fun `should not handle update status case event if external case id is not found`() {
-        val externalCaseStatusUpdatedEvent = UpdateStatusPortalCaseMessage("anExternalId", "some status")
-
-        assertThrows(NullPointerException::class.java) {
-            caseService.updateStatus(externalCaseStatusUpdatedEvent)
-        }
-    }
-
-    @Test
-    fun `should handle status update case event`() {
-        val event = UpdateStatusPortalCaseMessage("externalId", "b")
-
-        val submissionData = JsonNodeFactory.instance.objectNode()
-        submissionData.put("key", "value")
-
-        `when`(caseRepository.findCaseByExternalId(event.externalId)).thenReturn(
-            Case(
-                caseId = CaseId.existingId(UUID.randomUUID()),
-                userId = "aUserName",
-                externalId = "externalId",
-                status = Status("a"),
-                caseDefinitionId = CaseDefinitionId.existingId("person"),
-                submission = Submission(submissionData),
-            ),
-        )
-        `when`(caseDefinitionService.findById(CaseDefinitionId.existingId("person"))).thenReturn(
-            personCaseDefinition(),
-        )
-
-        val case = caseService.updateStatus(event)
-
-        assertThat(case.status.name).isEqualTo(event.status)
-        assertThat(case.statusHistory).hasSize(1)
-        val historicStatus = case.statusHistory?.get(0)
-        assertThat(historicStatus?.status?.name).isEqualTo("a")
-        assertThat(historicStatus?.status?.createdOn).isNotNull
-        assertThat(historicStatus?.createdOn).isNotNull
     }
 }

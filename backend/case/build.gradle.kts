@@ -32,7 +32,6 @@ jar.enabled = true
 dependencies {
     api(project(":data"))
     api(project(":graphql"))
-    api(project(":messaging"))
     api(project(":portal-authentication"))
     api(project(":zgw:common-ground-authentication"))
 
