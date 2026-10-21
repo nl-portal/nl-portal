@@ -20,6 +20,10 @@ export const QUERY_GET_OPEN_PRODUCT = gql`
   query GetOpenProduct($id: UUID!) {
     getOpenProduct(id: $id) {
       ...openProductFields
+      content {
+        content
+        taal
+      }
       zaken {
         uuid
         omschrijving

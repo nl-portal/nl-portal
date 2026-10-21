@@ -24,14 +24,17 @@ import {
   Zaak,
   GetOpenProductQueryVariables,
   GetOpenProductQuery,
+  OpenProductContentElement,
 } from "@nl-portal/nl-portal-api";
 import { skipToken, useQuery } from "@apollo/client/react";
 import TasksList from "../components/TasksList";
 import CasesList from "../components/CasesList";
 import DescriptionList from "../components/DescriptionList";
-import React from "react";
+import React, { useContext } from "react";
 import { DataMappingItem } from "../interfaces/product-types";
 import { getProductValue } from "../utils/get-product-value";
+import LiquidParser from "../components/LiquidParser";
+import { LocaleContext } from "@nl-portal/nl-portal-localization";
 import ProductDecisionsList from "../components/ProductDecisionList";
 import useRequiredParams from "../hooks/useRequiredParams";
 
@@ -54,6 +57,7 @@ const ThemeDetailsPage = ({
   productSettings,
 }: ThemeDetailsPageProps) => {
   const intl = useIntl();
+  const { currentLocale } = useContext(LocaleContext);
   const { id } = useRequiredParams<{ id: string }>();
   const openProduct = useQuery(
     GetOpenProductDocument,
@@ -68,6 +72,13 @@ const ThemeDetailsPage = ({
   const product = data?.getOpenProduct as OpenProductProduct | undefined;
   const zaken = product?.zaken as Zaak[] | undefined;
   const taken = product?.taken as TaakV2[] | undefined;
+
+  const template =
+    product?.content?.find(
+      (content: OpenProductContentElement) =>
+        content.taal === currentLocale.toLocaleLowerCase().split("-")[0],
+    )?.content ?? "";
+
   const details =
     product && productSettings
       ? productSettings?.headerTranslationIds
@@ -107,6 +118,11 @@ const ThemeDetailsPage = ({
         cases={zaken}
       />
       <DescriptionList loading={loading} showEmpty={false} items={details} />
+      <LiquidParser
+        loading={loading}
+        template={template}
+        data={product ?? {}}
+      />
       {children instanceof Function ? children(openProduct) : children}
       <TasksList
         loading={loading}
