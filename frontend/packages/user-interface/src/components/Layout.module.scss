@@ -2,4 +2,22 @@
   .skiplink {
     z-index: 3 !important;
   }
+
+  :global(.denhaag-page-content__main) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  :global(.denhaag-side-navigation) {
+    max-width: 18rem;
+  }
+
+  :global(.denhaag-side-navigation__link) > svg {
+    flex-shrink: 0;
+  }
+
+  :global(.denhaag-side-navigation__link-label) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
 }

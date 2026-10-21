@@ -27,6 +27,8 @@ import PortalLink from "./PortalLink";
 import RouterContext from "../contexts/RouterContext";
 import UserContext from "../contexts/UserContext";
 import { Paths } from "../interfaces/paths";
+import { getNavigationItemTitleId } from "../utils/navigation-item-title";
+import { getUnlabeledNavigationPage } from "../utils/get-current-navigation-page";
 
 type HeaderProps = {
   logo?: AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -60,8 +62,17 @@ const Header = ({ logo, paths }: HeaderProps) => {
           }),
         };
       });
+    const unlabeledItem = getUnlabeledNavigationPage(matches, navigationItems);
+    if (unlabeledItem) {
+      list.push({
+        href: unlabeledItem.path,
+        label: intl.formatMessage({
+          id: getNavigationItemTitleId(unlabeledItem),
+        }),
+      });
+    }
     return { navigationPath: list, Link: PortalLink };
-  }, [matches, intl]);
+  }, [matches, navigationItems, intl]);
 
   const languages = useMemo(
     () =>
@@ -102,9 +113,7 @@ const Header = ({ logo, paths }: HeaderProps) => {
       label: intl.formatMessage({ id: "app.appName" }),
       navigation: navigationItems.flat().map((item) => {
         const navItem = {
-          label: intl.formatMessage({
-            id: `pageTitles.${item.titleTranslationKey}`,
-          }),
+          label: intl.formatMessage({ id: getNavigationItemTitleId(item) }),
           href: item.path,
         };
         if (item.hasMessagesCount) {
@@ -121,9 +130,7 @@ const Header = ({ logo, paths }: HeaderProps) => {
       defaultExpanded: true,
       navigation: navigationItems.flat().map((item) => {
         const navItem = {
-          label: intl.formatMessage({
-            id: `pageTitles.${item.titleTranslationKey}`,
-          }),
+          label: intl.formatMessage({ id: getNavigationItemTitleId(item) }),
           href: item.path,
           icon: item.icon,
         };

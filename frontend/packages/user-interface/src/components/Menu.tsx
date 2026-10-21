@@ -26,6 +26,7 @@ import {
 import { getCurrentNavigationPage } from "../utils/get-current-navigation-page";
 import { NumberBadge } from "@gemeente-denhaag/number-badge";
 import AppContext from "../contexts/AppContext";
+import { getNavigationItemTitleId } from "../utils/navigation-item-title";
 import RouterContext from "../contexts/RouterContext";
 
 const Menu = () => {
@@ -54,9 +55,7 @@ const Menu = () => {
                 <Link className={className} hrefLang={hrefLang} to={item.path}>
                   <Icon />
                   <SideNavigationLinkLabel>
-                    <FormattedMessage
-                      id={`pageTitles.${item.titleTranslationKey}`}
-                    />
+                    <FormattedMessage id={getNavigationItemTitleId(item)} />
                     {item.hasMessagesCount && messagesCount > 0 && (
                       <NumberBadge>{messagesCount}</NumberBadge>
                     )}

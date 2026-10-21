@@ -45,6 +45,7 @@ export interface Features {
     openProductEnabled: boolean;
     overviewIntroEnabled: boolean;
     overviewMaintenanceAlertEnabled: boolean;
+    menuEntriesEnabled?: boolean;
   };
 }
 

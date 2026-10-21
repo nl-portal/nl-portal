@@ -17,6 +17,7 @@
     * [Authentication en authorization](fundamentals/architectuur/authentication-en-authorization.md)
 * [Features](features/features.md)
 * [Document filtering](features/document-filtering/document-filtering.md)
+* [Menu-items vanuit de backend](features/menu-entries.md)
 * [Open source](fundamentals/open-source.md)
 
 ## Configuratie
@@ -73,6 +74,7 @@
         * [3.0.4_3.0.3-1](release-notes/3.0.x/app/3.0.4_3.0.3-1.md)
 * 4.x.x
     * [4.0.0](release-notes/4.x.x/4.0.0/release-notes.md)
+    * [4.1.0](release-notes/4.x.x/4.1.0/release-notes.md)
 
 ## Contributing to NL portal
 
