@@ -12,8 +12,21 @@ extend type Query {
         onderwerp: String
     ): BerichtenPage!
 
-    # Returns the total amount of unopened Berichten
+    # Returns the total amount of unopened VTBBerichten
     getUnopenedBerichtenCount: Int!
+
+    getVTBBericht(id: UUID!): VTBBericht
+
+    #
+    #         Returns a paginated list of all VTBBerichten
+    #
+    getVTBBerichten(
+        pageNumber: Int
+        pageSize: Int
+    ):  VTBBerichtenPage!
+
+    # Returns the total amount of unopened VTBBerichten
+    getUnopenedVTBBerichtenCount: Int!
 }
 
 type Bericht {
@@ -68,3 +81,70 @@ type BerichtenPage {
     # The total number of available pages
     totalPages: Int!
 }
+
+type VTBBerichtenPage {
+    # The elements on this page
+    content: [VTBBericht!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type VTBBericht {
+    uuid: UUID!
+    onderwerp: String!
+    berichtTekst: String!
+    publicatiedatum: ZonedDateTime
+    referentie: String
+    geopendOp: ZonedDateTime
+    einddatumHandelingsTermijn: ZonedDateTime
+    isGerelateerdAan: [IsGerelateerdAan]
+    documenten: [Document!]!
+    berichtType: VTBBerichtType!
+}
+
+type IsGerelateerdAan {
+    urn: String
+}
+
+type VTBBerichtType {
+    bijlageTypen: [VTBBijlageType]!,
+    handelingsPerspectief: VTBHandelingsPerspectief!,
+    mijnOverheidBerichtenbox: Boolean!,
+    mijnOverheidBerichtenboxType: String,
+    verantwoordelijkeOrganisatie: String!,
+}
+
+type VTBBijlage {
+    informatieObject: String!
+    omschrijving: String
+}
+
+type VTBBijlageType {
+    informatieObjecttype: String!
+    omschrijving: String
+}
+
+enum VTBHandelingsPerspectief {
+    BETALEN
+    INCASSO
+    INFORMATIE_GEVEN
+    INFORMATIE_KRIJGEN
+    REACTIE_ONTVANGEN
+    VERNIEUWING_NODIG
+    UITNODIGING_VOOR_GESPREK
+    GEEN_HANDELINGS_PERSPECTIEF
+}
+

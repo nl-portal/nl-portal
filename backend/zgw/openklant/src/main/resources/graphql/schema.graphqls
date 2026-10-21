@@ -172,6 +172,7 @@ type HadKlantcontact {
 enum OnderwerpObjectIndentificatorType {
     ZAAK
     PRODUCT
+    BERICHT
 }
 
 type OpenKlant2Adres {

@@ -159,25 +159,106 @@ object TestHelper {
         }
         """.trimIndent()
 
-    val graphqlInvalidBerichtRequest =
+    val graphqlUnopenedVTBBerichtenCountRequest =
         """
         query {
-            getBericht(id: "9e021130-8cbd-4c6f-846a-677448e21ce6") {
-                berichtTekst
-                berichtType
-                bijlages
-                einddatumHandelingstermijn
-                geopend
-                handelingsperspectief
-                identificatie {
-                    type
-                    value
+            getUnopenedVTBBerichtenCount
+        }
+        """.trimIndent()
+
+    val graphqlVTBBerichtenPageRequest =
+        """
+        query {
+            getVTBBerichten(pageNumber: 1, pageSize: 10) {
+                content {
+                    uuid
+                    berichtTekst
+                    berichtType {
+                        bijlageTypen{
+                            informatieObjecttype
+                        }
+                        handelingsPerspectief
+                        mijnOverheidBerichtenbox
+                    }
+                    einddatumHandelingsTermijn
+                    geopendOp
+        
+                    onderwerp
+                    publicatiedatum
+                    referentie
                     __typename
                 }
+                totalElements
+                totalPages
+                __typename
+            }
+        }
+        """.trimIndent()
+
+    val graphqlValidVTBBerichtRequest =
+        """
+        query {
+            getVTBBericht(id: "9e021130-8cbd-4c6f-846a-677448e21ce8") {
+                uuid
+                berichtTekst
+                berichtType {
+                    handelingsPerspectief
+                    mijnOverheidBerichtenbox
+                }
+                einddatumHandelingsTermijn
+                geopendOp
+        
                 onderwerp
                 publicatiedatum
                 referentie
-                __typename
+            }
+        }
+        """.trimIndent()
+
+    val graphqlValidVTBBerichtReadRequest =
+        """
+        query {
+            getVTBBericht(id: "a4961c4a-29a7-4cc7-9d5d-bceed1dfccba") {
+                uuid
+                berichtTekst
+                berichtType {
+                    handelingsPerspectief
+                    mijnOverheidBerichtenbox
+                }
+                einddatumHandelingsTermijn
+                geopendOp
+                onderwerp
+                publicatiedatum
+                referentie
+            }
+        }
+        """.trimIndent()
+
+    val graphqlValidVTBBerichtReadRequestWithDocuments =
+        """
+        query {
+            getVTBBericht(id: "a4961c4a-29a7-4cc7-9d5d-bceed1dfccba") {
+                uuid
+                berichtTekst
+                berichtType {
+                    handelingsPerspectief
+                    mijnOverheidBerichtenbox
+                }
+                einddatumHandelingsTermijn
+                geopendOp
+                onderwerp
+                publicatiedatum
+                referentie
+                documenten {
+                    uuid,
+                    documentapi,
+                    identificatie,
+                    creatiedatum,
+                    titel,
+                    formaat,
+                    bestandsnaam,
+                    bestandsomvang
+                }
             }
         }
         """.trimIndent()
@@ -662,5 +743,142 @@ object TestHelper {
              }
            ]
          }
+        """.trimIndent()
+
+    val vtbBerichtResponse =
+        """
+        {
+          "url": "http://localhost:10001/berichten/api/v1/berichten/9e021130-8cbd-4c6f-846a-677448e21ce8",
+          "urn": "urn:maykin:berichten:bericht:9e021130-8cbd-4c6f-846a-677448e21ce8",
+          "uuid": "9e021130-8cbd-4c6f-846a-677448e21ce8",
+          "onderwerp": "Bericht burger",
+          "berichtTekst": "Long text",
+          "publicatiedatum": "2026-08-27T10:22:33Z",
+          "referentie": "",
+          "ontvanger": "urn:nld:brp:bsn:nummer:999990755",
+          "geopendOp": null,
+          "berichtType": "http://localhost:10001/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "isGerelateerdAan": [],
+          "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+          "bijlagen": [
+            {
+              "informatieObject": "urn:nld:denhaag:zaken-main:drc:enkelvoudiginformatieobject:uuid:095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+              "omschrijving": "test"
+            }
+          ]
+        }
+        """.trimIndent()
+
+    val vtbBerichtResponseRead =
+        """
+        {
+          "url": "http://localhost:10001/berichten/api/v1/berichten/a4961c4a-29a7-4cc7-9d5d-bceed1dfccba",
+          "urn": "urn:maykin:berichten:bericht:a4961c4a-29a7-4cc7-9d5d-bceed1dfccba",
+          "uuid": "85af56b8-02a2-4f71-9f63-f8675312a351",
+          "onderwerp": "Bericht burger",
+          "berichtTekst": "Long text",
+          "publicatiedatum": "2026-08-27T10:22:33Z",
+          "referentie": "",
+          "ontvanger": "urn:nld:brp:bsn:nummer:999990755",
+          "geopendOp": "2026-08-27T10:22:33Z",
+          "berichtType": "http://localhost:10001/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "isGerelateerdAan": [],
+          "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+          "bijlagen": [
+            {
+              "informatieObject": "urn:nld:denhaag:zaken-main:drc:enkelvoudiginformatieobject:uuid:095be615-a8ad-4c33-8e9c-c7612fbf6c9f",
+              "omschrijving": "test"
+            }
+          ]
+        }
+        """.trimIndent()
+
+    val vtbBerichtenResultPage =
+        """
+        {
+          "count": 3,
+          "next": null,
+          "previous": null,
+          "results": [
+            {
+              "url": "http://localhost:10001/berichten/api/v1/berichten/85af56b8-02a2-4f71-9f63-f8675312a351",
+              "urn": "urn:maykin:berichten:bericht:85af56b8-02a2-4f71-9f63-f8675312a351",
+              "uuid": "85af56b8-02a2-4f71-9f63-f8675312a351",
+              "onderwerp": "Bericht burger",
+              "berichtTekst": "Long text",
+              "publicatiedatum": "2026-08-27T10:22:33Z",
+              "referentie": "",
+              "ontvanger": "urn:nld:brp.bsn:999993847",
+              "geopendOp": null,
+              "berichtType": "http://localhost:10001/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+              "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+              "isGerelateerdAan": [],
+              "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+              "bijlagen": [
+                {
+                  "informatieObject": "urn:maykin:bijlage:1",
+                  "omschrijving": "test"
+                }
+              ]
+            },
+            {
+              "url": "http://localhost:10001/berichten/api/v1/berichten/e4a71422-96ca-4b80-8465-f33f7d63047c",
+              "urn": "urn:maykin:berichten:bericht:e4a71422-96ca-4b80-8465-f33f7d63047c",
+              "uuid": "e4a71422-96ca-4b80-8465-f33f7d63047c",
+              "onderwerp": "Bericht bedrijf",
+              "berichtTekst": "Long text",
+              "publicatiedatum": "2026-11-27T10:22:33Z",
+              "referentie": "",
+              "ontvanger": "urn:nld:hr:kvknummer:14127293",
+              "geopendOp": null,
+              "berichtType": "http://localhost:10001/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+              "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+              "isGerelateerdAan": [],
+              "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+              "bijlagen": []
+            },
+            {
+              "url": "http://localhost:8016/berichten/api/v1/berichten/ed85f556-5d8c-4c9b-84e4-f6bbceb83ec6",
+              "urn": "urn:maykin:berichten:bericht:ed85f556-5d8c-4c9b-84e4-f6bbceb83ec6",
+              "uuid": "ed85f556-5d8c-4c9b-84e4-f6bbceb83ec6",
+              "onderwerp": "Bericht bedrijf met vestiging",
+              "berichtTekst": "Long text",
+              "publicatiedatum": "2026-11-27T10:22:33Z",
+              "referentie": "",
+              "ontvanger": "urn:nld:hr:kvknummer:14127293:vestigingsnummer:000037143557",
+              "geopendOp": null,
+              "berichtType": "http://localhost:8016/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+              "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+              "isGerelateerdAan": [],
+              "einddatumHandelingsTermijn": "2027-08-27T10:23:08Z",
+              "bijlagen": []
+            }
+          ]
+        }
+        """.trimIndent()
+
+    val vtbBerichtTypeResponse =
+        """
+        {
+          "url": "http://localhost:8016/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "urn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "uuid": "d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
+          "bijlageTypen": [
+            {
+              "informatieObjecttype": "urn:maykin:test:type:1",
+              "omschrijving": "test 1"
+            },
+            {
+              "informatieObjecttype": "urn:maykin:test:type:2",
+              "omschrijving": "test 2"
+            }
+          ],
+          "handelingsPerspectief": "betalen",
+          "mijnOverheidBerichtenbox": true,
+          "mijnOverheidBerichtenboxType": "Test",
+          "verantwoordelijkeOrganisatie": "urn:maykin:test:product:1"
+        }
         """.trimIndent()
 }
