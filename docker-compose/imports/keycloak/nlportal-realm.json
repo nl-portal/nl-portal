@@ -614,6 +614,52 @@
     "notBefore" : 0,
     "groups" : [ ]
   }, {
+    "id" : "4c8e1f27-9b3a-4d60-a5e2-7f1d0c96b385",
+    "username" : "gemachtigde-bedrijf",
+    "firstName" : "Lukas",
+    "lastName" : "Klamer",
+    "emailVerified" : false,
+    "attributes" : {
+      "bsn" : [ "999993847" ],
+      "gemachtigdeKvk" : [ "14127293" ],
+      "authenticationMethod" : [ "machtigen" ]
+    },
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "type" : "password",
+      "value" : "gemachtigde-bedrijf",
+      "temporary" : false
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-master" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "2a6f9c13-8e4d-4b72-a1f5-6d0e3b84c927",
+    "username" : "gemachtigde-burger",
+    "firstName" : "Lukas",
+    "lastName" : "Klamer",
+    "emailVerified" : false,
+    "attributes" : {
+      "bsn" : [ "999993847" ],
+      "gemachtigdeBsn" : [ "999991723" ],
+      "authenticationMethod" : [ "machtigen" ]
+    },
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "type" : "password",
+      "value" : "gemachtigde-burger",
+      "temporary" : false
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-master" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "701041a6-e757-4336-8bb8-ee90cfcb1617",
     "username" : "burger",
     "firstName" : "Merel",
@@ -1126,7 +1172,7 @@
   "clientScopes" : [ {
     "id" : "9f3b7d20-54ac-4e18-b6d9-2c71e8f04a35",
     "name" : "aanvrager",
-    "description" : "Maps the bsn and kvk user attributes onto the aanvrager claim. Attached to the m2m client only, so the browser token never carries a BSN or KVK.",
+    "description" : "Maps the bsn and kvk user attributes onto the aanvrager claim, gemachtigdeBsn onto the gemachtigde claim and serviceUuid onto the eHerkenning ServiceUUID claim. Attached to the m2m client only, so the browser token never carries a BSN or KVK.",
     "protocol" : "openid-connect",
     "attributes" : {
       "include.in.token.scope" : "true",
@@ -1163,6 +1209,55 @@
         "access.token.claim" : "true",
         "claim.name" : "aanvrager.kvk",
         "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "b7e2c4d1-5a38-4f96-8c0e-2d9a61f4e7b3",
+      "name" : "gemachtigde bsn",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usermodel-attribute-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "user.attribute" : "gemachtigdeBsn",
+        "id.token.claim" : "true",
+        "lightweight.claim" : "false",
+        "access.token.claim" : "true",
+        "claim.name" : "gemachtigde.bsn",
+        "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "c5d1a8e4-3f62-4b09-9e7a-1b4c6d2f8a35",
+      "name" : "gemachtigde kvk",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usermodel-attribute-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "user.attribute" : "gemachtigdeKvk",
+        "id.token.claim" : "true",
+        "lightweight.claim" : "false",
+        "access.token.claim" : "true",
+        "claim.name" : "gemachtigde.kvk",
+        "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "e3a9f0c2-7d14-4b8e-9f61-5c2b8a0d4e17",
+      "name" : "etoegang service uuid",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usermodel-attribute-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "user.attribute" : "serviceUuid",
+        "id.token.claim" : "true",
+        "lightweight.claim" : "false",
+        "access.token.claim" : "true",
+        "claim.name" : "urn:etoegang:core:ServiceUUID",
+        "jsonType.label" : "String",
+        "multivalued" : "true"
       }
     } ]
   }, {
