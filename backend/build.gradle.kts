@@ -136,6 +136,7 @@ subprojects {
         configure<DependencyManagementExtension> {
             imports {
                 mavenBom("io.netty:netty-bom:${Versions.netty}")
+                mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:${Versions.kotlinCoroutines}")
             }
             dependencies {
                 // Security overrides on top of the Spring Boot 4.1.0 BOM.
