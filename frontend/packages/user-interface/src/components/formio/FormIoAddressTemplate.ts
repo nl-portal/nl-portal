@@ -16,6 +16,7 @@
 import { escape } from "lodash-es";
 import {
   errorsBlock,
+  hiddenLabelAria,
   serializeAttrs,
   wrapperOpen,
 } from "./FormIoTemplateUtils";
@@ -77,7 +78,9 @@ export const nlPortalAddress = {
     const refModeSwitcher = (ctx.ref && ctx.ref.modeSwitcher) || "modeSwitcher";
 
     const displayValue = escape(String(ctx.displayValue ?? ""));
-    const autocompleteLabel = escape(ctx.t("autocomplete"));
+    const autocompleteLabel = escape(
+      hiddenLabelAria(ctx) ?? ctx.t("autocomplete"),
+    );
 
     const autocompleteHtml =
       ctx.mode && ctx.mode.autocomplete

@@ -13,7 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { errorsBlock } from "./FormIoTemplateUtils";
+import {
+  errorsBlock,
+  hiddenLabelAria,
+  isLabelHidden,
+} from "./FormIoTemplateUtils";
 import { escape } from "lodash-es";
 
 export const nlPortalRadioButton = {
@@ -23,6 +27,7 @@ export const nlPortalRadioButton = {
     const label = escape(ctx.t(component.label || ""));
     const description = escape(ctx.t(component.description || ""));
     const hasErrors = Array.isArray(ctx.errors) && ctx.errors.length > 0;
+    const ariaLabel = hiddenLabelAria(ctx);
     const baseName = escape(ctx.input?.name || component.key || "radio");
     const radioName = ctx.input?.name ? baseName : `${baseName}[${id}]`;
 
@@ -69,9 +74,10 @@ export const nlPortalRadioButton = {
           ref="fieldset"
           class="utrecht-form-fieldset__fieldset utrecht-form-fieldset--html-fieldset"
           ${description ? `aria-describedby="${id}-description"` : ""}
+          ${ariaLabel ? `aria-label="${escape(ariaLabel)}"` : ""}
         >
           ${
-            label
+            label && !isLabelHidden(ctx)
               ? `<legend class="utrecht-form-fieldset__legend utrecht-form-fieldset__legend--html-legend">${label}</legend>`
               : ""
           }

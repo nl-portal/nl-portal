@@ -18,6 +18,8 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 
 * De applicatiebeveiliging is verbeterd.
 * Fixed an issue where the toegestane status (in_aanvraag) of a product would break at de-/serialization
+* Form.io-componenten in taakformulieren tonen het label en de beschrijving niet meer dubbel. Dit gold onder andere voor `datetime`, `phoneNumber`, `url`, `currency`, `time`, `address` en `radio`.
+* De instelling `hideLabel` (Hide label) werkt nu voor tekstvelden, tekstvakken, datum/tijd, select, adres, radio en selectboxes. Het label wordt verborgen en het veld krijgt een `aria-label`, zodat het voor schermlezers benoemd blijft. Formulieren die `hideLabel` al aan hadden staan, tonen dit label vanaf deze versie dus niet meer.
 
 ## Breaking changes
 
