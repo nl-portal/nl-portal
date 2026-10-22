@@ -18,6 +18,11 @@ package nl.nlportal.openklant.service
 import java.util.UUID
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.JwtBuilder
+import nl.nlportal.documentenapi.client.DocumentApisConfig
+import nl.nlportal.documentenapi.client.DocumentApisConfig.DocumentenApisConfigProperties
+import nl.nlportal.documentenapi.client.DocumentenApiClient
+import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.idtokenauthentication.service.IdTokenGenerator
 import nl.nlportal.openklant.TestHelper
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration
 import nl.nlportal.openklant.autoconfigure.OpenKlantModuleConfiguration.OpenKlantConfigurationProperties
@@ -32,12 +37,17 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
 import org.springframework.http.HttpStatus
+import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.server.ResponseStatusException
 
 class OpenKlant2ServiceTest {
     private lateinit var openklantModuleConfiguration: OpenKlantModuleConfiguration
+    private lateinit var documentApisConfig: DocumentApisConfig
     private lateinit var mockServer: MockWebServer
     private lateinit var openKlant2Client: OpenKlant2KlantinteractiesClient
+    private lateinit var documentenApiClient: DocumentenApiClient
+    private lateinit var documentenApiService: DocumentenApiService
+    private lateinit var idTokenGenerator: IdTokenGenerator
     private lateinit var hostUrl: String
     private lateinit var apiUrl: String
 
@@ -58,7 +68,18 @@ class OpenKlant2ServiceTest {
                     )
             }
 
+        documentApisConfig =
+            DocumentApisConfig().apply {
+                enabled = true
+                properties =
+                    DocumentenApisConfigProperties().apply {
+                        defaultDocumentApi = "openzaak"
+                    }
+            }
+        idTokenGenerator = IdTokenGenerator()
         openKlant2Client = OpenKlant2KlantinteractiesClient(openklantModuleConfiguration.properties)
+        documentenApiClient = DocumentenApiClient(documentApisConfig.properties, idTokenGenerator)
+        documentenApiService = DocumentenApiService(documentenApiClient, documentApisConfig.properties)
     }
 
     @AfterEach
@@ -69,9 +90,9 @@ class OpenKlant2ServiceTest {
     @Test
     fun `should find KlantContact that belongs to the authenticated user`() =
         runTest {
-            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties, documentenApiService)
             mockServer.enqueue(mockJsonResponse(klantContactenPage))
-            mockServer.enqueue(mockJsonResponse(TestHelper.Partijen.klantContact))
+            mockServer.enqueue(mockJsonResponse(TestHelper.klantContact))
 
             val klantContact =
                 service.findKlantContact(
@@ -90,7 +111,7 @@ class OpenKlant2ServiceTest {
     @Test
     fun `should not find KlantContact of another user`() =
         runTest {
-            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties, documentenApiService)
             // the scoped search of the other user does not return the klantcontact
             mockServer.enqueue(mockJsonResponse(TestHelper.emptyPage))
 
@@ -110,7 +131,7 @@ class OpenKlant2ServiceTest {
     @Test
     fun `should delete DigitaleAdres that belongs to the authenticated user`() =
         runTest {
-            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties, documentenApiService)
             mockServer.enqueue(mockJsonResponse(digitaleAdressenPage))
             mockServer.enqueue(MockResponse().setResponseCode(204))
 
@@ -131,7 +152,7 @@ class OpenKlant2ServiceTest {
     @Test
     fun `should not delete DigitaleAdres of another user`() =
         runTest {
-            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties)
+            val service = OpenKlant2Service(openKlant2Client, openklantModuleConfiguration.properties, documentenApiService)
             // the scoped search of the other user does not return the digitale adres
             mockServer.enqueue(mockJsonResponse(TestHelper.emptyPage))
 
@@ -185,7 +206,7 @@ class OpenKlant2ServiceTest {
                 "count": 1,
                 "next": null,
                 "previous": null,
-                "results": [${TestHelper.Partijen.klantContact}]
+                "results": [${TestHelper.klantContact}]
             }
             """.trimIndent()
     }

@@ -17,11 +17,13 @@ package nl.nlportal.openklant.graphql
 
 import java.util.UUID
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.openklant.client.domain.OpenKlant2Klantcontact
 import nl.nlportal.openklant.graphql.domain.OnderwerpObjectIndentificatorType
 import nl.nlportal.openklant.service.OpenKlant2Service
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -50,5 +52,14 @@ class KlantContactQuery(
         openklant2Service.findKlantContact(
             authentication = authentication,
             klantContactId = klantContactId,
+        )
+
+    @SchemaMapping(typeName = "OpenKlant2Klantcontact", field = "documenten")
+    suspend fun documenten(
+        authentication: CommonGroundAuthentication,
+        klantcontact: OpenKlant2Klantcontact,
+    ): List<Document>? =
+        openklant2Service.getKlantcontactDocumenten(
+            klantContact = klantcontact,
         )
 }
