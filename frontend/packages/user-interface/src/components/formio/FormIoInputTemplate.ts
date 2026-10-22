@@ -16,6 +16,7 @@
 import { escape } from "lodash-es";
 import {
   errorsBlock,
+  hiddenLabelAria,
   serializeAttrs,
   wrapperOpen,
 } from "./FormIoTemplateUtils";
@@ -54,6 +55,7 @@ const renderInputElement = (ctx: any) => {
     disabled: !!(ctx.disabled || ctx.component.disabled) || undefined,
     class: combinedClass,
     "aria-describedby": needsDescribedBy ? errorId : undefined,
+    "aria-label": hiddenLabelAria(ctx),
   };
 
   const inputAttributes = serializeAttrs(ctx.input?.attr, extras);
@@ -114,6 +116,7 @@ export const renderTextareaElement = (ctx: any) => {
     disabled: isDisabled || undefined,
     class: combinedClass,
     "aria-describedby": needsDescribedBy ? errorId : undefined,
+    "aria-label": hiddenLabelAria(ctx),
     rows: ctx.component.rows || undefined,
     cols: ctx.component.cols || undefined,
   };
