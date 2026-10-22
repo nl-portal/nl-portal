@@ -18,6 +18,7 @@ import {
   CaseDetailsPage,
   CasesPage,
   EditContactInfoPage,
+  MenuEntryRoutes,
   MessageDetailsPage,
   MessagesPage,
   NoMatchPage,
@@ -27,7 +28,6 @@ import {
 } from "@nl-portal/nl-portal-user-interface";
 import { OidcCallbackPage } from "@nl-portal/nl-portal-authentication";
 import { paths } from "./paths";
-import { Navigate } from "react-router";
 
 export const routes = [
   {
@@ -111,7 +111,6 @@ export const routes = [
   },
   {
     path: "*",
-    handle: { label: "breadcrumb.noMatch" },
-    element: <Navigate to={paths.noMatch} />,
+    element: <MenuEntryRoutes />,
   },
 ];

@@ -20,6 +20,7 @@ import RouterContext from "../contexts/RouterContext";
 import PortalLink from "./PortalLink";
 import styles from "./QuickLinks.module.scss";
 import SectionHeader from "./SectionHeader";
+import { getNavigationItemTitleId } from "../utils/navigation-item-title";
 
 interface QuickLinkProps {
   titleTranslationId?: string | null;
@@ -39,9 +40,7 @@ const QuickLinks = ({
       .filter((item) => item.showInQuickLinks)
       .map((item) => ({
         Icon: item.icon,
-        label: intl.formatMessage({
-          id: `pageTitles.${item.titleTranslationKey}`,
-        }),
+        label: intl.formatMessage({ id: getNavigationItemTitleId(item) }),
         href: item.path,
       }));
   }, [navigationItems, intl]);
