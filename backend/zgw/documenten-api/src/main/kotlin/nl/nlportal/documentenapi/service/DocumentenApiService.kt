@@ -64,6 +64,7 @@ class DocumentenApiService(
         filename: String,
         documentApi: String,
         informatieobjecttype: String? = null,
+        beschrijving: String? = null,
     ): Document {
         val auteur =
             ReactiveSecurityContextHolder
@@ -95,6 +96,7 @@ class DocumentenApiService(
                             it.isNullOrEmpty()
                         }
                         ?: documentenApiConfig.documentTypeUrl!!,
+                beschrijving = beschrijving.takeUnless { it.isNullOrBlank() },
             ),
             content,
             documentApi,

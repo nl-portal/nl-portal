@@ -19,19 +19,29 @@ import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentStatus
+import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
 import java.net.URI
 import java.util.UUID
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.NullSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import org.mockito.kotlin.any
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 @ExperimentalCoroutinesApi
 @SpringBootTest
@@ -73,6 +83,40 @@ internal class DocumentenApiServiceTest(
 
             assertDocumentReturned(document)
         }
+
+    @Test
+    fun `should pass beschrijving through to the Documenten API request`() =
+        runTest {
+            val request = uploadDocumentAndCaptureRequest("Kopie identiteitsbewijs partner")
+
+            assertEquals("Kopie identiteitsbewijs partner", request.beschrijving)
+        }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = ["", "   "])
+    fun `should leave beschrijving out of the Documenten API request when empty`(beschrijving: String?) =
+        runTest {
+            val request = uploadDocumentAndCaptureRequest(beschrijving)
+
+            assertNull(request.beschrijving)
+            assertFalse(jacksonObjectMapper().writeValueAsString(request).contains("beschrijving"))
+        }
+
+    private suspend fun uploadDocumentAndCaptureRequest(beschrijving: String?): PostEnkelvoudiginformatieobjectRequest {
+        whenever(documentenApiClient.postDocument(any(), any(), eq("openzaak"))).thenReturn(getTestDocument(null))
+
+        documentenApiService.uploadDocument(
+            content = "hello".toByteArray(),
+            filename = "hello.txt",
+            documentApi = "openzaak",
+            beschrijving = beschrijving,
+        )
+
+        val requestCaptor = argumentCaptor<PostEnkelvoudiginformatieobjectRequest>()
+        verify(documentenApiClient).postDocument(requestCaptor.capture(), any(), eq("openzaak"))
+        return requestCaptor.firstValue
+    }
 
     private fun getTestDocument(status: DocumentStatus?): Document =
         Document(

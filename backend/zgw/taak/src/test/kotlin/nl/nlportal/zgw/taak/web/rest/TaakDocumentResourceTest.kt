@@ -34,8 +34,10 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DefaultDataBufferFactory
@@ -86,7 +88,7 @@ class TaakDocumentResourceTest {
             val file = filePart("../../etc/passwd", payload)
             whenever(virusScanService.scan(any<ByteArray>()))
                 .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
-            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull()))
+            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(stubDocument())
 
             val response = resource.uploadDocument(taakId, file, null, authentication)
@@ -98,6 +100,7 @@ class TaakDocumentResourceTest {
                 bytesCaptor.capture(),
                 filenameCaptor.capture(),
                 any(),
+                anyOrNull(),
                 anyOrNull(),
             )
             assertFalse(filenameCaptor.firstValue.contains('/'))
@@ -126,7 +129,7 @@ class TaakDocumentResourceTest {
             val file = filePart("doc.pdf", payload)
             whenever(virusScanService.scan(any<ByteArray>()))
                 .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
-            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull()))
+            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(stubDocument())
 
             resource.uploadDocument(taakId, file, null, authentication)
@@ -139,8 +142,43 @@ class TaakDocumentResourceTest {
                 any(),
                 any(),
                 anyOrNull(),
+                anyOrNull(),
             )
             assertSame(scanCaptor.firstValue, uploadCaptor.firstValue)
+        }
+
+    @Test
+    fun `returns 400 without scanning or uploading when beschrijving is too long`() =
+        runTest {
+            val taakId = UUID.randomUUID()
+            val file = filePart("doc.pdf", "content".toByteArray())
+            val beschrijving = "a".repeat(1001)
+
+            val response = resource.uploadDocument(taakId, file, null, authentication, beschrijving)
+
+            assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
+            assertEquals(
+                "BESCHRIJVING_TOO_LONG",
+                (response.body as Map<*, *>)["error"],
+            )
+            verifyNoInteractions(virusScanService, documentenApiService)
+        }
+
+    @Test
+    fun `uploads document when beschrijving has the maximum length`() =
+        runTest {
+            val taakId = UUID.randomUUID()
+            val file = filePart("doc.pdf", "content".toByteArray())
+            val beschrijving = "a".repeat(1000)
+            whenever(virusScanService.scan(any<ByteArray>()))
+                .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
+            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(stubDocument())
+
+            val response = resource.uploadDocument(taakId, file, null, authentication, beschrijving)
+
+            assertEquals(HttpStatus.OK, response.statusCode)
+            verify(documentenApiService).uploadDocument(any(), any(), any(), anyOrNull(), eq(beschrijving))
         }
 
     private fun filePart(
