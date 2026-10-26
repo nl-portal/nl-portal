@@ -46,6 +46,21 @@ export function serializeAttrs(
     .join(" ");
 }
 
+/**
+ * Whether the component label is hidden through the Form.io "Hide label" setting.
+ */
+export function isLabelHidden(ctx: any): boolean {
+  return !!ctx.component?.hideLabel;
+}
+
+/**
+ * Translated component label to use as aria-label when the visible label is hidden.
+ */
+export function hiddenLabelAria(ctx: any): string | undefined {
+  if (!isLabelHidden(ctx)) return undefined;
+  return ctx.t(ctx.component.label || "") || undefined;
+}
+
 export function wrapperOpen(ctx: any, inputId: string, baseModifier = "text") {
   const hasErrors = Array.isArray(ctx.errors) && ctx.errors.length > 0;
   const cls =
@@ -56,7 +71,7 @@ export function wrapperOpen(ctx: any, inputId: string, baseModifier = "text") {
 
   return `
     <div class="${cls}" ref="element">
-      ${ctx.component.label !== false ? `<label for="${escape(inputId)}" class="utrecht-form-label" ref="label">${labelText}</label>` : ""}
+      ${ctx.component.label !== false && !isLabelHidden(ctx) ? `<label for="${escape(inputId)}" class="utrecht-form-label" ref="label">${labelText}</label>` : ""}
       ${description ? `<div class="utrecht-form-field-description">${description}</div>` : ""}
   `;
 }
