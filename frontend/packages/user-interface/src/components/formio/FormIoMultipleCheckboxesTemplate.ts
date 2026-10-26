@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 import { escape } from "lodash-es";
-import { errorsBlock } from "./FormIoTemplateUtils";
+import {
+  errorsBlock,
+  hiddenLabelAria,
+  isLabelHidden,
+} from "./FormIoTemplateUtils";
 
 export const nlPortalMultipleCheckboxes = {
   form: (ctx: any) => {
@@ -24,6 +28,7 @@ export const nlPortalMultipleCheckboxes = {
     const legend = escape(ctx.t(component.label || ""));
     const description = escape(ctx.t(component.description || ""));
     const hasErrors = Array.isArray(ctx.errors) && ctx.errors.length > 0;
+    const ariaLabel = hiddenLabelAria(ctx);
     const fieldsetClass = `utrecht-form-fieldset${hasErrors ? " utrecht-form-fieldset--invalid" : ""}`;
 
     const valueMap =
@@ -78,9 +83,10 @@ export const nlPortalMultipleCheckboxes = {
           ref="fieldset"
           class="utrecht-form-fieldset__fieldset utrecht-form-fieldset--html-fieldset"
           ${description ? `aria-describedby="${idBase}-description"` : ""}
+          ${ariaLabel ? `aria-label="${escape(ariaLabel)}"` : ""}
         >
           ${
-            legend
+            legend && !isLabelHidden(ctx)
               ? `<legend class="utrecht-form-fieldset__legend utrecht-form-fieldset__legend--html-legend">${legend}</legend>`
               : ""
           }

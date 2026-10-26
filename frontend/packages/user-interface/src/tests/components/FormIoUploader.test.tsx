@@ -13,11 +13,265 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeAll, afterEach } from "vitest";
+import { fireEvent, waitFor } from "@testing-library/react";
+import { Formio } from "@formio/js";
 import FormIoUploader from "../../components/formio/FormIoUploader";
+
+const createUploader = (component: object, data: object) =>
+  new FormIoUploader(
+    { type: "portalFileUpload", key: "bestanden.upload", ...component },
+    {},
+    data,
+  );
 
 describe("FormIoUploader", () => {
   it("is truthy", () => {
     expect(FormIoUploader).toBeTruthy();
+  });
+
+  describe("getBeschrijving", () => {
+    it("returns the value at beschrijvingPath", () => {
+      const uploader = createUploader(
+        { beschrijvingPath: "bestanden.beschrijving" },
+        { bestanden: { beschrijving: "Kopie identiteitsbewijs" } },
+      );
+
+      expect(uploader.getBeschrijving()).toBe("Kopie identiteitsbewijs");
+    });
+
+    it("prefers the value in the uploader's own row over the form root", () => {
+      const uploader = createUploader(
+        { beschrijvingPath: "item.omschrijving" },
+        { item: { omschrijving: "Bestand 2" } },
+      );
+      Object.defineProperty(uploader, "rootValue", {
+        get: () => ({ item: { omschrijving: "Root" } }),
+      });
+
+      expect(uploader.getBeschrijving()).toBe("Bestand 2");
+    });
+
+    it("falls back to the form root when the row has no value", () => {
+      const uploader = createUploader(
+        { beschrijvingPath: "bestanden.beschrijving" },
+        { documentUpload: [] },
+      );
+      Object.defineProperty(uploader, "rootValue", {
+        get: () => ({ bestanden: { beschrijving: "Kopie identiteitsbewijs" } }),
+      });
+
+      expect(uploader.getBeschrijving()).toBe("Kopie identiteitsbewijs");
+    });
+
+    it("returns undefined when beschrijvingPath is not set", () => {
+      const uploader = createUploader(
+        {},
+        { bestanden: { beschrijving: "Kopie identiteitsbewijs" } },
+      );
+
+      expect(uploader.getBeschrijving()).toBeUndefined();
+    });
+
+    it("returns undefined when the path does not resolve", () => {
+      const uploader = createUploader(
+        { beschrijvingPath: "bestanden.onbekend" },
+        { bestanden: {} },
+      );
+
+      expect(uploader.getBeschrijving()).toBeUndefined();
+    });
+
+    it.each([
+      ["an empty string", ""],
+      ["whitespace", "   "],
+      ["a number", 42],
+      ["an object", { tekst: "Kopie" }],
+    ])("returns undefined when the value is %s", (_, value) => {
+      const uploader = createUploader(
+        { beschrijvingPath: "bestanden.beschrijving" },
+        { bestanden: { beschrijving: value } },
+      );
+
+      expect(uploader.getBeschrijving()).toBeUndefined();
+    });
+  });
+
+  describe("upload", () => {
+    const fetchMock = vi.fn();
+
+    beforeAll(() => {
+      FormIoUploader.register();
+      sessionStorage.setItem("REST_URI", "http://localhost/api");
+    });
+
+    afterEach(() => {
+      fetchMock.mockReset();
+      vi.unstubAllGlobals();
+      document.body.innerHTML = "";
+    });
+
+    const uploadFile = async (
+      uploaderComponent: object,
+      response = new Response(JSON.stringify({ url: "http://document" })),
+    ) => {
+      fetchMock.mockResolvedValue(response);
+      vi.stubGlobal("fetch", fetchMock);
+
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+
+      await Formio.createForm(
+        element,
+        {
+          components: [
+            {
+              key: "bestanden.beschrijving",
+              type: "hidden",
+              input: true,
+              defaultValue: "Kopie identiteitsbewijs partner",
+            },
+            {
+              key: "bestanden.partnerID",
+              type: "portalFileUpload",
+              input: true,
+              label: "Identiteitsbewijs",
+              ...uploaderComponent,
+            },
+          ],
+        },
+        { taakId: "taak-id" },
+      );
+
+      const input = await waitFor(() => {
+        const fileInput =
+          element.querySelector<HTMLInputElement>('input[type="file"]');
+        expect(fileInput).not.toBeNull();
+        return fileInput!;
+      });
+
+      fireEvent.change(input, {
+        target: { files: [new File(["inhoud"], "id.pdf")] },
+      });
+
+      await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+      const [url, init] = fetchMock.mock.calls[0];
+      return { element, url, body: init.body as FormData };
+    };
+
+    it("sends the value of the hidden field as beschrijving", async () => {
+      const { url, body } = await uploadFile({
+        beschrijvingPath: "bestanden.beschrijving",
+      });
+
+      expect(url).toBe("http://localhost/api/taak/taak-id/document/content");
+      expect(body.get("beschrijving")).toBe("Kopie identiteitsbewijs partner");
+    });
+
+    it("sends the beschrijving of the row the file is uploaded in", async () => {
+      fetchMock.mockResolvedValue(
+        new Response(JSON.stringify({ url: "http://document" })),
+      );
+      vi.stubGlobal("fetch", fetchMock);
+
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+
+      const form = await Formio.createForm(
+        element,
+        {
+          components: [
+            {
+              key: "bestanden.opTeVragenInformatie",
+              type: "datagrid",
+              input: true,
+              components: [
+                {
+                  key: "informatieverzoekItem.omschrijvingAanvrager",
+                  type: "hidden",
+                  input: true,
+                },
+                {
+                  key: "documentUpload",
+                  type: "portalFileUpload",
+                  input: true,
+                  beschrijvingPath:
+                    "informatieverzoekItem.omschrijvingAanvrager",
+                },
+              ],
+            },
+          ],
+        },
+        { taakId: "taak-id" },
+      );
+
+      await form.setSubmission({
+        data: {
+          bestanden: {
+            opTeVragenInformatie: [0, 1, 2].map((index) => ({
+              informatieverzoekItem: {
+                omschrijvingAanvrager: `Bestand ${index}`,
+              },
+              documentUpload: [],
+            })),
+          },
+        },
+      });
+
+      const inputs = await waitFor(() => {
+        const fileInputs =
+          element.querySelectorAll<HTMLInputElement>('input[type="file"]');
+        expect(fileInputs).toHaveLength(3);
+        return fileInputs;
+      });
+
+      fireEvent.change(inputs[2], {
+        target: { files: [new File(["inhoud"], "id.pdf")] },
+      });
+
+      await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+      const body = fetchMock.mock.calls[0][1].body as FormData;
+      expect(body.get("beschrijving")).toBe("Bestand 2");
+    });
+
+    it("does not send beschrijving without beschrijvingPath", async () => {
+      const { body } = await uploadFile({});
+
+      expect(body.has("file")).toBe(true);
+      expect(body.has("beschrijving")).toBe(false);
+    });
+
+    it("shows a message when the beschrijving is too long", async () => {
+      const { element } = await uploadFile(
+        { beschrijvingPath: "bestanden.beschrijving" },
+        new Response(JSON.stringify({ error: "BESCHRIJVING_TOO_LONG" }), {
+          status: 400,
+        }),
+      );
+
+      await waitFor(() =>
+        expect(element.textContent).toContain(
+          "De beschrijving van het document is te lang. Neem contact op met de gemeente.",
+        ),
+      );
+    });
+
+    it("shows the generic error for other failed uploads", async () => {
+      const { element } = await uploadFile(
+        {},
+        new Response("Internal Server Error", { status: 500 }),
+      );
+
+      await waitFor(() =>
+        expect(element.textContent).toContain(
+          "Er is een fout opgetreden tijdens het uploaden van het bestand.",
+        ),
+      );
+      expect(element.textContent).not.toContain(
+        "De beschrijving van het document is te lang. Neem contact op met de gemeente.",
+      );
+    });
   });
 });

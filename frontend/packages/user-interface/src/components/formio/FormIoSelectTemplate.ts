@@ -15,6 +15,7 @@
  */
 import {
   errorsBlock,
+  hiddenLabelAria,
   serializeAttrs,
   wrapperOpen,
 } from "./FormIoTemplateUtils";
@@ -61,6 +62,7 @@ export const nlPortalSelect = {
       disabled: !!ctx.disabled || undefined,
       "aria-invalid": hasErrors ? "true" : undefined,
       "aria-describedby": needsDescribedBy ? errorId : undefined,
+      "aria-label": component.type === "day" ? undefined : hiddenLabelAria(ctx),
       multiple: component.multiple || undefined,
       name: hasNameInAttr ? undefined : `data[${component.key}]`,
     };

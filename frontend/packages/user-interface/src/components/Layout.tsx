@@ -43,6 +43,7 @@ import { nlPortalRadioSelectBoxesWrapper } from "./formio/FormIoRadioSelectBoxes
 import "./formio/FormIoTemplates.scss";
 import { nlPortalAddress } from "./formio/FormIoAddressTemplate";
 import { nlPortalWell } from "./formio/FormioWellTemplate";
+import { nlPortalFieldTemplates } from "./formio/FormIoFieldTemplate";
 import { SkipLink } from "@gemeente-denhaag/skip-link";
 import styles from "./Layout.module.scss";
 import { FormattedMessage } from "react-intl";
@@ -90,6 +91,7 @@ const Layout = ({
     const base = Templates.templates.bootstrap || Templates.current || {};
     Templates.templates["nl-portal"] = {
       ...base,
+      ...nlPortalFieldTemplates,
       address: nlPortalAddress,
       input: nlPortalInput,
       well: nlPortalWell,

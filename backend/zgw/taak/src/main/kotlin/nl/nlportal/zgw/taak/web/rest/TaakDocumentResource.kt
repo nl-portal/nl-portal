@@ -52,8 +52,19 @@ class TaakDocumentResource(
         @RequestPart("file") file: FilePart,
         @RequestPart("informatieobjecttype", required = false) informatieobjecttype: String?,
         authentication: CommonGroundAuthentication,
+        @RequestPart("beschrijving", required = false) beschrijving: String? = null,
     ): ResponseEntity<Any> {
         taakService.getTaakByIdV2(taakId, authentication)
+
+        if ((beschrijving?.length ?: 0) > 1000) {
+            return ResponseEntity(
+                mapOf(
+                    "error" to "BESCHRIJVING_TOO_LONG",
+                    "message" to "beschrijving may not be longer than 1000 characters",
+                ),
+                HttpStatus.BAD_REQUEST,
+            )
+        }
 
         val sanitizedFilename = FilenameSanitizer.sanitize(file.filename())
         val bufferedContent = bufferFileContent(file)
@@ -71,6 +82,7 @@ class TaakDocumentResource(
                     sanitizedFilename,
                     documentApi,
                     informatieobjecttype,
+                    beschrijving,
                 ),
             )
         } catch (e: Exception) {
