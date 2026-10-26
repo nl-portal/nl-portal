@@ -91,7 +91,6 @@ services:
 
     openklant-2:
         image: maykinmedia/open-klant:2.16.0
-        build: .
         container_name: openklant-2
         profiles:
             - zgw
