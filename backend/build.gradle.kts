@@ -128,6 +128,13 @@ subprojects {
         imports {
             mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES) {
                 bomProperty("graphql-java.version", Versions.graphqlJava)
+                bomProperty("netty.version", Versions.netty)
+                bomProperty("postgresql.version", Versions.postgresql)
+                bomProperty("httpclient5.version", Versions.httpClient5)
+                bomProperty("httpcore5.version", Versions.httpCore5)
+                bomProperty("log4j2.version", Versions.log4j2)
+                bomProperty("jackson-bom.version", Versions.jackson)
+                bomProperty("commons-lang3.version", Versions.apacheCommons)
             }
         }
     }

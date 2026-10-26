@@ -22,7 +22,7 @@ object Dependencies {
     val jsonWebTokensJackson by lazy { "io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebTokens}" }
     val kotlinCoroutines by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutines}" }
     val kotlinCoroutinesReactor by lazy { "org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${Versions.kotlinCoroutines}" }
-    val springCloudConfig by lazy { "org.springframework.cloud:spring-cloud-starter-config:${Versions.springCloud}" }
+    val springCloudConfig by lazy { "org.springframework.cloud:spring-cloud-starter-config:${Versions.springCloudConfig}" }
     val springCloudBootstrap by lazy { "org.springframework.cloud:spring-cloud-starter-bootstrap:${Versions.springCloud}" }
 
     val clamAv by lazy { "xyz.capybara:clamav-client:${Versions.clamAvVersion}" }
