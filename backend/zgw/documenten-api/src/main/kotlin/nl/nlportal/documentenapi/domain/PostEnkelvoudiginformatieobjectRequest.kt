@@ -15,6 +15,8 @@
  */
 package nl.nlportal.documentenapi.domain
 
+import com.fasterxml.jackson.annotation.JsonInclude
+
 data class PostEnkelvoudiginformatieobjectRequest(
     val bronorganisatie: String,
     val creatiedatum: String,
@@ -26,4 +28,6 @@ data class PostEnkelvoudiginformatieobjectRequest(
     var inhoud: String? = null,
     val indicatieGebruiksrecht: Boolean?,
     val informatieobjecttype: String,
+    @get:JsonInclude(JsonInclude.Include.NON_NULL)
+    val beschrijving: String? = null,
 )
