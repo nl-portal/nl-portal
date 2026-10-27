@@ -37,6 +37,7 @@ import nl.nlportal.vtbapi.client.domain.VTBBerichtUpdate
 import nl.nlportal.vtbapi.client.domain.VTBBijlage
 import nl.nlportal.vtbapi.client.path.VTBBerichtTypes
 import nl.nlportal.vtbapi.client.path.VTBBerichten
+import nl.nlportal.vtbapi.domain.VTBBerichtenPage
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
@@ -50,28 +51,27 @@ class VTBBerichtenService(
         pageNumber: Int,
         pageSize: Int,
         isOnGeopend: Boolean? = null,
-    ): ResultPage<VTBBericht> {
-        try {
-            val searchVariables =
-                mutableListOf<Pair<VTBBerichtFilters, Any>>(
-                    VTBBerichtFilters.PAGE to pageNumber.toString(),
-                    VTBBerichtFilters.PAGE_SIZE to pageSize.toString(),
-                    VTBBerichtFilters.ONTVANGER to authentication.getUrn(),
-                    VTBBerichtFilters.PUBLICATIEDATUM_LTE to LocalDateTime.now().toString(),
-                )
+    ): VTBBerichtenPage {
+        // try {
+        val searchVariables =
+            mutableListOf<Pair<VTBBerichtFilters, Any>>(
+                VTBBerichtFilters.PAGE to pageNumber.toString(),
+                VTBBerichtFilters.PAGE_SIZE to pageSize.toString(),
+                VTBBerichtFilters.ONTVANGER to authentication.getUrn(),
+                VTBBerichtFilters.PUBLICATIEDATUM_LTE to LocalDateTime.now().toString(),
+            )
 
-            isOnGeopend?.let {
-                searchVariables.add(VTBBerichtFilters.GEOPENDOP_NULL to isOnGeopend)
-            }
-            return vtbClient.path<VTBBerichten>().get(searchVariables)
-        } catch (e: Exception) {
-            logger.error { "Error getting berichten with cause: " + e.message }
+        isOnGeopend?.let {
+            searchVariables.add(VTBBerichtFilters.GEOPENDOP_NULL to isOnGeopend)
         }
-
-        return ResultPage(
-            count = 0,
-            results = emptyList(),
+        return VTBBerichtenPage.fromResultPage(
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            resultPage = vtbClient.path<VTBBerichten>().get(searchVariables),
         )
+        // } catch (e: Exception) {
+        //    logger.error { "Error getting berichten with cause: " + e.message }
+        // }
     }
 
     suspend fun getUnopenedBerichtenCount(
@@ -82,7 +82,7 @@ class VTBBerichtenService(
             pageNumber = 1,
             pageSize = 1,
             isOnGeopend = true,
-        ).count
+        ).totalElements
 
     suspend fun getBericht(
         authentication: CommonGroundAuthentication,

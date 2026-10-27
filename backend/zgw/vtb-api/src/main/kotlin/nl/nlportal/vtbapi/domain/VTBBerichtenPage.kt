@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.berichten.graphql
+package nl.nlportal.vtbapi.domain
 
 import nl.nlportal.graphql.Page
 import nl.nlportal.vtbapi.client.domain.ResultPage

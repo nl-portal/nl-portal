@@ -16,12 +16,11 @@
 package nl.nlportal.berichten.graphql
 
 import java.util.UUID
-import nl.nlportal.berichten.domain.Bericht
-import nl.nlportal.berichten.domain.BerichtType
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.vtbapi.client.domain.VTBBericht
 import nl.nlportal.vtbapi.client.domain.VTBBerichtType
+import nl.nlportal.vtbapi.domain.VTBBerichtenPage
 import nl.nlportal.vtbapi.service.VTBBerichtenService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -48,15 +47,10 @@ class VTBBerichtenQuery(
         @Argument pageNumber: Int? = 1,
         @Argument pageSize: Int? = 20,
     ): VTBBerichtenPage =
-        VTBBerichtenPage.fromResultPage(
+        vtbBerichtenService.getBerichten(
+            authentication = authentication,
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
-            resultPage =
-                vtbBerichtenService.getBerichten(
-                    authentication = authentication,
-                    pageNumber = pageNumber ?: 1,
-                    pageSize = pageSize ?: 20,
-                ),
         )
 
     @QueryMapping
