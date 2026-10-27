@@ -120,6 +120,7 @@ type VTBBericht {
     publicatiedatum: ZonedDateTime
     referentie: String
     geopendOp: ZonedDateTime
+    geopend: Boolean
     einddatumHandelingsTermijn: ZonedDateTime
     isGerelateerdAan: [VTBIsGerelateerdAan]
     documenten: [Document!]!

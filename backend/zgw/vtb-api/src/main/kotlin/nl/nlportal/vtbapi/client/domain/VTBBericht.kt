@@ -29,6 +29,7 @@ class VTBBericht(
     val referentie: String? = null,
     val ontvanger: String,
     val geopendOp: LocalDateTime? = null,
+    var geopend: Boolean? = false,
     val berichtType: String,
     val isGerelateerdAan: List<VTBIsGerelateerdAan>? = emptyList(),
     val einddatumHandelingsTermijn: LocalDateTime? = null,

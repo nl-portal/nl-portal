@@ -182,7 +182,7 @@ object TestHelper {
                     }
                     einddatumHandelingsTermijn
                     geopendOp
-        
+                    geopend
                     onderwerp
                     publicatiedatum
                     referentie
@@ -207,7 +207,7 @@ object TestHelper {
                 }
                 einddatumHandelingsTermijn
                 geopendOp
-        
+                geopend
                 onderwerp
                 publicatiedatum
                 referentie
@@ -811,7 +811,7 @@ object TestHelper {
               "publicatiedatum": "2026-08-27T10:22:33Z",
               "referentie": "",
               "ontvanger": "urn:nld:brp.bsn:999993847",
-              "geopendOp": null,
+              "geopendOp": "2026-08-27T10:22:33Z",
               "berichtType": "http://localhost:10001/berichten/api/v1/berichttypen/d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
               "berichtTypeUrn": "urn:maykin:berichten:berichttype:d9fabd4e-f6bd-43b5-a8ce-af412d7dd2e2",
               "isGerelateerdAan": [],

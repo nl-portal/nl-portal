@@ -102,12 +102,12 @@ class VTBBerichtenService(
 
         // if bericht geopendOp is not null, direct return bericht
         if (bericht.geopendOp != null) {
-            return bericht
+            return bericht.apply { geopend = true }
         }
 
         return updateBericht(
             id = id,
-        )
+        ).apply { geopend = geopendOp != null }
     }
 
     suspend fun updateBericht(id: UUID): VTBBericht =

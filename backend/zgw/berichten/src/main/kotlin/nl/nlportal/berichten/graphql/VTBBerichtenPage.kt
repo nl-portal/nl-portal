@@ -37,6 +37,7 @@ class VTBBerichtenPage(
             resultPage: ResultPage<VTBBericht>,
         ): VTBBerichtenPage {
             val berichten = resultPage.results.map { it }.sortedByDescending { it.publicatiedatum }
+            berichten.forEach { it.geopend = it.geopendOp != null }
 
             return VTBBerichtenPage(
                 number = pageNumber,
