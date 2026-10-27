@@ -54,7 +54,7 @@ object TestHelper {
         query {
             getBerichten(pageNumber: 1, pageSize: 10) {
                 content {
-                    id
+                    uuid
                     berichtTekst
                     berichtType
                     bijlages
@@ -82,7 +82,7 @@ object TestHelper {
         """
         query {
             getBericht(id: "9e021130-8cbd-4c6f-846a-677448e21ce8") {
-                id
+                uuid
                 berichtTekst
                 berichtType
                 bijlages
@@ -106,7 +106,7 @@ object TestHelper {
         """
         query {
             getBericht(id: "a4961c4a-29a7-4cc7-9d5d-bceed1dfccba") {
-                id
+                uuid
                 berichtTekst
                 berichtType
                 bijlages

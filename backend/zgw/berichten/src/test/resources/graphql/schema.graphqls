@@ -36,7 +36,7 @@ type Bericht {
     einddatumHandelingstermijn: ZonedDateTime!
     geopend: Boolean!
     handelingsperspectief: BerichtHandelingsperspectief!
-    id: UUID
+    uuid: UUID
     identificatie: BerichtIdentificatie!
     onderwerp: String!
     publicatiedatum: ZonedDateTime!
@@ -121,12 +121,12 @@ type VTBBericht {
     referentie: String
     geopendOp: ZonedDateTime
     einddatumHandelingsTermijn: ZonedDateTime
-    isGerelateerdAan: [IsGerelateerdAan]
+    isGerelateerdAan: [VTBIsGerelateerdAan]
     documenten: [Document!]!
     berichtType: VTBBerichtType!
 }
 
-type IsGerelateerdAan {
+type VTBIsGerelateerdAan {
     urn: String
 }
 

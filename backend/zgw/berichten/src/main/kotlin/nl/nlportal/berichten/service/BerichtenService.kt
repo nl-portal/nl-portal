@@ -100,7 +100,7 @@ class BerichtenService(
     ): Bericht? {
         val objectsApiBericht = objectenApiService.getObjectById<Bericht>(id.toString()) ?: return null
 
-        val berichtObject = objectsApiBericht.record.data.copy(id = id)
+        val berichtObject = objectsApiBericht.record.data.copy(uuid = id)
 
         if (berichtObject.identificatie.value != authentication.userId) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized for this Bericht")
@@ -116,7 +116,7 @@ class BerichtenService(
         updateRequest.record.correctedBy = authentication.userId
         updateRequest.record.correctionFor = objectsApiBericht.record.index.toString()
         val updatedObjectsApiBericht = objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
-        return updatedObjectsApiBericht?.record?.data?.copy(id = id)
+        return updatedObjectsApiBericht?.record?.data?.copy(uuid = id)
     }
 
     suspend fun getBerichtDocumentContent(

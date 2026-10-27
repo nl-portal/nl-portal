@@ -29,7 +29,7 @@ import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Bericht(
-    val id: UUID? = null,
+    val uuid: UUID? = null,
     val berichtTekst: String,
     var berichtType: BerichtType,
     val bijlages: List<String>? = emptyList(),

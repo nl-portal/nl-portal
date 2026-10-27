@@ -39,7 +39,7 @@ class BerichtenPage(
             pageSize: Int,
             resultPage: ResultPage<ObjectsApiObject<Bericht>>,
         ): BerichtenPage {
-            val berichten = resultPage.results.map { it.record.data.copy(id = it.uuid) }.sortedByDescending { it.publicatiedatum }
+            val berichten = resultPage.results.map { it.record.data.copy(uuid = it.uuid) }.sortedByDescending { it.publicatiedatum }
 
             return BerichtenPage(
                 number = pageNumber,
