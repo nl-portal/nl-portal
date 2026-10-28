@@ -69,9 +69,6 @@ class VTBBerichtenService(
             pageSize = pageSize,
             resultPage = vtbClient.path<VTBBerichten>().get(searchVariables),
         )
-        // } catch (e: Exception) {
-        //    logger.error { "Error getting berichten with cause: " + e.message }
-        // }
     }
 
     suspend fun getUnopenedBerichtenCount(

@@ -84,7 +84,27 @@
     "fields": {
       "uuid": "7c8d3611-364d-4b4a-a5bc-8e25d9ec85c7",
       "bericht": 1,
-      "informatie_object": "urn:maykin:bijlage:1",
+      "informatie_object": "urn:nld:denhaag:zaken-main:drc:enkelvoudiginformatieobject:uuid:f8746ac4-a231-423d-b1fa-4b4dd351fbe4",
+      "omschrijving": "test"
+    }
+  },
+  {
+    "model": "berichten.bijlage",
+    "pk": 2,
+    "fields": {
+      "uuid": "555ea62c-1c29-459d-88fc-84ce48f6ac78",
+      "bericht": 2,
+      "informatie_object": "urn:nld:denhaag:zaken-main:drc:enkelvoudiginformatieobject:uuid:f8746ac4-a231-423d-b1fa-4b4dd351fbe4",
+      "omschrijving": "test"
+    }
+  },
+  {
+    "model": "berichten.bijlage",
+    "pk": 3,
+    "fields": {
+      "uuid": "b520fd10-0677-41e4-936b-12be1fe06a87",
+      "bericht": 3,
+      "informatie_object": "urn:nld:denhaag:zaken-main:drc:enkelvoudiginformatieobject:uuid:f8746ac4-a231-423d-b1fa-4b4dd351fbe4",
       "omschrijving": "test"
     }
   }

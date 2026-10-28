@@ -110,6 +110,12 @@ nl-portal:
                         secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
                         rsin: "051845623"
                         documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/36e40d95-e411-4884-b08f-e5864ec8167f
+                    zaken-main:
+                        url: http://localhost:8001/documenten/api/v1
+                        clientId: nl-portal
+                        secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
+                        rsin: "051845623"
+                        documentTypeUrl: http://localhost:8001/catalogi/api/v1/informatieobjecttypen/36e40d95-e411-4884-b08f-e5864ec8167f
         virusscan:
             clamav:
                 enabled: true
