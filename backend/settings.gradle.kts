@@ -70,6 +70,7 @@ include(
     "form",
     "haalcentraal-hr",
     "haalcentraal2",
+    "iko-api",
     "zgw:taak",
     "zgw:documenten-api",
     "zgw:berichten",

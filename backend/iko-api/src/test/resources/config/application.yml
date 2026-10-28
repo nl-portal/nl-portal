@@ -1,0 +1,21 @@
+graphql:
+    packages:
+        - "nl.nlportal"
+
+nl-portal:
+    config:
+        ikoapi:
+            enabled: true
+            properties:
+                url: http://localhost:0
+                token-url: http://localhost:0/token
+                client-id: nl-portal
+                client-secret: secret
+                allowed-profiles: personen
+
+spring:
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: http://localhost:8082/auth/realms/nlportal
