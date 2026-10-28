@@ -15,7 +15,7 @@
  */
 import { Components } from "@formio/js";
 import { Root, createRoot } from "react-dom/client";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { get } from "lodash-es";
 import { FormField } from "@gemeente-denhaag/form-field";
 import { FormLabel } from "@gemeente-denhaag/form-label";
@@ -65,8 +65,20 @@ const PortalFileUpload = ({
 }: PortalFileUploadProps) => {
   const [errorMessageId, setErrorMessageId] = useState<string | null>(null);
   const [fileList, setFileList] = useState<UploadedFile[]>(initialValue);
+  const fileListRef = useRef(fileList);
 
   const intl = useIntl();
+
+  const updateFileList = (
+    update: (files: UploadedFile[]) => UploadedFile[],
+  ) => {
+    const files = update(fileListRef.current);
+    fileListRef.current = files;
+    setFileList(files);
+
+    // Add only the files that have been successfully uploaded to form.io.
+    onChange(files.filter((file) => file.isUploaded !== false && !!file.url));
+  };
 
   const handleError = (
     tempId?: string,
@@ -75,7 +87,7 @@ const PortalFileUpload = ({
     setErrorMessageId(messageId);
 
     if (tempId) {
-      setFileList((prev) => prev.filter((item) => item.id !== tempId));
+      updateFileList((prev) => prev.filter((item) => item.id !== tempId));
     }
   };
 
@@ -116,7 +128,7 @@ const PortalFileUpload = ({
       isUploaded: false,
     };
 
-    setFileList((prev) => (multiple ? [tempItem, ...prev] : [tempItem]));
+    updateFileList((prev) => (multiple ? [tempItem, ...prev] : [tempItem]));
 
     const upload = fetch(uploadLink, {
       method: "POST",
@@ -138,6 +150,11 @@ const PortalFileUpload = ({
         }
 
         const jsonResponse = await response.json();
+        if (typeof jsonResponse?.url !== "string" || !jsonResponse.url.trim()) {
+          handleError(tempId);
+          return;
+        }
+
         const uploadedFile: UploadedFile = {
           url: jsonResponse?.url,
           name: file.name,
@@ -146,7 +163,7 @@ const PortalFileUpload = ({
 
         setErrorMessageId(null);
 
-        setFileList((prev) =>
+        updateFileList((prev) =>
           prev.map((item) =>
             item.id === tempId
               ? { ...item, ...uploadedFile, isUploaded: true }
@@ -166,10 +183,6 @@ const PortalFileUpload = ({
       onUploadEnd(upload);
     });
   };
-
-  useEffect(() => {
-    onChange(fileList);
-  }, [fileList, onChange]);
 
   return (
     <FormField invalid={errorMessageId !== null}>
@@ -207,10 +220,10 @@ const PortalFileUpload = ({
           name={file.name}
           size={String(file.size)}
           onClick={() =>
-            setFileList((prev) => prev.filter((item) => item.id !== file.id))
+            updateFileList((prev) => prev.filter((item) => item.id !== file.id))
           }
           removable
-          loading={!file.isUploaded}
+          loading={file.isUploaded === false || !file.url}
         />
       ))}
     </FormField>
@@ -299,6 +312,7 @@ class FormIoUploader extends FieldComponent {
   onUploadEndHandler = (upload: Promise<void>) => {
     if (!this.pendingUploads.delete(upload)) return;
 
+    this.root?.onChange();
     this.emit("fileUploadingEnd", upload);
   };
 
