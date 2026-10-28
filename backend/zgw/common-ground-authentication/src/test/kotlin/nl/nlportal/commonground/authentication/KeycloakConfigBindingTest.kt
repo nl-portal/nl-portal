@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.autoconfigure.AutoConfigurations
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.runner.ApplicationContextRunner
+import org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration
+import org.springframework.cloud.context.properties.ConfigurationPropertiesRebinder
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.MapPropertySource
 import org.springframework.core.env.SystemEnvironmentPropertySource
@@ -131,6 +133,26 @@ internal class KeycloakConfigBindingTest {
                     TokenExchangeVersion.V2,
                     context.getBean(KeycloakConfig::class.java).tokenExchangeVersion,
                 )
+            }
+    }
+
+    @Test
+    fun `a configuration refresh keeps the bound values`() {
+        contextRunner
+            .withConfiguration(AutoConfigurations.of(ConfigurationPropertiesRebinderAutoConfiguration::class.java))
+            .withPropertyValues(
+                "nl-portal.authentication.keycloak.token-exchange-version=v2",
+                "nl-portal.authentication.keycloak.resource=nl-portal-m2m",
+                "nl-portal.authentication.keycloak.audience=nl-portal-audience",
+                "nl-portal.authentication.keycloak.credentials.secret=a-secret",
+            ).run { context ->
+                context.getBean(ConfigurationPropertiesRebinder::class.java).rebind()
+
+                val config = context.getBean(KeycloakConfig::class.java)
+                assertEquals(TokenExchangeVersion.V2, config.tokenExchangeVersion)
+                assertEquals("nl-portal-m2m", config.resource)
+                assertEquals("nl-portal-audience", config.audience)
+                assertEquals("a-secret", config.credentials.secret)
             }
     }
 
