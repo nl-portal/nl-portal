@@ -312,7 +312,6 @@ class FormIoUploader extends FieldComponent {
   onUploadEndHandler = (upload: Promise<void>) => {
     if (!this.pendingUploads.delete(upload)) return;
 
-    this.root?.onChange();
     this.emit("fileUploadingEnd", upload);
   };
 
