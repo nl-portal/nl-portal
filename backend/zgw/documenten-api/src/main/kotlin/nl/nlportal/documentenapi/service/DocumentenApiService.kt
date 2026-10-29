@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import nl.nlportal.commonground.authentication.URN_HR_PREFIX
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.client.DocumentApisConfig.DocumentenApisConfigProperties
 import nl.nlportal.documentenapi.client.DocumentenApiClient
@@ -46,6 +47,17 @@ class DocumentenApiService(
             extractId(documentUrl),
             documentenApisConfigProperties.getConfigForDocumentUrl(documentUrl),
         )
+
+    suspend fun getDocumentWithUrn(documentUrn: String): Document {
+        val (documentApi, uuid) =
+            getDocumentApiAndUUIDFromURN(
+                documentUrn = documentUrn,
+            )
+        return documentenApiClient.getDocument(
+            id = uuid,
+            documentApi = documentApi,
+        )
+    }
 
     fun getDocumentContentStreaming(
         documentId: UUID,
@@ -110,4 +122,22 @@ class DocumentenApiService(
             document.status in documentenApisConfigProperties.statusWhitelist &&
                 document.vertrouwelijkheidaanduiding in documentenApisConfigProperties.vertrouwelijkheidsaanduidingWhitelist
         }
+
+    fun getDocumentApiAndUUIDFromURN(
+        documentUrn: String,
+    ): Pair<String, UUID> {
+        val splitURN = documentUrn.split(":")
+        require(splitURN.size == 8) { "Invalid document Urn format." }
+
+        val documentApi = splitURN[3]
+        val uuid = splitURN[7]
+
+        // to check if document is configured
+        documentenApisConfigProperties.getConfig(documentApi)
+        return documentApi to UUID.fromString(uuid)
+    }
+
+    fun getDocumentUUIDFromURN(
+        documentUrn: String,
+    ): UUID = getDocumentApiAndUUIDFromURN(documentUrn).second
 }

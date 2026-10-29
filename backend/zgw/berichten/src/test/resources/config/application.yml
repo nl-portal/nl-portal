@@ -25,10 +25,21 @@ nl-portal:
                         url: https://example.org/documenten/api/v1
                         clientId: valtimo_client
                         secret: e09b8bc5-5831-4618-ab28-111111111111
+                    zaken-main:
+                        url: http://localhost:10001
+                        clientId: valtimo_client
+                        secret: e09b8bc5-5831-4618-ab28-41411304309d
+                        rsin: "051845623"
+                        documentTypeUrl: http://localhost:10001/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000
         berichten:
             enabled: true
             properties:
                 bericht-object-type-url: "https://example.com/api/v1/objecttypes/78731088-430f-49fd-9a4c-80ddd42ded28"
+        vtbapi:
+            enabled: true
+            properties:
+                token: bf329a5c-54f0-49a4-9afe-a83052790e6a
+                url: http://localhost:10001
 
 spring:
     security:

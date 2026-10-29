@@ -16,11 +16,14 @@
 package nl.nlportal.berichten.autoconfigure
 
 import nl.nlportal.berichten.graphql.BerichtenQuery
+import nl.nlportal.berichten.graphql.VTBBerichtenQuery
 import nl.nlportal.berichten.security.config.BerichtDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.berichten.service.BerichtenService
 import nl.nlportal.berichten.web.rest.BerichtDocumentResource
+import nl.nlportal.berichten.web.rest.VTBBerichtDocumentResource
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
+import nl.nlportal.vtbapi.service.VTBBerichtenService
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -55,4 +58,24 @@ class BerichtenAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(BerichtDocumentResourceHttpSecurityConfigurer::class)
     fun berichtDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer = BerichtDocumentResourceHttpSecurityConfigurer()
+
+    @Bean
+    @ConditionalOnMissingBean(VTBBerichtenQuery::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["vtbapi.enabled"], havingValue = "true")
+    fun vtbBerichtenQuery(
+        vtbBerichtenService: VTBBerichtenService,
+    ): VTBBerichtenQuery =
+        VTBBerichtenQuery(
+            vtbBerichtenService = vtbBerichtenService,
+        )
+
+    @Bean
+    @ConditionalOnMissingBean(VTBBerichtDocumentResource::class)
+    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["vtbapi.enabled"], havingValue = "true")
+    fun vtbBerichtDocumentResource(
+        vtbBerichtenService: VTBBerichtenService,
+    ): VTBBerichtDocumentResource =
+        VTBBerichtDocumentResource(
+            vtbBerichtenService = vtbBerichtenService,
+        )
 }

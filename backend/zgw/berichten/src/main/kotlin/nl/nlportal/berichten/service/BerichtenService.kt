@@ -16,46 +16,83 @@
 package nl.nlportal.berichten.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.time.LocalDate
+import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import nl.nlportal.berichten.autoconfigure.BerichtenConfiguration.BerichtenConfigurationProperties
 import nl.nlportal.berichten.domain.Bericht
 import nl.nlportal.berichten.graphql.BerichtenPage
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.zgw.objectenapi.domain.Comparator
 import nl.nlportal.zgw.objectenapi.domain.Comparator.EQUAL_TO
 import nl.nlportal.zgw.objectenapi.domain.Comparator.LOWER_THAN_OR_EQUAL_TO
 import nl.nlportal.zgw.objectenapi.domain.Comparator.STRING_CONTAINS
 import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
-import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
-import nl.nlportal.zgw.objectenapi.domain.ResultPage
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
-import java.time.LocalDate
-import java.util.UUID
-import nl.nlportal.documentenapi.domain.Document
-import nl.nlportal.documentenapi.service.DocumentenApiService
 
 class BerichtenService(
     private val objectenApiService: ObjectenApiService,
     private val documentenApiService: DocumentenApiService,
     private val berichtenConfigurationProperties: BerichtenConfigurationProperties,
 ) {
-    suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int {
+    suspend fun getBerichten(
+        authentication: CommonGroundAuthentication,
+        pageNumber: Int,
+        pageSize: Int,
+        onderwerp: String? = null,
+        ongeopend: Boolean? = null,
+    ): BerichtenPage {
+        // fix because ObjectsAPI filter LTE only accept dates, not date-time
+        val filterPublicationDate = LocalDate.now().plusDays(1)
         val searchParameters =
-            listOf(
-                ObjectSearchParameter("geopend", STRING_CONTAINS, "false"),
+            mutableListOf(
                 ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
                 ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
-                ObjectSearchParameter("publicatiedatum", LOWER_THAN_OR_EQUAL_TO, LocalDate.now().toString()),
+                ObjectSearchParameter("publicatiedatum", LOWER_THAN_OR_EQUAL_TO, filterPublicationDate.toString()),
             )
-        val results = getBerichten(1, 1, searchParameters)
 
-        return results.count
+        onderwerp?.let {
+            searchParameters.add(
+                ObjectSearchParameter(
+                    "onderwerp",
+                    Comparator.STRING_CONTAINS,
+                    it,
+                ),
+            )
+        }
+
+        ongeopend?.let {
+            searchParameters.add(
+                ObjectSearchParameter("geopend", STRING_CONTAINS, "false"),
+            )
+        }
+        return BerichtenPage.fromResultPage(
+            pageNumber = pageNumber,
+            pageSize = pageSize,
+            resultPage =
+                objectenApiService
+                    .getObjects<Bericht>(
+                        objectSearchParameters = searchParameters,
+                        objectTypeUrl = berichtenConfigurationProperties.berichtObjectTypeUrl!!,
+                        pageNumber = pageNumber,
+                        pageSize = pageSize,
+                    ),
+        )
     }
+
+    suspend fun getUnopenedBerichtenCount(authentication: CommonGroundAuthentication): Int =
+        getBerichten(
+            authentication = authentication,
+            pageNumber = 1,
+            pageSize = 1,
+        ).totalElements
 
     suspend fun getBericht(
         authentication: CommonGroundAuthentication,
@@ -63,15 +100,15 @@ class BerichtenService(
     ): Bericht? {
         val objectsApiBericht = objectenApiService.getObjectById<Bericht>(id.toString()) ?: return null
 
-        val bericht = objectsApiBericht.record.data.copy(id = id)
+        val berichtObject = objectsApiBericht.record.data.copy(uuid = id)
 
-        if (bericht.identificatie.value != authentication.userId) {
+        if (berichtObject.identificatie.value != authentication.userId) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized for this Bericht")
         }
 
-        if (bericht.geopend) {
+        if (berichtObject.geopend) {
             // Bericht is already read, so return
-            return bericht
+            return berichtObject
         }
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiBericht)
@@ -79,7 +116,7 @@ class BerichtenService(
         updateRequest.record.correctedBy = authentication.userId
         updateRequest.record.correctionFor = objectsApiBericht.record.index.toString()
         val updatedObjectsApiBericht = objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
-        return updatedObjectsApiBericht?.record?.data?.copy(id = id)
+        return updatedObjectsApiBericht?.record?.data?.copy(uuid = id)
     }
 
     suspend fun getBerichtDocumentContent(
@@ -106,7 +143,7 @@ class BerichtenService(
         }
 
         val bijlageUrl =
-            bericht.bijlages.firstOrNull { extractId(it) == documentId }
+            bericht.bijlages?.firstOrNull { extractId(it) == documentId }
                 ?: run {
                     logger.debug {
                         "Access denied to document $documentId on bericht $berichtId for user ${authentication.userId}"
@@ -130,61 +167,6 @@ class BerichtenService(
                     .copy(identificatie = identificatie)
             },
         )
-
-    suspend fun getBerichtenPage(
-        authentication: CommonGroundAuthentication,
-        pageNumber: Int,
-        pageSize: Int,
-        onderwerp: String?,
-    ): BerichtenPage {
-        // fix because ObjectsAPI filter LTE only accept dates, not date-time
-        val filterPublicationDate = LocalDate.now().plusDays(1)
-        val searchParameters =
-            mutableListOf(
-                ObjectSearchParameter("identificatie__type", EQUAL_TO, authentication.userType),
-                ObjectSearchParameter("identificatie__value", EQUAL_TO, authentication.userId),
-                ObjectSearchParameter("publicatiedatum", LOWER_THAN_OR_EQUAL_TO, filterPublicationDate.toString()),
-            )
-
-        onderwerp?.let {
-            searchParameters.add(
-                ObjectSearchParameter(
-                    "onderwerp",
-                    Comparator.STRING_CONTAINS,
-                    it,
-                ),
-            )
-        }
-        val results = getBerichten(pageNumber, pageSize, searchParameters)
-
-        return results.toBerichtenPage(pageNumber, pageSize)
-    }
-
-    private suspend fun getBerichten(
-        pageNumber: Int,
-        pageSize: Int,
-        searchParameters: List<ObjectSearchParameter> = emptyList(),
-    ) = objectenApiService
-        .getObjects<Bericht>(
-            objectSearchParameters = searchParameters,
-            objectTypeUrl = berichtenConfigurationProperties.berichtObjectTypeUrl,
-            pageNumber = pageNumber,
-            pageSize = pageSize,
-        )
-
-    private fun ResultPage<ObjectsApiObject<Bericht>>.toBerichtenPage(
-        pageNumber: Int,
-        pageSize: Int,
-    ): BerichtenPage {
-        val berichten = results.map { it.record.data.copy(id = it.uuid) }.sortedByDescending { it.publicatiedatum }
-
-        return BerichtenPage(
-            number = pageNumber,
-            size = pageSize,
-            content = berichten,
-            totalElements = count,
-        )
-    }
 
     companion object {
         private val logger = KotlinLogging.logger {}
