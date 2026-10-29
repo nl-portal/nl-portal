@@ -19,13 +19,13 @@ import {
   TableList,
   ThemeDetailsPage,
 } from "@nl-portal/nl-portal-user-interface";
-import { useDateFormatter } from "@nl-portal/nl-portal-localization";
 import { OpenProductProduct } from "@nl-portal/nl-portal-api";
-import { Link } from "@gemeente-denhaag/link";
-import StatusBadge from "@gemeente-denhaag/status-badge";
-import { useParams } from "react-router";
-import { paths } from "../constants/paths";
 import { capitalizeFirstLetter, currencyFormat } from "../util/product-format";
+import { useDateFormatter } from "@nl-portal/nl-portal-localization";
+import { useParams } from "react-router";
+import { Link } from "@gemeente-denhaag/link";
+import { paths } from "../constants/paths";
+import StatusBadge from "@gemeente-denhaag/status-badge";
 
 const ParkerenDetails = () => {
   const { formatDate } = useDateFormatter();

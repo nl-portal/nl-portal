@@ -19,6 +19,8 @@ import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 import nl.nlportal.core.util.ShaVersion
+import nl.nlportal.openproduct.client.domain.OpenProductLanguage
+import org.springframework.aot.hint.TypeReference.listOf
 
 @ConfigurationProperties(prefix = "nl-portal.config.openproduct")
 class OpenProductModuleConfiguration {
@@ -43,6 +45,8 @@ class OpenProductModuleConfiguration {
         var productApiUrl: URI? = null
         var productTypeApiUrl: URI? = null
         var token: String? = null
+        var productContentLabel: String? = null
+        var productContentLabelLanguage: List<OpenProductLanguage>? = listOf(OpenProductLanguage.NL, OpenProductLanguage.EN)
         var dmn: OpenProductDmnConfigurationProperties = OpenProductDmnConfigurationProperties()
         var prefill: OpenProductPrefillConfigurationProperties = OpenProductPrefillConfigurationProperties()
 
