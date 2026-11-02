@@ -45,7 +45,7 @@ enum class VTBBerichtFilters(
 ) : VTBFilters {
     PAGE("page"),
     PAGE_SIZE("page_size"),
-    GEOPENDOP_NULL("geopendOp__isnull "),
+    GEOPENDOP_NULL("geopendOp__isnull"),
     ONTVANGER("ontvanger"),
     PUBLICATIEDATUM_GTE("publicatiedatum__gte"),
     PUBLICATIEDATUM_LTE("publicatiedatum__lte"),
