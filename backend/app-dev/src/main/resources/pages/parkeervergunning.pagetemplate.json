@@ -1,0 +1,28 @@
+{
+  "naam": "Parkeervergunning",
+  "template": "{% heading level: 1 %}{{ vergunning.naam | escape }}{% endheading %}\n{% description-list title: \"gegevens\" %}\n{{ 'startdatum' | i18n }} | {{ vergunning.startDatum | date | escape }}\n{{ 'einddatum' | i18n }} | {{ vergunning.eindDatum | date | escape }}\n{{ 'status' | i18n }} | {{ vergunning.status | capitalize | escape }}\n{{ 'prijs' | i18n }} | {{ vergunning.prijs | currency | escape }}\n{% enddescription-list %}\n{% if vergunning.kentekens.size > 0 %}{% table title: \"voertuigen\" %}\n{{ 'kenteken' | i18n }}\n{% for kenteken in vergunning.kentekens %}{{ kenteken | escape }}\n{% endfor %}{% endtable %}{% endif %}\n{% if vergunning.periodes.size > 0 %}{% table title: \"periodes\" %}\n{{ 'datum' | i18n }} | {{ 'kenteken' | i18n }} | {{ 'status' | i18n }}\n{% for periode in vergunning.periodes %}{{ periode.datetimeStart | date | escape }} | {{ periode.kenteken | escape }} | {{ periode.status | capitalize | escape }}\n{% endfor %}{% endtable %}{% endif %}\n",
+  "messages": {
+    "nl-NL": {
+      "gegevens": "Gegevens",
+      "startdatum": "Startdatum",
+      "einddatum": "Einddatum",
+      "status": "Status",
+      "prijs": "Prijs",
+      "voertuigen": "Voertuigen",
+      "kenteken": "Kenteken",
+      "periodes": "Periodes",
+      "datum": "Datum"
+    },
+    "en-GB": {
+      "gegevens": "Details",
+      "startdatum": "Start date",
+      "einddatum": "End date",
+      "status": "Status",
+      "prijs": "Price",
+      "voertuigen": "Vehicles",
+      "kenteken": "Licence plate",
+      "periodes": "Periods",
+      "datum": "Date"
+    }
+  }
+}

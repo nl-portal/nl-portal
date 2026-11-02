@@ -1,0 +1,28 @@
+{
+  "naam": "Erfpacht",
+  "template": "{% heading level: 1 %}{{ 'titel' | i18n }}{% endheading %}\n{% tabs binding: \"producten\" param: \"filter.status\" page-param: \"page\" %}\n | {{ 'alle' | i18n }}\nactief | {{ 'actief' | i18n }}\ngereed | {{ 'gereed' | i18n }}\nverlopen | {{ 'verlopen' | i18n }}\n{% endtabs %}\n{% table title: \"producten\" binding: \"producten\" page-param: \"page\" page-size: 5 total: producten.total %}\n{{ 'naam' | i18n }} | {{ 'status' | i18n }} | {{ 'prijs' | i18n }}\n{% for product in producten.items %}[{{ product.naam | escape }}](/erfpacht/{{ product.id }}) | {{ product.status | capitalize | escape }} | {{ product.prijs | currency | escape }}\n{% endfor %}{% endtable %}\n",
+  "messages": {
+    "nl-NL": {
+      "titel": "Erfpacht",
+      "status": "Status",
+      "alle": "Alle",
+      "actief": "Actief",
+      "gereed": "Gereed",
+      "verlopen": "Verlopen",
+      "naam": "Naam",
+      "prijs": "Prijs",
+      "producten": "Mijn producten"
+    },
+    "en-GB": {
+      "titel": "Ground lease",
+      "status": "Status",
+      "alle": "All",
+      "actief": "Active",
+      "gereed": "Completed",
+      "verlopen": "Expired",
+      "naam": "Name",
+      "prijs": "Price",
+      "producten": "My products"
+    }
+  }
+}

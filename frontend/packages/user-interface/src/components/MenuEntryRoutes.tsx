@@ -17,10 +17,7 @@ import { useContext } from "react";
 import { Navigate, Route, Routes, useOutletContext } from "react-router";
 import AppContext from "../contexts/AppContext";
 import { RouterOutletContext } from "../interfaces/router-outlet-context";
-import {
-  MENU_ENTRY_RENDERERS,
-  MENU_ENTRY_SUB_PATH_TYPES,
-} from "../utils/menu-entry-renderers";
+import { MENU_ENTRY_RENDERERS } from "../utils/menu-entry-renderers";
 
 /**
  * Renders the pages of the backend-configured menu entries. Mount it as the element of the app's "*" route.
@@ -34,13 +31,10 @@ const MenuEntryRoutes = () => {
     <Routes>
       {menuEntries.map((entry) => {
         const Renderer = MENU_ENTRY_RENDERERS[entry.route.type];
-        const path = MENU_ENTRY_SUB_PATH_TYPES.includes(entry.route.type)
-          ? `${entry.route.path}/*`
-          : entry.route.path;
         return (
           <Route
             key={entry.route.path}
-            path={path}
+            path={entry.route.path}
             element={<Renderer entry={entry} />}
           />
         );

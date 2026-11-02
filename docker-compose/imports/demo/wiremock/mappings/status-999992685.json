@@ -1,0 +1,14 @@
+{
+    "priority": 1,
+    "request": {
+        "method": "GET",
+        "urlPath": "/status/5e9ec219-9e74-4a1a-9cc0-7c5d73376390"
+    },
+    "response": {
+        "status": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "bodyFileName": "status/999992685.json"
+    }
+}

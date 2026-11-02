@@ -19,8 +19,10 @@ import { UIMatch } from "react-router";
 import { NavigationItem } from "../../interfaces/navigation-item";
 import {
   getCurrentNavigationPage,
+  getHiddenMenuEntryPage,
   getUnlabeledNavigationPage,
 } from "../../utils/get-current-navigation-page";
+import { MenuEntry } from "../../utils/menu-entries";
 
 const entry: NavigationItem = {
   titleTranslationKey: "thema-concept",
@@ -132,6 +134,63 @@ describe("getUnlabeledNavigationPage", () => {
         [root, match("/bestaat-niet")],
         navigationItems,
       ),
+    ).toBeUndefined();
+  });
+});
+
+describe("getHiddenMenuEntryPage", () => {
+  const hidden: MenuEntry = {
+    name: "erfpacht-product",
+    icon: "DocumentIcon",
+    hidden: true,
+    route: { type: "templated", page: "product", path: "/erfpacht/:id" },
+  };
+  const visibleWithParam: MenuEntry = {
+    name: "thema-detail",
+    icon: "DocumentIcon",
+    route: { type: "templated", page: "detail", path: "/thema-concept/:id" },
+  };
+
+  it("returns the hidden entry whose route path matches the deepest match", () => {
+    expect(
+      getHiddenMenuEntryPage([root, match("/erfpacht/abc")], navigationItems, [
+        hidden,
+      ]),
+    ).toBe(hidden);
+  });
+
+  it("returns nothing for a labeled match or a path without hidden entry", () => {
+    expect(
+      getHiddenMenuEntryPage(
+        [root, match("/erfpacht/abc", "breadcrumb.x")],
+        navigationItems,
+        [hidden],
+      ),
+    ).toBeUndefined();
+    expect(
+      getHiddenMenuEntryPage([root, match("/erfpacht")], navigationItems, [
+        hidden,
+      ]),
+    ).toBeUndefined();
+    expect(
+      getHiddenMenuEntryPage(
+        [root, match("/thema-concept/abc")],
+        navigationItems,
+        [visibleWithParam],
+      ),
+    ).toBeUndefined();
+  });
+
+  it("lets an entry with a menu item win over a hidden entry", () => {
+    const hiddenOnEntryPath: MenuEntry = {
+      ...hidden,
+      route: { ...hidden.route, path: "/thema-concept" },
+    };
+
+    expect(
+      getHiddenMenuEntryPage([root, match("/thema-concept")], navigationItems, [
+        hiddenOnEntryPath,
+      ]),
     ).toBeUndefined();
   });
 });

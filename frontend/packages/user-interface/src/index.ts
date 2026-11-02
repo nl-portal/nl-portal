@@ -86,3 +86,7 @@ export * from "./contexts/NotificationContext";
 export * from "./utils/person-data";
 export type { MenuEntry, MenuEntryRoute } from "./utils/menu-entries";
 export { getNavigationItemTitleId } from "./utils/navigation-item-title";
+
+export { default as TemplatedPage } from "./components/TemplatedPage";
+export { default as LiquidParser } from "./components/LiquidParser";
+export type { LiquidParserProps } from "./components/LiquidParser";

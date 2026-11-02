@@ -18,6 +18,13 @@ import { DEFAULT_LOCALES, Messages } from "@nl-portal/nl-portal-localization";
 export const NL_NL_MESSAGES: Messages = {
   [DEFAULT_LOCALES.DUTCH]: {
     "app.appName": "NL Portal App",
+    "menu-entries.over-ons": "Over ons",
+    "menu-entries.contact": "Contact",
+    "menu-entries.erfpacht": "Erfpacht",
+    "menu-entries.erfpacht-product": "Erfpachtdetails",
+    "menu-entries.parkeervergunningen": "Parkeervergunningen",
+    "menu-entries.parkeervergunning": "Parkeervergunning",
+    "menu-entries.vergunningen": "Vergunningen",
     "pageTitles.sample": "Thema voorbeeld",
     "pageTitles.parkerenHistory": "Parkeren geschiedenis",
     "pageTitles.parkerenMutate": "Parkeren wijzigen",

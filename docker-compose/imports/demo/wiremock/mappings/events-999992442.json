@@ -1,0 +1,21 @@
+{
+  "priority": 1,
+  "scenarioName": "status-999992442",
+  "newScenarioState": "Started",
+  "request": {
+    "method": "GET",
+    "urlPath": "/events",
+    "queryParameters": {
+      "bsn": {
+        "equalTo": "999992442"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "events/interactie-999992442.json"
+  }
+}

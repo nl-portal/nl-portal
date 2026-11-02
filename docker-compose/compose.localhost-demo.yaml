@@ -1,0 +1,80 @@
+services:
+    localhost:
+        ports:
+            - "8083:8083" # WireMock (IKO page sources, index API mocks)
+            - "8084:8084" # IKO
+            - "8085:8085" # IKO Database
+            - "8086:8086" # IKO Redis
+
+    nl-portal-wiremock:
+        container_name: nl-portal-wiremock
+        image: wiremock/wiremock:3.13.2
+        network_mode: "service:localhost"
+        command: --port 8083
+        volumes:
+            - ./imports/demo/wiremock/__files:/home/wiremock/__files
+            - ./imports/demo/wiremock/mappings:/home/wiremock/mappings
+
+    nl-portal-iko:
+        container_name: nl-portal-iko
+        image: ghcr.io/integraal-klant-en-objectbeeld/iko:1.5.1
+        platform: linux/amd64
+        network_mode: "service:localhost"
+        depends_on:
+            nl-portal-iko-database:
+                condition: service_healthy
+            nl-portal-iko-redis:
+                condition: service_healthy
+            nl-portal-keycloak:
+                condition: service_started
+        environment:
+            SERVER_PORT: 8084
+            IKO_DEBUG_SHOW_HEADERS: true
+            IKO_CRYPTO_KEY: yzWx+Lw/pJcop8KX+kfV3hlX/lSlDhMXegNfiEIffbs=
+            SPRING_CACHE_TYPE: redis
+            SPRING_DATA_REDIS_HOST: localhost
+            SPRING_DATA_REDIS_PORT: 8086
+            SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:8085/iko-db
+            SPRING_DATASOURCE_USERNAME: iko-admin
+            SPRING_DATASOURCE_PASSWORD: secret
+            SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
+            SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://localhost:8082/auth/realms/iko
+            SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI: http://localhost:8082/auth/realms/iko/protocol/openid-connect/certs
+            SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENTID: iko
+            SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENTSECRET: hBLXFAV7LeXnHyBINdWPXwtu9GqznYl1
+            SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUERURI: http://localhost:8082/auth/realms/iko
+            SERVER_SERVLET_SESSION_COOKIE_SECURE: false
+
+    nl-portal-iko-database:
+        container_name: nl-portal-iko-database
+        image: postgres:15
+        network_mode: "service:localhost"
+        environment:
+            PGPORT: 8085
+            POSTGRES_DB: iko-db
+            POSTGRES_USER: iko-admin
+            POSTGRES_PASSWORD: secret
+        volumes:
+            - nl-portal-iko-database-data:/var/lib/postgresql/data
+            - ./imports/demo/iko/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+            - ./imports/demo/iko/pages-example.sql:/docker-entrypoint-initdb.d/pages-example.sql
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -p 8085 -U iko-admin -d iko-db" ]
+            interval: 5s
+            timeout: 5s
+            retries: 20
+
+    nl-portal-iko-redis:
+        container_name: nl-portal-iko-redis
+        image: redis:8.4.0-alpine
+        network_mode: "service:localhost"
+        command: redis-server --port 8086
+        healthcheck:
+            test: [ "CMD", "redis-cli", "-p", "8086", "ping" ]
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 5s
+
+volumes:
+    nl-portal-iko-database-data:

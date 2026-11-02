@@ -1,0 +1,19 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPath": "/events",
+    "queryParameters": {
+      "bsn": {
+        "equalTo": "999993847"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "events/interactie-999993847.json"
+  }
+}

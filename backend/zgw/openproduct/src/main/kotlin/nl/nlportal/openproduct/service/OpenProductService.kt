@@ -35,6 +35,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductBestandenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductContact
 import nl.nlportal.openproduct.client.domain.OpenProductContactenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductContentElement
+import nl.nlportal.openproduct.client.domain.OpenProductContentElementsFilters
 import nl.nlportal.openproduct.client.domain.OpenProductLink
 import nl.nlportal.openproduct.client.domain.OpenProductLinksFilters
 import nl.nlportal.openproduct.client.domain.OpenProductLocatie
@@ -58,6 +59,7 @@ import nl.nlportal.openproduct.client.domain.ResultPage
 import nl.nlportal.openproduct.client.path.Acties
 import nl.nlportal.openproduct.client.path.Bestanden
 import nl.nlportal.openproduct.client.path.Contacten
+import nl.nlportal.openproduct.client.path.ContentElements
 import nl.nlportal.openproduct.client.path.Links
 import nl.nlportal.openproduct.client.path.Locaties
 import nl.nlportal.openproduct.client.path.Organisaties
@@ -80,6 +82,7 @@ import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.server.ResponseStatusException
 
 @Suppress("UNCHECKED_CAST")
@@ -772,6 +775,36 @@ class OpenProductService(
     }
 
     /**
+     * The content of the first content element of product type [productTypeId] labelled [label], in [language].
+     *
+     * @return `null` when there is no such element or Open Product fails
+     */
+    suspend fun getProductTypeTemplate(
+        productTypeId: UUID,
+        language: String,
+        label: String,
+    ): String? {
+        try {
+            return openProductTypeClient
+                .path<ContentElements>()
+                .get(
+                    searchFilters =
+                        listOf(
+                            OpenProductContentElementsFilters.PAGE to 1,
+                            OpenProductContentElementsFilters.PAGE_SIZE to CONTENT_ELEMENTS_PAGE_SIZE,
+                            OpenProductContentElementsFilters.PRODUCTTYPE_UUID to productTypeId,
+                        ),
+                    language = language,
+                ).results
+                .firstOrNull { it.labels?.contains(label) == true }
+                ?.content
+        } catch (e: Exception) {
+            logger.error { "Error getting producttype template for producttype: $productTypeId with cause: " + e.message }
+        }
+        return null
+    }
+
+    /**
      * Get producten
      * @param: pageNumber, number for pagination
      * @param: pageSize, size for pagination
@@ -882,6 +915,33 @@ class OpenProductService(
             }
         }
         return null
+    }
+
+    /**
+     * The published product [id] when the subject owns it and may see its product type.
+     *
+     * @return `null` when the product doesn't exist, isn't published, isn't owned or its product type isn't allowed
+     * @throws Exception when Open Product fails
+     */
+    suspend fun findOwnedProduct(
+        authentication: CommonGroundAuthentication,
+        id: UUID,
+    ): OpenProductProduct? {
+        val product =
+            try {
+                openProductClient.path<Producten>().get(id = id)
+            } catch (e: WebClientResponseException.NotFound) {
+                null
+            } ?: return null
+
+        val visible =
+            product.gepubliceerd == true &&
+                isAuthorizedForProduct(authentication = authentication, product = product) &&
+                authenticationMachtigingsDienstService.isAllowedProductType(
+                    authentication = authentication,
+                    productTypeUUID = product.producttype.uuid,
+                )
+        return product.takeIf { visible }
     }
 
     /**
@@ -1461,5 +1521,6 @@ class OpenProductService(
 
     companion object {
         val logger = KotlinLogging.logger {}
+        private const val CONTENT_ELEMENTS_PAGE_SIZE = 100
     }
 }

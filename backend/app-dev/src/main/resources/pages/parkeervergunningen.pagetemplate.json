@@ -1,0 +1,32 @@
+{
+  "naam": "Parkeervergunningen",
+  "template": "{% heading level: 1 %}{{ 'titel' | i18n }}{% endheading %}\n{% tabs binding: \"vergunningen\" param: \"filter.status\" page-param: \"page\" %}\n | {{ 'alle' | i18n }}\nactief | {{ 'actief' | i18n }}\ngereed | {{ 'gereed' | i18n }}\nverlopen | {{ 'verlopen' | i18n }}\n{% endtabs %}\n{% table title: \"vergunningen\" binding: \"vergunningen\" page-param: \"page\" page-size: 5 total: vergunningen.total %}\n{{ 'naam' | i18n }} | {{ 'startdatum' | i18n }} | {{ 'einddatum' | i18n }} | {{ 'status' | i18n }} | {{ 'prijs' | i18n }}\n{% for vergunning in vergunningen.items %}[{{ vergunning.naam | escape }}](/parkeervergunningen/{{ vergunning.id }}) | {{ vergunning.startDatum | date | escape }} | {{ vergunning.eindDatum | date | escape }} | {{ vergunning.status | capitalize | escape }} | {{ vergunning.prijs | currency | escape }}\n{% endfor %}{% endtable %}\n",
+  "messages": {
+    "nl-NL": {
+      "titel": "Parkeervergunningen",
+      "alle": "Alle",
+      "actief": "Actief",
+      "gereed": "Gereed",
+      "verlopen": "Verlopen",
+      "vergunningen": "Mijn vergunningen",
+      "naam": "Naam",
+      "startdatum": "Startdatum",
+      "einddatum": "Einddatum",
+      "status": "Status",
+      "prijs": "Prijs"
+    },
+    "en-GB": {
+      "titel": "Parking permits",
+      "alle": "All",
+      "actief": "Active",
+      "gereed": "Completed",
+      "verlopen": "Expired",
+      "vergunningen": "My permits",
+      "naam": "Name",
+      "startdatum": "Start date",
+      "einddatum": "End date",
+      "status": "Status",
+      "prijs": "Price"
+    }
+  }
+}

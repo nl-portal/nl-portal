@@ -170,15 +170,33 @@ describe("withMenuEntries", () => {
       });
     });
 
-    it("sets matchSubPaths for custom entries only", () => {
+    it("sets matchSubPaths for a path ending in /* and strips the suffix", () => {
       const result = withMenuEntries(
         groups(),
-        [entry("a"), entry("b", {}, "custom")],
+        [
+          entry("a", {}, "custom"),
+          entry("b", {
+            route: { type: "custom", page: "page", path: "/extern/*" },
+          }),
+        ],
         resolveIcon,
       );
 
       expect(result[1][2].matchSubPaths).toBeUndefined();
+      expect(result[1][3].path).toBe("/extern");
       expect(result[1][3].matchSubPaths).toBe(true);
+    });
+  });
+
+  describe("hidden entries", () => {
+    it("adds no navigation item for a hidden entry", () => {
+      const result = withMenuEntries(
+        groups(),
+        [entry("a"), entry("b", { hidden: true })],
+        resolveIcon,
+      );
+
+      expect(paths(result)[1]).toEqual(["/taken", "/zaken", "/a"]);
     });
   });
 
@@ -217,7 +235,11 @@ describe("getRenderableMenuEntries", () => {
   it("keeps templated and custom entries on a new path", () => {
     const entries = [
       withPath("a", "/nieuw"),
-      withPath("b", "/extern", "custom"),
+      withPath("b", "/extern/*", "custom"),
+      entry("c", {
+        hidden: true,
+        route: { type: "templated", page: "p", path: "/nieuw/:id" },
+      }),
     ];
 
     const { renderable, skipped } = getRenderableMenuEntries(
@@ -263,6 +285,19 @@ describe("getRenderableMenuEntries", () => {
           reason: `path "${path}" is already used by an app route`,
         },
       ]);
+    },
+  );
+
+  it.each(["/taken/*", "/zaken/:id"])(
+    "skips pattern path %s used by an app route",
+    (path) => {
+      const { renderable } = getRenderableMenuEntries(
+        [withPath("a", path)],
+        routes,
+        renderers,
+      );
+
+      expect(renderable).toEqual([]);
     },
   );
 

@@ -1,0 +1,93 @@
+nl-portal:
+    config:
+        ikoapi:
+            enabled: true
+            properties:
+                url: http://localhost:8084
+                token-url: http://localhost:8082/auth/realms/iko/protocol/openid-connect/token
+                client-id: nl-portal
+                client-secret: jenv-portal-local-secret
+                allowed-profiles: personen,vergunningen,parkeerplekken
+    frontend:
+        menu-entries:
+            -   name: over-ons
+                icon: DocumentIcon
+                group: 99
+                route:
+                    type: templated
+                    page: over-ons
+                    path: /over-ons
+            -   name: contact
+                icon: DocumentIcon
+                group: 99
+                route:
+                    type: templated
+                    page: contact
+                    path: /contact
+            -   name: erfpacht
+                icon: DocumentIcon
+                group: 99
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: erfpacht
+                    path: /erfpacht
+            -   name: erfpacht-product
+                hidden: true
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: product
+                    path: /erfpacht/:id
+            -   name: product
+                hidden: true
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: product
+                    path: /producten/:id
+            -   name: parkeervergunningen
+                icon: ParkingIcon
+                group: 99
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: parkeervergunningen
+                    path: /parkeervergunningen
+            -   name: parkeervergunning
+                hidden: true
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: parkeervergunning
+                    path: /parkeervergunningen/:id
+            -   name: vergunningen
+                icon: ParkingIcon
+                group: 99
+                audience: [ burger ]
+                route:
+                    type: templated
+                    page: vergunningen
+                    path: /vergunningen
+        pages:
+            vergunningen:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: vergunningen.pagetemplate.json
+                bindings:
+                    personen:
+                        resolver: iko
+                        params:
+                            profile: personen
+                        projection: '{naam, geboortedatum}'
+                    vergunningen:
+                        resolver: iko
+                        params:
+                            profile: vergunningen
+                            container: vergunningen
+                            page: 0
+                            size: 5
+                        overrides: [ page, filter.status ]
+                        projection: '{items: .vergunningen, total: (.vergunningen | length)}'

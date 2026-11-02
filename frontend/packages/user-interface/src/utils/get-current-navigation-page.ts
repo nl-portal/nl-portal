@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { UIMatch } from "react-router";
+import { matchPath, UIMatch } from "react-router";
 import { NavigationItem } from "../interfaces/navigation-item";
+import type { MenuEntry } from "./menu-entries";
 
 /**
  * Whether the navigation item is the current page for the pathname: an exact path match,
@@ -67,4 +68,28 @@ export const getUnlabeledNavigationPage = (
   return navigationItems
     .flat()
     .find((item) => isCurrentFor(item, deepestMatch.pathname));
+};
+
+/**
+ * Returns the hidden menu entry rendered on the deepest match, such as `/erfpacht/:id`,
+ * when that match has no breadcrumb label and no navigation item.
+ *
+ * @param matches react-router useMatches
+ * @param navigationItems navigationItems
+ * @param menuEntries menu entries from AppContext, hidden ones included
+ * @returns the hidden menu entry for the deepest match
+ */
+export const getHiddenMenuEntryPage = (
+  matches: UIMatch<unknown, { label?: string } | undefined>[],
+  navigationItems: NavigationItem[][],
+  menuEntries: MenuEntry[],
+) => {
+  const deepestMatch = matches[matches.length - 1];
+  if (!deepestMatch || deepestMatch.handle?.label) return undefined;
+  if (getUnlabeledNavigationPage(matches, navigationItems)) return undefined;
+
+  return menuEntries.find(
+    (entry) =>
+      entry.hidden && matchPath(entry.route.path, deepestMatch.pathname),
+  );
 };

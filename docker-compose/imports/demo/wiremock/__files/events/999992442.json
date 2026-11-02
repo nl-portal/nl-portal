@@ -1,0 +1,134 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "1018ecfe-e68b-46bf-8505-a4f6b63dc262",
+    "source": "urn:nld:oin:00000001816076790000:besluit",
+    "type": "nl.overheid.besluit.besluit-gepubliceerd",
+    "subject": "6d74b981-16ab-44cd-ad72-20a2406774aa",
+    "time": "2027-02-12T14:30:00Z",
+    "datacontenttype": "application/json",
+    "wasderivedfrom": "zaak:87d04368-0a1b-4e93-8bd2-03211524405b",
+    "wasattributedto": "urn:nld:oin:00000001816076790000",
+    "activity": "Publiceren besluit",
+    "entitytype": "besluit",
+    "data": {
+      "burgerservicenummer": "999992442",
+      "linkTo": "http://localhost:8083/besluit/6d74b981-16ab-44cd-ad72-20a2406774aa"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "bcfc6e18-2582-470d-999c-c13389ec730d",
+    "source": "urn:nld:oin:00000001816076790000:document",
+    "type": "nl.overheid.document.document-gepubliceerd",
+    "subject": "3299406d-d694-4d1c-b7f2-14d56b8b6b05",
+    "time": "2027-02-07T14:30:00Z",
+    "datacontenttype": "application/json",
+    "wasderivedfrom": "zaak:87d04368-0a1b-4e93-8bd2-03211524405b",
+    "wasattributedto": "urn:nld:oin:00000001816076790000",
+    "activity": "Publiceren document",
+    "entitytype": "document",
+    "data": {
+      "burgerservicenummer": "999992442",
+      "linkTo": "http://localhost:8083/document/3299406d-d694-4d1c-b7f2-14d56b8b6b05"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "33ad79e0-eead-4ff5-9368-f291add7ded3",
+    "source": "urn:nld:oin:00000001816076790000:besluit",
+    "type": "nl.overheid.besluit.besluit-gepubliceerd",
+    "subject": "395acc60-a548-4774-855a-71168676b0b6",
+    "time": "2027-02-06T14:30:00Z",
+    "datacontenttype": "application/json",
+    "wasderivedfrom": "zaak:fd3f9827-f985-4b47-b09a-e42ffd77486b",
+    "wasattributedto": "urn:nld:oin:00000001816076790000",
+    "activity": "Publiceren besluit",
+    "entitytype": "besluit",
+    "data": {
+      "burgerservicenummer": "999992442",
+      "linkTo": "http://localhost:8083/besluit/395acc60-a548-4774-855a-71168676b0b6"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "3dc7275f-2e5b-4b51-aa3e-cd8fe34fb546",
+    "source": "urn:nld:oin:00000001816076790000:document",
+    "type": "nl.overheid.document.document-gepubliceerd",
+    "subject": "9829db3a-b2dc-4b42-a247-ce98a917af61",
+    "time": "2027-02-05T14:30:00Z",
+    "datacontenttype": "application/json",
+    "wasderivedfrom": "zaak:fd3f9827-f985-4b47-b09a-e42ffd77486b",
+    "wasattributedto": "urn:nld:oin:00000001816076790000",
+    "activity": "Publiceren document",
+    "entitytype": "document",
+    "data": {
+      "burgerservicenummer": "999992442",
+      "linkTo": "http://localhost:8083/document/9829db3a-b2dc-4b42-a247-ce98a917af61"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "f7f9370a-f68e-44b4-9738-950d1d00a4cc",
+    "source": "urn:nld:oin:00000001816076790000:zaken",
+    "type": "nl.overheid.zaken.zaak-geregistreerd",
+    "subject": "87d04368-0a1b-4e93-8bd2-03211524405b",
+    "time": "2027-02-04T12:30:00Z",
+    "datacontenttype": "application/json",
+    "wasderivedfrom": "verzoek:a0bbc888-68d4-4a14-9053-54decf105413",
+    "wasattributedto": "urn:nld:oin:00000001816076790000",
+    "activity": "Registreren zaak",
+    "entitytype": "zaak",
+    "data": {
+      "burgerservicenummer": "999992442",
+      "linkTo": "http://localhost:8083/zaken/87d04368-0a1b-4e93-8bd2-03211524405b"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "f84a5086-57c0-4186-9852-60124176bbd7",
+    "source": "urn:nld:oin:00000001816076790000:zaken",
+    "type": "nl.overheid.zaken.zaak-geregistreerd",
+    "subject": "fd3f9827-f985-4b47-b09a-e42ffd77486b",
+    "time": "2027-02-03T14:50:00Z",
+    "datacontenttype": "application/json",
+    "wasderivedfrom": "verzoek:4e0b7424-c453-4232-a95a-9073a25ecc21",
+    "wasattributedto": "urn:nld:oin:00000001816076790000",
+    "activity": "Registreren zaak",
+    "entitytype": "zaak",
+    "data": {
+      "burgerservicenummer": "999992442",
+      "linkTo": "http://localhost:8083/zaken/fd3f9827-f985-4b47-b09a-e42ffd77486b"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "10f85720-1dcd-46e0-8f8f-9e651d53f0db",
+    "source": "urn:nld:bsn:999992442:wallet",
+    "type": "nl.overheid.verzoeken.verzoek-ingediend",
+    "subject": "a0bbc888-68d4-4a14-9053-54decf105413",
+    "time": "2027-02-02T15:30:00Z",
+    "datacontenttype": "application/json",
+    "wasattributedto": "urn:nld:bsn:999992442",
+    "activity": "Indienen verzoek",
+    "entitytype": "verzoek",
+    "data": {
+      "burgerservicenummer": "999992442"
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "70f832ba-ad19-4c59-94c9-57d0fb94ce0a",
+    "source": "urn:nld:bsn:999992442:wallet",
+    "type": "nl.overheid.verzoeken.verzoek-ingediend",
+    "subject": "4e0b7424-c453-4232-a95a-9073a25ecc21",
+    "time": "2027-02-01T12:30:00Z",
+    "datacontenttype": "application/json",
+    "wasattributedto": "urn:nld:bsn:999992442",
+    "activity": "Indienen verzoek",
+    "entitytype": "verzoek",
+    "data": {
+      "burgerservicenummer": "999992442"
+    }
+  }
+]

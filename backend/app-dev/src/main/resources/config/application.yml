@@ -122,6 +122,11 @@ nl-portal:
                 url: http://localhost:8001
                 clientId: nl-portal
                 secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
+        pages:
+            enabled: true
+            properties:
+                objecten:
+                    object-type-url: http://localhost:8010/api/v2/objecttypes/5f2d9a3e-7b41-4c6e-9a0d-2e8f1c4b6a70
         objectenapi:
             enabled: true
             properties:
@@ -215,34 +220,123 @@ nl-portal:
             overview-maintenance-alert-enabled: true
             menu-entries-enabled: true
         menu-entries:
-            -   name: thema-concept
+            -   name: over-ons
+                icon: DocumentIcon
+                group: 99
+                route:
+                    type: templated
+                    page: over-ons
+                    path: /over-ons
+            -   name: contact
+                icon: DocumentIcon
+                group: 99
+                route:
+                    type: templated
+                    page: contact
+                    path: /contact
+            -   name: erfpacht
+                icon: DocumentIcon
+                group: 99
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: erfpacht
+                    path: /erfpacht
+            -   name: erfpacht-product
+                hidden: true
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: product
+                    path: /erfpacht/:id
+            -   name: product
+                hidden: true
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: product
+                    path: /producten/:id
+            -   name: parkeervergunningen
                 icon: ParkingIcon
-                group: 2
-                ordering: 0
+                group: 99
+                audience: [ burger, bedrijf ]
                 route:
                     type: templated
-                    page: template-a
-                    path: /thema-concept
-            -   name: bedrijf-pagina
-                icon: InboxIcon
-                audience: [ bedrijf ]
+                    page: parkeervergunningen
+                    path: /parkeervergunningen
+            -   name: parkeervergunning
+                hidden: true
+                audience: [ burger, bedrijf ]
                 route:
                     type: templated
-                    page: template-b
-                    path: /bedrijf-pagina
-            -   name: extern-portaal
-                icon: GridIcon
-                group: 9
-                route:
-                    type: custom
-                    page: remote-a
-                    path: /extern
-            -   name: botsing
-                icon: CheckCircleIcon
-                route:
-                    type: templated
-                    page: template-c
-                    path: /taken
+                    page: parkeervergunning
+                    path: /parkeervergunningen/:id
+        pages:
+            over-ons:
+                type: static
+                template:
+                    source: file
+                    params:
+                        file: over-ons.pagetemplate.json
+            contact:
+                type: static
+                template:
+                    source: objecten
+                    params:
+                        object: 8a3c2e1f-4d5b-4f6a-9c7e-1b2d3f4a5c60
+            erfpacht:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: erfpacht.pagetemplate.json
+                bindings:
+                    producten:
+                        resolver: openproduct
+                        params:
+                            product-type-code: ERFPACHT
+                            page: 0
+                            size: 5
+                        overrides: [ page, filter.status ]
+                        projection: '{items: [.results[] | {id: .uuid, naam, status, prijs}], total: .count}'
+            product:
+                type: dynamic
+                template:
+                    source: binding
+                    binding: product
+                bindings:
+                    product:
+                        resolver: openproduct
+                        params:
+                            content-label: klantportaal
+                        projection: '{naam, start_datum, eind_datum, status, prijs}'
+            parkeervergunningen:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: parkeervergunningen.pagetemplate.json
+                bindings:
+                    vergunningen:
+                        resolver: openproduct
+                        params:
+                            product-type-codes: PARKEREN, BEZOEKERSVERGUNNING
+                            page: 0
+                            size: 5
+                        overrides: [ page, filter.status ]
+                        projection: '{items: [.results[] | {id: .uuid, naam, startDatum: .start_datum, eindDatum: .eind_datum, status, prijs}], total: .count}'
+            parkeervergunning:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: parkeervergunning.pagetemplate.json
+                bindings:
+                    vergunning:
+                        resolver: openproduct
+                        params:
+                            product-type-codes: PARKEREN, BEZOEKERSVERGUNNING
+                        projection: '{naam, startDatum: .start_datum, eindDatum: .eind_datum, status, prijs, kentekens: (.verbruiksobject.data.kentekens // []), periodes: [(.verbruiksobject.data.periodes // [])[] | {datetimeStart, kenteken, status}]}'
         modules-whitelist:
             - zakenapi
             - product

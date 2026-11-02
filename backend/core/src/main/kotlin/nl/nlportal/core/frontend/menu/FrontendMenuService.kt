@@ -19,6 +19,7 @@ import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties.FrontendMenuEntryProperties
 import nl.nlportal.core.frontend.menu.domain.FrontendMenuEntry
 import nl.nlportal.core.frontend.menu.domain.FrontendMenuRoute
+import nl.nlportal.core.frontend.page.resolver.PageParams
 import org.springframework.security.core.Authentication
 
 /**
@@ -43,6 +44,17 @@ class FrontendMenuService(
             .map { it.toDomain() }
     }
 
+    /**
+     * Whether a menu entry visible to the user, hidden or not, renders the templated page [page].
+     */
+    fun isTemplatedPageVisible(
+        authentication: Authentication,
+        page: String,
+    ): Boolean =
+        getMenuEntries(authentication).any {
+            it.route.type == TEMPLATED && PageParams.canonical(it.route.page) == PageParams.canonical(page)
+        }
+
     private fun validate(entries: List<FrontendMenuEntryProperties>): List<String> {
         val duplicateNames =
             entries
@@ -63,7 +75,11 @@ class FrontendMenuService(
                 if (!NAME_PATTERN.matches(entry.name)) add("name must match ${NAME_PATTERN.pattern}")
                 if (entry.name in duplicateNames) add("name must be unique")
                 if (!route.path.startsWith("/")) add("route.path must start with /")
-                if (route.path.contains(":") || route.path.contains("*")) add("route.path must not contain : or *")
+                if (route.path.startsWith("/") && !isValidPath(route.path)) {
+                    add("route.path segments must be a literal [A-Za-z0-9._~-]+, a :param or a final *")
+                }
+                if (route.path.endsWith("/*") && route.type != CUSTOM) add("route.path may only end in /* for route.type custom")
+                if (PARAM_SEGMENT.containsMatchIn(route.path) && !entry.hidden) add("route.path with a :param requires hidden: true")
                 if (route.path in duplicatePaths) add("route.path must be unique")
                 if (route.type !in ROUTE_TYPES) add("route.type must be one of ${ROUTE_TYPES.joinToString()}, was '${route.type}'")
                 if (route.page.isBlank()) add("route.page must not be blank")
@@ -73,12 +89,20 @@ class FrontendMenuService(
         }
     }
 
+    private fun isValidPath(path: String): Boolean {
+        val segments = path.removePrefix("/").split("/")
+        return segments.withIndex().all { (index, segment) ->
+            LITERAL_SEGMENT.matches(segment) || PARAM_SEGMENT.matches(segment) || (segment == "*" && index == segments.lastIndex)
+        }
+    }
+
     private fun FrontendMenuEntryProperties.toDomain() =
         FrontendMenuEntry(
             name = name,
             icon = icon,
             group = group,
             ordering = ordering,
+            hidden = hidden,
             route =
                 FrontendMenuRoute(
                     type = route.type,
@@ -89,6 +113,10 @@ class FrontendMenuService(
 
     companion object {
         private val NAME_PATTERN = Regex("^[a-z0-9-]+$")
-        val ROUTE_TYPES = listOf("templated", "custom")
+        private val LITERAL_SEGMENT = Regex("^[A-Za-z0-9._~-]+$")
+        private val PARAM_SEGMENT = Regex("(^|/):[A-Za-z][A-Za-z0-9]*(?=/|$)")
+        const val TEMPLATED = "templated"
+        const val CUSTOM = "custom"
+        val ROUTE_TYPES = listOf(TEMPLATED, CUSTOM)
     }
 }

@@ -19,6 +19,7 @@ import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties.FrontendMenuEntryProperties
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties.FrontendMenuRouteProperties
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -36,6 +37,8 @@ internal class FrontendMenuServiceTest {
                 entry(name = "dup", path = "/dup"),
                 entry(name = "params", path = "/extern/:id"),
                 entry(name = "splat", path = "/extern/*"),
+                entry(name = "segments", type = "custom", path = "/a b/*/c"),
+                entry(name = "bad-param", path = "/x/:1d", hidden = true),
             )
 
         val exception = assertThrows<IllegalStateException> { FrontendMenuService(properties, null) }
@@ -53,14 +56,55 @@ internal class FrontendMenuServiceTest {
             "menu-entries[1] (dup): route.path must be unique",
             "menu-entries[2] (dup): name must be unique",
             "menu-entries[2] (dup): route.path must be unique",
-            "menu-entries[3] (params): route.path must not contain : or *",
-            "menu-entries[4] (splat): route.path must not contain : or *",
+            "menu-entries[3] (params): route.path with a :param requires hidden: true",
+            "menu-entries[4] (splat): route.path may only end in /* for route.type custom",
+            "menu-entries[5] (segments): route.path segments must be a literal",
+            "menu-entries[6] (bad-param): route.path segments must be a literal",
         ).forEach { assertTrue(message.contains(it), "Expected '$it' in:\n$message") }
+        assertFalse(message.contains("menu-entries[4] (splat): route.path segments"), message)
+    }
+
+    @Test
+    fun `full router paths are accepted`() {
+        FrontendMenuService(
+            properties(
+                entry(name = "a", path = "/a.b_c~d-e"),
+                entry(name = "b", path = "/b/:id", hidden = true),
+                entry(name = "c", path = "/c/:caseId/details", hidden = true),
+                entry(name = "d", type = "custom", path = "/d/*"),
+            ),
+            null,
+        )
+    }
+
+    @Test
+    fun `hidden is passed through`() {
+        val entries =
+            FrontendMenuService(properties(entry(name = "a", path = "/a"), entry(name = "b", path = "/b/:id", hidden = true)), null)
+                .getMenuEntries(authentication)
+
+        assertEquals(listOf(false, true), entries.map { it.hidden })
+    }
+
+    @Test
+    fun `templated page is visible through hidden entries and respects audience`() {
+        val properties =
+            properties(
+                entry(name = "list", path = "/list", page = "Erfpacht", audience = listOf("burger")),
+                entry(name = "detail", path = "/list/:id", page = "product-detail", hidden = true),
+                entry(name = "extern", type = "custom", path = "/extern/*", page = "extern"),
+            )
+
+        assertTrue(service(properties, "burger").isTemplatedPageVisible(authentication, "erfpacht"))
+        assertFalse(service(properties, "bedrijf").isTemplatedPageVisible(authentication, "erfpacht"))
+        assertTrue(service(properties, "bedrijf").isTemplatedPageVisible(authentication, "productdetail"))
+        assertFalse(service(properties, "burger").isTemplatedPageVisible(authentication, "extern"))
+        assertFalse(service(properties, "burger").isTemplatedPageVisible(authentication, "unknown"))
     }
 
     @Test
     fun `valid configuration starts`() {
-        FrontendMenuService(properties(entry(name = "a", path = "/a"), entry(name = "b", type = "custom", path = "/b")), null)
+        FrontendMenuService(properties(entry(name = "a", path = "/a"), entry(name = "b", type = "custom", path = "/b/*")), null)
     }
 
     @Test
@@ -132,11 +176,13 @@ internal class FrontendMenuServiceTest {
         group: Int? = null,
         ordering: Int? = null,
         audience: List<String> = emptyList(),
+        hidden: Boolean = false,
     ) = FrontendMenuEntryProperties(
         name = name,
         group = group,
         ordering = ordering,
         audience = audience,
+        hidden = hidden,
         route = FrontendMenuRouteProperties(type = type, page = page, path = path),
     )
 }

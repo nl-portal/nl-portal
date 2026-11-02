@@ -38,7 +38,13 @@ const menuEntries: MenuEntry[] = [
   {
     name: "extern-portaal",
     icon: "GridIcon",
-    route: { type: "custom", page: "remote-a", path: "/extern" },
+    route: { type: "custom", page: "remote-a", path: "/extern/*" },
+  },
+  {
+    name: "erfpacht-product",
+    icon: "DocumentIcon",
+    hidden: true,
+    route: { type: "templated", page: "product", path: "/erfpacht/:id" },
   },
 ];
 
@@ -75,10 +81,10 @@ const renderAt = (path: string) => {
 };
 
 describe("MenuEntryRoutes", () => {
-  it("renders the placeholder for a templated entry", async () => {
+  it("renders the templated page for a templated entry", async () => {
     renderAt("/thema-concept");
 
-    expect(await screen.findByText("noMatchPage.title")).toBeInTheDocument();
+    expect(await screen.findByLabelText("element.loading")).toBeInTheDocument();
     expect(screen.getByTestId("location")).toHaveTextContent("/thema-concept");
   });
 
@@ -87,6 +93,13 @@ describe("MenuEntryRoutes", () => {
 
     expect(await screen.findByText("noMatchPage.title")).toBeInTheDocument();
     expect(screen.getByTestId("location")).toHaveTextContent("/extern/a/b");
+  });
+
+  it("renders a hidden entry with a path param", async () => {
+    renderAt("/erfpacht/abc");
+
+    expect(await screen.findByLabelText("element.loading")).toBeInTheDocument();
+    expect(screen.getByTestId("location")).toHaveTextContent("/erfpacht/abc");
   });
 
   it("navigates to noMatch for a templated entry sub path", async () => {
