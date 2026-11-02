@@ -30,6 +30,7 @@
 * [Keycloak configuratie](configuratie/keycloak.md)
   * [Standard token exchange (v2)](configuratie/keycloak-token-exchange-v2.md)
   * [Legacy token exchange (v1)](configuratie/keycloak-token-exchange-v1.md)
+  * [Gemachtigde en machtigingen](configuratie/gemachtigde.md)
 
 ## Support en resources
 

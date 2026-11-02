@@ -40,6 +40,10 @@ De NL Portal is daarna bereikbaar op `http://localhost:3000`. Je kunt inloggen m
 | -------------- | ---------- | ----------------------- |
 | burger         | burger     | 999993847               |
 | bedrijf        | bedrijf    | 14127293                |
+| gemachtigde-burger  | gemachtigde-burger  | 999991723, gemachtigd voor 999993847 |
+| gemachtigde-bedrijf | gemachtigde-bedrijf | 14127293, gemachtigd voor 999993847  |
+
+Zie [Gemachtigde en machtigingen](gemachtigde.md) voor de machtigingsflows.
 
 **Let op:** het opstarten van alle ZGW componenten kan enkele minuten duren. De `RUN_MODE`-waarden `remote` en `local` kunnen niet tegelijk draaien omdat ze dezelfde poorten gebruiken.
 

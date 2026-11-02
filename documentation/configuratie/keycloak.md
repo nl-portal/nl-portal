@@ -154,4 +154,4 @@ Draai dit vanuit de map `docker-compose/`. **Let op:** `-v` verwijdert de volume
 
 ## Overige flows
 
-Naast de burger flow en de generieke gebruikersflow ondersteunt de NL Portal ook bedrijven (KVK / eHerkenning) en machtigingsflows (`machtigen`, `bewindvoering`). Deze flows zijn niet in deze documentatie uitgewerkt. Raadpleeg hiervoor de broncode (de `common-ground-authentication`-module onder `backend/` en de frontend-app onder `frontend/packages/app` in de monorepo) of neem contact op via [Community en support](../support-en-resources/community-en-support.md).
+Naast de burger flow en de generieke gebruikersflow ondersteunt de NL Portal ook bedrijven (KVK / eHerkenning) en machtigingsflows (`machtigen`, `bewindvoering`). De machtigingsflows zijn beschreven in [Gemachtigde en machtigingen](gemachtigde.md). De bedrijvenflow is niet in deze documentatie uitgewerkt. Raadpleeg hiervoor de broncode (de `common-ground-authentication`-module onder `backend/` en de frontend-app onder `frontend/packages/app` in de monorepo) of neem contact op via [Community en support](../support-en-resources/community-en-support.md).
