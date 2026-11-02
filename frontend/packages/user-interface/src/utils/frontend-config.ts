@@ -47,6 +47,11 @@ export interface Features {
     overviewMaintenanceAlertEnabled: boolean;
     vtbBerichtenEnabled: boolean;
   };
+  modules: {
+    berichten?: {
+      enabled: boolean;
+    };
+  };
 }
 
 type FeaturesResponse = Omit<Features, "properties" | "toggles"> & {

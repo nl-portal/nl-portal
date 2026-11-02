@@ -39,13 +39,16 @@ const MessageDetailsPage = () => {
   const { features, refetchMessageCount } = useContext(AppContext);
   const { restUri } = useContext(ApiContext);
   const { paths } = useOutletContext<RouterOutletContext>();
+  const berichtenEnabled = features?.modules.berichten?.enabled;
+  const vtbBerichtenEnabled = features?.toggles.vtbBerichtenEnabled;
+  const berichtenApi = vtbBerichtenEnabled ? "vtbberichten" : "berichten";
   const {
     data: berichtenData,
     loading: berichtenLoading,
     error: berichtenError,
   } = useQuery(GetBerichtDocument, {
     variables: { id },
-    skip: features?.toggles.vtbBerichtenEnabled,
+    skip: !berichtenEnabled || vtbBerichtenEnabled,
   });
   const {
     data: vtbData,
@@ -53,7 +56,7 @@ const MessageDetailsPage = () => {
     error: vtbError,
   } = useQuery(GetVtbBerichtDocument, {
     variables: { id },
-    skip: !features?.toggles.vtbBerichtenEnabled,
+    skip: !berichtenEnabled || !vtbBerichtenEnabled,
   });
 
   useEffect(() => {
@@ -106,14 +109,17 @@ const MessageDetailsPage = () => {
         error={Boolean(error)}
         messageText={message?.berichtTekst}
       />
-      <DocumentsList
-        loading={loading}
-        error={Boolean(error)}
-        documents={message?.documenten}
-        getDownloadLink={(doc) =>
-          `${restUri}/berichten/${id}/document/${doc.uuid}/content`
-        }
-      />
+      {!loading && (
+        <DocumentsList
+          loading={loading}
+          error={Boolean(error)}
+          documents={message?.documenten}
+          showEmpty={false}
+          getDownloadLink={(doc) =>
+            `${restUri}/${berichtenApi}/${id}/document/${doc.uuid}/content`
+          }
+        />
+      )}
     </PageGrid>
   );
 };

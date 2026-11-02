@@ -31,6 +31,7 @@ import { useContext } from "react";
 const MessagesPage = () => {
   const intl = useIntl();
   const { features } = useContext(AppContext);
+  const berichtenEnabled = features?.modules.berichten?.enabled;
   const vtbBerichtenEnabled = features?.toggles.vtbBerichtenEnabled;
   const {
     data: berichtenData,
@@ -38,7 +39,7 @@ const MessagesPage = () => {
     error: berichtenError,
     refetch: refetchBerichten,
   } = useQuery(GetBerichtenDocument, {
-    skip: vtbBerichtenEnabled,
+    skip: !berichtenEnabled || vtbBerichtenEnabled,
     variables: { pageSize: 10 },
     fetchPolicy: "cache-and-network",
   });
@@ -48,7 +49,7 @@ const MessagesPage = () => {
     error: vtbError,
     refetch: refetchVtbMessages,
   } = useQuery(GetVtbBerichtenDocument, {
-    skip: !vtbBerichtenEnabled,
+    skip: !berichtenEnabled || !vtbBerichtenEnabled,
     variables: { pageSize: 10 },
     fetchPolicy: "cache-and-network",
   });
@@ -57,9 +58,8 @@ const MessagesPage = () => {
   const error = berichtenError || vtbError;
   const refetch = berichtenData ? refetchBerichten : refetchVtbMessages;
   const messages =
-    (berichtenData?.getBerichten.content as Bericht[]) ||
-    (vtbData?.getVTBBerichten?.content as VtbBericht[]) ||
-    undefined;
+    (berichtenData?.getBerichten.content as Bericht[] | undefined) ||
+    (vtbData?.getVTBBerichten?.content as VtbBericht[] | undefined);
   const totalElements =
     berichtenData?.getBerichten.totalElements ||
     vtbData?.getVTBBerichten?.totalElements ||

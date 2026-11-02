@@ -126,7 +126,9 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     updateNavigationItems(newNavigationItems);
   }, [themesData, initNavigationItems, themes]);
 
+  const berichtenEnabled = features?.modules.berichten?.enabled;
   const vtbBerichtenEnabled = features?.toggles.vtbBerichtenEnabled;
+  const countEnabled = features?.toggles.messageCountEnabled;
   const messageCountOptions = {
     pollInterval: features?.properties?.messageCountPollingInterval || 30000,
     fetchPolicy: "cache-and-network",
@@ -135,20 +137,11 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     },
   } as const;
 
-  console.log(
-    "skip message",
-    !features?.toggles.messageCountEnabled || vtbBerichtenEnabled,
-  );
-  console.log(
-    "skip vtb message",
-    !features?.toggles.messageCountEnabled || !vtbBerichtenEnabled,
-  );
-
   const { refetch: refetchBerichtenCount, data: berichtenData } = useQuery(
     GetUnopenedBerichtenCountDocument,
     {
       ...messageCountOptions,
-      skip: !features?.toggles.messageCountEnabled || vtbBerichtenEnabled,
+      skip: !countEnabled || !berichtenEnabled || vtbBerichtenEnabled,
     },
   );
 
@@ -156,17 +149,17 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     GetUnopenedVtbBerichtenCountDocument,
     {
       ...messageCountOptions,
-      skip: !features?.toggles.messageCountEnabled || !vtbBerichtenEnabled,
+      skip: !countEnabled || !berichtenEnabled || !vtbBerichtenEnabled,
     },
   );
 
-  const messageCount = useMemo(
-    () =>
-      vtbBerichtenEnabled
-        ? (vtbData?.getUnopenedVTBBerichtenCount ?? 0)
-        : (berichtenData?.getUnopenedBerichtenCount ?? 0),
-    [vtbBerichtenEnabled, berichtenData, vtbData],
-  );
+  const messageCount = useMemo(() => {
+    if (!countEnabled || !berichtenEnabled) return 0;
+
+    return vtbBerichtenEnabled
+      ? (vtbData?.getUnopenedVTBBerichtenCount ?? 0)
+      : (berichtenData?.getUnopenedBerichtenCount ?? 0);
+  }, [vtbBerichtenEnabled, berichtenData, vtbData]);
 
   const loading = loadingConfig || loadingThemes || loadingUser;
 
