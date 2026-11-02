@@ -56,6 +56,7 @@ const featuresResponse = {
     openProductEnabled: false,
     overviewIntroEnabled: false,
     overviewMaintenanceAlertEnabled: false,
+    vtbBerichtenEnabled: false,
   },
 };
 

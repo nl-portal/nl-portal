@@ -18,6 +18,7 @@ import {
   GetOpenProductHoofdThemasByProductenDocument,
   GetOpenProductHoofdThemasByProductenQuery,
   GetUnopenedBerichtenCountDocument,
+  GetUnopenedVtbBerichtenCountDocument,
 } from "@nl-portal/nl-portal-api";
 import { useQuery } from "@apollo/client/react";
 import {
@@ -47,9 +48,9 @@ interface AppContextType {
   history: string[];
   features: Features | undefined;
   themes: Themes;
-  messagesCount: number;
+  messageCount: number;
   refetchThemes: () => void;
-  refetchMessages: () => void;
+  refetchMessageCount: () => void;
 }
 
 const AppContext = createContext<AppContextType>({} as AppContextType);
@@ -125,21 +126,46 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     updateNavigationItems(newNavigationItems);
   }, [themesData, initNavigationItems, themes]);
 
-  const { refetch: refetchMessages, data: messagesData } = useQuery(
+  const vtbBerichtenEnabled = features?.toggles.vtbBerichtenEnabled;
+  const messageCountOptions = {
+    pollInterval: features?.properties?.messageCountPollingInterval || 30000,
+    fetchPolicy: "cache-and-network",
+    skipPollAttempt: () => {
+      return !document.hasFocus();
+    },
+  } as const;
+
+  console.log(
+    "skip message",
+    !features?.toggles.messageCountEnabled || vtbBerichtenEnabled,
+  );
+  console.log(
+    "skip vtb message",
+    !features?.toggles.messageCountEnabled || !vtbBerichtenEnabled,
+  );
+
+  const { refetch: refetchBerichtenCount, data: berichtenData } = useQuery(
     GetUnopenedBerichtenCountDocument,
     {
-      pollInterval: features?.properties?.messageCountPollingInterval || 30000,
-      fetchPolicy: "cache-and-network",
-      skip: !features?.toggles.messageCountEnabled,
-      skipPollAttempt: () => {
-        return !document.hasFocus();
-      },
+      ...messageCountOptions,
+      skip: !features?.toggles.messageCountEnabled || vtbBerichtenEnabled,
     },
   );
 
-  const messagesCount = useMemo(
-    () => messagesData?.getUnopenedBerichtenCount || 0,
-    [messagesData],
+  const { refetch: refetchVtbCount, data: vtbData } = useQuery(
+    GetUnopenedVtbBerichtenCountDocument,
+    {
+      ...messageCountOptions,
+      skip: !features?.toggles.messageCountEnabled || !vtbBerichtenEnabled,
+    },
+  );
+
+  const messageCount = useMemo(
+    () =>
+      vtbBerichtenEnabled
+        ? (vtbData?.getUnopenedVTBBerichtenCount ?? 0)
+        : (berichtenData?.getUnopenedBerichtenCount ?? 0),
+    [vtbBerichtenEnabled, berichtenData, vtbData],
   );
 
   const loading = loadingConfig || loadingThemes || loadingUser;
@@ -162,9 +188,11 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
         history,
         features,
         themes,
-        messagesCount,
+        messageCount,
         refetchThemes,
-        refetchMessages,
+        refetchMessageCount: vtbBerichtenEnabled
+          ? refetchVtbCount
+          : refetchBerichtenCount,
       }}
     >
       {children}

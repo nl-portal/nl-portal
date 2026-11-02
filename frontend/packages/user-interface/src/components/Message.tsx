@@ -20,7 +20,7 @@ import { RouterOutletContext } from "../interfaces/router-outlet-context";
 import { FormattedMessage } from "react-intl";
 import { DataBadge } from "@gemeente-denhaag/data-badge";
 import styles from "./Message.module.scss";
-import { Bericht } from "@nl-portal/nl-portal-api";
+import { Bericht, VtbBericht } from "@nl-portal/nl-portal-api";
 import { useContext } from "react";
 import {
   LocaleContext,
@@ -28,7 +28,7 @@ import {
 } from "@nl-portal/nl-portal-localization";
 
 interface Props {
-  message: Bericht;
+  message: Bericht | VtbBericht;
 }
 
 const Message = ({ message }: Props) => {
@@ -39,9 +39,9 @@ const Message = ({ message }: Props) => {
   return (
     <ActionSingle
       labels={labels}
-      dateTime={message.publicatiedatum}
       locale={currentLocale}
-      link={paths.message(message.id ?? undefined)}
+      dateTime={message.publicatiedatum ?? undefined}
+      link={paths.message(message.uuid ?? undefined)}
       Link={PortalLink}
     >
       {message.geopend ? (
