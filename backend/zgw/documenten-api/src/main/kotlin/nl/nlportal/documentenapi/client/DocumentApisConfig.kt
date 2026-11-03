@@ -60,13 +60,25 @@ class DocumentApisConfig {
                 .firstOrNull()
                 ?: throw NullPointerException("No documentapi configuration found for handling: $documentUrl")
 
-        class DocumentApiConfig {
-            var url: String = ""
-            var clientId: String? = null
-            var secret: String? = null
-            var rsin: String? = null
-            var documentTypeUrl: String? = null
-            var ssl: Ssl? = null
-        }
+        fun getDocumentApiByDocumentTypeUrl(documentTypeUrl: String?): String =
+            if (documentTypeUrl != null) {
+                configurations
+                    .filterValues { documentenApiConfig ->
+                        documentTypeUrl.contains(documentenApiConfig.documentTypeUrl)
+                    }.keys
+                    .firstOrNull()
+                    ?: defaultDocumentApi
+            } else {
+                defaultDocumentApi
+            }
+
+        class DocumentApiConfig(
+            var url: String = "",
+            var clientId: String? = null,
+            var secret: String? = null,
+            var rsin: String = "",
+            var documentTypeUrl: String = "",
+            var ssl: Ssl? = null,
+        )
     }
 }

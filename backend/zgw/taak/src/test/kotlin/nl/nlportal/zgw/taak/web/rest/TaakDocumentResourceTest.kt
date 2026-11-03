@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zgw.taak.web.rest
 
+import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
@@ -45,7 +46,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Flux
-import java.util.UUID
 
 class TaakDocumentResourceTest {
     private val taakService: TaakService = mock()
@@ -61,7 +61,7 @@ class TaakDocumentResourceTest {
 
     @BeforeEach
     fun setUp() {
-        resource = TaakDocumentResource(taakService, documentenApiService, virusScanService, documentApisConfig)
+        resource = TaakDocumentResource(taakService, documentenApiService, virusScanService)
     }
 
     @Test
@@ -88,7 +88,7 @@ class TaakDocumentResourceTest {
             val file = filePart("../../etc/passwd", payload)
             whenever(virusScanService.scan(any<ByteArray>()))
                 .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
-            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull(), anyOrNull()))
+            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(stubDocument())
 
             val response = resource.uploadDocument(taakId, file, null, authentication)
@@ -99,7 +99,6 @@ class TaakDocumentResourceTest {
             verify(documentenApiService).uploadDocument(
                 bytesCaptor.capture(),
                 filenameCaptor.capture(),
-                any(),
                 anyOrNull(),
                 anyOrNull(),
             )
@@ -129,7 +128,7 @@ class TaakDocumentResourceTest {
             val file = filePart("doc.pdf", payload)
             whenever(virusScanService.scan(any<ByteArray>()))
                 .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
-            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull(), anyOrNull()))
+            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(stubDocument())
 
             resource.uploadDocument(taakId, file, null, authentication)
@@ -139,7 +138,6 @@ class TaakDocumentResourceTest {
             verify(virusScanService).scan(scanCaptor.capture())
             verify(documentenApiService).uploadDocument(
                 uploadCaptor.capture(),
-                any(),
                 any(),
                 anyOrNull(),
                 anyOrNull(),
@@ -172,13 +170,13 @@ class TaakDocumentResourceTest {
             val beschrijving = "a".repeat(1000)
             whenever(virusScanService.scan(any<ByteArray>()))
                 .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
-            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull(), anyOrNull()))
+            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull()))
                 .thenReturn(stubDocument())
 
             val response = resource.uploadDocument(taakId, file, null, authentication, beschrijving)
 
             assertEquals(HttpStatus.OK, response.statusCode)
-            verify(documentenApiService).uploadDocument(any(), any(), any(), anyOrNull(), eq(beschrijving))
+            verify(documentenApiService).uploadDocument(any(), any(), anyOrNull(), eq(beschrijving))
         }
 
     private fun filePart(
