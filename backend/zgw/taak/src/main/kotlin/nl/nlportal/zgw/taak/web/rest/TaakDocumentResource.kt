@@ -41,7 +41,6 @@ class TaakDocumentResource(
     private val taakService: TaakService,
     private val documentenApiService: DocumentenApiService,
     private val virusScanService: VirusScanService?,
-    private val documentApisConfig: DocumentApisConfig,
 ) {
     @PostMapping(
         value = ["/{taakId}/document/content"],
@@ -53,7 +52,6 @@ class TaakDocumentResource(
         @RequestPart("informatieobjecttype", required = false) informatieobjecttype: String?,
         authentication: CommonGroundAuthentication,
         @RequestPart("beschrijving", required = false) beschrijving: String? = null,
-        @RequestPart("documentapi", required = false) documentapi: String? = null,
     ): ResponseEntity<Any> {
         taakService.getTaakByIdV2(taakId, authentication)
 
@@ -80,7 +78,6 @@ class TaakDocumentResource(
                 documentenApiService.uploadDocument(
                     content = bufferedContent,
                     filename = sanitizedFilename,
-                    documentApi = documentapi ?: documentApisConfig.properties.defaultDocumentApi,
                     informatieobjecttype = informatieobjecttype,
                     beschrijving = beschrijving,
                 ),
