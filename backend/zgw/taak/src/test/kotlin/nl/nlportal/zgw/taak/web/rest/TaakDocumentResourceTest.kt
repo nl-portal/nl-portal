@@ -15,6 +15,7 @@
  */
 package nl.nlportal.zgw.taak.web.rest
 
+import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
@@ -45,7 +46,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.web.server.ResponseStatusException
 import reactor.core.publisher.Flux
-import java.util.UUID
 
 class TaakDocumentResourceTest {
     private val taakService: TaakService = mock()

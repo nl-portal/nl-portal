@@ -15,9 +15,9 @@
  */
 package nl.nlportal.zgw.taak.web.rest
 
+import java.util.UUID
 import kotlinx.coroutines.reactive.awaitSingle
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.domain.VirusScanStatus
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 @RestController
 @RequestMapping(value = ["/api/taak"])

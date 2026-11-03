@@ -15,15 +15,15 @@
  */
 package nl.nlportal.documentenapi.service
 
+import java.net.URI
+import java.util.UUID
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.client.DocumentenApiClient
 import nl.nlportal.documentenapi.domain.Document
 import nl.nlportal.documentenapi.domain.DocumentStatus
 import nl.nlportal.documentenapi.domain.PostEnkelvoudiginformatieobjectRequest
-import java.net.URI
-import java.util.UUID
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runTest
 import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.NullSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito.mock
