@@ -58,6 +58,11 @@ const featuresResponse = {
     overviewMaintenanceAlertEnabled: false,
     vtbBerichtenEnabled: false,
   },
+  modules: {
+    berichten: {
+      enabled: true,
+    },
+  },
 };
 
 vi.stubGlobal(
