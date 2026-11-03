@@ -6,5 +6,4 @@
 * De instelling `hideLabel` (Hide label) werkt nu voor tekstvelden, tekstvakken, datum/tijd, select, adres, radio en selectboxes. Het label wordt verborgen en het veld krijgt een `aria-label`, zodat het voor schermlezers benoemd blijft. Formulieren die `hideLabel` al aan hadden staan, tonen dit label vanaf deze versie dus niet meer.
 
 ## Nieuwe Functionaliteit
-* Taak upload endpoint heeft een extra optioneel property 'documentapi', hiermee kan je het document uploaden naar een andere document api dan de default
 

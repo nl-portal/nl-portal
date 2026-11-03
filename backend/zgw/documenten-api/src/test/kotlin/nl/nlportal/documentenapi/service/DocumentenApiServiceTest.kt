@@ -28,8 +28,10 @@ import nl.nlportal.documentenapi.domain.Vertrouwelijkheid.OPENBAAR
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.NullSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.Mockito.mock
@@ -109,7 +111,6 @@ internal class DocumentenApiServiceTest(
         documentenApiService.uploadDocument(
             content = "hello".toByteArray(),
             filename = "hello.txt",
-            documentApi = "openzaak",
             beschrijving = beschrijving,
         )
 
@@ -117,6 +118,23 @@ internal class DocumentenApiServiceTest(
         verify(documentenApiClient).postDocument(requestCaptor.capture(), any(), eq("openzaak"))
         return requestCaptor.firstValue
     }
+
+    @Test
+    fun `should upload document to other document api`() =
+        runTest {
+            val informatieobjecttypeUrl = "http://localhost:8002/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000"
+            documentenApiService.uploadDocument(
+                content = "hello".toByteArray(),
+                filename = "hello.txt",
+                informatieobjecttype = informatieobjecttypeUrl,
+            )
+
+            val requestCaptor = argumentCaptor<PostEnkelvoudiginformatieobjectRequest>()
+            verify(documentenApiClient).postDocument(requestCaptor.capture(), any(), eq("example"))
+            val request = requestCaptor.firstValue
+
+            assertTrue(jacksonObjectMapper().writeValueAsString(request).contains(informatieobjecttypeUrl))
+        }
 
     private fun getTestDocument(status: DocumentStatus?): Document =
         Document(
