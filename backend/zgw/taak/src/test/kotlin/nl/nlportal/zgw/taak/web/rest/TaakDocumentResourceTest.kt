@@ -109,6 +109,41 @@ class TaakDocumentResourceTest {
         }
 
     @Test
+    fun `sanitizes filename and passes buffered bytes to uploadDocument for other document api`() =
+        runTest {
+            val taakId = UUID.randomUUID()
+            val payload = "PDFCONTENT".toByteArray()
+            val file = filePart("../../etc/passwd", payload)
+            whenever(virusScanService.scan(any<ByteArray>()))
+                .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
+            whenever(documentenApiService.uploadDocument(any(), any(), any(), anyOrNull(), anyOrNull()))
+                .thenReturn(stubDocument())
+
+            val response =
+                resource.uploadDocument(
+                    taakId = taakId,
+                    file = file,
+                    informatieobjecttype = null,
+                    authentication = authentication,
+                    documentapi = "dummy",
+                )
+
+            assertEquals(HttpStatus.OK, response.statusCode)
+            val filenameCaptor = argumentCaptor<String>()
+            val bytesCaptor = argumentCaptor<ByteArray>()
+            verify(documentenApiService).uploadDocument(
+                bytesCaptor.capture(),
+                filenameCaptor.capture(),
+                any(),
+                anyOrNull(),
+                anyOrNull(),
+            )
+            assertFalse(filenameCaptor.firstValue.contains('/'))
+            assertFalse(filenameCaptor.firstValue.contains('\\'))
+            assertEquals(payload.toList(), bytesCaptor.firstValue.toList())
+        }
+
+    @Test
     fun `returns 400 when virus found`() =
         runTest {
             val taakId = UUID.randomUUID()

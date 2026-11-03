@@ -53,6 +53,7 @@ class TaakDocumentResource(
         @RequestPart("informatieobjecttype", required = false) informatieobjecttype: String?,
         authentication: CommonGroundAuthentication,
         @RequestPart("beschrijving", required = false) beschrijving: String? = null,
+        @RequestPart("documentapi", required = false) documentapi: String? = null,
     ): ResponseEntity<Any> {
         taakService.getTaakByIdV2(taakId, authentication)
 
@@ -74,15 +75,14 @@ class TaakDocumentResource(
             return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
         }
 
-        val documentApi = documentApisConfig.properties.defaultDocumentApi
         return try {
             ResponseEntity.ok(
                 documentenApiService.uploadDocument(
-                    bufferedContent,
-                    sanitizedFilename,
-                    documentApi,
-                    informatieobjecttype,
-                    beschrijving,
+                    content = bufferedContent,
+                    filename = sanitizedFilename,
+                    documentApi = documentapi ?: documentApisConfig.properties.defaultDocumentApi,
+                    informatieobjecttype = informatieobjecttype,
+                    beschrijving = beschrijving,
                 ),
             )
         } catch (e: Exception) {
