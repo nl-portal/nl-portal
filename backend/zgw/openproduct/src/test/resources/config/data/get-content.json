@@ -8,7 +8,31 @@
       "taal": "nl",
       "content": "test data",
       "labels": [
-        "naam"
+        "klantportaal"
+      ]
+    },
+    {
+      "uuid": "bcc4ba4e-8022-447f-8ffd-d65781a51d24",
+      "taal": "en",
+      "content": "test data",
+      "labels": [
+        "klantportaal"
+      ]
+    },
+    {
+      "uuid": "bcc4ba4e-8022-447f-8ffd-d65781a51d24",
+      "taal": "nl",
+      "content": "test data",
+      "labels": [
+        "klantportaal1"
+      ]
+    },
+    {
+      "uuid": "bcc4ba4e-8022-447f-8ffd-d65781a51d24",
+      "taal": "en",
+      "content": "test data",
+      "labels": [
+        "klantportaal1"
       ]
     }
   ]
