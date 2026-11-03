@@ -1,0 +1,123 @@
+{
+    "interactieId": "f6e04709-6340-46b9-b693-1d8f84e722fa",
+    "status": "OK",
+    "resultaat": [
+        {
+            "specversion": "1.0",
+            "id": "061299ed-10a3-4604-80ca-47c507bffbbb",
+            "source": "urn:nld:oin:00000001816076790000:openklant",
+            "type": "nl.overheid.klanten.klantcontact-geregistreerd",
+            "subject": "0b79374b-cac4-48a9-a5e4-4471d22acdd7",
+            "time": "2027-01-12T14:30:00Z",
+            "datacontenttype": "application/json",
+            "wasderivedfrom": "zaak:34f29861-a93c-4bd9-aeb6-9ab9917e2d45",
+            "wasattributedto": "urn:nld:oin:00000001816076790000",
+            "activity": "Registreren klantcontact",
+            "entitytype": "klantcontact",
+            "data": {
+                "burgerservicenummer": "999993847",
+                "linkTo": "http://localhost:8083/openklant/0b79374b-cac4-48a9-a5e4-4471d22acdd7"
+            }
+        },
+        {
+            "specversion": "1.0",
+            "id": "1f2fc28f-7def-4c07-a705-63c5692097f6",
+            "source": "urn:nld:oin:00000004000000034000:besluit",
+            "type": "nl.overheid.besluit.besluit-gepubliceerd",
+            "subject": "70ba118d-dd18-4952-9755-eac6e2c89c48",
+            "time": "2027-01-07T14:30:00Z",
+            "datacontenttype": "application/json",
+            "wasderivedfrom": "zaak:492443d1-a39b-4b9a-8033-156006754d85",
+            "wasattributedto": "urn:nld:oin:00000004000000034000",
+            "activity": "Publiceren besluit",
+            "entitytype": "besluit",
+            "data": {
+                "burgerservicenummer": "999993847",
+                "linkTo": "http://localhost:8083/besluit/70ba118d-dd18-4952-9755-eac6e2c89c48"
+            }
+        },
+        {
+            "specversion": "1.0",
+            "id": "d9757446-3299-45cc-8f56-6c15b671f004",
+            "source": "urn:nld:bsn:999993847:wallet",
+            "type": "nl.overheid.verzoeken.verzoek-ingediend",
+            "subject": "c90a704b-959d-4ff2-af6a-eb236214381b",
+            "time": "2027-01-06T14:30:00Z",
+            "datacontenttype": "application/json",
+            "wasderivedfrom": "zaak:492443d1-a39b-4b9a-8033-156006754d85",
+            "wasattributedto": "urn:nld:bsn:999993847",
+            "activity": "Indienen verzoek",
+            "entitytype": "verzoek",
+            "data": {
+                "burgerservicenummer": "999993847"
+            }
+        },
+        {
+            "specversion": "1.0",
+            "id": "a5a3801d-5498-4c97-a3c4-4b0b0f5fd7fd",
+            "source": "urn:nld:oin:00000004000000034000:zaken",
+            "type": "nl.overheid.zaken.zaak-geregistreerd",
+            "subject": "492443d1-a39b-4b9a-8033-156006754d85",
+            "time": "2027-01-05T14:30:00Z",
+            "datacontenttype": "application/json",
+            "wasderivedfrom": "zaak:1816024e-b1e5-49a1-91cf-bdbed2130173",
+            "wasattributedto": "urn:nld:oin:00000004000000034000",
+            "activity": "Registreren zaak",
+            "entitytype": "zaak",
+            "data": {
+                "burgerservicenummer": "999993847",
+                "linkTo": "http://localhost:8083/zaken/492443d1-a39b-4b9a-8033-156006754d85"
+            }
+        },
+        {
+            "specversion": "1.0",
+            "id": "ec5a64ed-3f61-4594-8ad2-5fcb402505ff",
+            "source": "urn:nld:oin:00000001816076790000:zaken",
+            "type": "nl.overheid.zaken.zaak-geregistreerd",
+            "subject": "1816024e-b1e5-49a1-91cf-bdbed2130173",
+            "time": "2027-01-04T12:30:00Z",
+            "datacontenttype": "application/json",
+            "wasderivedfrom": "zaak:34f29861-a93c-4bd9-aeb6-9ab9917e2d45",
+            "wasattributedto": "urn:nld:oin:00000001816076790000",
+            "activity": "Registreren zaak",
+            "entitytype": "zaak",
+            "data": {
+                "burgerservicenummer": "999993847",
+                "linkTo": "http://localhost:8083/zaken/1816024e-b1e5-49a1-91cf-bdbed2130173"
+            }
+        },
+        {
+            "specversion": "1.0",
+            "id": "1d904bfc-79b4-4caa-b67e-1c24436cfb87",
+            "source": "urn:nld:oin:00000001816076790000:zaken",
+            "type": "nl.overheid.zaken.zaak-geregistreerd",
+            "subject": "34f29861-a93c-4bd9-aeb6-9ab9917e2d45",
+            "time": "2027-01-03T14:50:00Z",
+            "datacontenttype": "application/json",
+            "wasderivedfrom": "klantcontact:460ddd17-4159-42e0-8dde-106d088ad798",
+            "wasattributedto": "urn:nld:oin:00000001816076790000",
+            "activity": "Registreren zaak",
+            "entitytype": "zaak",
+            "data": {
+                "burgerservicenummer": "999993847",
+                "linkTo": "http://localhost:8083/zaken/34f29861-a93c-4bd9-aeb6-9ab9917e2d45"
+            }
+        },
+        {
+            "specversion": "1.0",
+            "id": "5ef0e459-5ffd-4835-a1bb-4ec9361ae8d5",
+            "source": "urn:nld:oin:00000001816076790000:openklant",
+            "type": "nl.overheid.klanten.klantcontact-geregistreerd",
+            "subject": "460ddd17-4159-42e0-8dde-106d088ad798",
+            "time": "2027-01-02T15:30:00Z",
+            "datacontenttype": "application/json",
+            "wasattributedto": "urn:nld:oin:00000001816076790000",
+            "activity": "Registreren klantcontact",
+            "entitytype": "klantcontact",
+            "data": {
+                "burgerservicenummer": "999993847",
+                "linkTo": "http://localhost:8083/openklant/460ddd17-4159-42e0-8dde-106d088ad798"
+            }
+        }
+    ]
+}

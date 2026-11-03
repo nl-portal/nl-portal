@@ -70,23 +70,24 @@ const TableList = ({
       : [...(hdrs || [])];
   const rows =
     rws &&
-    rws.map((row) =>
-      row.find((r) => r.href)
+    rws.map((row) => {
+      const href = row.find((cell) => cell.href)?.href;
+      return hasLink
         ? [
-            ...row,
+            ...row.map((cell) => (href ? { ...cell, href } : cell)),
             {
-              href: row[0].href,
+              href,
               className: styles["table-list__icon"],
-              children: (
+              children: href ? (
                 <div className={styles["table-list__arrow"]}>
                   <span className={styles["table-list__link-label"]}>Link</span>
                   <ArrowRightIcon />
                 </div>
-              ),
+              ) : undefined,
             },
           ]
-        : row,
-    );
+        : row;
+    });
   const title = titleTranslationId
     ? intl.formatMessage({ id: titleTranslationId })
     : undefined;

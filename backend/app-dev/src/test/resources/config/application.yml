@@ -59,6 +59,8 @@ nl-portal:
             credentials:
                 secret: test-secret
     config:
+        pages:
+            enabled: true
         besluitenapi:
             enabled: true
             properties:

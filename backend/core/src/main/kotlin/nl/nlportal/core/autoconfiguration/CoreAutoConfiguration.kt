@@ -17,13 +17,24 @@ package nl.nlportal.core.autoconfiguration
 
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
+import nl.nlportal.core.frontend.configuration.PagesConfigurationProperties
 import nl.nlportal.core.frontend.menu.FrontendMenuAudienceResolver
 import nl.nlportal.core.frontend.menu.FrontendMenuService
 import nl.nlportal.core.frontend.menu.web.rest.FrontendMenuResource
+import nl.nlportal.core.frontend.page.PageConfigValidator
+import nl.nlportal.core.frontend.page.PageProjection
+import nl.nlportal.core.frontend.page.PageService
+import nl.nlportal.core.frontend.page.PagesStartupValidation
+import nl.nlportal.core.frontend.page.resolver.PageDataResolver
+import nl.nlportal.core.frontend.page.template.FilePageTemplateSource
+import nl.nlportal.core.frontend.page.template.PageTemplateLoader
+import nl.nlportal.core.frontend.page.template.PageTemplateSource
+import nl.nlportal.core.frontend.page.web.rest.FrontendPageResource
 import nl.nlportal.core.frontend.service.FrontendConfigurationService
 import nl.nlportal.core.frontend.web.rest.FrontendConfigurationResource
 import nl.nlportal.core.frontend.web.rest.PingResource
 import nl.nlportal.core.util.Mapper
+import org.springframework.beans.factory.ObjectProvider
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -35,6 +46,7 @@ import tools.jackson.databind.json.JsonMapper
 @EnableConfigurationProperties(
     FrontendModuleConfigurationProperties::class,
     FrontendConfigurationProperties::class,
+    PagesConfigurationProperties::class,
 )
 class CoreAutoConfiguration {
     @Bean("objectMapper")
@@ -76,7 +88,68 @@ class CoreAutoConfiguration {
     ) = FrontendMenuResource(frontendMenuService)
 
     @Bean
+    @ConditionalOnProperty(prefix = "nl-portal", name = [PAGES_ENABLED, MENU_ENTRIES_ENABLED], havingValue = "true")
+    @ConditionalOnMissingBean(PageProjection::class)
+    fun pageProjection() = PageProjection()
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal", name = [PAGES_ENABLED, MENU_ENTRIES_ENABLED], havingValue = "true")
+    @ConditionalOnMissingBean(FilePageTemplateSource::class)
+    fun filePageTemplateSource(pagesConfigurationProperties: PagesConfigurationProperties) = FilePageTemplateSource(pagesConfigurationProperties.properties.templateLocations)
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal", name = [PAGES_ENABLED, MENU_ENTRIES_ENABLED], havingValue = "true")
+    @ConditionalOnMissingBean(PageTemplateLoader::class)
+    fun pageTemplateLoader(pageTemplateSources: ObjectProvider<PageTemplateSource>) = PageTemplateLoader(pageTemplateSources.orderedStream().toList())
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal", name = [PAGES_ENABLED, MENU_ENTRIES_ENABLED], havingValue = "true")
+    @ConditionalOnMissingBean(PageConfigValidator::class)
+    fun pageConfigValidator(
+        pageDataResolvers: ObjectProvider<PageDataResolver>,
+        pageProjection: PageProjection,
+        pageTemplateLoader: PageTemplateLoader,
+    ) = PageConfigValidator(pageDataResolvers.orderedStream().toList(), pageProjection, pageTemplateLoader.sources)
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal", name = [PAGES_ENABLED, MENU_ENTRIES_ENABLED], havingValue = "true")
+    @ConditionalOnMissingBean(PageService::class)
+    fun pageService(
+        frontendConfigurationProperties: FrontendConfigurationProperties,
+        frontendMenuService: FrontendMenuService,
+        pageDataResolvers: ObjectProvider<PageDataResolver>,
+        pageProjection: PageProjection,
+        pageConfigValidator: PageConfigValidator,
+        pageTemplateLoader: PageTemplateLoader,
+    ) = PageService(
+        properties = frontendConfigurationProperties,
+        menuService = frontendMenuService,
+        resolvers = pageDataResolvers.orderedStream().toList(),
+        projection = pageProjection,
+        validator = pageConfigValidator,
+        templateLoader = pageTemplateLoader,
+    )
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal", name = [PAGES_ENABLED, MENU_ENTRIES_ENABLED], havingValue = "true")
+    @ConditionalOnMissingBean(FrontendPageResource::class)
+    fun frontendPageResource(pageService: PageService) = FrontendPageResource(pageService)
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal", name = [PAGES_ENABLED, MENU_ENTRIES_ENABLED], havingValue = "true")
+    @ConditionalOnMissingBean(PagesStartupValidation::class)
+    fun pagesStartupValidation(
+        frontendConfigurationProperties: FrontendConfigurationProperties,
+        pageConfigValidator: PageConfigValidator,
+    ) = PagesStartupValidation(frontendConfigurationProperties, pageConfigValidator)
+
+    @Bean
     @ConditionalOnProperty(prefix = "nl-portal.support", name = ["ping-endpoint.enabled"], havingValue = "true")
     @ConditionalOnMissingBean(PingResource::class)
     fun pingResource(): PingResource = PingResource()
+
+    companion object {
+        const val PAGES_ENABLED = "config.pages.enabled"
+        const val MENU_ENTRIES_ENABLED = "frontend.toggles.menu-entries-enabled"
+    }
 }

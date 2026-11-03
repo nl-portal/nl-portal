@@ -1,0 +1,32 @@
+{
+  "naam": "Mijn vergunningen",
+  "template": "{% heading level: 1 %}{{ 'titel' | i18n }}{% endheading %}\n{% description-list title: \"persoon\" %}\n{{ 'naam' | i18n }} | {{ personen.naam | escape }}\n{{ 'geboortedatum' | i18n }} | {{ personen.geboortedatum | date | escape }}\n{% enddescription-list %}\n{% filter binding: \"vergunningen\" param: \"filter.status\" title: \"status\" page-param: \"page\" %}\n | {{ 'alle' | i18n }}\nopen | {{ 'open' | i18n }}\nin behandeling | {{ 'inbehandeling' | i18n }}\ngesloten | {{ 'gesloten' | i18n }}\n{% endfilter %}\n{% table title: \"overzicht\" binding: \"vergunningen\" page-param: \"page\" page-size: 5 total: vergunningen.total %}\n{{ 'naam' | i18n }} | {{ 'status' | i18n }} | {{ 'startdatum' | i18n }}\n{% for vergunning in vergunningen.items %}{{ vergunning.naam | escape }} | {{ vergunning.status | capitalize | escape }} | {{ vergunning.startDatum | date | escape }}\n{% endfor %}{% endtable %}\n",
+  "messages": {
+    "nl-NL": {
+      "titel": "Mijn vergunningen",
+      "persoon": "Persoon",
+      "naam": "Naam",
+      "geboortedatum": "Geboortedatum",
+      "status": "Status",
+      "alle": "Alle",
+      "open": "Open",
+      "inbehandeling": "In behandeling",
+      "gesloten": "Gesloten",
+      "startdatum": "Startdatum",
+      "overzicht": "Overzicht"
+    },
+    "en-GB": {
+      "titel": "My permits",
+      "status": "Status",
+      "open": "Open",
+      "persoon": "Person",
+      "naam": "Name",
+      "geboortedatum": "Date of birth",
+      "alle": "All",
+      "inbehandeling": "In progress",
+      "gesloten": "Closed",
+      "startdatum": "Start date",
+      "overzicht": "Overview"
+    }
+  }
+}

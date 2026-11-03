@@ -1,0 +1,41 @@
+{
+    "mappings": [
+        {
+            "priority": 1,
+            "scenarioName": "status-999992442",
+            "requiredScenarioState": "Started",
+            "newScenarioState": "Completed",
+            "request": {
+                "method": "GET",
+                "urlPath": "/status/d34cbfee-abc9-4098-979d-e7846256c294"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "jsonBody": {
+                    "interactieId": "d34cbfee-abc9-4098-979d-e7846256c294",
+                    "status": "IN_PROGRESS"
+                }
+            }
+        },
+        {
+            "priority": 1,
+            "scenarioName": "status-999992442",
+            "requiredScenarioState": "Completed",
+            "newScenarioState": "Started",
+            "request": {
+                "method": "GET",
+                "urlPath": "/status/d34cbfee-abc9-4098-979d-e7846256c294"
+            },
+            "response": {
+                "status": 200,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "bodyFileName": "status/999992442.json"
+            }
+        }
+    ]
+}

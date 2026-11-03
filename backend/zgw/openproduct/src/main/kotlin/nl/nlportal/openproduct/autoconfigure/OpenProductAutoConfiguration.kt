@@ -22,6 +22,7 @@ import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductDmnClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
+import nl.nlportal.openproduct.page.OpenProductPageDataResolver
 import nl.nlportal.openproduct.security.config.ProductDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductPrefillService
@@ -80,6 +81,10 @@ class OpenProductAutoConfiguration {
             authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
             documentenApiService = documentenApiService,
         )
+
+    @Bean
+    @ConditionalOnMissingBean(OpenProductPageDataResolver::class)
+    fun openProductPageDataResolver(openProductService: OpenProductService): OpenProductPageDataResolver = OpenProductPageDataResolver(openProductService)
 
     @Bean("openProductDmnClient")
     fun openProductDmnClient(

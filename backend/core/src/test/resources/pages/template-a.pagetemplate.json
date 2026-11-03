@@ -1,0 +1,13 @@
+{
+  "naam": "Template A",
+  "template": "{{ 'titel' | i18n }} {{ items }}\n",
+  "messages": {
+    "nl-NL": {
+      "titel": "Producten",
+      "leeg": "Geen producten"
+    },
+    "en-GB": {
+      "titel": "Products"
+    }
+  }
+}

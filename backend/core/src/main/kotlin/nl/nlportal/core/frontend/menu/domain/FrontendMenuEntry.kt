@@ -20,6 +20,7 @@ data class FrontendMenuEntry(
     val icon: String,
     val group: Int?,
     val ordering: Int?,
+    val hidden: Boolean,
     val route: FrontendMenuRoute,
 )
 

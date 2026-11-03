@@ -25,6 +25,9 @@ In NL Portal kun je eenvoudig en veilig bestanden uitwisselen met de klant. Dit 
 ### Menu-items vanuit de backend
 Beheerders kunnen extra menu-items en pagina's toevoegen aan de standaard app-image via backend-configuratie, per doelgroep. Zie [Menu-items vanuit de backend](menu-entries.md).
 
+### Pagina's vanuit de backend
+Beheerders configureren LiquidJS-pagina's in de backend, met data uit Open Product of IKO, die de standaard app-image toont zonder frontend-build. Zie [Pagina's vanuit de backend](pages.md).
+
 ### Design system
 NL Portal gebruikt NL Design system als frontend. In dit design system zijn alle technische voorbereidingen voor het voldoen aan webtoegankelijkheidsregels zoals WCAG al getroffen. Daarnaast is het eenvoudig test stylen in de eigen huisstijl.
 

@@ -1,0 +1,20 @@
+{
+  "priority": 5,
+  "request": {
+    "method": "GET",
+    "urlPath": "/pages-mock/bedrijf"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "naam": "Bakkerij \"Het Wiel\" & Zn.",
+      "kvkNummer": "{{request.query.id}}"
+    },
+    "transformers": [
+      "response-template"
+    ]
+  }
+}

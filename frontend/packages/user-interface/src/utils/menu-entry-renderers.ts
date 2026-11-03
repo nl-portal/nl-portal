@@ -15,6 +15,7 @@
  */
 import { ComponentType } from "react";
 import MenuEntryPlaceholder from "../components/MenuEntryPlaceholder";
+import TemplatedPage from "../components/TemplatedPage";
 import { MenuEntry } from "./menu-entries";
 
 export type MenuEntryRendererProps = { entry: MenuEntry };
@@ -23,8 +24,6 @@ export const MENU_ENTRY_RENDERERS: Record<
   string,
   ComponentType<MenuEntryRendererProps>
 > = {
-  templated: MenuEntryPlaceholder,
+  templated: TemplatedPage,
   custom: MenuEntryPlaceholder,
 };
-
-export const MENU_ENTRY_SUB_PATH_TYPES = ["custom"];
