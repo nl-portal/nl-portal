@@ -122,6 +122,7 @@ services:
 
     nl-portal-openklant-2:
         image: maykinmedia/open-klant:2.19.2
+        platform: linux/amd64
         container_name: nl-portal-openklant-2
         profiles:
             - zgw
@@ -152,6 +153,7 @@ services:
 
     nl-portal-openklant-2-import:
         image: maykinmedia/open-klant:2.19.2
+        platform: linux/amd64
         container_name: nl-portal-openklant-2-import
         profiles:
             - zgw

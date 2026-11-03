@@ -3,6 +3,7 @@ services:
   # openklant 2
   openklant-2:
       image: maykinmedia/open-klant:2.19.2
+      platform: linux/amd64
       container_name: openklant-2-test
       ports:
           - "9007:8000"
