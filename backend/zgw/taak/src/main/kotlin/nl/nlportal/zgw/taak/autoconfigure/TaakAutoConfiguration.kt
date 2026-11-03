@@ -17,7 +17,6 @@ package nl.nlportal.zgw.taak.autoconfigure
 
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
-import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
 import nl.nlportal.form.service.ObjectsApiFormDefinitionService
@@ -68,8 +67,7 @@ class TaakAutoConfiguration {
         taakService: TaakService,
         documentenApiService: DocumentenApiService,
         virusScanService: VirusScanService?,
-        documentApisConfig: DocumentApisConfig,
-    ): TaakDocumentResource = TaakDocumentResource(taakService, documentenApiService, virusScanService, documentApisConfig)
+    ): TaakDocumentResource = TaakDocumentResource(taakService, documentenApiService, virusScanService)
 
     @Bean
     @ConditionalOnMissingBean(TaakDocumentResourceHttpSecurityConfigurer::class)

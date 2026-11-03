@@ -15,12 +15,12 @@
  */
 package nl.nlportal.documentenapi.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
-import nl.nlportal.commonground.authentication.URN_HR_PREFIX
 import nl.nlportal.core.util.CoreUtils.extractId
 import nl.nlportal.documentenapi.client.DocumentApisConfig.DocumentenApisConfigProperties
 import nl.nlportal.documentenapi.client.DocumentenApiClient
@@ -74,16 +74,16 @@ class DocumentenApiService(
     suspend fun uploadDocument(
         content: ByteArray,
         filename: String,
-        documentApi: String,
         informatieobjecttype: String? = null,
         beschrijving: String? = null,
     ): Document {
+        val documentApi = documentenApisConfigProperties.getDocumentApiByDocumentTypeUrl(informatieobjecttype)
+
         val auteur =
             ReactiveSecurityContextHolder
                 .getContext()
                 .map { (it.authentication as PortalAuthentication).userId }
                 .awaitSingleOrNull() ?: "valtimo"
-        val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
 
         if (documentenApisConfigProperties.allowedMimeTypes.isNotEmpty()) {
             val mediaType = Tika().detect(content).split(";")[0].trim()
@@ -92,9 +92,11 @@ class DocumentenApiService(
             }
         }
 
+        val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
+
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(
-                bronorganisatie = documentenApiConfig.rsin!!,
+                bronorganisatie = documentenApiConfig.rsin,
                 creatiedatum = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
                 titel = filename,
                 auteur = auteur,
@@ -107,7 +109,7 @@ class DocumentenApiService(
                         .takeUnless {
                             it.isNullOrEmpty()
                         }
-                        ?: documentenApiConfig.documentTypeUrl!!,
+                        ?: documentenApiConfig.documentTypeUrl,
                 beschrijving = beschrijving.takeUnless { it.isNullOrBlank() },
             ),
             content,
@@ -140,4 +142,8 @@ class DocumentenApiService(
     fun getDocumentUUIDFromURN(
         documentUrn: String,
     ): UUID = getDocumentApiAndUUIDFromURN(documentUrn).second
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }
