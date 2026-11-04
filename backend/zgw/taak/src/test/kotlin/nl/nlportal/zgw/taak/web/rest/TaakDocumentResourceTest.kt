@@ -88,7 +88,7 @@ class TaakDocumentResourceTest {
             val file = filePart("../../etc/passwd", payload)
             whenever(virusScanService.scan(any<ByteArray>()))
                 .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
-            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull()))
+            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(stubDocument())
 
             val response = resource.uploadDocument(taakId, file, null, authentication)
@@ -99,6 +99,7 @@ class TaakDocumentResourceTest {
             verify(documentenApiService).uploadDocument(
                 bytesCaptor.capture(),
                 filenameCaptor.capture(),
+                anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
             )
@@ -128,7 +129,7 @@ class TaakDocumentResourceTest {
             val file = filePart("doc.pdf", payload)
             whenever(virusScanService.scan(any<ByteArray>()))
                 .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
-            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull()))
+            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(stubDocument())
 
             resource.uploadDocument(taakId, file, null, authentication)
@@ -139,6 +140,7 @@ class TaakDocumentResourceTest {
             verify(documentenApiService).uploadDocument(
                 uploadCaptor.capture(),
                 any(),
+                anyOrNull(),
                 anyOrNull(),
                 anyOrNull(),
             )
@@ -170,13 +172,13 @@ class TaakDocumentResourceTest {
             val beschrijving = "a".repeat(1000)
             whenever(virusScanService.scan(any<ByteArray>()))
                 .thenReturn(VirusScanResult(VirusScanStatus.OK, emptyMap()))
-            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull()))
+            whenever(documentenApiService.uploadDocument(any(), any(), anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(stubDocument())
 
             val response = resource.uploadDocument(taakId, file, null, authentication, beschrijving)
 
             assertEquals(HttpStatus.OK, response.statusCode)
-            verify(documentenApiService).uploadDocument(any(), any(), anyOrNull(), eq(beschrijving))
+            verify(documentenApiService).uploadDocument(any(), any(), anyOrNull(), eq(beschrijving), anyOrNull())
         }
 
     private fun filePart(

@@ -76,9 +76,9 @@ class DocumentenApiService(
         filename: String,
         informatieobjecttype: String? = null,
         beschrijving: String? = null,
+        documentapi: String? = null,
     ): Document {
-        val documentApi = documentenApisConfigProperties.getDocumentApiByDocumentTypeUrl(informatieobjecttype)
-
+        val documentApi = documentapi ?: documentenApisConfigProperties.defaultDocumentApi
         val auteur =
             ReactiveSecurityContextHolder
                 .getContext()
