@@ -57,7 +57,7 @@ services:
             POSTGRES_PASSWORD: keycloak
 
     nl-portal-openzaak:
-        image: openzaak/open-zaak:1.31.1
+        image: openzaak/open-zaak:1.31.0
         container_name: nl-portal-openzaak
         platform: linux/amd64
         profiles:
@@ -91,7 +91,7 @@ services:
             - ./imports/openzaak/private-media:/app/private-media
 
     nl-portal-openzaak-import:
-        image: openzaak/open-zaak:1.31.1
+        image: openzaak/open-zaak:1.31.0
         container_name: nl-portal-openzaak-import
         platform: linux/amd64
         profiles:
@@ -449,10 +449,7 @@ services:
 
     nl-portal-clamav:
         container_name: nl-portal-clamav
-        image: clamav/clamav:latest
-        platform: linux/amd64
-        profiles:
-            - clamav
+        image: clamav/clamav:1.5.4-debian
         network_mode: "service:localhost"
         healthcheck:
             test: ["CMD", "/usr/local/bin/clamdcheck.sh"]
