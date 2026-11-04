@@ -122,18 +122,18 @@ internal class DocumentenApiServiceTest(
     @Test
     fun `should upload document to other document api`() =
         runTest {
-            val informatieobjecttypeUrl = "http://localhost:8002/catalogi/api/v1/informatieobjecttypen/00000000-0000-0000-000000000000"
+            val documentapi = "example"
             documentenApiService.uploadDocument(
                 content = "hello".toByteArray(),
                 filename = "hello.txt",
-                informatieobjecttype = informatieobjecttypeUrl,
+                documentapi = documentapi,
             )
 
             val requestCaptor = argumentCaptor<PostEnkelvoudiginformatieobjectRequest>()
-            verify(documentenApiClient).postDocument(requestCaptor.capture(), any(), eq("example"))
+            verify(documentenApiClient).postDocument(requestCaptor.capture(), any(), eq(documentapi))
             val request = requestCaptor.firstValue
 
-            assertTrue(jacksonObjectMapper().writeValueAsString(request).contains(informatieobjecttypeUrl))
+            assertFalse(jacksonObjectMapper().writeValueAsString(request).contains(documentapi))
         }
 
     private fun getTestDocument(status: DocumentStatus?): Document =
