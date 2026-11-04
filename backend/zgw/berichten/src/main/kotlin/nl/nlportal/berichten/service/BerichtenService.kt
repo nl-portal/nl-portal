@@ -47,7 +47,7 @@ class BerichtenService(
         pageNumber: Int,
         pageSize: Int,
         onderwerp: String? = null,
-        ongeopend: Boolean? = null,
+        geopend: Boolean? = null,
     ): BerichtenPage {
         // fix because ObjectsAPI filter LTE only accept dates, not date-time
         val filterPublicationDate = LocalDate.now().plusDays(1)
@@ -68,9 +68,9 @@ class BerichtenService(
             )
         }
 
-        ongeopend?.let {
+        geopend?.let {
             searchParameters.add(
-                ObjectSearchParameter("geopend", STRING_CONTAINS, "false"),
+                ObjectSearchParameter("geopend", STRING_CONTAINS, geopend.toString()),
             )
         }
         return BerichtenPage.fromResultPage(
@@ -92,6 +92,7 @@ class BerichtenService(
             authentication = authentication,
             pageNumber = 1,
             pageSize = 1,
+            geopend = false,
         ).totalElements
 
     suspend fun getBericht(
