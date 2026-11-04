@@ -20,5 +20,11 @@ export const defaultInMemoryCacheOptions: InMemoryCacheConfig = {
     Zaak: {
       keyFields: ["uuid"],
     },
+    Bericht: {
+      keyFields: ["uuid"],
+    },
+    VtbBericht: {
+      keyFields: ["uuid"],
+    },
   },
 };
