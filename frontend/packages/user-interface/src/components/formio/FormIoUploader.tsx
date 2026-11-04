@@ -44,6 +44,7 @@ interface PortalFileUploadProps {
   onUploadStart: (upload: Promise<void>) => void;
   onUploadEnd: (upload: Promise<void>) => void;
   informatieobjecttype?: string;
+  documentapi?: string;
   getBeschrijving?: () => string | undefined;
   initialValue?: UploadedFile[];
   taakId?: string;
@@ -59,6 +60,7 @@ const PortalFileUpload = ({
   onUploadStart,
   onUploadEnd,
   informatieobjecttype,
+  documentapi,
   getBeschrijving,
   initialValue = [],
   taakId,
@@ -118,6 +120,10 @@ const PortalFileUpload = ({
     const beschrijving = getBeschrijving?.();
     if (beschrijving) {
       formData.append("beschrijving", beschrijving);
+    }
+
+    if (documentapi) {
+      formData.append("documentapi", documentapi);
     }
 
     const tempId = crypto.randomUUID();
@@ -355,6 +361,7 @@ class FormIoUploader extends FieldComponent {
           onUploadStart={this.onUploadStartHandler}
           onUploadEnd={this.onUploadEndHandler}
           informatieobjecttype={this.component.informatieobjecttype || ""}
+          documentapi={this.component.documentapi || ""}
           getBeschrijving={this.getBeschrijving}
           initialValue={this.dataValue}
           taakId={this.options.taakId}
