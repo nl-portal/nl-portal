@@ -38,7 +38,7 @@ flowchart TB
     taken --> documentenapis
     
     berichten --> objectenapi
-    berichten --> berichtenmod
+    berichten --> vtbapi
     berichten --> documentenapis
     
     account --> haalcentraal2

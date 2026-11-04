@@ -54,16 +54,16 @@ export type Bericht = {
   __typename?: 'Bericht';
   berichtTekst: Scalars['String']['output'];
   berichtType: BerichtType;
-  bijlages: Array<Scalars['String']['output']>;
+  bijlages?: Maybe<Array<Scalars['String']['output']>>;
   documenten: Array<Document>;
   einddatumHandelingstermijn: Scalars['ZonedDateTime']['output'];
   geopend: Scalars['Boolean']['output'];
   handelingsperspectief: BerichtHandelingsperspectief;
-  id?: Maybe<Scalars['UUID']['output']>;
   identificatie: BerichtIdentificatie;
   onderwerp: Scalars['String']['output'];
   publicatiedatum: Scalars['ZonedDateTime']['output'];
   referentie?: Maybe<Scalars['String']['output']>;
+  uuid?: Maybe<Scalars['UUID']['output']>;
 };
 
 export enum BerichtHandelingsperspectief {
@@ -976,6 +976,7 @@ export type OgoneBetaling = {
 };
 
 export enum OnderwerpObjectIndentificatorType {
+  Bericht = 'BERICHT',
   Product = 'PRODUCT',
   Zaak = 'ZAAK'
 }
@@ -2057,8 +2058,10 @@ export type Query = {
   getTaakByIdV2?: Maybe<TaakV2>;
   /**  Get a list of tasks. Optional filter for zaak V2 */
   getTakenV2: TaakPageV2;
-  /**  Returns the total amount of unopened Berichten */
+  /**  Returns the total amount of unopened VTBBerichten */
   getUnopenedBerichtenCount: Scalars['Int']['output'];
+  /**  Returns the total amount of unopened VTBBerichten */
+  getUnopenedVTBBerichtenCount?: Maybe<Scalars['Int']['output']>;
   /**  Get DigitaleAdressen of authenticated user. */
   getUserDigitaleAdressen?: Maybe<Array<DigitaleAdresResponse>>;
   /**  Get KlantContact by id of authenticated user. */
@@ -2066,6 +2069,8 @@ export type Query = {
   getUserKlantContacten: Array<OpenKlant2Klantcontact>;
   /**  Get Partij by Id for authenticated user. */
   getUserPartij?: Maybe<OpenKlant2Partij>;
+  getVTBBericht?: Maybe<VtbBericht>;
+  getVTBBerichten?: Maybe<VtbBerichtenPage>;
   /**  Gets a zaak by id */
   getZaak: Zaak;
   getZaken: ZaakPage;
@@ -2366,6 +2371,17 @@ export type QueryGetUserPartijArgs = {
 };
 
 
+export type QueryGetVtbBerichtArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+export type QueryGetVtbBerichtenArgs = {
+  pageNumber?: InputMaybe<Scalars['Int']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryGetZaakArgs = {
   id: Scalars['UUID']['input'];
 };
@@ -2527,6 +2543,74 @@ export type UpdateProductRequestInput = {
   dataobject?: InputMaybe<Scalars['JSON']['input']>;
   uuid: Scalars['UUID']['input'];
   verbruiksobject?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type VtbBericht = {
+  __typename?: 'VTBBericht';
+  berichtTekst: Scalars['String']['output'];
+  berichtType: VtbBerichtType;
+  documenten: Array<Document>;
+  einddatumHandelingsTermijn?: Maybe<Scalars['ZonedDateTime']['output']>;
+  geopend?: Maybe<Scalars['Boolean']['output']>;
+  geopendOp?: Maybe<Scalars['ZonedDateTime']['output']>;
+  isGerelateerdAan?: Maybe<Array<Maybe<VtbIsGerelateerdAan>>>;
+  onderwerp: Scalars['String']['output'];
+  publicatiedatum?: Maybe<Scalars['ZonedDateTime']['output']>;
+  referentie?: Maybe<Scalars['String']['output']>;
+  uuid: Scalars['UUID']['output'];
+};
+
+export type VtbBerichtType = {
+  __typename?: 'VTBBerichtType';
+  bijlageTypen: Array<Maybe<VtbBijlageType>>;
+  handelingsPerspectief: VtbHandelingsPerspectief;
+  mijnOverheidBerichtenbox: Scalars['Boolean']['output'];
+  mijnOverheidBerichtenboxType?: Maybe<Scalars['String']['output']>;
+  verantwoordelijkeOrganisatie: Scalars['String']['output'];
+};
+
+export type VtbBerichtenPage = {
+  __typename?: 'VTBBerichtenPage';
+  /**  The elements on this page */
+  content: Array<VtbBericht>;
+  /**  The requested page number */
+  number: Scalars['Int']['output'];
+  /**  The number of elements on this page */
+  numberOfElements: Scalars['Int']['output'];
+  /**  The requested page size */
+  size: Scalars['Int']['output'];
+  /**  The total number of elements */
+  totalElements: Scalars['Int']['output'];
+  /**  The total number of available pages */
+  totalPages: Scalars['Int']['output'];
+};
+
+export type VtbBijlage = {
+  __typename?: 'VTBBijlage';
+  informatieObject: Scalars['String']['output'];
+  omschrijving?: Maybe<Scalars['String']['output']>;
+};
+
+export type VtbBijlageType = {
+  __typename?: 'VTBBijlageType';
+  informatieObjecttype: Scalars['String']['output'];
+  omschrijving?: Maybe<Scalars['String']['output']>;
+};
+
+export enum VtbHandelingsPerspectief {
+  Betalen = 'BETALEN',
+  GeenHandelingsPerspectief = 'GEEN_HANDELINGS_PERSPECTIEF',
+  Incasso = 'INCASSO',
+  InformatieGeven = 'INFORMATIE_GEVEN',
+  InformatieKrijgen = 'INFORMATIE_KRIJGEN',
+  ReactieOntvangen = 'REACTIE_ONTVANGEN',
+  UitnodigingVoorGesprek = 'UITNODIGING_VOOR_GESPREK',
+  VernieuwingNodig = 'VERNIEUWING_NODIG'
+}
+
+export type VtbIsGerelateerdAan = {
+  __typename?: 'VTBIsGerelateerdAan';
+  urn?: Maybe<Scalars['String']['output']>;
 };
 
 export type VerificatieCreateInput = {

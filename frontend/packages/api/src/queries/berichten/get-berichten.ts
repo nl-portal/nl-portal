@@ -23,8 +23,7 @@ export const QUERY_GET_BERICHTEN = gql`
       onderwerp: $onderwerp
     ) {
       content {
-        id
-        einddatumHandelingstermijn
+        uuid
         publicatiedatum
         geopend
         onderwerp

@@ -18,4 +18,5 @@ package nl.nlportal.openklant.graphql.domain
 enum class OnderwerpObjectIndentificatorType {
     ZAAK,
     PRODUCT,
+    BERICHT,
 }

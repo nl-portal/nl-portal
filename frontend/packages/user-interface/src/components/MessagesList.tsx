@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import styles from "./MessagesList.module.scss";
 import { Paragraph } from "@gemeente-denhaag/typography";
 import Skeleton from "./Skeleton";
 import { Pagination } from "@gemeente-denhaag/pagination";
 import Message from "./Message";
-import Table from "./Table";
-import { Bericht } from "@nl-portal/nl-portal-api";
+import { Bericht, VtbBericht } from "@nl-portal/nl-portal-api";
 import { listViewHeight } from "../constants/skeleton";
 
 interface Props {
@@ -33,7 +32,7 @@ interface Props {
   readMoreLink?: string;
   readMoreTranslationId?: string | null;
   totalAmount?: number;
-  messages?: Bericht[];
+  messages?: Bericht[] | VtbBericht[] | undefined;
   index?: number;
   indexLimit?: number;
   onChange?: (index: number) => void;
@@ -74,21 +73,6 @@ const MessagesList = ({
 
   return (
     <section className={styles["messages-list"]}>
-      <Table
-        headers={[
-          {
-            key: "subject",
-            head: true,
-            children: <FormattedMessage id="messagesList.subject" />,
-          },
-          {
-            key: "date",
-            head: true,
-            className: "denhaag-table__cell--align-end",
-            children: <FormattedMessage id="messagesList.date" />,
-          },
-        ]}
-      />
       {loading ? (
         <>
           {[...Array(3)].map((_, index) => (
@@ -97,7 +81,7 @@ const MessagesList = ({
         </>
       ) : (
         messages?.map((message) => (
-          <Message key={message.id} message={message} />
+          <Message key={message.uuid} message={message} />
         ))
       )}
       {indexLimit ? (

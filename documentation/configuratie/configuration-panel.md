@@ -10,24 +10,25 @@ Zie de [nl-portal-configuration-panel repository](https://github.com/nl-portal/n
 
 Via het Configuration Panel kun je alle backend modules in- en uitschakelen en configureren:
 
-| Module | Beschrijving |
-|--------|--------------|
-| Zaken API | Koppeling met Open Zaak voor zaken |
-| Catalogi API | Zaaktypen en informatieobjecttypen |
-| Documenten APIs | Documentopslag (meerdere configuraties mogelijk) |
-| Besluiten API | Besluiten bij zaken |
-| Open Object | Objectregistratie voor taken en berichten |
-| OpenKlant 2 | Klantgegevens en contactmomenten |
-| HaalCentraal BRP v2 | Persoonsgegevens uit de BRP |
-| HaalCentraal HR | Bedrijfsgegevens uit het Handelsregister |
-| Taak | Externe taken via Open Object |
-| Berichten | Berichtenfunctionaliteit |
-| Product | Productweergave |
-| OpenProduct | Koppeling met OpenProduct API |
-| DMN | Decision Model and Notation |
-| Prefill | Voorinvullen van formulieren |
-| Payment (Ogone/Direct) | Betalingsintegraties |
-| ClamAV | Virusscanning van uploads |
+| Module                 | Beschrijving                                                 |
+|------------------------|--------------------------------------------------------------|
+| Zaken API              | Koppeling met Open Zaak voor zaken                           |
+| Catalogi API           | Zaaktypen en informatieobjecttypen                           |
+| Documenten APIs        | Documentopslag (meerdere configuraties mogelijk)             |
+| Besluiten API          | Besluiten bij zaken                                          |
+| Open Object            | Objectregistratie voor taken en berichten                    |
+| OpenKlant 2            | Klantgegevens en contactmomenten                             |
+| HaalCentraal BRP v2    | Persoonsgegevens uit de BRP                                  |
+| HaalCentraal HR        | Bedrijfsgegevens uit het Handelsregister                     |
+| Taak                   | Externe taken via Open Object                                |
+| Berichten              | Berichtenfunctionaliteit                                     |
+| Product                | Productweergave                                              |
+| OpenProduct            | Koppeling met OpenProduct API                                |
+| OpenVTB                | Koppeling met OpenVTB API voor berichten, taken en verzoeken |
+| DMN                    | Decision Model and Notation                                  |
+| Prefill                | Voorinvullen van formulieren                                 |
+| Payment (Ogone/Direct) | Betalingsintegraties                                         |
+| ClamAV                 | Virusscanning van uploads                                    |
 
 ### Theming
 

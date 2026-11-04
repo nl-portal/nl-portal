@@ -45,6 +45,12 @@ export interface Features {
     openProductEnabled: boolean;
     overviewIntroEnabled: boolean;
     overviewMaintenanceAlertEnabled: boolean;
+    vtbBerichtenEnabled: boolean;
+  };
+  modules: {
+    berichten?: {
+      enabled: boolean;
+    };
   };
 }
 
