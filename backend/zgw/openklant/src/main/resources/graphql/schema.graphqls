@@ -233,6 +233,7 @@ type OpenKlant2Klantcontact {
     vertrouwelijk: Boolean!
     reactie: String
     metadata: JSON
+    documenten: [Document!]
 }
 
 enum OpenKlant2Landcode {
@@ -730,3 +731,4 @@ enum SoortPartij {
     ORGANISATIE
     CONTACTPERSOON
 }
+

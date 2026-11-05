@@ -265,6 +265,7 @@ type OpenKlant2Klantcontact {
     vertrouwelijk: Boolean!
     reactie: String
     metadata: JSON
+    documenten: [Document!]
 }
 
 enum OpenKlant2Landcode {
@@ -762,6 +763,18 @@ enum SoortPartij {
     ORGANISATIE
     CONTACTPERSOON
 }
+
+type Document {
+    bestandsnaam: String
+    bestandsomvang: Int
+    creatiedatum: String
+    documentapi: String!
+    formaat: String
+    identificatie: String
+    titel: String
+    uuid: UUID!
+}
+
 
 scalar UUID
 scalar Date
