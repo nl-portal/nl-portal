@@ -29,6 +29,7 @@ export interface Features {
     myGenderChangeUrl: string;
     myNameChangeUrl: string;
     overviewCurrentCasesPreviewLength: number;
+    overviewCurrentTasksPreviewLength: number;
     overviewMaintenanceAlertTextEn: string;
     overviewMaintenanceAlertTextNl: string;
     overviewMaintenanceAlertTitleEn: string;
