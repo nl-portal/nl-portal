@@ -8,12 +8,19 @@ Het formaat van een externe taak is gestandaardiseerd in een JSON-formaat. De ex
 
 Elk document dat de klant in een taakformulier uploadt via het `portalFileUpload` component, krijgt in de Documenten API een informatieobjecttype. Per upload-component kan worden ingesteld welk informatieobjecttype dat is.
 
+Er zijn twee niveaus:
+
+* **Standaard informatieobjecttype** (`document-type-url` in de configuratie van een Documenten API, verplicht): een algemeen type, bijvoorbeeld "Bijlage".
+* **Specifiek informatieobjecttype** (`informatieobjecttype` op het upload-component, optioneel): een type voor dit soort document, bijvoorbeeld "Identiteitsbewijs".
+
+Zo heeft elke upload altijd een informatieobjecttype, zoals de Documenten API-standaard verwacht.
+
 Hiervoor heeft het `portalFileUpload` component de eigenschap `informatieobjecttype`: de URL van een informatieobjecttype in de Catalogi API. Deze eigenschap staat niet in de form builder en wordt direct in de JSON van de formulierdefinitie gezet.
 
 Werking:
 
 * Is `informatieobjecttype` ingesteld, dan stuurt de portal de waarde bij elke upload mee.
-* Is `informatieobjecttype` niet ingesteld of leeg, dan gebruikt de backend het standaard informatieobjecttype uit de configuratie van de Documenten API.
+* Is `informatieobjecttype` niet ingesteld of leeg, dan gebruikt de backend het standaard informatieobjecttype (`document-type-url`) uit de configuratie van de Documenten API.
 * De waarde mag placeholders bevatten in de vorm `{{pad}}`. Op het moment van uploaden vervangt de portal elke placeholder door de waarde op dat pad in de data van de component. Het pad begint zonder `data.`, en voor een component in een container is het relatief ten opzichte van die container. Een placeholder waarvoor geen waarde wordt gevonden, blijft ongewijzigd in de URL staan.
 * Deze placeholders worden door de portal zelf als tekst vervangen, niet via de template-interpolatie van Form.io. Ze werken daarom ook binnen een strikte Content Security Policy.
 
