@@ -27,6 +27,7 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 * De enum `OpenProductFrequentie` is gewijzigd en ondersteunt nu ook een lege waarde.
 * **Images verhuisd naar de monorepo.** De backend- en frontend-images worden nu vanuit `nl-portal/nl-portal` gepubliceerd op een gedeeld versienummer (`ghcr.io/nl-portal/nl-portal-backend` / `-frontend`). Wijs je deployment naar de nieuwe images. Zie migratie-instructies.
 * **Frontend feature-configuratie via `window.*` is verwijderd** (`config.js` / `config.template.js`). `window.*` bevat nu alleen nog OIDC- en API-URL-configuratie; alle feature-toggles en -eigenschappen worden nu op de backend gezet. Zie migratie-instructies.
+* **Documenten API: `rsin` en `document-type-url` zijn verplicht.** Elke configuratie onder `nl-portal.config.documentenapis.properties.configurations.<naam>` moet nu een `rsin` en een `document-type-url` hebben (env: `NLPORTAL_CONFIG_DOCUMENTENAPIS_PROPERTIES_CONFIGURATIONS_<NAAM>_RSIN` en `..._DOCUMENTTYPEURL`). `document-type-url` is het standaard informatieobjecttype (bijvoorbeeld "Bijlage") voor uploads waarbij het formulier geen specifiek type meegeeft, zodat elk document een type heeft. Ontbrak een van beide, dan gaf uploaden een nullpointer; nu weigert de Documenten API de upload. Zie migratie-instructies.
 
 **Alleen voor broncode-ontwikkelaars en maatwerkimplementaties:**
 
@@ -34,6 +35,7 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 * **Frontend-platform bijgewerkt**: React 19, Vite 8, TypeScript 5.9. Bouwen vereist Node 24 en pnpm 11.
 * **Den Haag design tokens bijgewerkt naar `@gemeente-denhaag/design-tokens` 1.6.0.** Deze versie hernoemt de kleurschalen en verwijdert een aantal tokens. De Den Haag-componenten die met de libraries meekomen gebruiken de nieuwe namen. Overschrijf je in je eigen thema Den Haag-tokens, of verwijs je ernaar (bijvoorbeeld in je `--nlportal-*` tokens), dan hebben die geen effect meer: de Den Haag-kleuren komen weer door en spacing valt weg. Zie migratie-instructies.
 * **Haalcentraal HR:** in de GraphQL-response is `hoofdvestiging` gewijzigd naar `vestiging`. Hierdoor krijg je ook het juiste adres als je bent ingelogd voor een vestiging.
+* `DocumentApisConfig.DocumentenApisConfigProperties.DocumentApiConfig`: `rsin` en `documentTypeUrl` zijn niet langer nullable (`String` met standaardwaarde `""`).
 
 ## Deprecations
 
@@ -52,6 +54,8 @@ Bekend probleem in 3.x (ook beschreven in de release notes van 3.1.2), voor wie 
 Kom je van een oudere 3.x-versie? Lees eerst de release notes van de 3.x-versies na de jouwe in de 3.x-documentatie (versiekiezer linksboven).
 
 **Messaging-module verwijderd.** Verwijder de dependency `nl.nl-portal:messaging` uit je `pom.xml` of `build.gradle`, en verwijder de `spring.cloud.stream`-bindings voor de portal case- en taakberichten uit je configuratie.
+
+**Documenten API-configuratie.** Controleer dat elke documenten-API-configuratie een `rsin` en een `document-type-url` heeft. Ontbreekt er een, dan mislukken uploads naar die documenten-API.
 
 **Keycloak token exchange v1 → v2 (optioneel).** Niet verplicht voor 4.x: laat je alles staan, dan blijft je omgeving op `v1` werken. Wil je nu al over, dan beschrijft [Migratie van v1 naar v2](../../../configuratie/keycloak-token-exchange-v2.md#migratie-van-v1-naar-v2) het pad zonder downtime, inclusief terugrolstap. Let op: zet `KEYCLOAK_TOKEN_EXCHANGE_VERSION=v2` en maak `KEYCLOAK_TOKEN_EXCHANGE_AUDIENCE` in dezelfde wijziging leeg — een audience die uit de v1-opstelling blijft staan laat elke exchange mislukken.
 

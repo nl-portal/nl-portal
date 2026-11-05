@@ -82,7 +82,7 @@ class DocumentenApiService(
 
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(
-                bronorganisatie = documentenApiConfig.rsin!!,
+                bronorganisatie = documentenApiConfig.rsin,
                 creatiedatum = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
                 titel = filename,
                 auteur = auteur,
@@ -95,7 +95,7 @@ class DocumentenApiService(
                         .takeUnless {
                             it.isNullOrEmpty()
                         }
-                        ?: documentenApiConfig.documentTypeUrl!!,
+                        ?: documentenApiConfig.documentTypeUrl,
                 beschrijving = beschrijving.takeUnless { it.isNullOrBlank() },
             ),
             content,
