@@ -13,7 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { createElement, type ElementType } from "react";
+import {
+  cloneElement,
+  createElement,
+  isValidElement,
+  type ElementType,
+  type ReactNode,
+} from "react";
 import {
   Hash,
   Tag,
@@ -26,6 +32,7 @@ import {
   type TopLevelToken,
   type Template,
 } from "liquidjs";
+import { decodeLiquidText } from "./decodeLiquidText";
 import { tableDefinition } from "./components/table";
 import { descriptionListDefinition } from "./components/description-list";
 import { headingDefinition } from "./components/heading";
@@ -41,14 +48,14 @@ import { linkListDefinition } from "./components/link-list";
 /**
  * A template tag that renders [component].
  *
- * [props] maps tag arguments to component props. With a [body], the tag needs an end tag and the
- * rendered body is parsed into props; without one it is a plain tag. [validate] may reject the
- * final props by throwing, which fails the template render.
+ * [props] maps tag arguments to component props. A tag with a [body] needs an end tag and
+ * renders its body as children unless [body.parse] converts it to props. Without a [body],
+ * the tag needs no end tag. [validate] may reject the final props by throwing.
  */
 export type LiquidComponentDefinition = {
   component: ElementType;
   props: Record<string, string>;
-  body?: { parse: (body: string) => Record<string, unknown> };
+  body?: { parse?: (body: string) => Record<string, unknown> };
   validate?: (props: Record<string, unknown>) => void;
 };
 
@@ -69,10 +76,9 @@ export const LIQUID_COMPONENTS: Record<string, LiquidComponentDefinition> = {
 function toProps(
   definition: LiquidComponentDefinition,
   args: Record<string, unknown>,
-  body: string | undefined,
+  bodyProps: Record<string, unknown>,
 ) {
-  const props =
-    body !== undefined && definition.body ? definition.body.parse(body) : {};
+  const props = { ...bodyProps };
   for (const [name, target] of Object.entries(definition.props)) {
     if (Object.prototype.hasOwnProperty.call(args, name))
       props[target] = args[name];
@@ -110,16 +116,48 @@ export function registerComponents(liquid: Liquid) {
           emitter: Emitter,
         ): Generator<unknown, void, unknown> {
           const args = (yield this.args.render(ctx)) as Record<string, unknown>;
-          const body = definition.body
-            ? ((yield this.liquid.renderer.renderTemplates(
-                this.templates,
-                ctx,
-              )) as string)
-            : undefined;
+          let bodyProps: Record<string, unknown> = {};
+          if (definition.body?.parse) {
+            const text = (yield this.liquid.renderer.renderTemplates(
+              this.templates,
+              ctx,
+            )) as string;
+            bodyProps = definition.body.parse(text);
+          } else if (definition.body) {
+            const children: ReactNode[] = [];
+            let text = "";
+            const flushText = (last = false) => {
+              if (!children.length) text = text.trimStart();
+              if (last) text = text.trimEnd();
+              decodeLiquidText(text)
+                .split(/\r?\n/)
+                .forEach((line, index) => {
+                  if (index)
+                    children.push(
+                      createElement("br", { key: children.length }),
+                    );
+                  if (line) children.push(line);
+                });
+              text = "";
+            };
+            yield this.liquid.renderer.renderTemplates(this.templates, ctx, {
+              buffer: "",
+              write(value: unknown) {
+                if (isValidElement(value)) {
+                  flushText();
+                  children.push(cloneElement(value, { key: children.length }));
+                } else if (value != null) {
+                  text += String(value);
+                }
+              },
+            } satisfies Emitter);
+            flushText(true);
+            bodyProps = { children };
+          }
           emitter.write(
             createElement(
               definition.component,
-              toProps(definition, args, body),
+              toProps(definition, args, bodyProps),
             ),
           );
         }

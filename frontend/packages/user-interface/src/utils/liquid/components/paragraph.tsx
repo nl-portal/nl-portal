@@ -15,7 +15,6 @@
  */
 import { Paragraph } from "@gemeente-denhaag/typography";
 import type { LiquidComponentDefinition } from "../components";
-import { bodyText } from "../text";
 
 /**
  * A paragraph with the body as text.
@@ -26,5 +25,5 @@ import { bodyText } from "../text";
 export const paragraphDefinition: LiquidComponentDefinition = {
   component: Paragraph,
   props: {},
-  body: { parse: (body) => ({ children: bodyText(body) }) },
+  body: {},
 };
