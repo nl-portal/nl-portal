@@ -67,18 +67,18 @@ class OpenProductAutoConfiguration {
         openProductTypeClient: OpenProductTypeClient,
         zakenApiService: ZakenApiService,
         taakService: TaakService,
-        taakObjectConfig: TaakConfig,
         authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
         documentenApiService: DocumentenApiService,
+        openProductModuleConfiguration: OpenProductModuleConfiguration,
     ): OpenProductService =
         OpenProductService(
             openProductClient = openProductClient,
             openProductTypeClient = openProductTypeClient,
-            objectsApiTaskConfigProperties = taakObjectConfig.properties,
             zakenApiService = zakenApiService,
             taakService = taakService,
             authenticationMachtigingsDienstService = authenticationMachtigingsDienstService,
             documentenApiService = documentenApiService,
+            openProductConfigurationProperties = openProductModuleConfiguration.properties,
         )
 
     @Bean("openProductDmnClient")
