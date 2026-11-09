@@ -40,19 +40,25 @@ import QuickLinks from "../components/QuickLinks";
 
 interface OverviewPageProps {
   showNoEmailAlert?: boolean;
-  fetchTasksLength?: number;
+  fetchTasksLengthDefault?: number;
+  fetchCasesLengthDefault?: number;
   children?: ReactNode;
 }
 
 const OverviewPage = ({
   showNoEmailAlert = false,
-  fetchTasksLength = 5,
+  fetchTasksLengthDefault = 5,
+  fetchCasesLengthDefault = 4,
   children,
 }: OverviewPageProps) => {
   const intl = useIntl();
   const { features } = useContext(AppContext);
   const fetchCasesLength =
-    features?.properties.overviewCurrentCasesPreviewLength ?? 4;
+    features?.properties.overviewCurrentCasesPreviewLength ??
+    fetchCasesLengthDefault;
+  const fetchTasksLength =
+    features?.properties.overviewCurrentTasksPreviewLength ??
+    fetchTasksLengthDefault;
   const fetchProductsLength = features?.toggles.openProductEnabled ? 5 : 0;
   const { username, usernameVolmacht, isVolmacht, contact } =
     useContext(UserContext);
