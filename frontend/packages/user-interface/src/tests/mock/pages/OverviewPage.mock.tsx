@@ -38,7 +38,7 @@ const routeShowLessTasks = [
     children: [
       {
         index: true,
-        element: <OverviewPage fetchTasksLength={2} />,
+        element: <OverviewPage fetchTasksLengthDefault={2} />,
       },
     ],
   },
