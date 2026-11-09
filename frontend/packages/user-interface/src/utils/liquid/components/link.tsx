@@ -13,17 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { ComponentProps } from "react";
 import { useIntl } from "react-intl";
 import type { LiquidComponentDefinition } from "../components";
 import { isAllowedHref } from "../text";
 import { Link } from "@gemeente-denhaag/link";
 
-const LiquidLink = ({ href, title }: { href: string; title?: string }) => {
+const LiquidLink = ({
+  href,
+  title,
+  target,
+}: {
+  href: string;
+  title?: string;
+  target?: ComponentProps<"a">["target"];
+}) => {
   const intl = useIntl();
   const text = title
     ? intl.formatMessage({ id: title, defaultMessage: title })
     : href;
-  return <Link href={href}>{text}</Link>;
+  return (
+    <Link
+      href={href}
+      target={target}
+      rel={target === "_blank" ? "noopener" : undefined}
+    >
+      {text}
+    </Link>
+  );
 };
 
 /**
@@ -31,11 +48,11 @@ const LiquidLink = ({ href, title }: { href: string; title?: string }) => {
  * `href` is relative or uses https, http, tel or mailto.
  *
  * @example
- * {% link href: "/zaken" title: "Mijn zaken" %}
+ * {% link href: "/zaken" title: "Mijn zaken" target: "_blank" %}
  */
 export const linkDefinition: LiquidComponentDefinition = {
   component: LiquidLink,
-  props: { href: "href", title: "title" },
+  props: { href: "href", title: "title", target: "target" },
   validate: (props) => {
     if (
       typeof props.href !== "string" ||
