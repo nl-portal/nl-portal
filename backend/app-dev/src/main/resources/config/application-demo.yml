@@ -10,65 +10,14 @@ nl-portal:
                 allowed-profiles: personen,vergunningen,parkeerplekken
     frontend:
         menu-entries:
-            -   name: over-ons
-                icon: DocumentIcon
-                group: 99
-                route:
-                    type: templated
-                    page: over-ons
-                    path: /over-ons
-            -   name: contact
-                icon: DocumentIcon
-                group: 99
-                route:
-                    type: templated
-                    page: contact
-                    path: /contact
             -   name: erfpacht
-                icon: DocumentIcon
+                icon: BuildingIcon
                 group: 99
                 audience: [ burger, bedrijf ]
                 route:
                     type: templated
-                    page: erfpacht
+                    page: erfpacht-text-only
                     path: /erfpacht
-            -   name: erfpacht-product
-                hidden: true
-                audience: [ burger, bedrijf ]
-                route:
-                    type: templated
-                    page: product
-                    path: /erfpacht/:id
-            -   name: product
-                hidden: true
-                audience: [ burger, bedrijf ]
-                route:
-                    type: templated
-                    page: product
-                    path: /producten/:id
-            -   name: parkeervergunningen
-                icon: ParkingIcon
-                group: 99
-                audience: [ burger, bedrijf ]
-                route:
-                    type: templated
-                    page: parkeervergunningen
-                    path: /parkeervergunningen
-            -   name: parkeervergunning
-                hidden: true
-                audience: [ burger, bedrijf ]
-                route:
-                    type: templated
-                    page: parkeervergunning
-                    path: /parkeervergunningen/:id
-            -   name: vergunningen
-                icon: ParkingIcon
-                group: 99
-                audience: [ burger ]
-                route:
-                    type: templated
-                    page: vergunningen
-                    path: /vergunningen
         pages:
             vergunningen:
                 type: dynamic
