@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 import { useIntl } from "react-intl";
-import PortalLink from "../../../components/PortalLink";
 import type { LiquidComponentDefinition } from "../components";
 import { isAllowedHref } from "../text";
+import { Link } from "@gemeente-denhaag/link";
 
 const LiquidLink = ({ href, title }: { href: string; title?: string }) => {
   const intl = useIntl();
   const text = title
     ? intl.formatMessage({ id: title, defaultMessage: title })
     : href;
-  return <PortalLink href={href}>{text}</PortalLink>;
+  return <Link href={href}>{text}</Link>;
 };
 
 /**
