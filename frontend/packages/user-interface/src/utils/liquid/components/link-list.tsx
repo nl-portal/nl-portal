@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { LinkList } from "@gemeente-denhaag/link-list";
-import PortalLink from "../../../components/PortalLink";
-import { REGEX_PATTERNS } from "../../../constants/regex-patterns";
+import { LinkProps } from "@gemeente-denhaag/link";
+import LinkList from "../../../components/LinkList";
 import type { LiquidComponentDefinition } from "../components";
 import { isAllowedHref, pipeRows } from "../text";
 
 type Item = { label: string; href: string };
 
-const LiquidLinkList = ({ items }: { items: Item[] }) => (
+const LiquidLinkList = ({ links }: { links: LinkProps[] }) => (
   <LinkList
-    items={items.map((item) => ({
+    links={links.map((item) => ({
       ...item,
-      external: REGEX_PATTERNS.externalLink.test(item.href),
     }))}
-    Link={PortalLink}
   />
 );
 
