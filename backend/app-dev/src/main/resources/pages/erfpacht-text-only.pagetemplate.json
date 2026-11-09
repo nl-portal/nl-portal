@@ -1,0 +1,28 @@
+{
+    "naam": "Erfpacht",
+    "template": "\n{% heading level: 1 %}{{ 'titel' | i18n }}{% endheading %}\n{% paragraph %}U kunt op dit moment via MijnDenHaag de volgende erfpachtzaken niet regelen:{% endparagraph %}\n{% paragraph %}\nuw factuur inzien, opvragen en betalen\neen automatische incasso aanvragen\neen adreswijzing doorgeven\nuw erfpachtcontract inzien.\n{% endparagraph %}\n{% paragraph %}\nWilt u automatische incasso aanvragen of een adreswijzing doorgeven? Kijk dan op de pagina {% link href: \"https://www.denhaag.nl/erfpacht\" title: \"Erfpacht betalen\" %}, of stuur een e-mail naar {% link href: \"mailto:erfpachtadministratie@denhaag.nl\" title: \"erfpachtadministratie@denhaag.nl\" %}.\n{% endparagraph %}\n{% paragraph %}\nWilt u uw contract inzien? Stuur dan een e-mail naar {% link href: \"mailto:erfpachtbedrijf@denhaag.nl\" title: \"erfpachtbedrijf@denhaag.nl\" %}. Kijk voor overige vragen op de pagina {% link href: \"https://www.denhaag.nl/erfpacht\" title: \"Erfpact\" %} .\n{% endparagraph %}\n",
+    "messages": {
+        "nl-NL": {
+            "titel": "Erfpacht",
+            "status": "Status",
+            "alle": "Alle",
+            "actief": "Actief",
+            "gereed": "Gereed",
+            "verlopen": "Verlopen",
+            "naam": "Naam",
+            "prijs": "Prijs",
+            "producten": "Mijn producten"
+        },
+        "en-GB": {
+            "titel": "Ground lease",
+            "status": "Status",
+            "alle": "All",
+            "actief": "Active",
+            "gereed": "Completed",
+            "verlopen": "Expired",
+            "naam": "Name",
+            "prijs": "Price",
+            "producten": "My products"
+        }
+    }
+}
