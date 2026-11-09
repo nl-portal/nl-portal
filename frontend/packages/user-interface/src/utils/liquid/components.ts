@@ -44,6 +44,7 @@ import { alertDefinition } from "./components/alert";
 import { tabsDefinition } from "./components/tabs";
 import { searchDefinition } from "./components/search";
 import { linkListDefinition } from "./components/link-list";
+import { unorderedListDefinition } from "./components/unordered-list";
 
 /**
  * A template tag that renders [component].
@@ -71,6 +72,7 @@ export const LIQUID_COMPONENTS: Record<string, LiquidComponentDefinition> = {
   tabs: tabsDefinition,
   search: searchDefinition,
   "link-list": linkListDefinition,
+  "unordered-list": unorderedListDefinition,
 };
 
 function toProps(

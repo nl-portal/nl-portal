@@ -74,6 +74,7 @@
     "@gemeente-denhaag/text-input": "3.2.2",
     "@gemeente-denhaag/textarea": "^3.2.1",
     "@gemeente-denhaag/typography": "3.0.1",
+    "@gemeente-denhaag/unorderedlist": "3.3.2",
     "@gemeente-denhaag/utils": "3.1.1",
     "@utrecht/component-library-css": "9.0.15",
     "@utrecht/document-css": "3.0.1",
