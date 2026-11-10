@@ -26,6 +26,13 @@ nl-portal:
                     type: templated
                     page: wonen-en-bouwen
                     path: /wonen-en-bouwen
+            -   name: parkeervergunning
+                hidden: true
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: parkeervergunning
+                    path: /parkeervergunningen/:id
         pages:
             wonen-en-bouwen:
                 type: dynamic
@@ -42,25 +49,16 @@ nl-portal:
                             size: 5
                         overrides: [ page, filter.status ]
                         projection: '{items: [.results[] | {id: .uuid, naam, startDatum: .start_datum, eindDatum: .eind_datum, status, prijs}], total: .count}'
-
-            vergunningen:
+            parkeervergunning:
                 type: dynamic
                 template:
                     source: file
                     params:
-                        file: vergunningen.pagetemplate.json
+                        file: parkeervergunning.pagetemplate.json
                 bindings:
-                    personen:
-                        resolver: iko
+                    vergunning:
+                        resolver: openproduct
                         params:
-                            profile: personen
-                        projection: '{naam, geboortedatum}'
-                    vergunningen:
-                        resolver: iko
-                        params:
-                            profile: vergunningen
-                            container: vergunningen
-                            page: 0
-                            size: 5
-                        overrides: [ page, filter.status ]
-                        projection: '{items: .vergunningen, total: (.vergunningen | length)}'
+                            product-type-codes: PARKEREN, BEZOEKERSVERGUNNING
+                        projection: '{naam, startDatum: .start_datum, eindDatum: .eind_datum, status, prijs, kentekens: (.verbruiksobject.data.kentekens // []), periodes: [(.verbruiksobject.data.periodes // [])[] | {datetimeStart, kenteken, status}]}'
+

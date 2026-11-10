@@ -256,21 +256,21 @@ nl-portal:
 #                    type: templated
 #                    page: product
 #                    path: /producten/:id
-#            -   name: parkeervergunningen
-#                icon: ParkingIcon
-#                group: 99
-#                audience: [ burger, bedrijf ]
-#                route:
-#                    type: templated
-#                    page: parkeervergunningen
-#                    path: /parkeervergunningen
-#            -   name: parkeervergunning
-#                hidden: true
-#                audience: [ burger, bedrijf ]
-#                route:
-#                    type: templated
-#                    page: parkeervergunning
-#                    path: /parkeervergunningen/:id
+            -   name: parkeervergunningen
+                icon: ParkingIcon
+                group: 99
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: parkeervergunningen
+                    path: /parkeervergunningen
+            -   name: parkeervergunning
+                hidden: true
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: parkeervergunning
+                    path: /parkeervergunningen/:id
         pages:
             erfpacht-text-only:
                 type: static
@@ -278,7 +278,6 @@ nl-portal:
                     source: file
                     params:
                         file: erfpacht-text-only.pagetemplate.json
-
             over-ons:
                 type: static
                 template:
