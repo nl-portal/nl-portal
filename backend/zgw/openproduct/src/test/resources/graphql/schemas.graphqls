@@ -22,6 +22,15 @@ type Query {
         pageSize: Int
     ): [Zaak!]!
 
+     # Get taken of a thema, including their parent themas
+        getOpenProductThemaTakenByName(naam: String!, pageSize: Int): [TaakV2!]!
+
+     # Get zaken of a thema, including their parent themas
+    getOpenProductThemaZakenByName(
+        naam: String!
+        pageSize: Int
+    ): [Zaak!]!
+
     # Get all themas
     getOpenProductThemas(pageNumber: Int, pageSize: Int): ThemasPage!
 
@@ -127,6 +136,13 @@ type Query {
     # Get all prijzen
     getOpenProductPrijzen(pageNumber: Int, pageSize: Int): PrijzenPage!
 
+    getOpenProductZaken(id: UUID!): [Zaak!]!
+
+    getOpenProductTaken(id: UUID!): [TaakV2!]!
+
+    getOpenProductDocumenten(id: UUID!): [Document!]!
+
+    getOpenProductDecisions(id: UUID!): [JSON!]!
 }
 
 type Mutation {

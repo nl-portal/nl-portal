@@ -82,3 +82,10 @@ enum class SortList(
     ASCENDING("ascending"),
     DESCENDING("descending"),
 }
+
+enum class OpenProductLanguage(
+    @JsonValue val language: String,
+) {
+    NL("nl"),
+    EN("en"),
+}

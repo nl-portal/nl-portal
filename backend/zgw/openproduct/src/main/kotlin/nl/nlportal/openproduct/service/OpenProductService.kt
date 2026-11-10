@@ -36,6 +36,7 @@ import nl.nlportal.openproduct.client.domain.OpenProductContact
 import nl.nlportal.openproduct.client.domain.OpenProductContactenFilters
 import nl.nlportal.openproduct.client.domain.OpenProductContentElement
 import nl.nlportal.openproduct.client.domain.OpenProductContentElementsFilters
+import nl.nlportal.openproduct.client.domain.OpenProductLanguage
 import nl.nlportal.openproduct.client.domain.OpenProductLink
 import nl.nlportal.openproduct.client.domain.OpenProductLinksFilters
 import nl.nlportal.openproduct.client.domain.OpenProductLocatie
@@ -1044,6 +1045,54 @@ class OpenProductService(
         return openProductClient.path<Producten>().patch(productUpdate = productUpdate)
     }
 
+    suspend fun getThemaZakenByName(
+        authentication: CommonGroundAuthentication,
+        naam: String,
+        pageSize: Int? = null,
+        thema: OpenProductThema? = null,
+    ): List<Zaak> {
+        val themaZaak =
+            thema ?: getThemas(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = pageSize ?: 999,
+                extraSearchVariables =
+                    listOf<Pair<OpenProductThemasFilters, Any>>(
+                        OpenProductThemasFilters.NAAM to naam,
+                    ),
+            ).results.firstOrNull()
+
+        if (themaZaak == null) {
+            return emptyList()
+        }
+
+        // 2. loop through productTypes and get zaakTypes
+        val zaakTypes = mutableSetOf<UUID>()
+
+        themaZaak.producttypen.forEach {
+            getProductType(
+                id = it.uuid,
+                language = OpenProductLanguage.NL.language,
+            )?.zaaktypen?.forEach { zaakType ->
+                zaakTypes.add(extractId(zaakType.url!!))
+            }
+        }
+
+        // 3. get Zaken with filters
+        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
+            return emptyList()
+        }
+
+        return zakenApiService
+            .getZaken(
+                authentication = authentication,
+                page = 1,
+                pageSize = pageSize,
+                isOpen = true,
+                zaakTypeUUIDs = zaakTypes.toList(),
+            ).content
+    }
+
     /**
      * Get zaken of a thema
      * @param: authentication, authenticated user
@@ -1115,6 +1164,66 @@ class OpenProductService(
                 isOpen = isOpen,
                 zaakTypeUUIDs = zaakTypes.toList(),
             ).content
+    }
+
+    suspend fun getThemaTakenByName(
+        authentication: CommonGroundAuthentication,
+        naam: String,
+        pageSize: Int? = null,
+    ): List<TaakV2> {
+        val thema =
+            getThemas(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = pageSize ?: 999,
+                extraSearchVariables =
+                    listOf<Pair<OpenProductThemasFilters, Any>>(
+                        OpenProductThemasFilters.NAAM to naam,
+                    ),
+            ).results.firstOrNull()
+
+        if (thema == null) {
+            return emptyList()
+        }
+
+        val taken =
+            taakService
+                .getTakenV2(
+                    authentication = authentication,
+                    pageNumber = 1,
+                    pageSize = pageSize ?: 999,
+                ).content
+
+        // when no tasks are found, just return immediately
+        if (taken.isEmpty()) {
+            return taken
+        }
+
+        val zaken =
+            getThemaZakenByName(
+                authentication = authentication,
+                naam = naam,
+                thema = thema,
+                pageSize = pageSize,
+            )
+
+        val producten =
+            getProducten(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = 999,
+                extraSearchVariables =
+                    listOf(
+                        OpenProductProductenFilters.THEMA_UUID to thema.uuid.toString(),
+                    ),
+            ).results
+
+        // filter out the taak which is not connected to a zaak
+        return taken
+            .filterNot { task ->
+                !zaken.any { it.uuid.toString() == task.koppeling.value } &&
+                    !producten.any { it.uuid.toString() == task.koppeling.value }
+            }.sortedBy { it.verloopdatum }
     }
 
     /**
@@ -1209,6 +1318,26 @@ class OpenProductService(
         return zaakList
     }
 
+    suspend fun getProductZaken(
+        authentication: CommonGroundAuthentication,
+        id: UUID,
+    ): List<Zaak> {
+        val product =
+            getProduct(
+                authentication = authentication,
+                id = id,
+            )
+
+        if (product == null || product.zaken.isNullOrEmpty()) {
+            return emptyList()
+        }
+
+        return getProductZaken(
+            authentication = authentication,
+            zaken = product.zaken,
+        )
+    }
+
     /**
      * Get taken of a product
      * @param: taken, list of taken
@@ -1233,6 +1362,45 @@ class OpenProductService(
         }
 
         return takenList.toList()
+    }
+
+    suspend fun getProductTaken(
+        authentication: CommonGroundAuthentication,
+        id: UUID,
+    ): List<TaakV2> {
+        val product =
+            getProduct(
+                authentication = authentication,
+                id = id,
+            )
+
+        if (product == null || product.taken.isNullOrEmpty()) {
+            return emptyList()
+        }
+
+        return getProductTaken(
+            authentication = authentication,
+            taken = product.taken,
+        )
+    }
+
+    suspend fun getProductDocumenten(
+        authentication: CommonGroundAuthentication,
+        id: UUID,
+    ): List<Document> {
+        val product =
+            getProduct(
+                authentication = authentication,
+                id = id,
+            )
+
+        if (product == null || product.taken.isNullOrEmpty()) {
+            return emptyList()
+        }
+
+        return getOpenProductDocumenten(
+            openProductProduct = product,
+        )
     }
 
     /**
