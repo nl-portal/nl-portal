@@ -33,21 +33,27 @@ import { ProductSettings } from "../interfaces/product-types";
 
 interface Props {
   slug: string;
-  fetchTasksLength?: number;
-  fetchCasesLength?: number;
+  fetchTasksLengthDefault?: number;
+  fetchCasesLengthDefault?: number;
   productenSettings: ProductSettings[];
   children?: ((theme: OpenProductThema) => React.ReactNode) | React.ReactNode;
 }
 
 const ThemeOverviewPage = ({
   slug,
-  fetchTasksLength = 5,
-  fetchCasesLength = 4,
+  fetchTasksLengthDefault = 5,
+  fetchCasesLengthDefault = 4,
   productenSettings,
   children,
 }: Props) => {
   const intl = useIntl();
-  const { themes } = use(AppContext);
+  const { themes, features } = use(AppContext);
+  const fetchCasesLength =
+    features?.properties.overviewCurrentCasesPreviewLength ??
+    fetchCasesLengthDefault;
+  const fetchTasksLength =
+    features?.properties.overviewCurrentTasksPreviewLength ??
+    fetchTasksLengthDefault;
   const theme = themes.find(
     (theme) => stringToSlug(theme.naam) === stringToSlug(slug),
   ) as OpenProductThema;
