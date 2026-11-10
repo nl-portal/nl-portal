@@ -18,7 +18,31 @@ nl-portal:
                     type: templated
                     page: erfpacht-text-only
                     path: /erfpacht
+            -   name: wonen-en-bouwen
+                icon: HouseIcon
+                group: 99
+                audience: [ burger, bedrijf ]
+                route:
+                    type: templated
+                    page: wonen-en-bouwen
+                    path: /wonen-en-bouwen
         pages:
+            wonen-en-bouwen:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: wonen-en-bouwen.pagetemplate.json
+                bindings:
+                    woonboten:
+                        resolver: openproduct
+                        params:
+                            product-type-codes: PARKEREN, BEZOEKERSVERGUNNING
+                            page: 0
+                            size: 5
+                        overrides: [ page, filter.status ]
+                        projection: '{items: [.results[] | {id: .uuid, naam, startDatum: .start_datum, eindDatum: .eind_datum, status, prijs}], total: .count}'
+
             vergunningen:
                 type: dynamic
                 template:
