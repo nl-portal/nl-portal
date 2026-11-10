@@ -98,6 +98,7 @@ class OpenProductQuery(
             id = id,
         )
 
+    @QueryMapping
     suspend fun getOpenProductTaken(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
@@ -107,6 +108,7 @@ class OpenProductQuery(
             id = id,
         )
 
+    @QueryMapping
     suspend fun getOpenProductDocumenten(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
@@ -116,6 +118,7 @@ class OpenProductQuery(
             id = id,
         )
 
+    @QueryMapping
     suspend fun getOpenProductDecisions(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
