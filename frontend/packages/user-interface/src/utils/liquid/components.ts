@@ -48,7 +48,7 @@ import { unorderedListDefinition } from "./components/unordered-list";
 import { richTextDefinition } from "./components/rich-text";
 import { pageHeaderDefinition } from "./components/page-header";
 import { themeTasksDefinition } from "./components/ThemeTasks.tsx";
-import { mijnZakenDefinition } from "./components/mijnzaken.tsx";
+import { themeCasesDefinition } from "./components/ThemeCases.tsx";
 
 /**
  * A template tag that renders [component].
@@ -80,7 +80,7 @@ export const LIQUID_COMPONENTS: Record<string, LiquidComponentDefinition> = {
   richtext: richTextDefinition,
   "page-header": pageHeaderDefinition,
   "theme-tasks": themeTasksDefinition,
-  mijnzaken: mijnZakenDefinition,
+  "theme-cases": themeCasesDefinition,
 };
 
 function toProps(
