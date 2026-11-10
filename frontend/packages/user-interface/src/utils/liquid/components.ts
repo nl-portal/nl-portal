@@ -47,7 +47,7 @@ import { linkListDefinition } from "./components/link-list";
 import { unorderedListDefinition } from "./components/unordered-list";
 import { richTextDefinition } from "./components/rich-text";
 import { pageHeaderDefinition } from "./components/page-header";
-import { mijnTakenDefinition } from "./components/mijntaken.tsx";
+import { themeTasksDefinition } from "./components/ThemeTasks.tsx";
 import { mijnZakenDefinition } from "./components/mijnzaken.tsx";
 
 /**
@@ -79,7 +79,7 @@ export const LIQUID_COMPONENTS: Record<string, LiquidComponentDefinition> = {
   "unordered-list": unorderedListDefinition,
   richtext: richTextDefinition,
   "page-header": pageHeaderDefinition,
-  mijntaken: mijnTakenDefinition,
+  "theme-tasks": themeTasksDefinition,
   mijnzaken: mijnZakenDefinition,
 };
 

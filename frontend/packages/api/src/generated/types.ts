@@ -1999,6 +1999,8 @@ export type Query = {
   getOpenProductContact?: Maybe<OpenProductContact>;
   /**  Get all contacten */
   getOpenProductContacten: ContactenPage;
+  getOpenProductDecisions: Array<Scalars['JSON']['output']>;
+  getOpenProductDocumenten: Array<Document>;
   /**  Get all hoofd themas */
   getOpenProductHoofdThemas: Array<OpenProductThema>;
   /**  Get all hoofd themas by producten */
@@ -2019,14 +2021,19 @@ export type Query = {
   getOpenProductPrijs?: Maybe<OpenProductPrijs>;
   /**  Get all prijzen */
   getOpenProductPrijzen: PrijzenPage;
+  getOpenProductTaken: Array<TaakV2>;
   /**  Get a thema */
   getOpenProductThema?: Maybe<OpenProductThema>;
   /**  Get thema hierarchy */
   getOpenProductThemaHierarchy: Array<OpenProductThemaHierarchy>;
   /**  Get taken of a thema, including their parent themas */
   getOpenProductThemaTaken: Array<TaakV2>;
+  /**  Get taken of a thema, including their parent themas */
+  getOpenProductThemaTakenByName: Array<TaakV2>;
   /**  Get zaken of a thema, including their parent themas */
   getOpenProductThemaZaken: Array<Zaak>;
+  /**  Get zaken of a thema, including their parent themas */
+  getOpenProductThemaZakenByName: Array<Zaak>;
   /**  Get all themas */
   getOpenProductThemas: ThemasPage;
   /**  Get all themas hierarchy */
@@ -2035,6 +2042,7 @@ export type Query = {
   getOpenProductType?: Maybe<OpenProductProductType>;
   /**  Get all Open product types */
   getOpenProductTypes: ProductTypesPage;
+  getOpenProductZaken: Array<Zaak>;
   getOpenProducten: ProductenPage;
   /**  Get a Open producten type by thema id */
   getOpenProductenByThema: Array<OpenProductProduct>;
@@ -2173,6 +2181,16 @@ export type QueryGetOpenProductContactenArgs = {
 };
 
 
+export type QueryGetOpenProductDecisionsArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+export type QueryGetOpenProductDocumentenArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
 export type QueryGetOpenProductLinkArgs = {
   id: Scalars['UUID']['input'];
 };
@@ -2219,6 +2237,11 @@ export type QueryGetOpenProductPrijzenArgs = {
 };
 
 
+export type QueryGetOpenProductTakenArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
 export type QueryGetOpenProductThemaArgs = {
   id: Scalars['UUID']['input'];
 };
@@ -2236,10 +2259,22 @@ export type QueryGetOpenProductThemaTakenArgs = {
 };
 
 
+export type QueryGetOpenProductThemaTakenByNameArgs = {
+  naam: Scalars['String']['input'];
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryGetOpenProductThemaZakenArgs = {
   id: Scalars['UUID']['input'];
   isOpen?: InputMaybe<Scalars['Boolean']['input']>;
   language?: InputMaybe<Scalars['String']['input']>;
+  pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetOpenProductThemaZakenByNameArgs = {
+  naam: Scalars['String']['input'];
   pageSize?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -2260,6 +2295,11 @@ export type QueryGetOpenProductTypesArgs = {
   language?: InputMaybe<Scalars['String']['input']>;
   pageNumber?: InputMaybe<Scalars['Int']['input']>;
   pageSize?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetOpenProductZakenArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
