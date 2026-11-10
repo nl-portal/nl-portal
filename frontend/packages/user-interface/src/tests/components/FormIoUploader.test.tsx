@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { describe, it, expect, vi, beforeAll, afterEach } from "vitest";
-import { fireEvent, waitFor } from "@testing-library/react";
+import { act, fireEvent, waitFor } from "@testing-library/react";
 import { Formio } from "@formio/js";
 import FormIoUploader from "../../components/formio/FormIoUploader";
 
@@ -99,13 +99,31 @@ describe("FormIoUploader", () => {
 
   describe("upload", () => {
     const fetchMock = vi.fn();
+    const forms: Array<{ destroy: () => void }> = [];
+
+    const createForm = async (
+      ...args: Parameters<typeof Formio.createForm>
+    ) => {
+      let form!: Awaited<ReturnType<typeof Formio.createForm>>;
+      await act(async () => {
+        form = await Formio.createForm(...args);
+      });
+      forms.push(form);
+      return form;
+    };
 
     beforeAll(() => {
       FormIoUploader.register();
       sessionStorage.setItem("REST_URI", "http://localhost/api");
     });
 
-    afterEach(() => {
+    afterEach(async () => {
+      await act(async () => {
+        for (const form of forms.splice(0)) {
+          form.destroy();
+        }
+      });
+
       fetchMock.mockReset();
       vi.unstubAllGlobals();
       document.body.innerHTML = "";
@@ -121,7 +139,7 @@ describe("FormIoUploader", () => {
       const element = document.createElement("div");
       document.body.appendChild(element);
 
-      await Formio.createForm(
+      await createForm(
         element,
         {
           components: [
@@ -178,7 +196,7 @@ describe("FormIoUploader", () => {
       const element = document.createElement("div");
       document.body.appendChild(element);
 
-      const form = await Formio.createForm(
+      const form = await createForm(
         element,
         {
           components: [
@@ -206,17 +224,19 @@ describe("FormIoUploader", () => {
         { taakId: "taak-id" },
       );
 
-      await form.setSubmission({
-        data: {
-          bestanden: {
-            opTeVragenInformatie: [0, 1, 2].map((index) => ({
-              informatieverzoekItem: {
-                omschrijvingAanvrager: `Bestand ${index}`,
-              },
-              documentUpload: [],
-            })),
+      await act(async () => {
+        await form.setSubmission({
+          data: {
+            bestanden: {
+              opTeVragenInformatie: [0, 1, 2].map((index) => ({
+                informatieverzoekItem: {
+                  omschrijvingAanvrager: `Bestand ${index}`,
+                },
+                documentUpload: [],
+              })),
+            },
           },
-        },
+        });
       });
 
       const inputs = await waitFor(() => {

@@ -19,6 +19,9 @@ import { getProduct } from "../data/product.mock";
 import { getUnopenedBerichten } from "../data/unopened-berichten";
 import { getZaken } from "../data/zaken.mock";
 
+import { getPersoon } from "../data/persoon.mock";
+import { getUserDigitaleAdressen } from "../data/userDigitaleAdressen.mock";
+
 const routes = [
   {
     path: testPaths.cases,
@@ -34,6 +37,8 @@ const routes = [
 export const MockCasesPage = () => (
   <TestProvider
     mocks={[
+      getPersoon,
+      getUserDigitaleAdressen,
       getProduct,
       getUnopenedBerichten,
       getZaken({ pageSize: 10, isOpen: true }),

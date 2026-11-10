@@ -23,12 +23,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000001324",
       zaaktype: {
         identificatie: "GESLOTENZAAK1",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-02-01",
       status: {
         statustype: {
           isEindstatus: true,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -41,12 +43,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000001317",
       zaaktype: {
         identificatie: "OPENZAAK1",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-01-01",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -59,12 +63,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000001263",
       zaaktype: {
         identificatie: "OPENZAAK2",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-01-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -77,12 +83,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000001261",
       zaaktype: {
         identificatie: "GESLOTENZAAK2",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-02-02",
       status: {
         statustype: {
           isEindstatus: true,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -95,12 +103,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004448",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-03",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -113,12 +123,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004427",
       zaaktype: {
         identificatie: "B0756",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-03",
       status: {
         statustype: {
           isEindstatus: true,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -131,12 +143,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004424",
       zaaktype: {
         identificatie: "B0756",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-03",
       status: {
         statustype: {
           isEindstatus: true,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -149,12 +163,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004417",
       zaaktype: {
         identificatie: "B0756",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: true,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -167,12 +183,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004414",
       zaaktype: {
         identificatie: "B0756",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: true,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -185,12 +203,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004410",
       zaaktype: {
         identificatie: "B0756",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: true,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -203,12 +223,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004406",
       zaaktype: {
         identificatie: "B0756",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: true,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -221,12 +243,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004404",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -239,12 +263,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004402",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -257,12 +283,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004398",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -275,12 +303,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004397",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -293,12 +323,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004396",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -311,12 +343,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004387",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -329,12 +363,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004386",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -347,12 +383,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004385",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",
@@ -365,12 +403,14 @@ const getContent = (pageSize?: number, isOpen?: boolean) => {
       identificatie: "ZAAK-2024-0000004384",
       zaaktype: {
         identificatie: "aanvraag-financiele-ondersteuning-ondernemers-beha",
+        omschrijving: "",
         __typename: "ZaakType",
       },
       startdatum: "2024-04-02",
       status: {
         statustype: {
           isEindstatus: false,
+          omschrijving: "",
           __typename: "ZaakStatusType",
         },
         __typename: "ZaakStatus",

@@ -17,6 +17,9 @@ import TasksPage from "../../../pages/TasksPage";
 import TestProvider, { testPaths } from "../../../providers/TestProvider";
 import { getTaken } from "../data/taken.mock";
 
+import { getPersoon } from "../data/persoon.mock";
+import { getUserDigitaleAdressen } from "../data/userDigitaleAdressen.mock";
+
 const routes = [
   {
     path: testPaths.tasks,
@@ -31,7 +34,7 @@ const routes = [
 
 export const MockTasksPage = () => (
   <TestProvider
-    mocks={[getTaken({})]}
+    mocks={[getPersoon, getUserDigitaleAdressen, getTaken({})]}
     routes={routes}
     initialIndex={0}
     initialEntries={[testPaths.tasks]}
