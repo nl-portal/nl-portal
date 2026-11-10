@@ -46,6 +46,7 @@ import { searchDefinition } from "./components/search";
 import { linkListDefinition } from "./components/link-list";
 import { unorderedListDefinition } from "./components/unordered-list";
 import { richTextDefinition } from "./components/rich-text";
+import { pageHeaderDefinition } from "./components/page-header";
 
 /**
  * A template tag that renders [component].
@@ -75,6 +76,7 @@ export const LIQUID_COMPONENTS: Record<string, LiquidComponentDefinition> = {
   "link-list": linkListDefinition,
   "unordered-list": unorderedListDefinition,
   richtext: richTextDefinition,
+  "page-header": pageHeaderDefinition,
 };
 
 function toProps(
