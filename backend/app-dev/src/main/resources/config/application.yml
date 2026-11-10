@@ -278,7 +278,6 @@ nl-portal:
                     source: file
                     params:
                         file: erfpacht-text-only.pagetemplate.json
-
             over-ons:
                 type: static
                 template:
