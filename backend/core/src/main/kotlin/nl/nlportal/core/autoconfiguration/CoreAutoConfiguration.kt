@@ -19,7 +19,9 @@ import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
 import nl.nlportal.core.frontend.configuration.PagesConfigurationProperties
 import nl.nlportal.core.frontend.menu.FrontendMenuAudienceResolver
+import nl.nlportal.core.frontend.menu.FrontendMenuConditionalChecker
 import nl.nlportal.core.frontend.menu.FrontendMenuService
+import nl.nlportal.core.frontend.menu.service.FrontendMenuConditionalCheckers
 import nl.nlportal.core.frontend.menu.web.rest.FrontendMenuResource
 import nl.nlportal.core.frontend.page.PageConfigValidator
 import nl.nlportal.core.frontend.page.PageProjection
@@ -75,9 +77,11 @@ class CoreAutoConfiguration {
     fun frontendMenuService(
         frontendConfigurationProperties: FrontendConfigurationProperties,
         frontendMenuAudienceResolver: FrontendMenuAudienceResolver?,
+        frontendMenuConditionalCheckers: FrontendMenuConditionalCheckers
     ) = FrontendMenuService(
         properties = frontendConfigurationProperties,
         audienceResolver = frontendMenuAudienceResolver,
+        conditionalCheckers = frontendMenuConditionalCheckers,
     )
 
     @Bean
@@ -152,4 +156,9 @@ class CoreAutoConfiguration {
         const val PAGES_ENABLED = "config.pages.enabled"
         const val MENU_ENTRIES_ENABLED = "frontend.toggles.menu-entries-enabled"
     }
+
+    @Bean
+    fun frontendMenuConditionalCheckers(
+        checkers: List<FrontendMenuConditionalChecker>
+    ) = FrontendMenuConditionalCheckers(checkers)
 }

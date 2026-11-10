@@ -22,6 +22,8 @@ nl-portal:
                 icon: HouseIcon
                 group: 99
                 audience: [ burger, bedrijf ]
+                conditional:
+                    thema: wonen-en-boten
                 route:
                     type: templated
                     page: wonen-en-bouwen

@@ -19,6 +19,7 @@ import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties.FrontendMenuEntryProperties
 import nl.nlportal.core.frontend.menu.domain.FrontendMenuEntry
 import nl.nlportal.core.frontend.menu.domain.FrontendMenuRoute
+import nl.nlportal.core.frontend.menu.service.FrontendMenuConditionalCheckers
 import nl.nlportal.core.frontend.page.resolver.PageParams
 import org.springframework.security.core.Authentication
 
@@ -29,6 +30,7 @@ import org.springframework.security.core.Authentication
 class FrontendMenuService(
     private val properties: FrontendConfigurationProperties,
     private val audienceResolver: FrontendMenuAudienceResolver?,
+    private val conditionalCheckers: FrontendMenuConditionalCheckers
 ) {
     init {
         val violations = validate(properties.menuEntries)
@@ -41,6 +43,7 @@ class FrontendMenuService(
         val audience = audienceResolver?.resolve(authentication) ?: FrontendMenuAudienceResolver.SUBJECT
         return properties.menuEntries
             .filter { it.audience.isEmpty() || it.audience.any { a -> a.equals(audience, ignoreCase = true) } }
+            .filter { conditionalCheckers.check(it.conditional) }
             .map { it.toDomain() }
     }
 

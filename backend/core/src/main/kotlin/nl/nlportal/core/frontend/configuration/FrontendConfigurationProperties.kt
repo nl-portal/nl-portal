@@ -67,6 +67,10 @@ class FrontendConfigurationProperties {
         var custom: String? = null
     }
 
+    class FrontendMenuConditional(
+        var thema: String? = null
+    )
+
     class FrontendMenuEntryProperties(
         var name: String = "",
         var icon: String = "DocumentIcon",
@@ -74,6 +78,7 @@ class FrontendConfigurationProperties {
         var ordering: Int? = null,
         var audience: List<String> = emptyList(),
         var hidden: Boolean = false,
+        var conditional: Map<String, String> = mutableMapOf(),
         var route: FrontendMenuRouteProperties = FrontendMenuRouteProperties(),
     )
 

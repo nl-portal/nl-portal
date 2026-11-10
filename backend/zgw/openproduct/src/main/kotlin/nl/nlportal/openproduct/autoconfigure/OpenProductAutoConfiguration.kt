@@ -16,6 +16,7 @@
 package nl.nlportal.openproduct.autoconfigure
 
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
+import nl.nlportal.core.frontend.menu.FrontendMenuConditionalChecker
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.documentenapi.service.DocumentenApiService
@@ -24,10 +25,10 @@ import nl.nlportal.openproduct.client.OpenProductDmnClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
 import nl.nlportal.openproduct.page.OpenProductPageDataResolver
 import nl.nlportal.openproduct.security.config.ProductDocumentResourceHttpSecurityConfigurer
+import nl.nlportal.openproduct.service.OPFrontendMenuConditionalChecker
 import nl.nlportal.openproduct.service.OpenProductDmnService
 import nl.nlportal.openproduct.service.OpenProductPrefillService
 import nl.nlportal.openproduct.service.OpenProductService
-import nl.nlportal.zakenapi.client.ZakenApiClient
 import nl.nlportal.zakenapi.service.ZakenApiService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.autoconfigure.TaakConfig
@@ -123,4 +124,7 @@ class OpenProductAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(ProductDocumentResourceHttpSecurityConfigurer::class)
     fun productDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer = ProductDocumentResourceHttpSecurityConfigurer()
+
+    @Bean
+    fun opFrontendMenuConditionalCheckers(): FrontendMenuConditionalChecker = OPFrontendMenuConditionalChecker()
 }
