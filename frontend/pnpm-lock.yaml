@@ -546,6 +546,9 @@ importers:
       '@gemeente-denhaag/responsive-content':
         specifier: 2.1.2
         version: 2.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@gemeente-denhaag/rich-text':
+        specifier: 5.1.2
+        version: 5.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@gemeente-denhaag/select':
         specifier: ^3.2.1
         version: 3.2.2(@babel/runtime@7.29.7)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1342,6 +1345,12 @@ packages:
 
   '@gemeente-denhaag/responsive-content@2.1.2':
     resolution: {integrity: sha512-x87cjHjCJT32Wjmg6/J6QsA1dRBXSkKeOHxqFveL2cS6+XB4LEaUnFi9HepVdqubEOemeQ4sM7t3Sq8geNswPg==}
+    peerDependencies:
+      react: 18 || 19
+      react-dom: 18 || 19
+
+  '@gemeente-denhaag/rich-text@5.1.2':
+    resolution: {integrity: sha512-/9SybKh4KrmT7xu0eD05pQuJLHrSocXEePua9RfRma4tYx6WviCUOSAJYuOKgelkWXtUzV8Rqb/xiFB7/VafcA==}
     peerDependencies:
       react: 18 || 19
       react-dom: 18 || 19
@@ -7396,6 +7405,11 @@ snapshots:
   '@gemeente-denhaag/responsive-content@2.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       clsx: 2.1.1
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
+
+  '@gemeente-denhaag/rich-text@5.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+    dependencies:
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 
