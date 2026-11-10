@@ -68,7 +68,7 @@ class FrontendConfigurationProperties {
     }
 
     class FrontendMenuConditional(
-        var thema: String? = null
+        var thema: String? = null,
     )
 
     class FrontendMenuEntryProperties(

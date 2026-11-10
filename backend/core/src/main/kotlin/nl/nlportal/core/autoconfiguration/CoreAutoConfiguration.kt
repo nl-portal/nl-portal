@@ -77,7 +77,7 @@ class CoreAutoConfiguration {
     fun frontendMenuService(
         frontendConfigurationProperties: FrontendConfigurationProperties,
         frontendMenuAudienceResolver: FrontendMenuAudienceResolver?,
-        frontendMenuConditionalCheckers: FrontendMenuConditionalCheckers
+        frontendMenuConditionalCheckers: FrontendMenuConditionalCheckers,
     ) = FrontendMenuService(
         properties = frontendConfigurationProperties,
         audienceResolver = frontendMenuAudienceResolver,
@@ -159,6 +159,6 @@ class CoreAutoConfiguration {
 
     @Bean
     fun frontendMenuConditionalCheckers(
-        checkers: List<FrontendMenuConditionalChecker>
+        checkers: List<FrontendMenuConditionalChecker>,
     ) = FrontendMenuConditionalCheckers(checkers)
 }

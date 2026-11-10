@@ -35,6 +35,14 @@ nl-portal:
                     type: templated
                     page: parkeervergunning
                     path: /parkeervergunningen/:id
+            -   name: vergunningen
+                icon: ParkingIcon
+                group: 99
+                audience: [ burger ]
+                route:
+                    type: templated
+                    page: vergunningen
+                    path: /vergunningen
         pages:
             wonen-en-bouwen:
                 type: dynamic
@@ -51,6 +59,27 @@ nl-portal:
                             size: 5
                         overrides: [ page, filter.status ]
                         projection: '{items: [.results[] | {id: .uuid, naam, startDatum: .start_datum, eindDatum: .eind_datum, status, prijs}], total: .count}'
+            vergunningen:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: vergunningen.pagetemplate.json
+                bindings:
+                    personen:
+                        resolver: iko
+                        params:
+                            profile: personen
+                        projection: '{naam, geboortedatum}'
+                    vergunningen:
+                        resolver: iko
+                        params:
+                            profile: vergunningen
+                            container: vergunningen
+                            page: 0
+                            size: 5
+                        overrides: [ page, filter.status ]
+                        projection: '{items: .vergunningen, total: (.vergunningen | length)}'
             parkeervergunning:
                 type: dynamic
                 template:

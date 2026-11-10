@@ -30,7 +30,7 @@ import org.springframework.security.core.Authentication
 class FrontendMenuService(
     private val properties: FrontendConfigurationProperties,
     private val audienceResolver: FrontendMenuAudienceResolver?,
-    private val conditionalCheckers: FrontendMenuConditionalCheckers
+    private val conditionalCheckers: FrontendMenuConditionalCheckers,
 ) {
     init {
         val violations = validate(properties.menuEntries)
