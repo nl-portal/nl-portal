@@ -98,6 +98,21 @@ class OpenProductThemaQuery(
     }
 
     @QueryMapping
+    suspend fun getOpenProductThemaTaken(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+        @Argument language: String? = null,
+        @Argument pageSize: Int? = null,
+    ): List<TaakV2> =
+        openProductService.getThemaTaken(
+            authentication = authentication,
+            id = id,
+            language = language,
+            pageSize = pageSize,
+        )
+
+
+    @QueryMapping
     suspend fun getOpenProductThemaZaken(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
@@ -114,18 +129,29 @@ class OpenProductThemaQuery(
         )
 
     @QueryMapping
-    suspend fun getOpenProductThemaTaken(
+    suspend fun getOpenProductThemaZakenByName(
         authentication: CommonGroundAuthentication,
-        @Argument id: UUID,
-        @Argument language: String? = null,
+        @Argument naam: String,
         @Argument pageSize: Int? = null,
-    ): List<TaakV2> =
-        openProductService.getThemaTaken(
+    ): List<Zaak> =
+        openProductService.getThemaZakenByName(
             authentication = authentication,
-            id = id,
-            language = language,
+            naam = naam,
             pageSize = pageSize,
         )
+
+    @QueryMapping
+    suspend fun getOpenProductThemaTakenByName(
+        authentication: CommonGroundAuthentication,
+        @Argument naam: String,
+        @Argument pageSize: Int? = null,
+    ): List<TaakV2> =
+        openProductService.getThemaTakenByName(
+            authentication = authentication,
+            naam = naam,
+            pageSize = pageSize,
+        )
+
 
     @SchemaMapping(typeName = "OpenProductThema", field = "zaken")
     suspend fun zaken(

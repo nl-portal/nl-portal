@@ -15,6 +15,7 @@
  */
 package nl.nlportal.openproduct.graphql
 
+import com.sun.org.apache.xml.internal.serializer.Version.getProduct
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.node.ObjectNode
 import java.util.UUID
@@ -86,6 +87,59 @@ class OpenProductQuery(
             authentication = authentication,
             themaId = themaId,
         )
+
+
+    @QueryMapping
+    suspend fun getOpenProductZaken(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+    ): List<Zaak> {
+        return openProductService.getProductZaken(
+            authentication = authentication,
+            id = id,
+        )
+    }
+
+    suspend fun getOpenProductTaken(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+    ): List<TaakV2> {
+        return openProductService.getProductTaken(
+            authentication = authentication,
+            id = id,
+        )
+    }
+
+    suspend fun getOpenProductDocumenten(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+    ): List<Document> {
+        return openProductService.getProductDocumenten(
+            authentication = authentication,
+            id = id,
+        )
+    }
+
+    suspend fun getOpenProductDecisions(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+    ): List<ObjectNode> {
+        val product = openProductService.getProduct(
+            authentication = authentication,
+            id= id
+        )
+
+        if(product == null) {
+            return emptyList()
+        }
+
+        val result =
+            openProductDmnService.getProductDecision(
+                product = product,
+            )
+
+        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
+    }
 
     @SchemaMapping(typeName = "OpenProductProduct", field = "zaken")
     suspend fun zaken(
