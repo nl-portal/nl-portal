@@ -1050,18 +1050,19 @@ class OpenProductService(
         naam: String,
         pageSize: Int? = null,
         thema: OpenProductThema? = null,
-    ) : List<Zaak> {
+    ): List<Zaak> {
+        val themaZaak =
+            thema ?: getThemas(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = pageSize ?: 999,
+                extraSearchVariables =
+                    listOf<Pair<OpenProductThemasFilters, Any>>(
+                        OpenProductThemasFilters.NAAM to naam,
+                    ),
+            ).results.firstOrNull()
 
-        val themaZaak = thema?: getThemas(
-            authentication = authentication,
-            pageNumber = 1,
-            pageSize = pageSize?:999,
-            extraSearchVariables = listOf<Pair<OpenProductThemasFilters, Any>>(
-                OpenProductThemasFilters.NAAM to naam,
-            ),
-        ).results.firstOrNull()
-
-        if(themaZaak == null) {
+        if (themaZaak == null) {
             return emptyList()
         }
 
@@ -1069,13 +1070,13 @@ class OpenProductService(
         val zaakTypes = mutableSetOf<UUID>()
 
         themaZaak.producttypen.forEach {
-                getProductType(
-                    id = it.uuid,
-                    language =OpenProductLanguage.NL.language,
-                )?.zaaktypen?.forEach { zaakType ->
-                    zaakTypes.add(extractId(zaakType.url!!))
-                }
+            getProductType(
+                id = it.uuid,
+                language = OpenProductLanguage.NL.language,
+            )?.zaaktypen?.forEach { zaakType ->
+                zaakTypes.add(extractId(zaakType.url!!))
             }
+        }
 
         // 3. get Zaken with filters
         if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
@@ -1170,16 +1171,18 @@ class OpenProductService(
         naam: String,
         pageSize: Int? = null,
     ): List<TaakV2> {
-        val thema = getThemas(
-            authentication = authentication,
-            pageNumber = 1,
-            pageSize = pageSize?: 999,
-            extraSearchVariables = listOf<Pair<OpenProductThemasFilters, Any>>(
-                OpenProductThemasFilters.NAAM to naam,
-            ),
-        ).results.firstOrNull()
+        val thema =
+            getThemas(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = pageSize ?: 999,
+                extraSearchVariables =
+                    listOf<Pair<OpenProductThemasFilters, Any>>(
+                        OpenProductThemasFilters.NAAM to naam,
+                    ),
+            ).results.firstOrNull()
 
-        if(thema == null) {
+        if (thema == null) {
             return emptyList()
         }
 
@@ -1201,7 +1204,7 @@ class OpenProductService(
                 authentication = authentication,
                 naam = naam,
                 thema = thema,
-                pageSize = pageSize
+                pageSize = pageSize,
             )
 
         val producten =
@@ -1209,19 +1212,20 @@ class OpenProductService(
                 authentication = authentication,
                 pageNumber = 1,
                 pageSize = 999,
-                extraSearchVariables = listOf(
-                    OpenProductProductenFilters.THEMA_UUID to thema.uuid.toString(),
-                ),
+                extraSearchVariables =
+                    listOf(
+                        OpenProductProductenFilters.THEMA_UUID to thema.uuid.toString(),
+                    ),
             ).results
 
         // filter out the taak which is not connected to a zaak
         return taken
             .filterNot { task ->
                 !zaken.any { it.uuid.toString() == task.koppeling.value } &&
-                        !producten.any { it.uuid.toString() == task.koppeling.value }
+                    !producten.any { it.uuid.toString() == task.koppeling.value }
             }.sortedBy { it.verloopdatum }
-
     }
+
     /**
      * Get taken of a thema
      * @param: authentication, authenticated user
@@ -1318,20 +1322,20 @@ class OpenProductService(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): List<Zaak> {
-        val product = getProduct(
-            authentication = authentication,
-            id = id
-        )
+        val product =
+            getProduct(
+                authentication = authentication,
+                id = id,
+            )
 
-        if(product == null || product.zaken.isNullOrEmpty()) {
+        if (product == null || product.zaken.isNullOrEmpty()) {
             return emptyList()
         }
 
         return getProductZaken(
             authentication = authentication,
-            zaken = product.zaken
+            zaken = product.zaken,
         )
-
     }
 
     /**
@@ -1364,18 +1368,19 @@ class OpenProductService(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): List<TaakV2> {
-        val product = getProduct(
-            authentication = authentication,
-            id = id
-        )
+        val product =
+            getProduct(
+                authentication = authentication,
+                id = id,
+            )
 
-        if(product == null || product.taken.isNullOrEmpty()) {
+        if (product == null || product.taken.isNullOrEmpty()) {
             return emptyList()
         }
 
         return getProductTaken(
             authentication = authentication,
-            taken = product.taken
+            taken = product.taken,
         )
     }
 
@@ -1383,18 +1388,18 @@ class OpenProductService(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): List<Document> {
-        val product = getProduct(
-            authentication = authentication,
-            id = id
-        )
+        val product =
+            getProduct(
+                authentication = authentication,
+                id = id,
+            )
 
-        if(product == null || product.taken.isNullOrEmpty()) {
+        if (product == null || product.taken.isNullOrEmpty()) {
             return emptyList()
         }
 
         return getOpenProductDocumenten(
             openProductProduct = product,
-
         )
     }
 

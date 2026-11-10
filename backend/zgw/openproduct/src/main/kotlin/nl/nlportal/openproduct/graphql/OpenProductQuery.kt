@@ -88,48 +88,45 @@ class OpenProductQuery(
             themaId = themaId,
         )
 
-
     @QueryMapping
     suspend fun getOpenProductZaken(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
-    ): List<Zaak> {
-        return openProductService.getProductZaken(
+    ): List<Zaak> =
+        openProductService.getProductZaken(
             authentication = authentication,
             id = id,
         )
-    }
 
     suspend fun getOpenProductTaken(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
-    ): List<TaakV2> {
-        return openProductService.getProductTaken(
+    ): List<TaakV2> =
+        openProductService.getProductTaken(
             authentication = authentication,
             id = id,
         )
-    }
 
     suspend fun getOpenProductDocumenten(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
-    ): List<Document> {
-        return openProductService.getProductDocumenten(
+    ): List<Document> =
+        openProductService.getProductDocumenten(
             authentication = authentication,
             id = id,
         )
-    }
 
     suspend fun getOpenProductDecisions(
         authentication: CommonGroundAuthentication,
         @Argument id: UUID,
     ): List<ObjectNode> {
-        val product = openProductService.getProduct(
-            authentication = authentication,
-            id= id
-        )
+        val product =
+            openProductService.getProduct(
+                authentication = authentication,
+                id = id,
+            )
 
-        if(product == null) {
+        if (product == null) {
             return emptyList()
         }
 

@@ -111,7 +111,6 @@ class OpenProductThemaQuery(
             pageSize = pageSize,
         )
 
-
     @QueryMapping
     suspend fun getOpenProductThemaZaken(
         authentication: CommonGroundAuthentication,
@@ -151,7 +150,6 @@ class OpenProductThemaQuery(
             naam = naam,
             pageSize = pageSize,
         )
-
 
     @SchemaMapping(typeName = "OpenProductThema", field = "zaken")
     suspend fun zaken(
