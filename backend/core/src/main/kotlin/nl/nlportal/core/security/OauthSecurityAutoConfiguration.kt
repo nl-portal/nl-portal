@@ -36,6 +36,10 @@ import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
 import java.time.Duration
+import org.springframework.security.web.header.writers.CrossOriginEmbedderPolicyHeaderWriter
+import org.springframework.security.web.server.header.CrossOriginEmbedderPolicyServerHttpHeadersWriter
+import org.springframework.security.web.server.header.CrossOriginOpenerPolicyServerHttpHeadersWriter
+import org.springframework.security.web.server.header.PermissionsPolicyServerHttpHeadersWriter
 
 @AutoConfiguration
 @EnableWebFluxSecurity
@@ -75,6 +79,23 @@ class OauthSecurityAutoConfiguration {
                 h.contentTypeOptions(withDefaults())
                 h.referrerPolicy { c ->
                     c.policy(ReferrerPolicyServerHttpHeadersWriter.ReferrerPolicy.SAME_ORIGIN)
+                }
+                if (securityHeadersConfig.crossOriginOpenerPolicyEnabled) {
+                    h.crossOriginOpenerPolicy { c ->
+                        c.policy(CrossOriginOpenerPolicyServerHttpHeadersWriter.CrossOriginOpenerPolicy.SAME_ORIGIN)
+                    }
+                }
+
+                if (securityHeadersConfig.crossOriginEmbedderPolicyEnabled) {
+                    h.crossOriginEmbedderPolicy { c ->
+                        c.policy(CrossOriginEmbedderPolicyServerHttpHeadersWriter.CrossOriginEmbedderPolicy.REQUIRE_CORP)
+                    }
+                }
+
+                if (securityHeadersConfig.permissionsPolicyEnabled) {
+                    h.permissionsPolicy { c ->
+                        c.policy(PermissionsPolicyServerHttpHeadersWriter.PERMISSIONS_POLICY)
+                    }
                 }
             }.authorizeExchange {
                 it.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()

@@ -21,4 +21,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class SecurityHeadersConfig(
     var contentSecurityPolicy: String?,
     var hstsMaxAgeInDays: Long = 365,
+    var crossOriginOpenerPolicyEnabled: Boolean = false,
+    var crossOriginEmbedderPolicyEnabled: Boolean = false,
+    var permissionsPolicyEnabled: Boolean = false,
 )
