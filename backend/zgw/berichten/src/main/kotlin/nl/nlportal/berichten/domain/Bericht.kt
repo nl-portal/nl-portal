@@ -18,13 +18,21 @@ package nl.nlportal.berichten.domain
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 import java.util.UUID
+import nl.nlportal.commonground.authentication.BSN_KEY
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.commonground.authentication.VESTIGINGNUMMER_KEY
+import nl.nlportal.vtbapi.client.domain.VTBBericht
+import nl.nlportal.zgw.objectenapi.domain.Comparator
+import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Bericht(
-    val id: UUID? = null,
+    val uuid: UUID? = null,
     val berichtTekst: String,
-    val berichtType: BerichtType,
-    val bijlages: List<String>,
+    var berichtType: BerichtType,
+    val bijlages: List<String>? = emptyList(),
     val einddatumHandelingstermijn: LocalDateTime,
     var geopend: Boolean,
     val handelingsperspectief: BerichtHandelingsperspectief,

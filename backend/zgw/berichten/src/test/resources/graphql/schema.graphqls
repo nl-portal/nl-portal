@@ -14,6 +14,19 @@ type Query {
 
     # Returns the total amount of unopened Berichten
     getUnopenedBerichtenCount: Int!
+
+    getVTBBericht(id: UUID!): VTBBericht
+
+    #
+    #         Returns a paginated list of all VTBBerichten
+    #
+    getVTBBerichten(
+        pageNumber: Int
+        pageSize: Int
+    ):  VTBBerichtenPage!
+
+    # Returns the total amount of unopened VTBBerichten
+    getUnopenedVTBBerichtenCount: Int!
 }
 
 type Bericht {
@@ -23,7 +36,7 @@ type Bericht {
     einddatumHandelingstermijn: ZonedDateTime!
     geopend: Boolean!
     handelingsperspectief: BerichtHandelingsperspectief!
-    id: UUID
+    uuid: UUID
     identificatie: BerichtIdentificatie!
     onderwerp: String!
     publicatiedatum: ZonedDateTime!
@@ -78,6 +91,73 @@ type Document {
     identificatie: String
     titel: String
     uuid: UUID!
+}
+
+type VTBBerichtenPage {
+    # The elements on this page
+    content: [VTBBericht!]!
+
+    # The requested page number
+    number: Int!
+
+    # The number of elements on this page
+    numberOfElements: Int!
+
+    # The requested page size
+    size: Int!
+
+    # The total number of elements
+    totalElements: Int!
+
+    # The total number of available pages
+    totalPages: Int!
+}
+
+type VTBBericht {
+    uuid: UUID!
+    onderwerp: String!
+    berichtTekst: String!
+    publicatiedatum: ZonedDateTime
+    referentie: String
+    geopendOp: ZonedDateTime
+    geopend: Boolean
+    einddatumHandelingsTermijn: ZonedDateTime
+    isGerelateerdAan: [VTBIsGerelateerdAan]
+    documenten: [Document!]!
+    berichtType: VTBBerichtType!
+}
+
+type VTBIsGerelateerdAan {
+    urn: String
+}
+
+type VTBBerichtType {
+    bijlageTypen: [VTBBijlageType]!,
+    handelingsPerspectief: VTBHandelingsPerspectief!,
+    mijnOverheidBerichtenbox: Boolean!,
+    mijnOverheidBerichtenboxType: String,
+    verantwoordelijkeOrganisatie: String!,
+}
+
+type VTBBijlage {
+    informatieObject: String!
+    omschrijving: String
+}
+
+type VTBBijlageType {
+    informatieObjecttype: String!
+    omschrijving: String
+}
+
+enum VTBHandelingsPerspectief {
+    BETALEN
+    INCASSO
+    INFORMATIE_GEVEN
+    INFORMATIE_KRIJGEN
+    REACTIE_ONTVANGEN
+    VERNIEUWING_NODIG
+    UITNODIGING_VOOR_GESPREK
+    GEEN_HANDELINGS_PERSPECTIEF
 }
 
 scalar UUID

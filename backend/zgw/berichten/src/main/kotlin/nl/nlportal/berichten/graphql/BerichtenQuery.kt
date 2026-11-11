@@ -46,7 +46,7 @@ class BerichtenQuery(
         @Argument pageSize: Int? = 20,
         @Argument onderwerp: String? = null,
     ): BerichtenPage =
-        berichtenService.getBerichtenPage(
+        berichtenService.getBerichten(
             authentication = authentication,
             pageNumber = pageNumber ?: 1,
             pageSize = pageSize ?: 20,
@@ -63,9 +63,13 @@ class BerichtenQuery(
     @SchemaMapping(typeName = "Bericht", field = "documenten")
     suspend fun documenten(
         bericht: Bericht,
-    ): List<Document> =
-        berichtenService.getDocumenten(
+    ): List<Document> {
+        if (bericht.bijlages == null) {
+            return emptyList()
+        }
+        return berichtenService.getDocumenten(
             identificatie = bericht.identificatie.value,
             bijlages = bericht.bijlages,
         )
+    }
 }

@@ -13,6 +13,7 @@ nl-portal:
               klant-contact-code-register:
                   product: open-product
                   zaak: open-zaak
+                  bericht: vtb-bericht
       verificatie:
         enabled: false
         properties:
