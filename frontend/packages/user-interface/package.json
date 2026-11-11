@@ -43,7 +43,7 @@
     "@gemeente-denhaag/contact-timeline": "4.1.4",
     "@gemeente-denhaag/data-badge": "2.2.2",
     "@gemeente-denhaag/descriptionlist": "4.1.2",
-    "@gemeente-denhaag/file": "2.6.0",
+    "@gemeente-denhaag/file": "2.7.0",
     "@gemeente-denhaag/file-upload": "^1.1.1",
     "@gemeente-denhaag/footer": "^4.3.2",
     "@gemeente-denhaag/form-field": "3.2.2",

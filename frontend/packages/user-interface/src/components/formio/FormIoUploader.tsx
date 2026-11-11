@@ -43,6 +43,7 @@ interface PortalFileUploadProps {
   onChange: (fileList: UploadedFile[]) => void;
   onUploadStart: (upload: Promise<void>) => void;
   onUploadEnd: (upload: Promise<void>) => void;
+  getClearCount: () => number;
   informatieobjecttype?: string;
   documentapi?: string;
   getBeschrijving?: () => string | undefined;
@@ -59,6 +60,7 @@ const PortalFileUpload = ({
   onChange,
   onUploadStart,
   onUploadEnd,
+  getClearCount,
   informatieobjecttype,
   documentapi,
   getBeschrijving,
@@ -104,6 +106,7 @@ const PortalFileUpload = ({
     );
 
   const uploadFile = (file: File) => {
+    const clearCountAtUploadStart = getClearCount();
     const restUri = sessionStorage.getItem("REST_URI");
     const uploadLink = `${restUri}/taak/${taakId}/document/content`;
     setErrorMessageId(null);
@@ -146,6 +149,7 @@ const PortalFileUpload = ({
       .then(async (response) => {
         if (!response.ok) {
           const errorResponse = await response.json().catch(() => null);
+          if (clearCountAtUploadStart !== getClearCount()) return;
           handleError(
             tempId,
             errorResponse?.error === "BESCHRIJVING_TOO_LONG"
@@ -156,6 +160,8 @@ const PortalFileUpload = ({
         }
 
         const jsonResponse = await response.json();
+        if (clearCountAtUploadStart !== getClearCount()) return;
+
         if (typeof jsonResponse?.url !== "string" || !jsonResponse.url.trim()) {
           handleError(tempId);
           return;
@@ -178,6 +184,8 @@ const PortalFileUpload = ({
         );
       })
       .catch(() => {
+        if (clearCountAtUploadStart !== getClearCount()) return;
+
         handleError(tempId);
       });
 
@@ -240,6 +248,7 @@ const FieldComponent = Components.components.field;
 class FormIoUploader extends FieldComponent {
   private reactRoot: Root | null;
   private pendingUploads = new Set<Promise<void>>();
+  private clearCount = 0;
   static globalOidcToken = "";
 
   constructor(component: any, options: any, data: any) {
@@ -329,7 +338,11 @@ class FormIoUploader extends FieldComponent {
     return typeof value === "string" && value.trim() ? value : undefined;
   };
 
+  getClearCount = () => this.clearCount;
+
   deleteValue() {
+    // Ignore results from uploads started before the field was cleared.
+    this.clearCount++;
     super.deleteValue();
     this.pendingUploads?.forEach(this.onUploadEndHandler);
   }
@@ -360,6 +373,7 @@ class FormIoUploader extends FieldComponent {
           onChange={this.onChangeHandler}
           onUploadStart={this.onUploadStartHandler}
           onUploadEnd={this.onUploadEndHandler}
+          getClearCount={this.getClearCount}
           informatieobjecttype={this.component.informatieobjecttype || ""}
           documentapi={this.component.documentapi || ""}
           getBeschrijving={this.getBeschrijving}
