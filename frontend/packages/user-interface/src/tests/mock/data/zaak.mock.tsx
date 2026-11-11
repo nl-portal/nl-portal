@@ -42,6 +42,7 @@ export const getZaak = {
             isEindstatus: false,
             __typename: "ZaakStatusType",
           },
+          substatussen: [],
           __typename: "ZaakStatus",
         },
         statusGeschiedenis: [
@@ -52,6 +53,7 @@ export const getZaak = {
               isEindstatus: false,
               __typename: "ZaakStatusType",
             },
+            substatussen: [],
             __typename: "ZaakStatus",
           },
           {
@@ -61,6 +63,7 @@ export const getZaak = {
               isEindstatus: false,
               __typename: "ZaakStatusType",
             },
+            substatussen: [],
             __typename: "ZaakStatus",
           },
         ],
@@ -436,6 +439,7 @@ export const getZaak = {
           zaak: "https://openzaakurl/zaken/api/v1/zaken/82cb13cf-d2f9-4e3e-ac07-751373035ecb",
           __typename: "ZaakDetails",
         },
+        resultaat: null,
         __typename: "Zaak",
       },
     },

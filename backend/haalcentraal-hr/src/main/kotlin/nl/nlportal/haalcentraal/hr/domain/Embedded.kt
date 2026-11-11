@@ -16,7 +16,7 @@
 package nl.nlportal.haalcentraal.hr.domain
 
 data class Embedded(
-    val hoofdvestiging: Vestiging,
+    val hoofdvestiging: Vestiging? = null,
     var vestiging: Vestiging? = null,
     val eigenaar: Eigenaar,
 )

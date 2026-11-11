@@ -24,6 +24,8 @@ export const getPersoon = {
     data: {
       getPersoonV2: {
         burgerservicenummer: "999991954",
+        bewonersAantal: null,
+        geheimhoudingPersoonsgegevens: false,
         geslacht: {
           code: "6030",
           omschrijving: "vrouw",
@@ -40,7 +42,10 @@ export const getPersoon = {
             omschrijving: "woonadres",
           },
           verblijfadres: {
-            officieleStraatnaam: "Leyweg 61e",
+            officieleStraatnaam: "Leyweg",
+            huisnummer: 61,
+            huisletter: "e",
+            huisnummertoevoeging: null,
             postcode: "2545CC",
             woonplaats: "'s-Gravenhage",
           },
@@ -54,6 +59,8 @@ export const getPersoon = {
         geboorte: {
           datum: {
             datum: "2003-03-03",
+            langFormaat: "3 maart 2003",
+            type: "Datum",
             jaar: 2003,
             maand: 3,
             dag: 3,
@@ -64,6 +71,7 @@ export const getPersoon = {
             omschrijving: "Nederland",
             __typename: "PersoonGeboorteLand",
           },
+          plaats: null,
           __typename: "PersoonGeboorte",
         },
         nationaliteiten: [

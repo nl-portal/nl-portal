@@ -29,6 +29,8 @@ export const getUserDigitaleAdressen = {
           type: "EMAIL",
           omschrijving: "email",
           referentie: "",
+          verificatieDatum: null,
+          verificatieNeeded: false,
           __typename: "DigitaleAdresResponse",
         },
       ],
