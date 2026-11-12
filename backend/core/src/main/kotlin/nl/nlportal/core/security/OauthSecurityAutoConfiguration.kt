@@ -15,6 +15,7 @@
  */
 package nl.nlportal.core.security
 
+import java.time.Duration
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.core.security.config.SecurityEndpointsConfig
 import nl.nlportal.core.security.config.SecurityHeadersConfig
@@ -30,16 +31,14 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.header.CrossOriginEmbedderPolicyServerHttpHeadersWriter
+import org.springframework.security.web.server.header.CrossOriginOpenerPolicyServerHttpHeadersWriter
+import org.springframework.security.web.server.header.PermissionsPolicyServerHttpHeadersWriter
 import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter
 import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter
 import org.springframework.web.cors.reactive.CorsWebFilter
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
-import java.time.Duration
-import org.springframework.security.web.header.writers.CrossOriginEmbedderPolicyHeaderWriter
-import org.springframework.security.web.server.header.CrossOriginEmbedderPolicyServerHttpHeadersWriter
-import org.springframework.security.web.server.header.CrossOriginOpenerPolicyServerHttpHeadersWriter
-import org.springframework.security.web.server.header.PermissionsPolicyServerHttpHeadersWriter
 
 @AutoConfiguration
 @EnableWebFluxSecurity
@@ -50,7 +49,6 @@ class OauthSecurityAutoConfiguration {
     fun springSecurityWebFilterChain(
         http: ServerHttpSecurity,
         converter: Converter<Jwt, out Mono<out AbstractAuthenticationToken>>?,
-        corsPathConfiguration: CorsPathConfiguration,
         securityConfigurers: List<HttpSecurityConfigurer>,
         securityHeadersConfig: SecurityHeadersConfig,
         securityEndpointsConfig: SecurityEndpointsConfig,
