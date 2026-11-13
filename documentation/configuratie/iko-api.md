@@ -2,9 +2,9 @@
 
 De backend-module `iko-api` is de API-module voor communicatie met IKO (Integraal Klant- en Objectbeeld). Deze eerste versie ondersteunt alleen het lezen van Aggregated Data Profiles (ADP's) voor de ingelogde burger of het ingelogde bedrijf.
 
-Het is een interne API-module, net als `zgw:zaken-api`: er komt geen GraphQL-query of REST-endpoint bij. Feature-modules gebruiken de module om IKO-data op te halen. De eerste afnemer zijn de portaalpagina's (nl-portal-issues#170).
+Het is een interne API-module, net als `zgw:zaken-api`: er komt geen GraphQL-query of REST-endpoint bij. Feature-modules gebruiken de module om IKO-data op te halen.
 
-De module staat standaard uit en zit niet in de standaard app-images.
+De module zit in de standaard app-images en staat standaard uit.
 
 ## Configuratie
 
@@ -81,6 +81,22 @@ curl -s -d grant_type=client_credentials -u nl-portal:<secret> <token-url> \
 * Omdat IKO gebruikers niet van elkaar kan onderscheiden, komt de parameter `id` altijd uit de authenticatie (BSN voor een burger, KVK-nummer voor een bedrijf), nooit uit invoer van de aanroeper.
 * `allowed-profiles` is de allowlist van NL Portal. Voor andere namen wordt IKO niet aangeroepen.
 * De `roles` van elk ADP in IKO zijn de allowlist van IKO. NL Portal kan alleen ADP's lezen die de role uit stap 2 bevatten.
+
+## Resolver `iko`
+
+De module levert de [resolver](../features/portal-pages.md#resolvers) `iko` voor portaalpagina's: een Aggregated Data Profile voor de ingelogde burger of het ingelogde bedrijf, alleen zonder id. Het profiel moet in `allowed-profiles` staan.
+
+| Param | Gebruik |
+|---|---|
+| `profile` | naam van het profiel (verplicht) |
+| `container` | container voor paginering, sortering en filters |
+| `page` (vanaf 0), `size` (1–100) | paginering van de container; standaard 0 en 10 |
+| `sort` | lijst van `veld:asc` of `veld:desc` |
+| `filter.<veld>` | filters van de container |
+
+* De resolver bestaat alleen als `nl-portal.config.ikoapi.enabled` aan staat. Anders is een binding met `resolver: iko` ongeldig, met een fout in de log.
+* Vast (niet in `overrides`): `profile`, `container`. `page`, `size`, `sort` en `filter.*` vereisen een `container`.
+* Params worden genormaliseerd (kleine letters, zonder streepjes): een filter `filter.zaakType` komt bij IKO aan als `zaaktype`. Configureer de filters in het IKO-profiel daarom ook met genormaliseerde namen.
 
 ## Gebruik vanuit een feature-module
 

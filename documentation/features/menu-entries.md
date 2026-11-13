@@ -1,10 +1,6 @@
 # Menu-items vanuit de backend
 
-Met menu-items vanuit de backend voeg je extra pagina's toe aan het menu van de standaard app-image, zonder de frontend opnieuw te bouwen. Een menu-item verwijst naar een portaalpagina (`portal-page`).
-
-Maatwerkimplementaties blijven hun eigen pagina's registreren in hun `routes.tsx` en menu-items.
-
-Een `portal-page` menu-item toont een [portaalpagina](portal-pages.md), als ook de module `nl-portal.config.portal-pages` aan staat. Zie [Route-types](#route-types).
+Met menu-items vanuit de backend voeg je routes en items in het menu toe aan de app, zonder de frontend opnieuw te bouwen. Een menu-item is een route, en ook een item in het menu als het niet `hidden` is. Wat de route toont, bepaalt het `route.type`: elk type werkt, zolang het in de backend en de frontend is geïmplementeerd. Zie [Route-types](#route-types).
 
 ## Aanzetten
 
@@ -53,6 +49,8 @@ nl-portal:
           path: /thema-concept/:id
 ```
 
+Het voorbeeld gebruikt het route-type `portal-page` van de [portaalpagina's](portal-pages.md).
+
 | Property | Standaardwaarde | Beschrijving |
 |---|---|---|
 | `name` | (verplicht) | Unieke naam, alleen `a-z`, `0-9` en `-`. Bepaalt de titel. |
@@ -62,8 +60,8 @@ nl-portal:
 | `audience` | (iedereen) | Lijst van `burger`, `bedrijf` en/of `subject`. |
 | `hidden` | `false` | `true`: alleen een route, geen item in het menu. |
 | `conditional` | – | Voorwaarden per gebruiker, als `<sleutel>: <waarde>`. Zie [Voorwaarden](#voorwaarden). |
-| `route.type` | (verplicht) | `portal-page` of een eigen type. Een type werkt alleen als de functie erachter aan staat. Zie [Route-types](#route-types). |
-| `route.page` | (verplicht) | De sleutel van de [portaalpagina](portal-pages.md) (`portal-page`), of wat een eigen type verwacht. |
+| `route.type` | (verplicht) | Het route-type. Zie [Route-types](#route-types). |
+| `route.page` | (verplicht) | Gaat naar het route-type; wat de waarde betekent, bepaalt het type. |
 | `route.path` | (verplicht) | Uniek pad in React Router-vorm, begint met `/`. Zie [Paden](#paden). |
 
 In env-vorm staat de index in de naam, bijvoorbeeld `NLPORTAL_FRONTEND_MENUENTRIES_0_NAME`, `NLPORTAL_FRONTEND_MENUENTRIES_0_ROUTE_TYPE` en `NLPORTAL_FRONTEND_MENUENTRIES_0_ROUTE_PATH`.
@@ -83,7 +81,7 @@ Een ongeldige configuratie houdt de backend niet tegen bij het opstarten. Een on
 
 Regels:
 
-* een afsluitende `*` is toegestaan, tenzij het route-type hem afwijst; `portal-page` wijst hem af;
+* een afsluitende `*` is toegestaan, tenzij het route-type hem afwijst;
 * een pad met een `:parameter` vereist `hidden: true`, want zo'n pad is geen bestemming in het menu.
 
 ## Gedrag
@@ -112,14 +110,12 @@ Met `conditional` is een menu-item alleen zichtbaar als elke voorwaarde geldt vo
   route: { type: portal-page, page: wonen-en-bouwen, path: /wonen-en-bouwen }
 ```
 
+De sleutel `thema` komt hier van de [Open Product-module](../fundamentals/architectuur/integraties/product.md#voorwaarde-thema).
+
 * Alle voorwaarden moeten gelden. Een item zonder `conditional` is niet afhankelijk van voorwaarden.
-* De voorwaarden worden bij elke keer ophalen van het menu opnieuw gecontroleerd, per gebruiker. Ook de [pagina](portal-pages.md) van het item controleert ze: geldt een voorwaarde niet, dan is de pagina een 404.
+* De voorwaarden worden bij elke keer ophalen van het menu opnieuw gecontroleerd, per gebruiker.
 * Een onbekende sleutel laat het item weg, met een fout in de log. Een checker die faalt (bijvoorbeeld een storing van de bron) telt als "geldt niet".
 * In env-vorm: `NLPORTAL_FRONTEND_MENUENTRIES_0_CONDITIONAL_THEMA=Wonen en bouwen`.
-
-### `thema` (Open Product)
-
-Met de Open Product-module aan geldt `thema: <naam>` als de gebruiker minstens één product heeft in het gepubliceerde thema met die `naam`. Een onbekend thema geldt niet. Elke controle kost een aanroep naar de thema's en een naar de producten van Open Product.
 
 ### Een eigen voorwaarde
 
@@ -134,20 +130,20 @@ class AbonnementChecker(private val service: AbonnementService) : FrontendMenuCo
 }
 ```
 
-`key` is de sleutel onder `conditional`. `check` krijgt het token van de gebruiker en de waarde uit de configuratie, en geeft `false` bij een fout. Hebben twee checkers dezelfde sleutel, dan wint de eerste (in `@Order`) en staat er een waarschuwing in de log.
+`key` is de sleutel onder `conditional`. `check` krijgt het token van de gebruiker en de waarde uit de configuratie, en geeft `false` bij een fout. Registreer de bean alleen als de functie erachter aan staat. Hebben twee checkers dezelfde sleutel, dan wint de eerste (in `@Order`) en staat er een waarschuwing in de log.
 
 ## Route-types
 
-Het `route.type` bepaalt welke functie de pagina van een menu-item levert. Een type is alleen beschikbaar als die functie aan staat; een item met een type dat niet beschikbaar is, wordt weggelaten met een fout in de log.
+Het `route.type` bepaalt wat de route van een menu-item toont. Een type bestaat uit twee delen:
 
-| Type | Vereist |
-|---|---|
-| `portal-page` | `nl-portal.config.portal-pages.enabled`. `route.page` moet een geldige [portaalpagina](portal-pages.md) zijn; anders wordt het item weggelaten. |
-| `custom` | Externe pagina's, nog niet geïmplementeerd (nl-portal-issues#171). Tot dan worden `custom`-items weggelaten. |
+* in de backend een bean die `FrontendMenuRouteType` implementeert. Zonder bean wordt het item weggelaten, met een fout in de log;
+* in de frontend een renderer. Zonder renderer wordt het item in de frontend overgeslagen, met een waarschuwing in de console.
+
+Bijvoorbeeld `portal-page` van de [portaalpagina's](portal-pages.md#menu-item).
 
 ### Een eigen route-type
 
-Een implementatie kan een eigen type toevoegen. In de backend is dat een Spring bean die `FrontendMenuRouteType` implementeert; registreer de bean alleen als de functie aan staat:
+In de backend is dat een Spring bean die `FrontendMenuRouteType` implementeert; registreer de bean alleen als de functie aan staat:
 
 ```kotlin
 class AfsprakenRouteType : FrontendMenuRouteType {
@@ -177,7 +173,7 @@ Een renderer krijgt `{ entry }`. Definieer de lijst buiten het component: de men
 * Configuratieproblemen staan alleen in de log bij het opstarten en na een refresh van de configuratie (Spring Cloud Config), niet bij elke aanvraag.
 * **Fout (ERROR):** iets wordt weggelaten, zoals een menu-item of een pagina.
 * **Waarschuwing (WARN):** het werkt nog, maar niet zoals bedoeld, bijvoorbeeld twee checkers met dezelfde sleutel. Ook een bron die faalt tijdens een aanvraag, zoals een storing bij een voorwaarde, is een waarschuwing. Die regel noemt alleen het soort fout en de HTTP-status, niet de URL: de URL van een aanvraag kan een BSN of KVK-nummer bevatten.
-* **TRACE:** de volledige fout, met URL, voor het zoeken naar de oorzaak. Staat standaard uit. Zet je TRACE aan (bijvoorbeeld voor `nl.nlportal.core.frontend.portalpage`), dan kunnen er BSN's in de log komen; doe dat alleen tijdelijk.
+* **TRACE:** de volledige fout, met URL, voor het zoeken naar de oorzaak. Staat standaard uit. Zet je TRACE aan voor het package van een checker (bijvoorbeeld `nl.nlportal.openproduct`), dan kunnen er BSN's in de log komen; doe dat alleen tijdelijk.
 
 ## Vertalingen
 
@@ -185,5 +181,6 @@ De titel van een menu-item is voorlopig het message-id `menu-entries.<name>`, bi
 
 ## Beperkingen
 
-* De breadcrumb stopt bij de pagina van het menu-item ("Overzicht › titel"), ook op onderliggende paden van een item met `/*`.
+* De breadcrumb stopt bij de pagina van het menu-item ("Overzicht › titel"), ook op onderliggende paden van een item met `/*`. Ook op de route van een `hidden` menu-item is de breadcrumb "Overzicht › titel"; het menu markeert dan het zichtbare menu-item erboven (het langste pad), of anders "Overzicht".
+* Zonder het message `menu-entries.<name>` in de app heeft de route van een `hidden` menu-item geen kruimel en is de paginatitel de naam van de app.
 * Mislukt het ophalen van de menu-items, dan wordt dat pas opnieuw geprobeerd na het herladen van de pagina. Het menu toont dan alleen de standaard items.

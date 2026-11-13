@@ -1,6 +1,6 @@
 # Portaalpagina's
 
-Met portaalpagina's configureer je pagina's die de standaard app-image toont met LiquidJS, zonder de frontend opnieuw te bouwen. Een pagina is bereikbaar via een [menu-item](menu-entries.md) met `route.type: portal-page` en `route.page: <sleutel>`. Het menu-item bepaalt dus het pad en de doelgroep, de pagina de inhoud.
+Met portaalpagina's configureer je pagina's die de standaard app-image toont met LiquidJS, zonder de frontend opnieuw te bouwen. Een pagina is bereikbaar via een [menu-item](#menu-item): het menu-item bepaalt het pad en de doelgroep, de pagina de inhoud.
 
 ## Paginatypes
 
@@ -9,13 +9,29 @@ Met portaalpagina's configureer je pagina's die de standaard app-image toont met
 | `static` | geen | `GET /api/frontend/portal-pages/<sleutel>` |
 | `dynamic` | uit bindings; één binding kan opnieuw worden opgehaald met andere params (paginering, filters) | `GET /api/frontend/portal-pages/<sleutel>`, of met een id `GET /api/frontend/portal-pages/<sleutel>/<id>` |
 
-Een `dynamic` pagina met een id hoort bij een menu-item met een padparameter, bijvoorbeeld `/erfpacht/:id`; de waarde van die parameter is het id. Zo'n menu-item is altijd `hidden`. Met een id haalt elke binding dat ene object op in plaats van een lijst.
+Met een id haalt elke binding van een `dynamic` pagina dat ene object op in plaats van een lijst.
 
 De configuratie van een pagina legt alleen de structuur vast: bindings, `overrides` en `projection`. Het template en de teksten van een pagina komen uit een [templatebron](#templatebronnen): een bestand, een object in de Objecten API of een binding.
 
-## Gouden regels
+## Menu-item
 
-Voor wie templates schrijft of pagina's configureert. Jij bent verantwoordelijk voor wat een template met data doet; [Veilige uitvoer](#veilige-uitvoer) beschrijft wat de portal zelf doet.
+Een pagina is bereikbaar via een [menu-item](menu-entries.md) met het route-type `portal-page`:
+
+```yaml
+route: { type: portal-page, page: erfpacht, path: /erfpacht }
+```
+
+* Het type bestaat alleen als `nl-portal.config.portal-pages.enabled` aan staat; anders wordt het item weggelaten.
+* `route.page` is de sleutel van een geconfigureerde, geldige pagina. Anders wordt het item weggelaten, met een fout in de log.
+* `route.path` mag niet eindigen op `/*`.
+* Een `dynamic` pagina met een id hoort bij een `hidden` menu-item met een padparameter, bijvoorbeeld `/erfpacht/:id`; de waarde van die parameter is het id.
+* Een pagina is alleen beschikbaar als de gebruiker een `portal-page` menu-item naar die pagina mag zien, ook een `hidden` item. Daarvoor gelden ook de `audience` en de `conditional` van dat item. Anders is het antwoord 404.
+
+## Veiligheid
+
+Voor wie templates schrijft of pagina's configureert. Jij bent verantwoordelijk voor wat een template met data doet; [Veilige uitvoer](#veilige-uitvoer) en [Op de server](#op-de-server) beschrijven wat de portal zelf doet.
+
+### Gouden regels
 
 1. **Toon data alleen met `{{ }}`**, nooit met `raw`, `echo`, `cycle`, `include`, `render` of `layout`.
 2. **Gebruik geen `escape`:** `{{ }}` toont data al als tekst.
@@ -25,9 +41,9 @@ Voor wie templates schrijft of pagina's configureert. Jij bent verantwoordelijk 
 6. **Schrijf tekens zoals ze zijn** (`&`, niet `&amp;`), en `\|` voor een letterlijk sluisteken in een rij.
 7. **Gebruik `lines` voor regeleinden uit data.**
 
-## Veilige uitvoer
+### Veilige uitvoer
 
-Dit is wat de portal zelf doet; al het andere is aan de template-schrijver. De frontend maakt van elke `{{ }}` eerst een plaatshouder. De tag leest zijn rijen, cellen en links uit de tekst met plaatshouders, en vult de waarden pas daarna in, als tekst. Een waarde met `|`, een regeleinde, `[x](…)`, `**…**` of `<b>` kan dus geen structuur toevoegen. Een link uit data gaat daarna door dezelfde controle als een link in het template.
+De frontend maakt van elke `{{ }}` eerst een plaatshouder. De tag leest zijn rijen, cellen en links uit de tekst met plaatshouders, en vult de waarden pas daarna in, als tekst. Een waarde met `|`, een regeleinde, `[x](…)`, `**…**` of `<b>` kan dus geen structuur toevoegen. Een link uit data gaat daarna door dezelfde controle als een link in het template.
 
 * Plaatshouders gelden alleen voor `{{ }}`. `raw`, `echo` en `cycle` maken hun uitvoer deel van het template en kunnen rijen, cellen en links maken (regel 1).
 * `include`, `render` en `layout` laden een ander template via de browser (regel 1).
@@ -38,7 +54,7 @@ Dit is wat de portal zelf doet; al het andere is aan de template-schrijver. De f
 
 | Data | Template | Getoond |
 |---|---|---|
-| `Jan "de" Vries-O'Neill \ <b>&amp;</b>` + regeleinde + `regel 2` (IKO-mock `personen.naam`) | `Naam \| {{ personen.naam }}` in `description-list` | één rij: `Jan "de" Vries-O'Neill \ <b>&amp;</b> regel 2` |
+| `Jan "de" Vries-O'Neill \ <b>&amp;</b>` + regeleinde + `regel 2` | `Naam \| {{ personen.naam }}` in `description-list` | één rij: `Jan "de" Vries-O'Neill \ <b>&amp;</b> regel 2` |
 | `Caf&eacute; &amp; bar` | `{{ v \| html_text }}` | `Café & bar` |
 | `<p>Welkom</p>` | `{{ v }}` | `<p>Welkom</p>` |
 | `<p>Welkom</p>` | `{{ v \| html_text }}` | `Welkom` |
@@ -47,6 +63,13 @@ Dit is wat de portal zelf doet; al het andere is aan de template-schrijver. De f
 | `javascript:alert(1)` | `[link]({{ v }})` in een `table`-cel | het hele template wordt weggelaten: "Deze inhoud kan niet worden weergegeven." |
 | `een` + regeleinde + `twee` | `{{ v }}` in `paragraph` | `een twee` (geen regeleinde) |
 | `een` + regeleinde + `twee` | de `lines`-loop in `paragraph` | `een`, regeleinde, `twee` |
+
+### Op de server
+
+* Het subject (BSN of KVK) komt altijd uit het token, nooit uit de request.
+* De browser kan alleen een paginasleutel, een id, een alias en waarden voor de keys uit `overrides` meesturen. Al het andere wordt geweigerd voordat een resolver iets doet.
+* Alleen het resultaat van de `projection` gaat naar de browser. De standaard `'{}'` stuurt niets door.
+* Resolvers geven nooit identifiers van andere subjects terug.
 
 ## Configuratie
 
@@ -111,7 +134,7 @@ nl-portal:
 | `template.params` | – | Params van de templatebron, bijvoorbeeld `file` of `object`. |
 | `template.binding` | – | Alleen bij `source: binding`: de alias van de binding die het template levert. |
 | `bindings.<alias>` | – | Databronnen van de pagina. `static` heeft er geen, `dynamic` minstens één. De alias is de variabelenaam in het template. |
-| `bindings.<alias>.resolver` | (verplicht) | De bron, bijvoorbeeld `openproduct` of `iko`. Zie [Resolvers](#resolvers). |
+| `bindings.<alias>.resolver` | (verplicht) | De bron, bijvoorbeeld `openproduct`. Zie [Resolvers](#resolvers). |
 | `bindings.<alias>.params` | – | Standaardwaarden voor de resolver. |
 | `bindings.<alias>.overrides` | – | De params die de pagina mag overschrijven bij opnieuw ophalen. Een key hoeft geen standaardwaarde te hebben. |
 | `bindings.<alias>.projection` | `'{}'` | jq-expressie op de data van de resolver. Alleen het resultaat gaat naar de browser, dus ook een eventueel totaal voor paginering. |
@@ -132,7 +155,7 @@ De configuratie werkt op dezelfde manier vanuit YAML, een config server, environ
 
 * **Waarden zijn tekst.** `page: 0` wordt `"0"`; de resolver zet het om. Er is geen `null`: een key zonder waarde bestaat niet.
 * **Lijsten** schrijf je geïndexeerd (`codes.0`, `codes.1`, zoals YAML-lijsten en environment variables worden) of als één waarde met komma's (`"a, b"`, zoals het configuratiepaneel ze opslaat). Lijstitems bevatten daarom geen komma; een sortering is `veld:asc` of `veld:desc`.
-* **Keys worden genormaliseerd:** kleine letters, zonder streepjes, punten blijven staan. `PRODUCTTYPECODE` en `product-type-code` zijn dezelfde param, en de paginasleutel `overons` (uit een environment variable) hoort bij `route.page: over-ons`. Dat geldt ook voor namen die een resolver doorgeeft: een IKO-filter `filter.zaakType` komt bij IKO aan als `zaaktype`, dus configureer de filters in het IKO-profiel ook met genormaliseerde namen.
+* **Keys worden genormaliseerd:** kleine letters, zonder streepjes, punten blijven staan. `PRODUCTTYPECODE` en `product-type-code` zijn dezelfde param, en de paginasleutel `overons` (uit een environment variable) hoort bij `route.page: over-ons`. Dat geldt ook voor namen die een resolver doorgeeft aan zijn bron.
 * **Aliassen** zijn `[a-z][a-z0-9]*` en niet `errors` of `meta`.
 * **Bindings** worden altijd op alias gesorteerd, omdat de volgorde van environment variables niet vastligt.
 
@@ -180,7 +203,6 @@ Het configuratiepaneel slaat geneste keys plat op, zoals `nl-portal.frontend.pag
 ```
 
 * De endpoints vereisen een JWT en bestaan alleen als `nl-portal.config.portal-pages.enabled` en `menu-entries-enabled` allebei aan staan.
-* Een pagina is alleen beschikbaar als de gebruiker een `portal-page` menu-item naar die pagina mag zien (ook een `hidden` item). Anders is het antwoord 404.
 * `messages` bevat alle teksten van het template, per locale. De frontend kiest de teksten van de taal van de gebruiker, zonder terugval op een andere taal.
 * `root` is de alias van de binding als het template uit een binding komt (`source: binding`). Het template wordt dan getoond met de data van die binding als root; `template` is `null` als de binding geen template leverde.
 * `meta.params` bevat de huidige waarden van de keys uit `overrides`. Een lege waarde in een POST zet een key terug naar de standaardwaarde.
@@ -358,7 +380,7 @@ Een widget-tag zet een ander onderdeel van de portal op de pagina, met zijn eige
 {% theme-cases theme: "Wonen en bouwen" page-size: 10 %}
 ```
 
-`theme` is de exacte `naam` van een gepubliceerd thema in Open Product, hoofdlettergevoelig. Ook de GraphQL-queries zelf accepteren alleen een `pageSize` van 1 tot en met 100. Een onbekend thema, of een thema zonder zaaktypen, toont een lege lijst. De widget-tags vereisen de Open Product-module.
+De widget-tags vereisen de Open Product-module. `theme` en `page-size` gaan ongewijzigd naar de [queries](../fundamentals/architectuur/integraties/product.md#graphql-queries-per-thema-en-product), die bepalen wat er getoond wordt.
 
 ## Portaalfilters
 
@@ -442,50 +464,14 @@ In een JSON-templatebestand schrijf je de loop hetzelfde, met `\n` voor het rege
 
 Alle andere [filters van LiquidJS](https://liquidjs.com/filters/overview.html) (versie 10, zie `package.json` van `user-interface`) werken ongewijzigd. Een onbekend filter geeft een fout (`strictFilters`). Omdat uitvoer tekst is, gedragen deze zich anders dan je misschien verwacht:
 
-* **`raw`** maakt de uitvoer deel van het template. Data door `raw` kan rijen, cellen en links toevoegen; gebruik het nooit op data uit een bron (regel 1).
-* **`escape`, `escape_once`, `xml_escape`** zijn niet nodig voor de veiligheid. Hun entities worden als tekst getoond: `Jan &amp; Piet`.
+* **`raw`**: zie [regel 1](#gouden-regels).
+* **`escape`, `escape_once`, `xml_escape`**: hun entities worden als tekst getoond, `Jan &amp; Piet` (regel 2).
 * **`newline_to_br`** toont `<br />` als tekst; gebruik [`lines`](#lines).
 * **`strip_html`** haalt tags weg maar decodeert geen entities; gebruik [`html_text`](#html_text).
 
-## Beveiliging
-
-* Template-schrijvers zijn verantwoordelijk voor wat hun template met data doet en volgen de [Gouden regels](#gouden-regels); [Veilige uitvoer](#veilige-uitvoer) beschrijft wat de portal zelf doet.
-* Het subject (BSN of KVK) komt altijd uit het token, nooit uit de request.
-* De browser kan alleen een paginasleutel, een id, een alias en waarden voor de keys uit `overrides` meesturen. Al het andere wordt geweigerd voordat een resolver iets doet.
-* Alleen het resultaat van de `projection` gaat naar de browser. De standaard `'{}'` stuurt niets door.
-* Resolvers geven nooit identifiers van andere subjects terug (Open Product: `eigenaren` wordt verwijderd).
-* HTML in templates en data wordt niet gerenderd. Links en afbeeldingen gaan door een controle, ook als de link uit data komt; welke data in een link komt, bepaalt de template-schrijver (regel 4).
-
 ## Resolvers
 
-### `openproduct`
-
-Producten van de ingelogde burger of het ingelogde bedrijf uit Open Product. Zonder id een lijst, met een id één product met een content-element als template (voor `source: binding`).
-
-| Param | Gebruik |
-|---|---|
-| `product-type-code`, `product-type-codes` | filter op producttype; met een id moet het product van dit type zijn |
-| `filter.status` | filter op status (`actief`, `gereed`, …) |
-| `page` (vanaf 0), `size` (1–100) | paginering; standaard 0 en 10 |
-| `content-label` | met een id: label van het content-element dat het template is |
-
-Vast (niet in `overrides`): `product-type-code`, `product-type-codes`, `content-label`.
-
-Met een id is het template de inhoud van het eerste content-element van het producttype met het label `content-label`, in de taal van de gebruiker. Zonder zo'n element toont de pagina "Er zijn geen details beschikbaar.". Een product dat niet van de gebruiker is, niet gepubliceerd is of een ongeldig id heeft, geeft een 404.
-
-### `iko`
-
-Een Aggregated Data Profile uit IKO voor de ingelogde burger of het ingelogde bedrijf, alleen zonder id. Vereist de [IKO API-module](../configuratie/iko-api.md); het profiel moet in `allowed-profiles` staan.
-
-| Param | Gebruik |
-|---|---|
-| `profile` | naam van het profiel (verplicht) |
-| `container` | container voor paginering, sortering en filters |
-| `page` (vanaf 0), `size` (1–100) | paginering van de container; standaard 0 en 10 |
-| `sort` | lijst van `veld:asc` of `veld:desc` |
-| `filter.<veld>` | filters van de container |
-
-Vast: `profile`, `container`. `page`, `size`, `sort` en `filter.*` vereisen een `container`.
+Een binding haalt zijn data op via een resolver. Bijvoorbeeld `openproduct` van de [Open Product-module](../fundamentals/architectuur/integraties/product.md#resolver-openproduct).
 
 ### Een eigen resolver
 
@@ -495,8 +481,6 @@ Test in elk geval dat by-id voor een andere gebruiker `null` geeft, dat een stor
 
 ## Beperkingen
 
-* Op de route van een `hidden` menu-item is de breadcrumb "Overzicht › titel". Het menu markeert het zichtbare menu-item erboven (het langste pad); is er geen, dan "Overzicht".
-* De titel komt uit het message `menu-entries.<name>` in de app. Zonder dat message is er geen kruimel en is de paginatitel de naam van de app.
 * Geef `table` en `description-list` altijd een `title`. Zonder `title` toont `table` het message-id `tableList.title` en `description-list` de kop "Details".
 * Pagina's zijn alleen-lezen.
 * Een template staat als JSON-string in het bestand of in `record.data`. Meerdere regels schrijf je met `\n`; een redactie-omgeving voor templates is er nog niet.
