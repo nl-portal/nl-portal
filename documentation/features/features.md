@@ -22,6 +22,9 @@ Binnen NL Portal draait alles om zaken. NL Portal kan de zaakinformatie van een 
 In NL Portal kun je eenvoudig en veilig bestanden uitwisselen met de klant. Dit kan zowel gaan om het veilig toesturen van een bestand vanuit de organisatie naar de klant of de klant kan veilig een bestand uploaden naar de organisatie. Dit bestand wordt gekoppeld aan de juiste zaak en voorzien van de nodige metadata. Veilig en AVG proof.
 
 
+### Menu-items vanuit de backend
+Beheerders kunnen extra menu-items en pagina's toevoegen aan de standaard app-image via backend-configuratie, per doelgroep. Zie [Menu-items vanuit de backend](menu-entries.md).
+
 ### Design system
 NL Portal gebruikt NL Design system als frontend. In dit design system zijn alle technische voorbereidingen voor het voldoen aan webtoegankelijkheidsregels zoals WCAG al getroffen. Daarnaast is het eenvoudig test stylen in de eigen huisstijl.
 

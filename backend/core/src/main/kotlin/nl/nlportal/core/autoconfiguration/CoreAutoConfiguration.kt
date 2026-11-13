@@ -17,6 +17,9 @@ package nl.nlportal.core.autoconfiguration
 
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
+import nl.nlportal.core.frontend.menu.FrontendMenuAudienceResolver
+import nl.nlportal.core.frontend.menu.FrontendMenuService
+import nl.nlportal.core.frontend.menu.web.rest.FrontendMenuResource
 import nl.nlportal.core.frontend.service.FrontendConfigurationService
 import nl.nlportal.core.frontend.web.rest.FrontendConfigurationResource
 import nl.nlportal.core.frontend.web.rest.PingResource
@@ -53,6 +56,24 @@ class CoreAutoConfiguration {
     fun frontendConfigurationResource(
         frontendConfigurationService: FrontendConfigurationService,
     ) = FrontendConfigurationResource(frontendConfigurationService)
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal.frontend.toggles", name = ["menu-entries-enabled"], havingValue = "true")
+    @ConditionalOnMissingBean(FrontendMenuService::class)
+    fun frontendMenuService(
+        frontendConfigurationProperties: FrontendConfigurationProperties,
+        frontendMenuAudienceResolver: FrontendMenuAudienceResolver?,
+    ) = FrontendMenuService(
+        properties = frontendConfigurationProperties,
+        audienceResolver = frontendMenuAudienceResolver,
+    )
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal.frontend.toggles", name = ["menu-entries-enabled"], havingValue = "true")
+    @ConditionalOnMissingBean(FrontendMenuResource::class)
+    fun frontendMenuResource(
+        frontendMenuService: FrontendMenuService,
+    ) = FrontendMenuResource(frontendMenuService)
 
     @Bean
     @ConditionalOnProperty(prefix = "nl-portal.support", name = ["ping-endpoint.enabled"], havingValue = "true")

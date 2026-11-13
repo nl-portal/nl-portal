@@ -29,6 +29,7 @@ export { default as Heading } from "./components/Heading";
 export * from "./components/Heading";
 export { default as Layout } from "./components/Layout";
 export { default as LinkList } from "./components/LinkList";
+export { default as MenuEntryRoutes } from "./components/MenuEntryRoutes";
 export * from "./components/LinkList";
 export { default as Notification } from "./components/Notification";
 export * from "./components/Notification";
@@ -83,3 +84,5 @@ export { default as NotificationContext } from "./contexts/NotificationContext";
 export * from "./contexts/NotificationContext";
 
 export * from "./utils/person-data";
+export type { MenuEntry, MenuEntryRoute } from "./utils/menu-entries";
+export { getNavigationItemTitleId } from "./utils/navigation-item-title";

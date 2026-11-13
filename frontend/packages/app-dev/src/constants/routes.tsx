@@ -18,6 +18,7 @@ import {
   CaseDetailsPage,
   CasesPage,
   EditContactInfoPage,
+  MenuEntryRoutes,
   MessageDetailsPage,
   MessagesPage,
   NoMatchPage,
@@ -30,7 +31,7 @@ import {
 import { OidcCallbackPage } from "@nl-portal/nl-portal-authentication";
 import { paths } from "./paths";
 import { themes } from "./themes";
-import { Navigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import { FormattedNumber } from "react-intl";
 import ParkerenOverview from "../pages/ParkerenOverview";
 import ParkerenDetails from "../pages/ParkerenDetails";
@@ -269,7 +270,6 @@ export const routes = [
   },
   {
     path: "*",
-    handle: { label: "breadcrumb.noMatch" },
-    element: <Navigate to={paths.noMatch} />,
+    element: <MenuEntryRoutes />,
   },
 ];

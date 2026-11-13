@@ -213,6 +213,36 @@ nl-portal:
             cases-contact-moments-enabled: true
             overview-intro-enabled: true
             overview-maintenance-alert-enabled: true
+            menu-entries-enabled: true
+        menu-entries:
+            -   name: thema-concept
+                icon: ParkingIcon
+                group: 2
+                ordering: 0
+                route:
+                    type: templated
+                    page: template-a
+                    path: /thema-concept
+            -   name: bedrijf-pagina
+                icon: InboxIcon
+                audience: [ bedrijf ]
+                route:
+                    type: templated
+                    page: template-b
+                    path: /bedrijf-pagina
+            -   name: extern-portaal
+                icon: GridIcon
+                group: 9
+                route:
+                    type: custom
+                    page: remote-a
+                    path: /extern
+            -   name: botsing
+                icon: CheckCircleIcon
+                route:
+                    type: templated
+                    page: template-c
+                    path: /taken
         modules-whitelist:
             - zakenapi
             - product

@@ -53,6 +53,7 @@ dependencies {
     api(Dependencies.kotlinLogging)
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.springBootTestWebClient)
+    testImplementation(TestDependencies.springSecurityTest)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
 }

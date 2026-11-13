@@ -16,8 +16,10 @@
 package nl.nlportal.commonground.authentication
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import nl.nlportal.core.frontend.menu.FrontendMenuAudienceResolver
 import nl.nlportal.portal.authentication.service.PortalAuthenticationConverter
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.core.annotation.Order
@@ -75,6 +77,17 @@ class AuthenticationConfiguration {
 
         return CommonGroundAuthenticationConverter(reactiveJwtDecoder, keycloakConfig)
     }
+
+    @Bean
+    @ConditionalOnMissingBean(FrontendMenuAudienceResolver::class)
+    fun commonGroundFrontendMenuAudienceResolver(): FrontendMenuAudienceResolver =
+        FrontendMenuAudienceResolver {
+            when (it) {
+                is BurgerAuthentication -> "burger"
+                is BedrijfAuthentication -> "bedrijf"
+                else -> FrontendMenuAudienceResolver.SUBJECT
+            }
+        }
 
     companion object {
         val logger = KotlinLogging.logger {}

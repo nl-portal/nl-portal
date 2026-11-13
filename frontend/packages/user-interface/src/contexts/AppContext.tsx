@@ -20,6 +20,7 @@ import {
   GetUnopenedBerichtenCountDocument,
 } from "@nl-portal/nl-portal-api";
 import { useQuery } from "@apollo/client/react";
+import { OidcContext } from "@nl-portal/nl-portal-authentication";
 import {
   createContext,
   ReactNode,
@@ -39,6 +40,14 @@ import {
   loadFrontendConfig,
   applyFrontendTheme,
 } from "../utils/frontend-config";
+import {
+  getRenderableMenuEntries,
+  loadMenuEntries,
+  MenuEntry,
+  withMenuEntries,
+} from "../utils/menu-entries";
+import { MENU_ENTRY_RENDERERS } from "../utils/menu-entry-renderers";
+import { resolveMenuEntryIcon } from "../utils/menu-entry-icon";
 
 type Themes =
   GetOpenProductHoofdThemasByProductenQuery["getOpenProductHoofdThemasByProducten"];
@@ -48,6 +57,7 @@ interface AppContextType {
   features: Features | undefined;
   themes: Themes;
   messagesCount: number;
+  menuEntries: MenuEntry[];
   refetchThemes: () => void;
   refetchMessages: () => void;
 }
@@ -65,8 +75,12 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
   const { restUri } = useContext(ApiContext);
   const [features, setFeatures] = useState<Features | undefined>(undefined);
   const [loadingConfig, startTransition] = useTransition();
-  const { initNavigationItems, updateNavigationItems } =
+  const { routes, initNavigationItems, updateNavigationItems } =
     useContext(RouterContext);
+  const { oidcToken } = useContext(OidcContext);
+  const [menuEntries, setMenuEntries] = useState<MenuEntry[] | undefined>(
+    undefined,
+  );
   const { isLoading: loadingUser } = useContext(UserContext);
 
   const history = useMemo<string[]>(() => {
@@ -98,6 +112,29 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     });
   }, [features, restUri, startTransition]);
 
+  const menuEntriesEnabled = !!features?.toggles.menuEntriesEnabled;
+
+  useEffect(() => {
+    if (!menuEntriesEnabled || menuEntries !== undefined || !oidcToken) return;
+
+    loadMenuEntries(restUri, oidcToken)
+      .then((entries) => {
+        const { renderable, skipped } = getRenderableMenuEntries(
+          entries,
+          routes,
+          MENU_ENTRY_RENDERERS,
+        );
+        skipped.forEach(({ entry, reason }) =>
+          console.warn(`Menu entry "${entry.name}" skipped: ${reason}`),
+        );
+        setMenuEntries(renderable);
+      })
+      .catch((err) => {
+        console.error("Failed to load menu entries:", err);
+        setMenuEntries([]);
+      });
+  }, [menuEntriesEnabled, oidcToken]);
+
   const {
     loading: loadingThemes,
     refetch: refetchThemes,
@@ -112,18 +149,26 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
   );
 
   useEffect(() => {
-    if (!themesData) return;
+    if (!themesData && !menuEntries) return;
 
-    const activeThemes = themes.map((theme) => stringToSlug(theme.naam)) || [];
+    const activeThemes = themesData
+      ? themes.map((theme) => stringToSlug(theme.naam))
+      : [];
 
-    const newNavigationItems = initNavigationItems.map((group) =>
+    const filteredNavigationItems = initNavigationItems.map((group) =>
       group.filter(
         (item) => !item.themeSlug || activeThemes.includes(item.themeSlug),
       ),
     );
 
-    updateNavigationItems(newNavigationItems);
-  }, [themesData, initNavigationItems, themes]);
+    updateNavigationItems(
+      withMenuEntries(
+        filteredNavigationItems,
+        menuEntries ?? [],
+        resolveMenuEntryIcon,
+      ),
+    );
+  }, [themesData, themes, menuEntries, initNavigationItems]);
 
   const { refetch: refetchMessages, data: messagesData } = useQuery(
     GetUnopenedBerichtenCountDocument,
@@ -142,7 +187,11 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
     [messagesData],
   );
 
-  const loading = loadingConfig || loadingThemes || loadingUser;
+  const loading =
+    loadingConfig ||
+    loadingThemes ||
+    loadingUser ||
+    (menuEntriesEnabled && menuEntries === undefined);
 
   useEffect(() => {
     localStorage.setItem("history", JSON.stringify(history));
@@ -163,6 +212,7 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
         features,
         themes,
         messagesCount,
+        menuEntries: menuEntries ?? [],
         refetchThemes,
         refetchMessages,
       }}
