@@ -15,7 +15,6 @@
  */
 package nl.nlportal.openproduct.graphql
 
-import com.sun.org.apache.xml.internal.serializer.Version.getProduct
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.node.ObjectNode
 import java.util.UUID

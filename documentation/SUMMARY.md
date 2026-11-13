@@ -18,7 +18,7 @@
 * [Features](features/features.md)
 * [Document filtering](features/document-filtering/document-filtering.md)
 * [Menu-items vanuit de backend](features/menu-entries.md)
-* [Pagina's vanuit de backend](features/pages.md)
+* [Portaalpagina's](features/portal-pages.md)
 * [Open source](fundamentals/open-source.md)
 
 ## Configuratie

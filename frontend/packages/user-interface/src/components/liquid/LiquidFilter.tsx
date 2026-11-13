@@ -16,7 +16,7 @@
 import { useContext, useId } from "react";
 import { useIntl } from "react-intl";
 import { Select, SelectOption } from "@gemeente-denhaag/select";
-import PageBindingContext from "../../contexts/PageBindingContext";
+import PortalPageBindingContext from "../../contexts/PortalPageBindingContext";
 
 export type LiquidFilterOption = { value: string; label: string };
 
@@ -30,12 +30,12 @@ type Props = {
 
 /**
  * A select that refetches [binding] with [param] set to the chosen value; the empty value removes
- * the override. [pageParam] is reset at the same time. Without a PageBindingContext it is disabled.
+ * the override. [pageParam] is reset at the same time. Without a PortalPageBindingContext it is disabled.
  */
 const LiquidFilter = ({ binding, param, title, pageParam, options }: Props) => {
   const intl = useIntl();
   const id = useId();
-  const context = useContext(PageBindingContext);
+  const context = useContext(PortalPageBindingContext);
   const interactive = Boolean(context && binding && param);
   const value =
     (binding && param && context?.meta(binding)?.params[param]) || "";

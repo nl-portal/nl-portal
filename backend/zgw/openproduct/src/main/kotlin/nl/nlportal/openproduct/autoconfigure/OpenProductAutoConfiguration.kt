@@ -16,14 +16,13 @@
 package nl.nlportal.openproduct.autoconfigure
 
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
-import nl.nlportal.core.frontend.menu.FrontendMenuConditionalChecker
 import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.openproduct.client.OpenProductClient
 import nl.nlportal.openproduct.client.OpenProductDmnClient
 import nl.nlportal.openproduct.client.OpenProductTypeClient
-import nl.nlportal.openproduct.page.OpenProductPageDataResolver
+import nl.nlportal.openproduct.portalpage.OpenProductPortalPageBindingResolver
 import nl.nlportal.openproduct.security.config.ProductDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.openproduct.service.OPFrontendMenuConditionalChecker
 import nl.nlportal.openproduct.service.OpenProductDmnService
@@ -84,8 +83,8 @@ class OpenProductAutoConfiguration {
         )
 
     @Bean
-    @ConditionalOnMissingBean(OpenProductPageDataResolver::class)
-    fun openProductPageDataResolver(openProductService: OpenProductService): OpenProductPageDataResolver = OpenProductPageDataResolver(openProductService)
+    @ConditionalOnMissingBean(OpenProductPortalPageBindingResolver::class)
+    fun openProductPortalPageBindingResolver(openProductService: OpenProductService): OpenProductPortalPageBindingResolver = OpenProductPortalPageBindingResolver(openProductService)
 
     @Bean("openProductDmnClient")
     fun openProductDmnClient(
@@ -126,5 +125,6 @@ class OpenProductAutoConfiguration {
     fun productDocumentResourceHttpSecurityConfigurer(): HttpSecurityConfigurer = ProductDocumentResourceHttpSecurityConfigurer()
 
     @Bean
-    fun opFrontendMenuConditionalCheckers(): FrontendMenuConditionalChecker = OPFrontendMenuConditionalChecker()
+    @ConditionalOnMissingBean(name = ["opFrontendMenuConditionalChecker"])
+    fun opFrontendMenuConditionalChecker(openProductService: OpenProductService): OPFrontendMenuConditionalChecker = OPFrontendMenuConditionalChecker(openProductService)
 }

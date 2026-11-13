@@ -22,10 +22,10 @@ type Query {
         pageSize: Int
     ): [Zaak!]!
 
-     # Get taken of a thema, including their parent themas
-        getOpenProductThemaTakenByName(naam: String!, pageSize: Int): [TaakV2!]!
+    # Get the taken linked to an open zaak or a product of the published thema with exactly this naam
+    getOpenProductThemaTakenByName(naam: String!, pageSize: Int): [TaakV2!]!
 
-     # Get zaken of a thema, including their parent themas
+    # Get the open zaken of the published thema with exactly this naam
     getOpenProductThemaZakenByName(
         naam: String!
         pageSize: Int
@@ -136,12 +136,16 @@ type Query {
     # Get all prijzen
     getOpenProductPrijzen(pageNumber: Int, pageSize: Int): PrijzenPage!
 
+    # Get the zaken of a product of the user
     getOpenProductZaken(id: UUID!): [Zaak!]!
 
+    # Get the taken of a product of the user
     getOpenProductTaken(id: UUID!): [TaakV2!]!
 
+    # Get the documenten of a product of the user
     getOpenProductDocumenten(id: UUID!): [Document!]!
 
+    # Get the DMN decision results of a product of the user
     getOpenProductDecisions(id: UUID!): [JSON!]!
 }
 

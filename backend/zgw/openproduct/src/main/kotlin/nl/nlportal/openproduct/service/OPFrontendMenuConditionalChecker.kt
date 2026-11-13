@@ -15,10 +15,40 @@
  */
 package nl.nlportal.openproduct.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.CancellationException
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.frontend.menu.FrontendMenuConditionalChecker
+import nl.nlportal.core.util.CoreUtils
+import org.springframework.security.core.Authentication
 
-class OPFrontendMenuConditionalChecker : FrontendMenuConditionalChecker {
-    override fun conditionalKey(): String = "thema"
+/**
+ * Menu condition `thema: <naam>`: holds when the user has at least one product in the published theme with that `naam`.
+ * No theme, another kind of authentication or an Open Product error counts as `false`.
+ */
+class OPFrontendMenuConditionalChecker(
+    private val openProductService: OpenProductService,
+) : FrontendMenuConditionalChecker {
+    override val key: String = "thema"
 
-    override fun check(value: String): Boolean = listOf("wonen-en-boten", "erfpacht").contains(value)
+    override suspend fun check(
+        authentication: Authentication,
+        value: String,
+    ): Boolean {
+        val user = authentication as? CommonGroundAuthentication ?: return false
+        return try {
+            val thema = openProductService.findThemaByName(user, value) ?: return false
+            openProductService.getThemaProducten(user, thema).isNotEmpty()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            logger.warn { "Menu condition thema '$value' failed: ${CoreUtils.logSummary(e)}" }
+            logger.trace(e) { "Menu condition thema '$value' failed" }
+            false
+        }
+    }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }

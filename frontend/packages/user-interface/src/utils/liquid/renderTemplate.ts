@@ -17,7 +17,7 @@ import type { IntlShape } from "react-intl";
 import { cloneElement, isValidElement, type ReactNode } from "react";
 import { Context, toPromise, type Emitter } from "liquidjs";
 import { createLiquidEngine } from "./engine";
-import { decodeLiquidText } from "./decodeLiquidText";
+import { resolveValues } from "./values";
 
 export async function renderTemplate(
   template: string,
@@ -28,7 +28,8 @@ export async function renderTemplate(
   const nodes: ReactNode[] = [];
   let text = "";
   const flushText = () => {
-    if (text.trim()) nodes.push(decodeLiquidText(text));
+    const value = resolveValues(liquid, text);
+    if (value.trim()) nodes.push(value);
     text = "";
   };
   const emitter: Emitter = {

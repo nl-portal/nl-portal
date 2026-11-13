@@ -28,7 +28,7 @@ const hidden: MenuEntry = {
   name: "erfpacht-product",
   icon: "DocumentIcon",
   hidden: true,
-  route: { type: "templated", page: "product", path: "/erfpacht/:id" },
+  route: { type: "portal-page", page: "product", path: "/erfpacht/:id" },
 };
 
 const renderAt = (path: string, messages: Record<string, string>) => {

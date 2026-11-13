@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { decodeLiquidText } from "./decodeLiquidText";
 import { REGEX_PATTERNS } from "../../constants/regex-patterns";
 
 /**
- * The non-blank rows of a tag body as `left | right`, split at the first unescaped `|`, trimmed and decoded once.
- * `\\|` is a literal pipe. A row without `|` has no `right`.
+ * The non-blank rows of a tag body as `left | right`, split at the first unescaped `|` and trimmed.
+ * `\\|` is a literal pipe. A row without `|` has no `right`. Values are still placeholders here.
  */
 export const pipeRows = (body: string) =>
   body
@@ -26,8 +25,7 @@ export const pipeRows = (body: string) =>
     .filter((line) => line.trim())
     .map((line) => {
       const separator = line.search(/(?<!\\)\|/);
-      const text = (value: string) =>
-        decodeLiquidText(value.trim().replace(/\\\|/g, "|"));
+      const text = (value: string) => value.trim().replace(/\\\|/g, "|");
       return separator === -1
         ? { left: text(line), right: undefined }
         : {
@@ -36,10 +34,19 @@ export const pipeRows = (body: string) =>
           };
     });
 
-/** The rendered body of a text tag, trimmed and decoded once. */
-export const bodyText = (body: string) => decodeLiquidText(body.trim());
+/** The rendered body of a text tag, trimmed. */
+export const bodyText = (body: string) => body.trim();
 
-/** Whether [href] is relative or uses a protocol PortalLink treats as external (https, http, tel, mailto). */
+/**
+ * Whether [href] is a relative link or uses https, http, tel or mailto. Rejects protocol-relative links (`//host`),
+ * backslashes, surrounding whitespace and control characters, so data can't point a relative-looking link at another site.
+ */
 export const isAllowedHref = (href: string) =>
-  !REGEX_PATTERNS.urlProtocol.test(href) ||
-  REGEX_PATTERNS.externalLink.test(href);
+  href === href.trim() &&
+  !href.startsWith("//") &&
+  !href.includes("\\") &&
+  ![...href].some(
+    (char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127,
+  ) &&
+  (!REGEX_PATTERNS.urlProtocol.test(href) ||
+    REGEX_PATTERNS.externalLink.test(href));

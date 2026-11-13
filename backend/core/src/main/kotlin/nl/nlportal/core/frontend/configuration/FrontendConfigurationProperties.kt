@@ -26,7 +26,7 @@ class FrontendConfigurationProperties {
     var toggles: FrontendToggles = FrontendToggles()
     var modulesWhitelist: List<String> = emptyList()
     var menuEntries: List<FrontendMenuEntryProperties> = emptyList()
-    var pages: Map<String, FrontendPageProperties> = emptyMap()
+    var pages: Map<String, PortalPageProperties> = emptyMap()
 
     class FrontendTheme(
         var style: String? = null,
@@ -67,10 +67,6 @@ class FrontendConfigurationProperties {
         var custom: String? = null
     }
 
-    class FrontendMenuConditional(
-        var thema: String? = null,
-    )
-
     class FrontendMenuEntryProperties(
         var name: String = "",
         var icon: String = "DocumentIcon",
@@ -88,23 +84,23 @@ class FrontendConfigurationProperties {
         var path: String = "",
     )
 
-    class FrontendPageProperties(
+    class PortalPageProperties(
         var type: String = "",
-        var template: FrontendPageTemplateProperties? = null,
-        var bindings: Map<String, FrontendPageBindingProperties> = linkedMapOf(),
+        var template: PortalPageTemplateProperties? = null,
+        var bindings: Map<String, PortalPageBindingProperties> = linkedMapOf(),
     )
 
     /**
-     * @property source the template source type: `binding`, or the type of a `PageTemplateSource` bean
+     * @property source the template source type: `binding`, or the type of a `PortalPageTemplateSource` bean
      * @property binding the alias whose resolver supplies the template, for the `binding` source only
      */
-    class FrontendPageTemplateProperties(
+    class PortalPageTemplateProperties(
         var source: String = "",
         var binding: String? = null,
         var params: Map<String, String> = linkedMapOf(),
     )
 
-    class FrontendPageBindingProperties(
+    class PortalPageBindingProperties(
         var resolver: String = "",
         var params: Map<String, String> = linkedMapOf(),
         var overrides: List<String> = emptyList(),

@@ -29,5 +29,5 @@ class FrontendMenuResource(
     private val frontendMenuService: FrontendMenuService,
 ) {
     @GetMapping
-    fun menu(authentication: Authentication): ResponseEntity<List<FrontendMenuEntry>> = ResponseEntity.ok(frontendMenuService.getMenuEntries(authentication))
+    suspend fun menu(authentication: Authentication): ResponseEntity<List<FrontendMenuEntry>> = ResponseEntity.ok(frontendMenuService.getMenuEntries(authentication))
 }

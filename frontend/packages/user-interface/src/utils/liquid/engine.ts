@@ -15,24 +15,28 @@
  */
 import { Liquid } from "liquidjs";
 import type { IntlShape } from "react-intl";
-import { registerComponents } from "./components";
+import { registerTags } from "./tags";
 import { registerFormatters } from "./formatters";
+import { storeValue } from "./values";
 
 /**
  * A Liquid engine for portal templates: strict variables and filters, own properties only,
  * bounded parse, render and memory use, the portal formatters and the component tags.
+ * Every `{{ }}` output that doesn't end in `raw` becomes a value placeholder (see `values.ts`); `echo` and `cycle`
+ * write their value as is. Create one engine per render.
  */
 export function createLiquidEngine(intl: IntlShape) {
-  const liquid = new Liquid({
+  const liquid: Liquid = new Liquid({
     strictVariables: true,
     strictFilters: true,
     ownPropertyOnly: true,
     parseLimit: 1e6,
     renderLimit: 1000,
     memoryLimit: 1e7,
+    outputEscape: (value: unknown): string => storeValue(liquid, value),
   });
 
   registerFormatters(liquid, intl);
-  registerComponents(liquid);
+  registerTags(liquid);
   return liquid;
 }

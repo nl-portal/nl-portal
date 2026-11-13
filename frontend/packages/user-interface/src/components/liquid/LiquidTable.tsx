@@ -15,7 +15,7 @@
  */
 import { useContext, type ComponentProps } from "react";
 import TableList from "../TableList";
-import PageBindingContext from "../../contexts/PageBindingContext";
+import PortalPageBindingContext from "../../contexts/PortalPageBindingContext";
 
 type Props = ComponentProps<typeof TableList> & {
   binding?: string;
@@ -25,7 +25,7 @@ type Props = ComponentProps<typeof TableList> & {
 };
 
 /**
- * TableList for templates. With a PageBindingContext, [binding], [pageParam], [pageSize] and [total]
+ * TableList for templates. With a PortalPageBindingContext, [binding], [pageParam], [pageSize] and [total]
  * it shows pagination that refetches the binding; otherwise it renders without interaction.
  */
 const LiquidTable = ({
@@ -35,7 +35,7 @@ const LiquidTable = ({
   total,
   ...props
 }: Props) => {
-  const context = useContext(PageBindingContext);
+  const context = useContext(PortalPageBindingContext);
   const size = Number(pageSize);
   const count = Number(total);
 

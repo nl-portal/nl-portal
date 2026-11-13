@@ -15,7 +15,7 @@
  */
 import { useContext } from "react";
 import { Tab, TabList, TabsContainer, TabText } from "@gemeente-denhaag/tab";
-import PageBindingContext from "../../contexts/PageBindingContext";
+import PortalPageBindingContext from "../../contexts/PortalPageBindingContext";
 import type { LiquidFilterOption } from "./LiquidFilter";
 
 type Props = {
@@ -27,10 +27,10 @@ type Props = {
 
 /**
  * Tabs that refetch [binding] with [param] set to the chosen value, resetting [pageParam]. The selected tab
- * follows the binding's current params. Without a PageBindingContext the tabs don't react.
+ * follows the binding's current params. Without a PortalPageBindingContext the tabs don't react.
  */
 const LiquidTabs = ({ binding, param, pageParam, options }: Props) => {
-  const context = useContext(PageBindingContext);
+  const context = useContext(PortalPageBindingContext);
   const interactive = Boolean(context && binding && param);
   const value =
     (binding && param && context?.meta(binding)?.params[param]) || "";

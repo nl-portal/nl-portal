@@ -87,3 +87,18 @@ Een document is een verwijzing naar een EnkelvoudigInformatieObject uit de docum
 De onderdelen die getoond worden zijn op basis van de ingelogde gebruiker. 
 Bijvoorbeeld om hoofdthema's in het zijmenu te tonen, worden alleen hoofdthema's getoond op basis van de producten van de ingelogde gebruiker.
 
+### GraphQL-queries per thema en product
+Alle queries geven alleen gegevens van de ingelogde gebruiker terug.
+
+| Query | Geeft |
+|---|---|
+| `getOpenProductThemaZakenByName(naam, pageSize)` | de lopende zaken van de zaaktypen van de producttypen in het gepubliceerde thema met deze `naam`, als de machtigingsdienst die zaaktypen toestaat |
+| `getOpenProductThemaTakenByName(naam, pageSize)` | de taken van de gebruiker die horen bij die zaken of bij een product van de gebruiker in het thema, gesorteerd op verloopdatum |
+| `getOpenProductZaken(id)` | de zaken van product `id` |
+| `getOpenProductTaken(id)` | de taken van product `id` |
+| `getOpenProductDocumenten(id)` | de documenten van product `id` |
+| `getOpenProductDecisions(id)` | de uitkomsten van de DMN-beslissingen van product `id` |
+
+`pageSize` is optioneel; als hij is meegegeven moet hij tussen 1 en 100 liggen, anders geeft de query de fout `pageSize must be between 1 and 100`.
+
+Het thema wordt gezocht op de exacte `naam` (hoofdlettergevoelig). Een onbekend thema of product geeft een lege lijst, net als een thema zonder zaaktypen (producttypen zonder zaaktype, of zaaktypen zonder url); een product van iemand anders geeft een fout. Op [portaalpagina's](../../../features/portal-pages.md#widget-tags) tonen de widget-tags `theme-cases` en `theme-tasks` de eerste twee.

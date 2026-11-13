@@ -1,9 +1,9 @@
 nl-portal:
   config:
-    pages:
+    portal-pages:
       enabled: true
       properties:
-        template-locations: classpath:does-not-exist/, file:/does-not-exist/, classpath:pages/, ftp:ignored/
+        template-locations: classpath:does-not-exist/, file:/does-not-exist/, classpath:portal-pages/, ftp:ignored/
     taak:
       enabled: true
     besluiten:
@@ -62,19 +62,17 @@ nl-portal:
         group: 2
         ordering: 0
         route:
-          type: templated
+          type: portal-page
           page: template-a
           path: /thema-concept
       - name: thema-concept-detail
         hidden: true
         route:
-          type: templated
+          type: portal-page
           page: template-a-detail
           path: /thema-concept/:id
       - name: extern-portaal
         icon: GridIcon
-        audience:
-          - bedrijf
         route:
           type: custom
           page: remote-a
@@ -85,7 +83,7 @@ nl-portal:
         template:
           source: file
           params:
-            file: template-a.pagetemplate.json
+            file: template-a.portal-page-template.json
         bindings:
           items:
             resolver: fake
@@ -113,7 +111,7 @@ nl-portal:
         template:
           source: file
           params:
-            file: missing.pagetemplate.json
+            file: missing.portal-page-template.json
 ---
 spring:
   config:

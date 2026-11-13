@@ -122,10 +122,10 @@ nl-portal:
                 url: http://localhost:8001
                 clientId: nl-portal
                 secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
-        pages:
+        portal-pages:
             enabled: true
             properties:
-                objecten:
+                object:
                     object-type-url: http://localhost:8010/api/v2/objecttypes/5f2d9a3e-7b41-4c6e-9a0d-2e8f1c4b6a70
         objectenapi:
             enabled: true
@@ -220,82 +220,97 @@ nl-portal:
             overview-maintenance-alert-enabled: true
             menu-entries-enabled: true
         menu-entries:
-#            -   name: over-ons
-#                icon: DocumentIcon
-#                group: 99
-#                route:
-#                    type: templated
-#                    page: over-ons
-#                    path: /over-ons
-#            -   name: contact
-#                icon: DocumentIcon
-#                group: 99
-#                route:
-#                    type: templated
-#                    page: contact
-#                    path: /contact
+            -   name: over-ons
+                icon: DocumentIcon
+                group: 99
+                route:
+                    type: portal-page
+                    page: over-ons
+                    path: /over-ons
+            -   name: contact
+                icon: DocumentIcon
+                group: 99
+                route:
+                    type: portal-page
+                    page: contact
+                    path: /contact
+            -   name: mijn-producten
+                icon: GridIcon
+                group: 99
+                audience: [ burger, bedrijf ]
+                route:
+                    type: portal-page
+                    page: mijn-producten
+                    path: /mijn-producten
+            -   name: mijn-product
+                hidden: true
+                audience: [ burger, bedrijf ]
+                route:
+                    type: portal-page
+                    page: mijn-product
+                    path: /mijn-producten/:id
             -   name: erfpacht
                 icon: BuildingIcon
                 group: 99
                 audience: [ burger, bedrijf ]
+                conditional:
+                    thema: Erfpacht
                 route:
-                    type: templated
-                    page: erfpacht-text-only
+                    type: portal-page
+                    page: erfpacht
                     path: /erfpacht
-#            -   name: erfpacht-product
-#                hidden: true
-#                audience: [ burger, bedrijf ]
-#                route:
-#                    type: templated
-#                    page: product
-#                    path: /erfpacht/:id
-#            -   name: product
-#                hidden: true
-#                audience: [ burger, bedrijf ]
-#                route:
-#                    type: templated
-#                    page: product
-#                    path: /producten/:id
-            -   name: parkeervergunningen
-                icon: ParkingIcon
-                group: 99
-                audience: [ burger, bedrijf ]
-                route:
-                    type: templated
-                    page: parkeervergunningen
-                    path: /parkeervergunningen
-            -   name: parkeervergunning
+            -   name: erfpacht-product
                 hidden: true
                 audience: [ burger, bedrijf ]
+                conditional:
+                    thema: Erfpacht
                 route:
-                    type: templated
-                    page: parkeervergunning
-                    path: /parkeervergunningen/:id
+                    type: portal-page
+                    page: erfpacht-product
+                    path: /erfpacht/:id
         pages:
-            erfpacht-text-only:
-                type: static
-                template:
-                    source: file
-                    params:
-                        file: erfpacht-text-only.pagetemplate.json
             over-ons:
                 type: static
                 template:
                     source: file
                     params:
-                        file: over-ons.pagetemplate.json
+                        file: over-ons.portal-page-template.json
             contact:
                 type: static
                 template:
-                    source: objecten
+                    source: object
                     params:
-                        object: 8a3c2e1f-4d5b-4f6a-9c7e-1b2d3f4a5c60
+                        object-url: http://localhost:8010/api/v2/objects/8a3c2e1f-4d5b-4f6a-9c7e-1b2d3f4a5c60
+            mijn-producten:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: mijn-producten.portal-page-template.json
+                bindings:
+                    producten:
+                        resolver: openproduct
+                        params:
+                            page: 0
+                            size: 5
+                        overrides: [ page ]
+                        projection: '{items: [.results[] | {id: .uuid, naam, type: .producttype.naam, status, startDatum: .start_datum, prijs}], total: .count}'
+            mijn-product:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: mijn-product.portal-page-template.json
+                bindings:
+                    product:
+                        resolver: openproduct
+                        projection: '{naam, type: .producttype.naam, status, startDatum: .start_datum, eindDatum: .eind_datum, prijs, frequentie}'
             erfpacht:
                 type: dynamic
                 template:
                     source: file
                     params:
-                        file: erfpacht.pagetemplate.json
+                        file: erfpacht.portal-page-template.json
                 bindings:
                     producten:
                         resolver: openproduct
@@ -303,9 +318,9 @@ nl-portal:
                             product-type-code: ERFPACHT
                             page: 0
                             size: 5
-                        overrides: [ page, filter.status ]
-                        projection: '{items: [.results[] | {id: .uuid, naam, status, prijs}], total: .count}'
-            product:
+                        overrides: [ page ]
+                        projection: '{items: [.results[] | {id: .uuid, naam, status, startDatum: .start_datum}], total: .count}'
+            erfpacht-product:
                 type: dynamic
                 template:
                     source: binding
@@ -314,35 +329,9 @@ nl-portal:
                     product:
                         resolver: openproduct
                         params:
+                            product-type-code: ERFPACHT
                             content-label: klantportaal
                         projection: '{naam, start_datum, eind_datum, status, prijs}'
-            parkeervergunningen:
-                type: dynamic
-                template:
-                    source: file
-                    params:
-                        file: parkeervergunningen.pagetemplate.json
-                bindings:
-                    vergunningen:
-                        resolver: openproduct
-                        params:
-                            product-type-codes: PARKEREN, BEZOEKERSVERGUNNING
-                            page: 0
-                            size: 5
-                        overrides: [ page, filter.status ]
-                        projection: '{items: [.results[] | {id: .uuid, naam, startDatum: .start_datum, eindDatum: .eind_datum, status, prijs}], total: .count}'
-            parkeervergunning:
-                type: dynamic
-                template:
-                    source: file
-                    params:
-                        file: parkeervergunning.pagetemplate.json
-                bindings:
-                    vergunning:
-                        resolver: openproduct
-                        params:
-                            product-type-codes: PARKEREN, BEZOEKERSVERGUNNING
-                        projection: '{naam, startDatum: .start_datum, eindDatum: .eind_datum, status, prijs, kentekens: (.verbruiksobject.data.kentekens // []), periodes: [(.verbruiksobject.data.periodes // [])[] | {datetimeStart, kenteken, status}]}'
         modules-whitelist:
             - zakenapi
             - product

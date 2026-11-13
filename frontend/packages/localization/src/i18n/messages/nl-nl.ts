@@ -292,11 +292,11 @@ export const NL_NL_MESSAGES: Messages = {
     "tableList.fetchError":
       "Er ging iets niet goed, probeer het later opnieuw.",
     "tableList.empty": "Er zijn geen onderdelen beschikbaar.",
-    "templatedPage.error": "Deze inhoud kan niet worden weergegeven.",
-    "templatedPage.refetchError":
+    "portalPage.error": "Deze inhoud kan niet worden weergegeven.",
+    "portalPage.refetchError":
       "Het ophalen van de gegevens is mislukt. Probeer het opnieuw.",
-    "templatedPage.noDetails": "Er zijn geen details beschikbaar.",
-    "templatedPage.search": "Zoeken",
+    "portalPage.noDetails": "Er zijn geen details beschikbaar.",
+    "portalPage.search": "Zoeken",
     "actionList.title": "Wat kan ik regelen",
     "linkList.title": "Zie ook",
     "documentsList.title": "Documenten",

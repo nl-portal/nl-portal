@@ -34,7 +34,6 @@ dependencies {
     implementation(project(":zgw:openproduct"))
     implementation(project(":product"))
     implementation(project(":zgw:verificatie"))
-    implementation(project(":iko-api"))
     implementation(project(":case"))
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")

@@ -27,13 +27,17 @@ import AppContext from "../../contexts/AppContext";
 import { NotificationProvider } from "../../contexts/NotificationContext";
 import MenuEntryRoutes from "../../components/MenuEntryRoutes";
 import { MenuEntry } from "../../utils/menu-entries";
+import {
+  MENU_ENTRY_RENDERERS,
+  MenuEntryRenderers,
+} from "../../utils/menu-entry-renderers";
 import { testPaths } from "../../providers/TestProvider";
 
 const menuEntries: MenuEntry[] = [
   {
     name: "thema-concept",
     icon: "ParkingIcon",
-    route: { type: "templated", page: "template-a", path: "/thema-concept" },
+    route: { type: "portal-page", page: "template-a", path: "/thema-concept" },
   },
   {
     name: "extern-portaal",
@@ -41,12 +45,22 @@ const menuEntries: MenuEntry[] = [
     route: { type: "custom", page: "remote-a", path: "/extern/*" },
   },
   {
+    name: "eigen",
+    icon: "DocumentIcon",
+    route: { type: "foo", page: "eigen", path: "/eigen" },
+  },
+  {
     name: "erfpacht-product",
     icon: "DocumentIcon",
     hidden: true,
-    route: { type: "templated", page: "product", path: "/erfpacht/:id" },
+    route: { type: "portal-page", page: "product", path: "/erfpacht/:id" },
   },
 ];
+
+const menuEntryRenderers: MenuEntryRenderers = {
+  ...MENU_ENTRY_RENDERERS,
+  foo: ({ entry }) => <div>foo renderer for {entry.name}</div>,
+};
 
 const Location = () => (
   <div data-testid="location">{useLocation().pathname}</div>
@@ -60,7 +74,12 @@ const renderAt = (path: string) => {
           <IntlProvider locale="nl" onError={() => {}}>
             <NotificationProvider>
               <AppContext.Provider
-                value={{ menuEntries } as ContextType<typeof AppContext>}
+                value={
+                  {
+                    menuEntries,
+                    menuEntryRenderers,
+                  } as ContextType<typeof AppContext>
+                }
               >
                 <Location />
                 <Outlet context={{ paths: testPaths }} />
@@ -81,7 +100,7 @@ const renderAt = (path: string) => {
 };
 
 describe("MenuEntryRoutes", () => {
-  it("renders the templated page for a templated entry", async () => {
+  it("renders the portal page for a portal-page entry", async () => {
     renderAt("/thema-concept");
 
     expect(await screen.findByLabelText("element.loading")).toBeInTheDocument();
@@ -102,11 +121,19 @@ describe("MenuEntryRoutes", () => {
     expect(screen.getByTestId("location")).toHaveTextContent("/erfpacht/abc");
   });
 
-  it("navigates to noMatch for a templated entry sub path", async () => {
+  it("navigates to noMatch for a portal-page entry sub path", async () => {
     renderAt("/thema-concept/a");
 
     expect(await screen.findByText("not found route")).toBeInTheDocument();
     expect(screen.getByTestId("location")).toHaveTextContent(testPaths.noMatch);
+  });
+
+  it("renders an entry with the renderer from the app context", async () => {
+    renderAt("/eigen");
+
+    expect(
+      await screen.findByText("foo renderer for eigen"),
+    ).toBeInTheDocument();
   });
 
   it("navigates to noMatch for an unknown path", async () => {

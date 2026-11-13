@@ -42,8 +42,11 @@ const handlerOf = (filter: FilterImplOptions | undefined) =>
     FilterHandler | undefined;
 
 /**
- * The `i18n` filter: formats message `id` with keyword arguments as ICU values, like every portal message:
- * an unknown id shows the id.
+ * `i18n`: formats the message `id` from the page's messages with keyword arguments as ICU values,
+ * like every portal message. An unknown id shows the id.
+ *
+ * @example
+ * {{ 'aantal' | i18n: count: producten.total }}
  */
 const createI18nFilter =
   (intl: IntlShape) =>
@@ -58,24 +61,83 @@ const createI18nFilter =
   };
 
 /**
- * Registers the portal formatters. `date` without an argument formats as an intl short date;
- * with an strftime argument it delegates to the built-in Liquid `date` filter.
- * `i18n` formats a message of [intl], which includes the page's own messages.
+ * `date`: without an argument a short date in the user's language; with an strftime argument the built-in
+ * LiquidJS `date`.
+ *
+ * @example
+ * {{ startDatum | date }} {{ startDatum | date: "%Y-%m-%d" }}
  */
-export function registerFormatters(liquid: Liquid, intl: IntlShape) {
+const createDateFilter = (liquid: Liquid, intl: IntlShape) => {
   const builtInDate = handlerOf(liquid.filters.date);
+  return function (this: unknown, value: unknown, ...args: unknown[]) {
+    if (args.length && builtInDate) {
+      return builtInDate.call(this, value, ...args);
+    }
+    return LIQUID_FORMATTERS.date(intl, value);
+  };
+};
 
-  liquid.registerFilter(
-    "date",
-    function (this: unknown, value: unknown, ...args: unknown[]) {
-      if (args.length && builtInDate) {
-        return builtInDate.call(this, value, ...args);
-      }
-      return LIQUID_FORMATTERS.date(intl, value);
-    },
+/**
+ * `currency`: an amount in the user's language, euro unless the currency code is given.
+ *
+ * @example
+ * {{ prijs | currency }} {{ prijs | currency: "USD" }}
+ */
+const createCurrencyFilter =
+  (intl: IntlShape) => (value: unknown, currency?: string) =>
+    LIQUID_FORMATTERS.currency(intl, value, currency);
+
+/**
+ * `html_text`: the text of an HTML or HTML-encoded value: tags removed and every entity decoded, parsed in an
+ * inert document. `null` gives `""`, other values are stringified. The result is still shown as text.
+ *
+ * @example
+ * {{ omschrijving | html_text }}
+ */
+export const htmlText = (value: unknown): string => {
+  if (value === null || value === undefined) return "";
+  return (
+    new DOMParser().parseFromString(String(value), "text/html").body
+      .textContent ?? ""
   );
-  liquid.registerFilter("currency", (value: unknown, currency?: string) =>
-    LIQUID_FORMATTERS.currency(intl, value, currency),
-  );
-  liquid.registerFilter("i18n", createI18nFilter(intl));
+};
+
+/**
+ * `lines`: the lines of a value, split on `\n` or `\r\n` and trimmed. `null` gives no lines.
+ *
+ * @example
+ * {% assign regels = adres | lines %}{% for regel in regels %}{{ regel }}
+ * {% endfor %}
+ */
+export const lines = (value: unknown): string[] => {
+  if (value === null || value === undefined) return [];
+  return String(value)
+    .split(/\r?\n/)
+    .map((line) => line.trim());
+};
+
+const PORTAL_FILTER_FACTORIES = {
+  date: createDateFilter,
+  currency: (_: Liquid, intl: IntlShape) => createCurrencyFilter(intl),
+  i18n: (_: Liquid, intl: IntlShape) => createI18nFilter(intl),
+  html_text: () => htmlText,
+  lines: () => lines,
+} satisfies Record<
+  string,
+  (liquid: Liquid, intl: IntlShape) => (...args: never[]) => unknown
+>;
+
+/** The names of every filter the portal registers: its own and the LiquidJS built-ins it overrides. */
+export const PORTAL_FILTERS = Object.keys(
+  PORTAL_FILTER_FACTORIES,
+) as (keyof typeof PORTAL_FILTER_FACTORIES)[];
+
+/** Registers every filter in [PORTAL_FILTERS] on [liquid]; `i18n` formats messages of [intl]. */
+export function registerFormatters(liquid: Liquid, intl: IntlShape) {
+  for (const name of PORTAL_FILTERS) {
+    liquid.registerFilter(
+      name,
+      PORTAL_FILTER_FACTORIES[name](liquid, intl) as FilterHandler,
+    );
+  }
 }

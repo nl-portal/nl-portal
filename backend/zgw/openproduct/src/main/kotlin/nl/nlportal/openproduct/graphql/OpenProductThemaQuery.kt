@@ -132,24 +132,28 @@ class OpenProductThemaQuery(
         authentication: CommonGroundAuthentication,
         @Argument naam: String,
         @Argument pageSize: Int? = null,
-    ): List<Zaak> =
-        openProductService.getThemaZakenByName(
+    ): List<Zaak> {
+        requirePageSize(pageSize)
+        return openProductService.getThemaZakenByName(
             authentication = authentication,
             naam = naam,
             pageSize = pageSize,
         )
+    }
 
     @QueryMapping
     suspend fun getOpenProductThemaTakenByName(
         authentication: CommonGroundAuthentication,
         @Argument naam: String,
         @Argument pageSize: Int? = null,
-    ): List<TaakV2> =
-        openProductService.getThemaTakenByName(
+    ): List<TaakV2> {
+        requirePageSize(pageSize)
+        return openProductService.getThemaTakenByName(
             authentication = authentication,
             naam = naam,
             pageSize = pageSize,
         )
+    }
 
     @SchemaMapping(typeName = "OpenProductThema", field = "zaken")
     suspend fun zaken(
@@ -188,4 +192,12 @@ class OpenProductThemaQuery(
         openProductService.getThemaLinks(
             thema = openProductThema,
         )
+
+    private fun requirePageSize(pageSize: Int?) {
+        require(pageSize == null || pageSize in 1..MAX_PAGE_SIZE) { "pageSize must be between 1 and $MAX_PAGE_SIZE" }
+    }
+
+    companion object {
+        const val MAX_PAGE_SIZE = 100
+    }
 }

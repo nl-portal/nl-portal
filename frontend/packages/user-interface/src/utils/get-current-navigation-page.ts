@@ -30,17 +30,33 @@ export const isCurrentFor = (item: NavigationItem, pathname: string) =>
  * shows the current page + icon below the header. In case of the childpages, the parent page + icon is shown.
  * Also the document title show this "navigation page" (first parent which is shown in the menu)
  *
- * The deepest match that has a navigation item wins.
+ * The deepest match that has a navigation item wins. On the route of a hidden menu entry, such as `/erfpacht/:id`,
+ * the visible item with the longest path above it wins instead: menu entries render flat under the "*" route, so
+ * otherwise only the root matches. Only hidden entries get this, so an unknown sub path still falls back to the root.
  *
  * @param matches react-router useMatches
  * @param navigationItems navigationItems
+ * @param menuEntries menu entries from AppContext, hidden ones included
  * @returns current navigation page
  */
 export const getCurrentNavigationPage = (
   matches: UIMatch[],
   navigationItems: NavigationItem[][],
+  menuEntries: MenuEntry[] = [],
 ) => {
   const items = navigationItems.flat();
+  const labeledMatches = matches as UIMatch<
+    unknown,
+    { label?: string } | undefined
+  >[];
+
+  if (getHiddenMenuEntryPage(labeledMatches, navigationItems, menuEntries)) {
+    const pathname = matches[matches.length - 1].pathname;
+    const parent = items
+      .filter((item) => pathname.startsWith(`${item.path}/`))
+      .sort((a, b) => b.path.length - a.path.length)[0];
+    if (parent) return parent;
+  }
 
   for (const match of [...matches].reverse()) {
     const item = items.find((item) => isCurrentFor(item, match.pathname));

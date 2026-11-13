@@ -16,18 +16,34 @@
 package nl.nlportal.core.frontend.menu.service
 
 import nl.nlportal.core.frontend.menu.FrontendMenuConditionalChecker
+import org.springframework.security.core.Authentication
 
+/**
+ * The [FrontendMenuConditionalChecker]s by key. With two checkers for one key the first, in `@Order`, wins.
+ */
 class FrontendMenuConditionalCheckers(
-    conditionalCheckers: List<FrontendMenuConditionalChecker>,
+    checkers: List<FrontendMenuConditionalChecker>,
 ) {
-    val conditionalCheckersMap = conditionalCheckers.groupBy { it.conditionalKey() }.mapValues { it.value.first() }
+    private val checkers: Map<String, FrontendMenuConditionalChecker> = checkers.groupBy { it.key }.mapValues { it.value.first() }
 
-    fun check(
-        key: String,
-        value: String,
-    ): Boolean = conditionalCheckersMap[key]?.check(value) ?: true
+    /** Keys that more than one checker claims. */
+    val duplicateKeys: Set<String> =
+        checkers
+            .groupingBy { it.key }
+            .eachCount()
+            .filterValues { it > 1 }
+            .keys
 
-    fun check(conditions: Map<String, String>): Boolean {
-        return conditions.map { check(it.key, it.value) }.all { return it }
-    }
+    fun isKnown(key: String): Boolean = key in checkers
+
+    /**
+     * Whether every condition in [conditions] holds for the user. An unknown key fails closed.
+     */
+    suspend fun check(
+        authentication: Authentication,
+        conditions: Map<String, String>,
+    ): Boolean =
+        conditions.all { (key, value) ->
+            checkers[key]?.check(authentication, value) ?: false
+        }
 }

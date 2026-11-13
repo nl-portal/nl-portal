@@ -15,8 +15,17 @@
  */
 package nl.nlportal.core.frontend.menu
 
-interface FrontendMenuConditionalChecker {
-    fun conditionalKey(): String
+import org.springframework.security.core.Authentication
 
-    fun check(value: String): Boolean
+/**
+ * Decides whether a menu entry with `conditional: { <key>: <value> }` is shown to the user.
+ */
+interface FrontendMenuConditionalChecker {
+    val key: String
+
+    /** Whether the condition [value] holds for the user in [authentication]; failures count as `false`. */
+    suspend fun check(
+        authentication: Authentication,
+        value: String,
+    ): Boolean
 }

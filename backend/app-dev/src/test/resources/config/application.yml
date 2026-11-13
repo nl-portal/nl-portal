@@ -49,7 +49,7 @@ nl-portal:
         menu-entries:
             -   name: test-entry
                 route:
-                    type: templated
+                    type: portal-page
                     page: template-a
                     path: /test-entry
     authentication:
@@ -59,7 +59,7 @@ nl-portal:
             credentials:
                 secret: test-secret
     config:
-        pages:
+        portal-pages:
             enabled: true
         besluitenapi:
             enabled: true

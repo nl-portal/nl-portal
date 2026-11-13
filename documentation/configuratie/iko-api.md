@@ -2,7 +2,7 @@
 
 De backend-module `iko-api` is de API-module voor communicatie met IKO (Integraal Klant- en Objectbeeld). Deze eerste versie ondersteunt alleen het lezen van Aggregated Data Profiles (ADP's) voor de ingelogde burger of het ingelogde bedrijf.
 
-Het is een interne API-module, net als `zgw:zaken-api`: er komt geen GraphQL-query of REST-endpoint bij. Feature-modules gebruiken de module om IKO-data op te halen. De eerste afnemer wordt templated pages (nl-portal-issues#170).
+Het is een interne API-module, net als `zgw:zaken-api`: er komt geen GraphQL-query of REST-endpoint bij. Feature-modules gebruiken de module om IKO-data op te halen. De eerste afnemer zijn de portaalpagina's (nl-portal-issues#170).
 
 De module staat standaard uit en zit niet in de standaard app-images.
 

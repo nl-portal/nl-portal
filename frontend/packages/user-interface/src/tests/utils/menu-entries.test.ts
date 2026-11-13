@@ -56,7 +56,7 @@ const groups = (): NavigationItem[][] => [
 const entry = (
   name: string,
   overrides: Partial<MenuEntry> = {},
-  type = "templated",
+  type = "portal-page",
 ): MenuEntry => ({
   name,
   icon: "GridIcon",
@@ -222,23 +222,23 @@ describe("withMenuEntries", () => {
 
 describe("getRenderableMenuEntries", () => {
   const Renderer = () => null;
-  const renderers = { templated: Renderer, custom: Renderer };
+  const renderers = { "portal-page": Renderer, custom: Renderer };
   const routes: RouteObject[] = [
     { path: "/taken", element: null },
     { path: "/zaken/:id", element: null },
     { path: "*", element: null },
   ];
 
-  const withPath = (name: string, path: string, type = "templated") =>
+  const withPath = (name: string, path: string, type = "portal-page") =>
     entry(name, { route: { type, page: "page", path } });
 
-  it("keeps templated and custom entries on a new path", () => {
+  it("keeps portal-page and custom entries on a new path", () => {
     const entries = [
       withPath("a", "/nieuw"),
       withPath("b", "/extern/*", "custom"),
       entry("c", {
         hidden: true,
-        route: { type: "templated", page: "p", path: "/nieuw/:id" },
+        route: { type: "portal-page", page: "p", path: "/nieuw/:id" },
       }),
     ];
 

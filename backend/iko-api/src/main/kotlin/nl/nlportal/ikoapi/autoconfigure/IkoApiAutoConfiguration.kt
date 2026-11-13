@@ -17,7 +17,7 @@ package nl.nlportal.ikoapi.autoconfigure
 
 import nl.nlportal.ikoapi.client.IkoApiClient
 import nl.nlportal.ikoapi.client.IkoApiConfig
-import nl.nlportal.ikoapi.page.IkoPageDataResolver
+import nl.nlportal.ikoapi.portalpage.IkoPortalPageBindingResolver
 import nl.nlportal.ikoapi.service.IkoApiService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -45,6 +45,6 @@ class IkoApiAutoConfiguration {
     ): IkoApiService = IkoApiService(ikoApiClient, ikoApiConfig.properties)
 
     @Bean
-    @ConditionalOnMissingBean(IkoPageDataResolver::class)
-    fun ikoPageDataResolver(ikoApiService: IkoApiService): IkoPageDataResolver = IkoPageDataResolver(ikoApiService)
+    @ConditionalOnMissingBean(IkoPortalPageBindingResolver::class)
+    fun ikoPortalPageBindingResolver(ikoApiService: IkoApiService): IkoPortalPageBindingResolver = IkoPortalPageBindingResolver(ikoApiService)
 }

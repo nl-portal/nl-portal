@@ -15,15 +15,22 @@
  */
 import { ComponentType } from "react";
 import MenuEntryPlaceholder from "../components/MenuEntryPlaceholder";
-import TemplatedPage from "../components/TemplatedPage";
+import PortalPage from "../components/PortalPage";
 import { MenuEntry } from "./menu-entries";
 
 export type MenuEntryRendererProps = { entry: MenuEntry };
 
-export const MENU_ENTRY_RENDERERS: Record<
+export type MenuEntryRenderers = Record<
   string,
   ComponentType<MenuEntryRendererProps>
-> = {
-  templated: TemplatedPage,
+>;
+
+/**
+ * The default renderer per menu entry `route.type`. Implementations can pass their own map to `AppProvider`
+ * (`menuEntryRenderers`); it replaces this one, so spread these defaults to keep them:
+ * `{ ...MENU_ENTRY_RENDERERS, foo: FooPage }`.
+ */
+export const MENU_ENTRY_RENDERERS: MenuEntryRenderers = {
+  "portal-page": PortalPage,
   custom: MenuEntryPlaceholder,
 };

@@ -21,12 +21,12 @@ import org.junit.jupiter.api.Test
 import java.io.File
 
 /**
- * Jackson 2 and jackson-jq are on the classpath only for jq projections, so only `PageProjection.kt`
+ * Jackson 2 and jackson-jq are on the classpath only for jq projections, so only `PortalPageProjection.kt`
  * may import them. Everything else uses Jackson 3 (`tools.jackson`).
  */
 class JacksonImportRuleTest {
     @Test
-    fun `Jackson 2 and jackson-jq are only imported by PageProjection`() {
+    fun `Jackson 2 and jackson-jq are only imported by PortalPageProjection`() {
         val backend = File("..").canonicalFile
         val sources =
             backend
@@ -52,7 +52,7 @@ class JacksonImportRuleTest {
 
     companion object {
         private val FORBIDDEN_IMPORTS = listOf("com.fasterxml.jackson.databind", "com.fasterxml.jackson.core", "net.thisptr")
-        private val ALLOWED_FILES = setOf("PageProjection.kt")
+        private val ALLOWED_FILES = setOf("PortalPageProjection.kt")
         private val EXCLUDED_DIRECTORIES = setOf("build", "out", ".gradle", "node_modules")
     }
 }

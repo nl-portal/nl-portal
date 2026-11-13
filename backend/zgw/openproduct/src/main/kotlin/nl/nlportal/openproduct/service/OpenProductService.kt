@@ -1045,41 +1045,29 @@ class OpenProductService(
         return openProductClient.path<Producten>().patch(productUpdate = productUpdate)
     }
 
+    /**
+     * Get open zaken of the published thema with name [naam]: zaken of the zaaktypen of the thema's producttypen,
+     * when the machtigingsdienst allows all of them. Zaaktypen without a url are skipped.
+     * @param: authentication, authenticated user
+     * @param: naam, exact naam of the thema
+     * @param: pageSize, maximum number of zaken
+     * @param: thema, the thema when already known, skips the lookup by naam
+     * @return: list of zaken, empty when the thema doesn't exist or has no zaaktypen
+     */
     suspend fun getThemaZakenByName(
         authentication: CommonGroundAuthentication,
         naam: String,
         pageSize: Int? = null,
         thema: OpenProductThema? = null,
     ): List<Zaak> {
-        val themaZaak =
-            thema ?: getThemas(
-                authentication = authentication,
-                pageNumber = 1,
-                pageSize = pageSize ?: 999,
-                extraSearchVariables =
-                    listOf<Pair<OpenProductThemasFilters, Any>>(
-                        OpenProductThemasFilters.NAAM to naam,
-                    ),
-            ).results.firstOrNull()
+        val found = thema ?: findThemaByName(authentication, naam) ?: return emptyList()
+        val zaakTypes =
+            found.producttypen
+                .flatMap { getProductType(id = it.uuid, language = OpenProductLanguage.NL.language)?.zaaktypen.orEmpty() }
+                .mapNotNull { zaakType -> zaakType.url?.let { extractId(it) } }
+                .distinct()
 
-        if (themaZaak == null) {
-            return emptyList()
-        }
-
-        // 2. loop through productTypes and get zaakTypes
-        val zaakTypes = mutableSetOf<UUID>()
-
-        themaZaak.producttypen.forEach {
-            getProductType(
-                id = it.uuid,
-                language = OpenProductLanguage.NL.language,
-            )?.zaaktypen?.forEach { zaakType ->
-                zaakTypes.add(extractId(zaakType.url!!))
-            }
-        }
-
-        // 3. get Zaken with filters
-        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
+        if (zaakTypes.isEmpty() || !authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes)) {
             return emptyList()
         }
 
@@ -1089,7 +1077,7 @@ class OpenProductService(
                 page = 1,
                 pageSize = pageSize,
                 isOpen = true,
-                zaakTypeUUIDs = zaakTypes.toList(),
+                zaakTypeUUIDs = zaakTypes,
             ).content
     }
 
@@ -1146,13 +1134,13 @@ class OpenProductService(
                     id = it.uuid,
                     language = language,
                 )?.zaaktypen?.forEach { zaakType ->
-                    zaakTypes.add(CoreUtils.extractId(zaakType.url!!))
+                    zaakType.url?.let { url -> zaakTypes.add(CoreUtils.extractId(url)) }
                 }
             }
         }
 
         // 3. get Zaken with filters
-        if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
+        if (zaakTypes.isEmpty() || !authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
             return emptyList()
         }
 
@@ -1166,64 +1154,38 @@ class OpenProductService(
             ).content
     }
 
+    /**
+     * Get taken of the published thema with name [naam]: the user's taken linked to an open zaak of the thema
+     * (see [getThemaZakenByName]) or to one of the user's producten in the thema, sorted by verloopdatum.
+     * @param: authentication, authenticated user
+     * @param: naam, exact naam of the thema
+     * @param: pageSize, maximum number of taken returned
+     * @return: list of taken, empty when the thema doesn't exist
+     */
     suspend fun getThemaTakenByName(
         authentication: CommonGroundAuthentication,
         naam: String,
         pageSize: Int? = null,
     ): List<TaakV2> {
-        val thema =
-            getThemas(
-                authentication = authentication,
-                pageNumber = 1,
-                pageSize = pageSize ?: 999,
-                extraSearchVariables =
-                    listOf<Pair<OpenProductThemasFilters, Any>>(
-                        OpenProductThemasFilters.NAAM to naam,
-                    ),
-            ).results.firstOrNull()
-
-        if (thema == null) {
-            return emptyList()
-        }
-
+        val thema = findThemaByName(authentication, naam) ?: return emptyList()
         val taken =
             taakService
                 .getTakenV2(
                     authentication = authentication,
                     pageNumber = 1,
-                    pageSize = pageSize ?: 999,
+                    pageSize = 999,
                 ).content
 
-        // when no tasks are found, just return immediately
         if (taken.isEmpty()) {
             return taken
         }
 
-        val zaken =
-            getThemaZakenByName(
-                authentication = authentication,
-                naam = naam,
-                thema = thema,
-                pageSize = pageSize,
-            )
+        val linked =
+            getThemaZakenByName(authentication = authentication, naam = naam, thema = thema).map { it.uuid.toString() }.toSet() +
+                getThemaProducten(authentication = authentication, thema = thema).map { it.uuid.toString() }
 
-        val producten =
-            getProducten(
-                authentication = authentication,
-                pageNumber = 1,
-                pageSize = 999,
-                extraSearchVariables =
-                    listOf(
-                        OpenProductProductenFilters.THEMA_UUID to thema.uuid.toString(),
-                    ),
-            ).results
-
-        // filter out the taak which is not connected to a zaak
-        return taken
-            .filterNot { task ->
-                !zaken.any { it.uuid.toString() == task.koppeling.value } &&
-                    !producten.any { it.uuid.toString() == task.koppeling.value }
-            }.sortedBy { it.verloopdatum }
+        val themaTaken = taken.filter { it.koppeling.value in linked }.sortedBy { it.verloopdatum }
+        return pageSize?.let { themaTaken.take(it) } ?: themaTaken
     }
 
     /**
@@ -1318,6 +1280,12 @@ class OpenProductService(
         return zaakList
     }
 
+    /**
+     * Get zaken of a product of the user
+     * @param: authentication, authenticated user
+     * @param: id, uuid of the product
+     * @return: list of zaken, empty when the product doesn't exist or has none
+     */
     suspend fun getProductZaken(
         authentication: CommonGroundAuthentication,
         id: UUID,
@@ -1364,6 +1332,12 @@ class OpenProductService(
         return takenList.toList()
     }
 
+    /**
+     * Get taken of a product of the user
+     * @param: authentication, authenticated user
+     * @param: id, uuid of the product
+     * @return: list of taken, empty when the product doesn't exist or has none
+     */
     suspend fun getProductTaken(
         authentication: CommonGroundAuthentication,
         id: UUID,
@@ -1384,6 +1358,12 @@ class OpenProductService(
         )
     }
 
+    /**
+     * Get documenten of a product of the user
+     * @param: authentication, authenticated user
+     * @param: id, uuid of the product
+     * @return: list of documenten, empty when the product doesn't exist or has none
+     */
     suspend fun getProductDocumenten(
         authentication: CommonGroundAuthentication,
         id: UUID,
@@ -1394,7 +1374,7 @@ class OpenProductService(
                 id = id,
             )
 
-        if (product == null || product.taken.isNullOrEmpty()) {
+        if (product == null || product.documenten.isEmpty()) {
             return emptyList()
         }
 
@@ -1495,6 +1475,24 @@ class OpenProductService(
         }
         return documentenApiService.filterDocuments(documents)
     }
+
+    /**
+     * Get the published thema with exactly the name [naam], or null; a blank [naam] is null without calling Open Product.
+     */
+    suspend fun findThemaByName(
+        authentication: CommonGroundAuthentication,
+        naam: String,
+    ): OpenProductThema? =
+        if (naam.isBlank()) {
+            null
+        } else {
+            getThemas(
+                authentication = authentication,
+                pageNumber = 1,
+                pageSize = 1,
+                extraSearchVariables = listOf(OpenProductThemasFilters.NAAM to naam),
+            ).results.firstOrNull()
+        }
 
     /**
      * Collect thema hierarchy up from subthema

@@ -38,6 +38,7 @@ import {
 import PageMetaData from "../components/PageMetaData";
 import { UserProvider } from "../contexts/UserContext";
 import { Themes } from "../interfaces/themes";
+import { MenuEntryRenderers } from "../utils/menu-entry-renderers";
 
 export const testPaths: Paths = {
   noMatch: "/404",
@@ -118,11 +119,13 @@ const TestContent = ({
   mocks,
   paths,
   themes,
+  menuEntryRenderers,
 }: {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
   mocks: MockedResponse<Record<string, any>>[];
   paths: Paths;
   themes?: Themes;
+  menuEntryRenderers?: MenuEntryRenderers;
 }) => {
   return (
     <MockWrapper>
@@ -130,7 +133,7 @@ const TestContent = ({
         <LocalizationProvider>
           <NotificationProvider>
             <UserProvider>
-              <AppProvider>
+              <AppProvider menuEntryRenderers={menuEntryRenderers}>
                 <PageMetaData />
                 <Outlet context={{ paths, themes }} />
               </AppProvider>
@@ -148,16 +151,24 @@ const TestProvider = ({
   routes,
   initialIndex,
   initialEntries,
+  menuEntryRenderers,
 }: {
   mocks: MockedResponse<Record<string, unknown>>[];
   paths?: Paths;
   routes: RouteObject[];
   initialIndex?: number;
   initialEntries?: string[];
+  menuEntryRenderers?: MenuEntryRenderers;
 }): ReactElement => {
   return (
     <RouterProvider
-      element={<TestContent mocks={mocks} paths={paths} />}
+      element={
+        <TestContent
+          mocks={mocks}
+          paths={paths}
+          menuEntryRenderers={menuEntryRenderers}
+        />
+      }
       routes={routes}
       navigationItems={testNavigationItems}
       test={{

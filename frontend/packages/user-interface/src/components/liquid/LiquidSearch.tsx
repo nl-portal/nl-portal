@@ -20,7 +20,7 @@ import { FormLabel } from "@gemeente-denhaag/form-label";
 import { TextInput } from "@gemeente-denhaag/text-input";
 import { Button } from "@gemeente-denhaag/button";
 import { SearchIcon } from "@gemeente-denhaag/icons";
-import PageBindingContext from "../../contexts/PageBindingContext";
+import PortalPageBindingContext from "../../contexts/PortalPageBindingContext";
 
 type Props = {
   binding?: string;
@@ -31,12 +31,12 @@ type Props = {
 
 /**
  * A search field that refetches [binding] with [param] set to the submitted text, resetting [pageParam].
- * It starts with the binding's current value. Without a PageBindingContext it is disabled.
+ * It starts with the binding's current value. Without a PortalPageBindingContext it is disabled.
  */
 const LiquidSearch = ({ binding, param, title, pageParam }: Props) => {
   const intl = useIntl();
   const id = useId();
-  const context = useContext(PageBindingContext);
+  const context = useContext(PortalPageBindingContext);
   const interactive = Boolean(context && binding && param);
   const value =
     (binding && param && context?.meta(binding)?.params[param]) || "";
@@ -68,7 +68,7 @@ const LiquidSearch = ({ binding, param, title, pageParam }: Props) => {
           iconEnd={<SearchIcon />}
         />
         <Button type="submit" disabled={!interactive}>
-          <FormattedMessage id="templatedPage.search" />
+          <FormattedMessage id="portalPage.search" />
         </Button>
       </FormField>
     </form>
