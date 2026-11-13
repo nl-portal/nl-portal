@@ -35,6 +35,17 @@ data class OpenProductContentElement(
     val taal: String,
 )
 
+enum class OpenProductContentElementsFilters(
+    @JsonValue val value: String,
+) : OpenProductFilters {
+    PAGE("page"),
+    PAGE_SIZE("page_size"),
+    PRODUCTTYPE_UUID("producttype__uuid"),
+    ;
+
+    override fun toString() = this.value
+}
+
 enum class OpenProductToegestaneStatus(
     @JsonValue val status: String,
 ) {
@@ -70,4 +81,11 @@ enum class SortList(
 ) {
     ASCENDING("ascending"),
     DESCENDING("descending"),
+}
+
+enum class OpenProductLanguage(
+    @JsonValue val language: String,
+) {
+    NL("nl"),
+    EN("en"),
 }

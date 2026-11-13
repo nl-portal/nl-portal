@@ -16,6 +16,8 @@
 package nl.nlportal.zgw.objectenapi.autoconfiguration
 
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.objectenapi.portalpage.ObjectPortalPageTemplateSourceProperties
+import nl.nlportal.zgw.objectenapi.portalpage.ObjectPortalPageTemplateSource
 import nl.nlportal.zgw.objectenapi.service.ObjectenApiService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -24,7 +26,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(ObjectsApiClientConfig::class)
+@EnableConfigurationProperties(ObjectsApiClientConfig::class, ObjectPortalPageTemplateSourceProperties::class)
 @ConditionalOnProperty(prefix = "nl-portal.config.objectenapi", name = ["enabled"], havingValue = "true")
 class ObjectsApiAutoConfiguration {
     @Bean
@@ -37,4 +39,12 @@ class ObjectsApiAutoConfiguration {
         objectsApiClient: ObjectsApiClient,
         objectsApiClientConfig: ObjectsApiClientConfig,
     ): ObjectenApiService = ObjectenApiService(objectsApiClient, objectsApiClientConfig.properties)
+
+    @Bean
+    @ConditionalOnProperty(prefix = "nl-portal.config.portal-pages", name = ["enabled"], havingValue = "true")
+    @ConditionalOnMissingBean(ObjectPortalPageTemplateSource::class)
+    fun objectPortalPageTemplateSource(
+        objectenApiService: ObjectenApiService,
+        objectPortalPageTemplateSourceProperties: ObjectPortalPageTemplateSourceProperties,
+    ): ObjectPortalPageTemplateSource = ObjectPortalPageTemplateSource(objectenApiService, objectPortalPageTemplateSourceProperties)
 }

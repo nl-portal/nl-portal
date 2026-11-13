@@ -1,0 +1,22 @@
+{
+  "naam": "Mijn product",
+  "template": "{% back-link href: \"/mijn-producten\" %}{% assign titel = product.naam %}{% page-header title: titel sub-title: product.type %}{% endpage-header %}\n{% description-list title: \"gegevens\" %}\n{{ 'status' | i18n }} | {{ product.status | capitalize }}\n{{ 'startdatum' | i18n }} | {{ product.startDatum | date }}\n{{ 'einddatum' | i18n }} | {{ product.eindDatum | date }}\n{{ 'prijs' | i18n }} | {{ product.prijs | currency }}\n{{ 'frequentie' | i18n }} | {{ product.frequentie | capitalize }}\n{% enddescription-list %}\n",
+  "messages": {
+    "nl-NL": {
+      "gegevens": "Gegevens",
+      "status": "Status",
+      "startdatum": "Startdatum",
+      "einddatum": "Einddatum",
+      "prijs": "Prijs",
+      "frequentie": "Frequentie"
+    },
+    "en-GB": {
+      "gegevens": "Details",
+      "status": "Status",
+      "startdatum": "Start date",
+      "einddatum": "End date",
+      "prijs": "Price",
+      "frequentie": "Frequency"
+    }
+  }
+}

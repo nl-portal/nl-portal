@@ -18,6 +18,7 @@ package nl.nlportal.core.frontend.menu
 import nl.nlportal.core.util.Mapper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -32,7 +33,7 @@ class FrontendMenuResourceTest(
     @Autowired private val applicationContext: ApplicationContext,
 ) {
     @Test
-    fun `get menu entries for the authenticated user`() {
+    fun `get only valid menu entries for the authenticated user`() {
         val webTestClient =
             WebTestClient
                 .bindToApplicationContext(applicationContext)
@@ -54,15 +55,22 @@ class FrontendMenuResourceTest(
 
         val responseJson = Mapper.get().readTree(responseBodyContent)
 
-        assertEquals(1, responseJson.size())
+        assertEquals(2, responseJson.size())
+        assertFalse(String(responseBodyContent!!).contains("extern-portaal"))
         val entry = responseJson[0]
         assertEquals("thema-concept", entry.requiredAt("/name").stringValue())
         assertEquals("ParkingIcon", entry.requiredAt("/icon").stringValue())
         assertEquals(2, entry.requiredAt("/group").intValue())
         assertEquals(0, entry.requiredAt("/ordering").intValue())
-        assertEquals("templated", entry.requiredAt("/route/type").stringValue())
+        assertFalse(entry.requiredAt("/hidden").booleanValue())
+        assertEquals("portal-page", entry.requiredAt("/route/type").stringValue())
         assertEquals("template-a", entry.requiredAt("/route/page").stringValue())
         assertEquals("/thema-concept", entry.requiredAt("/route/path").stringValue())
         assertFalse(entry.has("audience"))
+
+        val hiddenEntry = responseJson[1]
+        assertEquals("thema-concept-detail", hiddenEntry.requiredAt("/name").stringValue())
+        assertTrue(hiddenEntry.requiredAt("/hidden").booleanValue())
+        assertEquals("/thema-concept/:id", hiddenEntry.requiredAt("/route/path").stringValue())
     }
 }

@@ -16,7 +16,7 @@
 import NoMatchPage from "../pages/NoMatchPage";
 
 /**
- * Temporary content for menu entries until the templated (#170) and custom (#171) renderers exist.
+ * Temporary content for `custom` menu entries until the custom renderer (#171) exists.
  */
 const MenuEntryPlaceholder = () => <NoMatchPage />;
 

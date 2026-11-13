@@ -34,6 +34,7 @@ class IkoMockServer {
 
     var tokenResponse: () -> MockResponse = { token(expiresIn = 300) }
     var adpResponse: () -> MockResponse = { json("{}") }
+    var adpHandler: (RecordedRequest) -> MockResponse = { adpResponse() }
 
     init {
         server.dispatcher =
@@ -42,7 +43,7 @@ class IkoMockServer {
                     requests.add(request)
                     return when {
                         request.path == "/token" -> tokenResponse()
-                        request.path?.startsWith("/api/iko/") == true -> adpResponse()
+                        request.path?.startsWith("/api/iko/") == true -> adpHandler(request)
                         else -> MockResponse().setResponseCode(404)
                     }
                 }
@@ -69,6 +70,7 @@ class IkoMockServer {
         requests.clear()
         tokenResponse = { token(expiresIn = 300) }
         adpResponse = { json("{}") }
+        adpHandler = { adpResponse() }
     }
 
     fun shutdown() {

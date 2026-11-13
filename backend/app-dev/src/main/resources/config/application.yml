@@ -122,6 +122,11 @@ nl-portal:
                 url: http://localhost:8001
                 clientId: nl-portal
                 secret: DGXJs3GKU84LFZWWfdb!nk6gpL6mL9@A
+        portal-pages:
+            enabled: true
+            properties:
+                object:
+                    object-type-url: http://localhost:8010/api/v2/objecttypes/5f2d9a3e-7b41-4c6e-9a0d-2e8f1c4b6a70
         objectenapi:
             enabled: true
             properties:
@@ -215,34 +220,118 @@ nl-portal:
             overview-maintenance-alert-enabled: true
             menu-entries-enabled: true
         menu-entries:
-            -   name: thema-concept
-                icon: ParkingIcon
-                group: 2
-                ordering: 0
+            -   name: over-ons
+                icon: DocumentIcon
+                group: 99
                 route:
-                    type: templated
-                    page: template-a
-                    path: /thema-concept
-            -   name: bedrijf-pagina
-                icon: InboxIcon
-                audience: [ bedrijf ]
+                    type: portal-page
+                    page: over-ons
+                    path: /over-ons
+            -   name: contact
+                icon: DocumentIcon
+                group: 99
                 route:
-                    type: templated
-                    page: template-b
-                    path: /bedrijf-pagina
-            -   name: extern-portaal
+                    type: portal-page
+                    page: contact
+                    path: /contact
+            -   name: mijn-producten
                 icon: GridIcon
-                group: 9
+                group: 99
+                audience: [ burger, bedrijf ]
                 route:
-                    type: custom
-                    page: remote-a
-                    path: /extern
-            -   name: botsing
-                icon: CheckCircleIcon
+                    type: portal-page
+                    page: mijn-producten
+                    path: /mijn-producten
+            -   name: mijn-product
+                hidden: true
+                audience: [ burger, bedrijf ]
                 route:
-                    type: templated
-                    page: template-c
-                    path: /taken
+                    type: portal-page
+                    page: mijn-product
+                    path: /mijn-producten/:id
+            -   name: erfpacht
+                icon: BuildingIcon
+                group: 99
+                audience: [ burger, bedrijf ]
+                conditional:
+                    thema: Erfpacht
+                route:
+                    type: portal-page
+                    page: erfpacht
+                    path: /erfpacht
+            -   name: erfpacht-product
+                hidden: true
+                audience: [ burger, bedrijf ]
+                conditional:
+                    thema: Erfpacht
+                route:
+                    type: portal-page
+                    page: erfpacht-product
+                    path: /erfpacht/:id
+        pages:
+            over-ons:
+                type: static
+                template:
+                    source: file
+                    params:
+                        file: over-ons.portal-page-template.json
+            contact:
+                type: static
+                template:
+                    source: object
+                    params:
+                        object-url: http://localhost:8010/api/v2/objects/8a3c2e1f-4d5b-4f6a-9c7e-1b2d3f4a5c60
+            mijn-producten:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: mijn-producten.portal-page-template.json
+                bindings:
+                    producten:
+                        resolver: openproduct
+                        params:
+                            page: 0
+                            size: 5
+                        overrides: [ page ]
+                        projection: '{items: [.results[] | {id: .uuid, naam, type: .producttype.naam, status, startDatum: .start_datum, prijs}], total: .count}'
+            mijn-product:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: mijn-product.portal-page-template.json
+                bindings:
+                    product:
+                        resolver: openproduct
+                        projection: '{naam, type: .producttype.naam, status, startDatum: .start_datum, eindDatum: .eind_datum, prijs, frequentie}'
+            erfpacht:
+                type: dynamic
+                template:
+                    source: file
+                    params:
+                        file: erfpacht.portal-page-template.json
+                bindings:
+                    producten:
+                        resolver: openproduct
+                        params:
+                            product-type-code: ERFPACHT
+                            page: 0
+                            size: 5
+                        overrides: [ page ]
+                        projection: '{items: [.results[] | {id: .uuid, naam, status, startDatum: .start_datum}], total: .count}'
+            erfpacht-product:
+                type: dynamic
+                template:
+                    source: binding
+                    binding: product
+                bindings:
+                    product:
+                        resolver: openproduct
+                        params:
+                            product-type-code: ERFPACHT
+                            content-label: klantportaal
+                        projection: '{naam, start_datum, eind_datum, status, prijs}'
         modules-whitelist:
             - zakenapi
             - product

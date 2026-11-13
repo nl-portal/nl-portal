@@ -26,6 +26,7 @@ class FrontendConfigurationProperties {
     var toggles: FrontendToggles = FrontendToggles()
     var modulesWhitelist: List<String> = emptyList()
     var menuEntries: List<FrontendMenuEntryProperties> = emptyList()
+    var pages: Map<String, PortalPageProperties> = emptyMap()
 
     class FrontendTheme(
         var style: String? = null,
@@ -72,6 +73,8 @@ class FrontendConfigurationProperties {
         var group: Int? = null,
         var ordering: Int? = null,
         var audience: List<String> = emptyList(),
+        var hidden: Boolean = false,
+        var conditional: Map<String, String> = mutableMapOf(),
         var route: FrontendMenuRouteProperties = FrontendMenuRouteProperties(),
     )
 
@@ -79,5 +82,28 @@ class FrontendConfigurationProperties {
         var type: String = "",
         var page: String = "",
         var path: String = "",
+    )
+
+    class PortalPageProperties(
+        var type: String = "",
+        var template: PortalPageTemplateProperties? = null,
+        var bindings: Map<String, PortalPageBindingProperties> = linkedMapOf(),
+    )
+
+    /**
+     * @property source the template source type: `binding`, or the type of a `PortalPageTemplateSource` bean
+     * @property binding the alias whose resolver supplies the template, for the `binding` source only
+     */
+    class PortalPageTemplateProperties(
+        var source: String = "",
+        var binding: String? = null,
+        var params: Map<String, String> = linkedMapOf(),
+    )
+
+    class PortalPageBindingProperties(
+        var resolver: String = "",
+        var params: Map<String, String> = linkedMapOf(),
+        var overrides: List<String> = emptyList(),
+        var projection: String = "{}",
     )
 }

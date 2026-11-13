@@ -18,6 +18,12 @@ import { Messages, DEFAULT_LOCALES } from "@nl-portal/nl-portal-localization";
 export const EN_GB_MESSAGES: Messages = {
   [DEFAULT_LOCALES.ENGLISH]: {
     "app.appName": "NL Portal App",
+    "menu-entries.over-ons": "About us",
+    "menu-entries.contact": "Contact",
+    "menu-entries.mijn-producten": "My products",
+    "menu-entries.mijn-product": "Product details",
+    "menu-entries.erfpacht": "Ground lease",
+    "menu-entries.erfpacht-product": "Ground lease details",
     "pageTitles.sample": "Theme sample",
     "pageTitles.parkerenHistory": "Parking history",
     "pageTitles.parkerenMutate": "Change parking",

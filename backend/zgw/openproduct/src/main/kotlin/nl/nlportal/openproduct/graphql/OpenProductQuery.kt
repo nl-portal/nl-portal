@@ -87,6 +87,59 @@ class OpenProductQuery(
             themaId = themaId,
         )
 
+    @QueryMapping
+    suspend fun getOpenProductZaken(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+    ): List<Zaak> =
+        openProductService.getProductZaken(
+            authentication = authentication,
+            id = id,
+        )
+
+    @QueryMapping
+    suspend fun getOpenProductTaken(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+    ): List<TaakV2> =
+        openProductService.getProductTaken(
+            authentication = authentication,
+            id = id,
+        )
+
+    @QueryMapping
+    suspend fun getOpenProductDocumenten(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+    ): List<Document> =
+        openProductService.getProductDocumenten(
+            authentication = authentication,
+            id = id,
+        )
+
+    @QueryMapping
+    suspend fun getOpenProductDecisions(
+        authentication: CommonGroundAuthentication,
+        @Argument id: UUID,
+    ): List<ObjectNode> {
+        val product =
+            openProductService.getProduct(
+                authentication = authentication,
+                id = id,
+            )
+
+        if (product == null) {
+            return emptyList()
+        }
+
+        val result =
+            openProductDmnService.getProductDecision(
+                product = product,
+            )
+
+        return Mapper.get().convertValue(result, object : TypeReference<List<ObjectNode>>() {})
+    }
+
     @SchemaMapping(typeName = "OpenProductProduct", field = "zaken")
     suspend fun zaken(
         authentication: CommonGroundAuthentication,

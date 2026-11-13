@@ -1,0 +1,26 @@
+{
+  "naam": "Mijn producten",
+  "template": "{% page-header title: \"titel\" %}{% endpage-header %}\n{% if errors.producten %}{% alert variant: \"error\" %}{{ 'fout' | i18n }}{% endalert %}{% else %}\n{% table title: \"overzicht\" binding: \"producten\" page-param: \"page\" page-size: 5 total: producten.total %}\n{{ 'naam' | i18n }} | {{ 'type' | i18n }} | {{ 'status' | i18n }} | {{ 'startdatum' | i18n }} | {{ 'prijs' | i18n }}\n{% for product in producten.items %}[{{ product.naam }}](/mijn-producten/{{ product.id }}) | {{ product.type }} | {{ product.status | capitalize }} | {{ product.startDatum | date }} | {{ product.prijs | currency }}\n{% endfor %}{% endtable %}{% endif %}\n",
+  "messages": {
+    "nl-NL": {
+      "titel": "Mijn producten",
+      "overzicht": "Overzicht",
+      "naam": "Naam",
+      "type": "Soort",
+      "status": "Status",
+      "startdatum": "Startdatum",
+      "prijs": "Prijs",
+      "fout": "Uw producten kunnen nu niet worden opgehaald. Probeer het later opnieuw."
+    },
+    "en-GB": {
+      "titel": "My products",
+      "overzicht": "Overview",
+      "naam": "Name",
+      "type": "Type",
+      "status": "Status",
+      "startdatum": "Start date",
+      "prijs": "Price",
+      "fout": "Your products can't be retrieved right now. Please try again later."
+    }
+  }
+}

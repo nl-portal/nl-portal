@@ -24,6 +24,7 @@ object Versions {
     const val commonsCodec = "1.22.0"
     const val graphqlJava = "25.0"
     const val graphqlJavaScalars = "24.0"
+    const val jacksonJq = "2.0.0-alpha2"
     const val kotlinLogging = "7.0.13"
     const val springCloud = "5.0.4"
     const val httpCore5 = "5.4.4" // override Boot 4.1.0 BOM (5.4.2), CVE-2026-54399/-54428 fix

@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "title": "PortaalPaginaTemplate",
+    "description": "Template en teksten van een NL Portal-pagina, schema 1.0.0",
+    "required": [
+        "naam",
+        "template"
+    ],
+    "properties": {
+        "naam": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Naam voor redacteuren om het object terug te vinden; wordt niet getoond"
+        },
+        "template": {
+            "type": "string",
+            "minLength": 1,
+            "description": "De Liquid-template van de pagina"
+        },
+        "messages": {
+            "type": "object",
+            "description": "Teksten per portal-locale (nl-NL, en-GB), per message id",
+            "propertyNames": {
+                "pattern": "^[a-z]{2,3}-[A-Z]{2}$"
+            },
+            "additionalProperties": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

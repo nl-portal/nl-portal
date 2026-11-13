@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":payment-direct"))
     implementation(project(":zgw:zaken"))
     implementation(project(":zgw:openproduct"))
+    implementation(project(":iko-api"))
     implementation(project(":product"))
     implementation(project(":zgw:verificatie"))
     implementation(project(":case"))

@@ -39,6 +39,11 @@ dependencies {
 
     // Jackson
     api(Dependencies.jacksonKotlinModule)
+    api(Dependencies.kotlinCoroutines)
+    api(Dependencies.kotlinCoroutinesReactor)
+    implementation(Dependencies.jacksonJq)
+    implementation(Dependencies.jacksonJqJackson3)
+    implementation(Dependencies.jacksonJqJoni)
 
     api(Dependencies.commonsCodec)
 
