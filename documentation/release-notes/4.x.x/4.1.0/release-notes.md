@@ -7,6 +7,7 @@
 * **Menu-items vanuit de backend.** Beheerders kunnen extra menu-items configureren onder `nl-portal.frontend.menu-entries` voor LiquidJS-pagina's (`templated`) en module federation-pagina's (`custom`) in de standaard app-image. Per item zijn groep, volgorde, icoon en doelgroep (`burger`, `bedrijf`, `subject`) in te stellen. De functionaliteit staat standaard uit. Zie [Menu-items vanuit de backend](../../../features/menu-entries.md).
   * Beide types tonen voorlopig een placeholder ("Pagina niet gevonden").
   * De frontend haalt de items op via het nieuwe endpoint `GET /api/frontend/menu`. Dit endpoint valt buiten `/api/public/**` en vereist dus een JWT.
+* **IKO API-module.** De nieuwe backend-library `iko-api` is de API-module voor communicatie met IKO. Deze eerste versie ondersteunt alleen het lezen van Aggregated Data Profiles voor de ingelogde burger of het ingelogde bedrijf. De module staat standaard uit, voegt geen GraphQL- of REST-endpoints toe en zit niet in de standaard app-images; voor bestaande installaties verandert er niets. Zie [IKO API](../../../configuratie/iko-api.md).
 
 ## Bugfixes
 
