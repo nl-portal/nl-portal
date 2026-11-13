@@ -15,12 +15,16 @@
  */
 package nl.nlportal.ikoapi.client
 
+import io.github.oshai.kotlinlogging.KotlinLogging
+import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.ikoapi.client.IkoApiConfig.IkoApiConfigProperties
+import nl.nlportal.ikoapi.autoconfigure.IkoApiModuleConfiguration.IkoApiConfigurationProperties
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.http.codec.json.JacksonJsonDecoder
 import org.springframework.http.codec.json.JacksonJsonEncoder
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
+import reactor.netty.http.client.HttpClient
 import tools.jackson.databind.JsonNode
 
 class IkoApiClient(
@@ -45,19 +49,31 @@ class IkoApiClient(
             .awaitBodyOrNull<JsonNode>()
 
     companion object {
+        private val logger = KotlinLogging.logger {}
+
         /**
          * Builds a client for the configured IKO instance, authenticated with a client-credentials token from IKO's Keycloak realm.
+         *
+         * When both [clientSslContextResolver] and `ssl` are set, calls to IKO use that SSL context. The token call to Keycloak does not.
          *
          * @throws IllegalArgumentException when `url`, `token-url`, `client-id` or `client-secret` is missing
          */
         fun create(
-            properties: IkoApiConfigProperties,
+            properties: IkoApiConfigurationProperties,
             webClientBuilder: WebClient.Builder,
+            clientSslContextResolver: ClientSslContextResolver? = null,
         ): IkoApiClient =
             IkoApiClient(
                 webClientBuilder
                     .clone()
-                    .baseUrl(requireNotNull(properties.url) { "nl-portal.config.ikoapi.properties.url is required" }.toString().trimEnd('/'))
+                    .also { builder ->
+                        val ssl = properties.ssl
+                        if (clientSslContextResolver != null && ssl != null) {
+                            val sslContext = clientSslContextResolver.resolve(ssl.key, ssl.trustedCertificate)
+                            builder.clientConnector(ReactorClientHttpConnector(HttpClient.create().secure { it.sslContext(sslContext) }))
+                            logger.debug { "Client SSL context was set: private key=${ssl.key != null}, trusted certificate=${ssl.trustedCertificate != null}." }
+                        }
+                    }.baseUrl(requireNotNull(properties.url) { "nl-portal.config.ikoapi.properties.url is required" }.toString().trimEnd('/'))
                     .codecs {
                         with(it.defaultCodecs()) {
                             maxInMemorySize(16 * 1024 * 1024)

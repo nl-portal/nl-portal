@@ -16,6 +16,10 @@ De module staat standaard uit en zit niet in de standaard app-images.
 | `nl-portal.config.ikoapi.properties.client-id` | `NLPORTAL_CONFIG_IKOAPI_PROPERTIES_CLIENTID` | Client van NL Portal in de IKO-realm |
 | `nl-portal.config.ikoapi.properties.client-secret` | `NLPORTAL_CONFIG_IKOAPI_PROPERTIES_CLIENTSECRET` | Secret van die client |
 | `nl-portal.config.ikoapi.properties.allowed-profiles` | `NLPORTAL_CONFIG_IKOAPI_PROPERTIES_ALLOWEDPROFILES` | Kommagescheiden namen van de ADP's die NL Portal mag opvragen. Standaard leeg: elk profiel wordt dan geweigerd |
+| `nl-portal.config.ikoapi.properties.ssl.key.cert-chain` | `NLPORTAL_CONFIG_IKOAPI_PROPERTIES_SSL_KEY_CERTCHAIN` | Optioneel. Locatie van de certificaatketen voor een clientcertificaat |
+| `nl-portal.config.ikoapi.properties.ssl.key.key` | `NLPORTAL_CONFIG_IKOAPI_PROPERTIES_SSL_KEY_KEY` | Optioneel. Locatie van de private key bij dat certificaat |
+| `nl-portal.config.ikoapi.properties.ssl.key.key-password` | `NLPORTAL_CONFIG_IKOAPI_PROPERTIES_SSL_KEY_KEYPASSWORD` | Optioneel. Wachtwoord van de private key, als die versleuteld is |
+| `nl-portal.config.ikoapi.properties.ssl.trusted-certificate` | `NLPORTAL_CONFIG_IKOAPI_PROPERTIES_SSL_TRUSTEDCERTIFICATE` | Optioneel. Locatie van een extra vertrouwd certificaat, bijvoorbeeld van een gateway met een eigen CA |
 
 Met de module aan zijn `url`, `token-url`, `client-id` en `client-secret` verplicht. Ontbreekt er een, dan start de applicatie niet en meldt `nl-portal.config.ikoapi.properties.<naam> is required`. Lege waarden worden bij het opstarten niet afgevangen.
 
@@ -33,6 +37,24 @@ nl-portal:
                 client-secret: ${NLPORTAL_CONFIG_IKOAPI_PROPERTIES_CLIENTSECRET}
                 allowed-profiles: personen
 ```
+
+### SSL
+
+Met `ssl` stel je een clientcertificaat en/of een extra vertrouwd certificaat in voor de verbinding met IKO, net als bij de andere API-modules. Dat is nodig als IKO achter een gateway staat die een clientcertificaat vraagt of een certificaat van een eigen CA gebruikt. De waarden zijn locaties, geen PEM-tekst: `file:/pad/naar/cert.pem` of `classpath:/ssl/cert.pem`.
+
+```yaml
+nl-portal:
+    config:
+        ikoapi:
+            properties:
+                ssl:
+                    key:
+                        cert-chain: file:/etc/nl-portal/iko/client-cert.pem
+                        key: file:/etc/nl-portal/iko/client-key.pem
+                    trusted-certificate: file:/etc/nl-portal/iko/gateway-ca.pem
+```
+
+`ssl` geldt alleen voor de aanroepen naar IKO. Het ophalen van het token bij Keycloak (`token-url`) gebruikt de truststore van de JVM.
 
 ## Keycloak-voorwaarden (IKO-realm)
 

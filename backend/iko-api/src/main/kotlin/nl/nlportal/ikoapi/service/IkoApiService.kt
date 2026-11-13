@@ -21,7 +21,7 @@ import nl.nlportal.commonground.authentication.BurgerAuthentication
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.ikoapi.client.IkoApiClient
-import nl.nlportal.ikoapi.client.IkoApiConfig.IkoApiConfigProperties
+import nl.nlportal.ikoapi.autoconfigure.IkoApiModuleConfiguration.IkoApiConfigurationProperties
 import nl.nlportal.ikoapi.domain.IkoContainerParam
 import nl.nlportal.ikoapi.domain.IkoErrorResponse
 import org.springframework.http.HttpStatus
@@ -36,7 +36,7 @@ import java.util.Base64
  */
 class IkoApiService(
     private val ikoApiClient: IkoApiClient,
-    private val properties: IkoApiConfigProperties,
+    private val properties: IkoApiConfigurationProperties,
 ) {
     /**
      * @return the profile JSON as returned by IKO, or `null` when the user has no BSN or KVK or IKO answers 404

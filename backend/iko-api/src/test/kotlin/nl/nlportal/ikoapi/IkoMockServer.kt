@@ -16,7 +16,7 @@
 package nl.nlportal.ikoapi
 
 import nl.nlportal.ikoapi.client.IkoApiClient
-import nl.nlportal.ikoapi.client.IkoApiConfig.IkoApiConfigProperties
+import nl.nlportal.ikoapi.autoconfigure.IkoApiModuleConfiguration.IkoApiConfigurationProperties
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -51,8 +51,8 @@ class IkoMockServer {
         server.start()
     }
 
-    fun properties(allowedProfiles: List<String> = emptyList()): IkoApiConfigProperties =
-        IkoApiConfigProperties().apply {
+    fun properties(allowedProfiles: List<String> = emptyList()): IkoApiConfigurationProperties =
+        IkoApiConfigurationProperties().apply {
             url = URI(server.url("/api/iko/").toString())
             tokenUrl = URI(server.url("/token").toString())
             clientId = "nl-portal"

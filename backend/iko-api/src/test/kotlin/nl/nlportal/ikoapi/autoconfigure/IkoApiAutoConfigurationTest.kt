@@ -15,8 +15,11 @@
  */
 package nl.nlportal.ikoapi.autoconfigure
 
+import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.core.ssl.ResourceClientSslContextResolver
+import nl.nlportal.core.ssl.StringClientSslContextResolver
 import nl.nlportal.ikoapi.client.IkoApiClient
-import nl.nlportal.ikoapi.client.IkoApiConfig.IkoApiConfigProperties
+import nl.nlportal.ikoapi.autoconfigure.IkoApiModuleConfiguration.IkoApiConfigurationProperties
 import nl.nlportal.ikoapi.service.IkoApiService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -84,7 +87,7 @@ class IkoApiAutoConfigurationTest {
 
     @Test
     fun `keeps a user-defined IkoApiService`() {
-        val custom = IkoApiService(IkoApiClient(WebClient.create()), IkoApiConfigProperties())
+        val custom = IkoApiService(IkoApiClient(WebClient.create()), IkoApiConfigurationProperties())
 
         contextRunner
             .withPropertyValues("nl-portal.config.ikoapi.enabled=true", *properties(requiredProperties))
@@ -92,6 +95,29 @@ class IkoApiAutoConfigurationTest {
             .run { context ->
                 assertThat(context).hasSingleBean(IkoApiService::class.java)
                 assertThat(context.getBean(IkoApiService::class.java)).isSameAs(custom)
+            }
+    }
+
+    @Test
+    fun `creates a ClientSslContextResolver when enabled`() {
+        contextRunner
+            .withPropertyValues("nl-portal.config.ikoapi.enabled=true", *properties(requiredProperties))
+            .run { context ->
+                assertThat(context).hasSingleBean(ClientSslContextResolver::class.java)
+                assertThat(context.getBean(ClientSslContextResolver::class.java)).isInstanceOf(ResourceClientSslContextResolver::class.java)
+            }
+    }
+
+    @Test
+    fun `keeps a user-defined ClientSslContextResolver`() {
+        val custom = StringClientSslContextResolver()
+
+        contextRunner
+            .withPropertyValues("nl-portal.config.ikoapi.enabled=true", *properties(requiredProperties))
+            .withBean("customClientSslContextResolver", ClientSslContextResolver::class.java, Supplier { custom })
+            .run { context ->
+                assertThat(context).hasSingleBean(ClientSslContextResolver::class.java)
+                assertThat(context.getBean(ClientSslContextResolver::class.java)).isSameAs(custom)
             }
     }
 
