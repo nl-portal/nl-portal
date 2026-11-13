@@ -39,6 +39,7 @@ import PageMetaData from "../components/PageMetaData";
 import { UserProvider } from "../contexts/UserContext";
 import { Themes } from "../interfaces/themes";
 import { MenuEntryRenderers } from "../utils/menu-entry-renderers";
+import { testMessages } from "../tests/mock/data/messages.mock";
 
 export const testPaths: Paths = {
   noMatch: "/404",
@@ -130,7 +131,7 @@ const TestContent = ({
   return (
     <MockWrapper>
       <MockedProvider mocks={mocks}>
-        <LocalizationProvider>
+        <LocalizationProvider customMessages={testMessages}>
           <NotificationProvider>
             <UserProvider>
               <AppProvider menuEntryRenderers={menuEntryRenderers}>

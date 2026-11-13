@@ -19,6 +19,8 @@ import { getPersoon } from "../data/persoon.mock";
 import { getProduct } from "../data/product.mock";
 import { getUnopenedBerichten } from "../data/unopened-berichten";
 
+import { getUserDigitaleAdressen } from "../data/userDigitaleAdressen.mock";
+
 const routes = [
   {
     path: testPaths.account,
@@ -33,7 +35,12 @@ const routes = [
 
 export const MockAccountPage = () => (
   <TestProvider
-    mocks={[getPersoon, getProduct, getUnopenedBerichten]}
+    mocks={[
+      getPersoon,
+      getUserDigitaleAdressen,
+      getProduct,
+      getUnopenedBerichten,
+    ]}
     routes={routes}
     initialIndex={0}
     initialEntries={[testPaths.account]}

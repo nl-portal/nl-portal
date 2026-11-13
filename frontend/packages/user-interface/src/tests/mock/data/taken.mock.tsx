@@ -39,6 +39,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -63,6 +64,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -87,6 +89,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -111,6 +114,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -135,6 +139,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -159,6 +164,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -183,6 +189,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -207,6 +214,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -231,6 +239,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
     {
@@ -255,6 +264,7 @@ const getContent = (size?: number) => {
       status: "OPEN",
       verloopdatum: "2024-06-15T21:59:59.999",
       version: "V1",
+      ogonebetaling: null,
       __typename: "TaakV2",
     },
   ];
@@ -295,7 +305,6 @@ export const getTakenById = {
     query: QUERY_GET_TAKEN_V2,
     variables: {
       zaakId: "82cb13cf-d2f9-4e3e-ac07-751373035ecb",
-      pageSize: 10,
     },
   },
   result: {
@@ -371,9 +380,12 @@ export const getTakenById = {
             status: "OPEN",
             verloopdatum: null,
             version: "V1",
+            ogonebetaling: null,
             __typename: "TaakV2",
           },
         ],
+        totalElements: 1,
+        totalPages: 1,
         __typename: "TaakPageV2",
       },
     },

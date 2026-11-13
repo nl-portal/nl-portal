@@ -18,6 +18,7 @@
 
 ## Bugfixes
 
+* Support voor uploaden naar een document api die niet de default is.
 * Het zijmenu wordt niet meer smaller op pagina's met veel tekst, is maximaal 18rem breed, en lange labels lopen door op een volgende regel.
 
 ## Migratie-instructies

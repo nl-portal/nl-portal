@@ -11,7 +11,7 @@
   --header-height: var(--denhaag-header-height);
   --breadcrumb-height: 50px;
   --top-height: calc(
-    var(--denhaag-header-md-height) + var(--breadcrumb-height)
+    var(--denhaag-header-lg-height, 7.5rem) + var(--breadcrumb-height)
   );
 
   @include mixins.breakpoint(desktop) {

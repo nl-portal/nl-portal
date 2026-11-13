@@ -60,13 +60,13 @@ class DocumentApisConfig {
                 .firstOrNull()
                 ?: throw NullPointerException("No documentapi configuration found for handling: $documentUrl")
 
-        class DocumentApiConfig {
-            var url: String = ""
-            var clientId: String? = null
-            var secret: String? = null
-            var rsin: String? = null
-            var documentTypeUrl: String? = null
-            var ssl: Ssl? = null
-        }
+        class DocumentApiConfig(
+            var url: String = "",
+            var clientId: String? = null,
+            var secret: String? = null,
+            var rsin: String = "",
+            var documentTypeUrl: String = "",
+            var ssl: Ssl? = null,
+        )
     }
 }

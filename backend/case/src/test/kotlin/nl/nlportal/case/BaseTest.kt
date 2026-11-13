@@ -15,8 +15,9 @@
  */
 package nl.nlportal.case
 
-import tools.jackson.databind.node.JsonNodeFactory
-import tools.jackson.databind.node.ObjectNode
+import java.io.InputStream
+import java.time.LocalDateTime
+import java.util.UUID
 import nl.nlportal.case.domain.Case
 import nl.nlportal.case.domain.CaseDefinition
 import nl.nlportal.case.domain.CaseDefinitionId
@@ -28,14 +29,11 @@ import nl.nlportal.case.domain.Submission
 import nl.nlportal.case.repository.CaseRepository
 import nl.nlportal.case.service.CaseDefinitionService
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.messaging.out.PortalMessage
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import reactor.core.publisher.Sinks
-import java.io.InputStream
-import java.time.LocalDateTime
-import java.util.UUID
 import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.node.JsonNodeFactory
+import tools.jackson.databind.node.ObjectNode
 
 abstract class BaseTest {
     @Mock
@@ -43,9 +41,6 @@ abstract class BaseTest {
 
     @Mock
     lateinit var caseDefinitionService: CaseDefinitionService
-
-    @Mock
-    lateinit var sink: Sinks.Many<PortalMessage>
 
     fun baseSetUp() {
         MockitoAnnotations.openMocks(this)

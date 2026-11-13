@@ -44,30 +44,30 @@ See [Running the application](#running-the-application).
 All ports below are exposed via the `localhost` helper container (the services share its
 network namespace), so from your host every service is reachable on `localhost:<port>`.
 
-| Service                                 | Port  | Profile / RUN_MODE|
-|-----------------------------------------|-------|-------------------|
-| NL Portal Backend (build from source)   | 8080  | RUN_MODE=local    |
-| NL Portal Frontend (build from source)  | 3000  | RUN_MODE=local    |
-| NL Portal Backend (published image)     | 8080  | RUN_MODE=remote   |
-| NL Portal Frontend (published image)    | 3000  | RUN_MODE=remote   |
-| NL Portal Database (postgres)           | 5432 | - (core)          |
-| Keycloak                                | 8082  | - (core)          |
-| Keycloak Database (postgres)            | -     | - (core)          |
-| Open Zaak                               | 8001  | zgw, openzaak     |
-| Open Zaak Database (postgis)            | -     | zgw, openzaak     |
-| OpenKlant 2                             | 8014  | zgw, openklant    |
-| OpenKlant 2 Database (postgres)         | -     | zgw, openklant    |
-| Open Object                             | 8010  | zgw, objecten     |
-| Open Notificaties                       | 8012  | zgw, objecten     |
-| OpenProduct                             | 8015  | zgw, openproduct  |
-| Redis                                   | -     | zgw (sub-profiles)|
-| Haalcentraal BRP                        | 5010  | haalcentraal      |
-| Haalcentraal Bewoning                   | 5011  | haalcentraal      |
-| Configuration Panel Router              | 3001  | config            |
-| Configuration Panel Backend             | 8090  | config            |
-| Configuration Panel Frontend            | 8091  | config            |
-| Configuration Panel Database (postgres) | -     | config            |
-| ClamAV virus scan                       | 3310  | (default)         |
+| Service                                 | Port | Profile / RUN_MODE                                                                                          |
+|-----------------------------------------|------|-------------------------------------------------------------------------------------------------------------|
+| NL Portal Backend (build from source)   | 8080 | `RUN_MODE=local`                                                                                            |
+| NL Portal Frontend (build from source)  | 3000 | `RUN_MODE=local`                                                                                            |
+| NL Portal Backend (published image)     | 8080 | `RUN_MODE=remote`                                                                                           |
+| NL Portal Frontend (published image)    | 3000 | `RUN_MODE=remote`                                                                                           |
+| NL Portal Database (postgres)           | 5432 | -                                                                                                           |
+| Keycloak                                | 8082 | -                                                                                                           |
+| Keycloak Database (postgres)            | -    | -                                                                                                           |
+| ClamAV virus scan                       | 3310 | -                                                                                                           |
+| Open Zaak                               | 8001 | `--profile zgw`, `--profile openzaak`                                                                       |
+| Open Zaak Database (postgis)            | -    | `--profile zgw`, `--profile openzaak`                                                                       |
+| OpenKlant 2                             | 8014 | `--profile zgw`, `--profile openklant`                                                                      |
+| OpenKlant 2 Database (postgres)         | -    | `--profile zgw`, `--profile openklant`                                                                      |
+| Open Object                             | 8010 | `--profile zgw`, `--profile objecten`                                                                       |
+| Open Notificaties                       | 8012 | `--profile zgw`, `--profile objecten`                                                                       |
+| OpenProduct                             | 8015 | `--profile zgw`, `--profile openproduct`                                                                    |
+| Redis                                   | -    | `--profile zgw`, `--profile openzaak`, `--profile objecten`, `--profile openklant`, `--profile openproduct` |
+| Haalcentraal BRP                        | 5010 | `--profile haalcentraal`                                                                                    |
+| Haalcentraal Bewoning                   | 5011 | `--profile haalcentraal`                                                                                    |
+| Configuration Panel Router              | 3001 | `--profile config`                                                                                          |
+| Configuration Panel Backend             | 8090 | `--profile config`                                                                                          |
+| Configuration Panel Frontend            | 8091 | `--profile config`                                                                                          |
+| Configuration Panel Database (postgres) | -    | `--profile config`                                                                                          |
 
 > **NB!** `RUN_MODE` selects exactly one app-run mode, so `local` and `remote` can never bind the
 > app ports 8080/3000 at the same time. ClamAV now runs by default (no profile) and virus scanning is
@@ -144,7 +144,7 @@ To run only the supporting services (e.g. when running the application from your
 leave `RUN_MODE` at its default (`sources`), which starts no app container. Two options:
 - Including all ZGW related services, like Open Zaak, Open Klant and Open Object (Objects API and
   Objecttypes API, served together by one container)
-- Keycloak and database only
+- Core services only (Keycloak, database and ClamAV)
 
 #### Including all ZGW related services
 Execute the following command:
@@ -182,17 +182,7 @@ docker compose --profile haalcentraal up -d
 | Haalcentraal BRP |    5010     |
 | Haalcentraal Bewoning     |    5011     |
 
-#### ClamAV virusscanner only
-Execute the following command:
-```shell
-docker compose --profile clamav up -d
-```
-
-| Service               | Mapped port |
-|-----------------------|:-----------:|
-| ClamAV                |    3310     |
-
-#### Keycloak and database only
+#### Core services only
 Execute the following command: 
 ```shell
 docker compose up -d
@@ -203,12 +193,13 @@ docker compose up -d
 | NL Portal database (postgres) |  5432         |
 | Keycloak |  8082         |
 | Keycloak database (postgres) |    -   |
+| ClamAV |    3310   |
 
 
 #### To run all containers Keycloak, ZGW related services, HaalCentraal and ClamAV
 Execute the following command:
 ```shell
-docker compose --profile zgw --profile haalcentraal --profile clamav up -d
+docker compose --profile zgw --profile haalcentraal up -d
 ```
 
 ## Maintenance
