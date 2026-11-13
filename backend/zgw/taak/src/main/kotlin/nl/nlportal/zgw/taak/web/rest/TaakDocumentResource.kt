@@ -15,9 +15,9 @@
  */
 package nl.nlportal.zgw.taak.web.rest
 
+import java.util.UUID
 import kotlinx.coroutines.reactive.awaitSingle
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.documentenapi.client.DocumentApisConfig
 import nl.nlportal.documentenapi.domain.VirusScanStatus
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 
 @RestController
 @RequestMapping(value = ["/api/taak"])
@@ -41,7 +40,6 @@ class TaakDocumentResource(
     private val taakService: TaakService,
     private val documentenApiService: DocumentenApiService,
     private val virusScanService: VirusScanService?,
-    private val documentApisConfig: DocumentApisConfig,
 ) {
     @PostMapping(
         value = ["/{taakId}/document/content"],
@@ -52,8 +50,20 @@ class TaakDocumentResource(
         @RequestPart("file") file: FilePart,
         @RequestPart("informatieobjecttype", required = false) informatieobjecttype: String?,
         authentication: CommonGroundAuthentication,
+        @RequestPart("beschrijving", required = false) beschrijving: String? = null,
+        @RequestPart("documentapi", required = false) documentapi: String? = null,
     ): ResponseEntity<Any> {
         taakService.getTaakByIdV2(taakId, authentication)
+
+        if ((beschrijving?.length ?: 0) > 1000) {
+            return ResponseEntity(
+                mapOf(
+                    "error" to "BESCHRIJVING_TOO_LONG",
+                    "message" to "beschrijving may not be longer than 1000 characters",
+                ),
+                HttpStatus.BAD_REQUEST,
+            )
+        }
 
         val sanitizedFilename = FilenameSanitizer.sanitize(file.filename())
         val bufferedContent = bufferFileContent(file)
@@ -63,14 +73,14 @@ class TaakDocumentResource(
             return ResponseEntity(virusScanResult, HttpStatus.BAD_REQUEST)
         }
 
-        val documentApi = documentApisConfig.properties.defaultDocumentApi
         return try {
             ResponseEntity.ok(
                 documentenApiService.uploadDocument(
-                    bufferedContent,
-                    sanitizedFilename,
-                    documentApi,
-                    informatieobjecttype,
+                    content = bufferedContent,
+                    filename = sanitizedFilename,
+                    informatieobjecttype = informatieobjecttype,
+                    beschrijving = beschrijving,
+                    documentapi = documentapi,
                 ),
             )
         } catch (e: Exception) {

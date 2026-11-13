@@ -349,6 +349,8 @@ export const EN_GB_MESSAGES: Messages = {
     "footer.contact.buttonlabel": "Contact page",
     "footer.contact.button.url": "#url",
     "formio.fileUpload.error": "An error occurred while uploading the file.",
+    "formio.fileUpload.descriptionTooLong":
+      "The document description is too long. Please contact the municipality.",
     "formio.fileUpload.text": "Drag your file here or",
     "formio.fileUpload.buttonLabel": "Choose a file",
   },

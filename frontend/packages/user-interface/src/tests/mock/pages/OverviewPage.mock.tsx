@@ -20,6 +20,9 @@ import { OverviewPage } from "../../..";
 import { getZaken } from "../data/zaken.mock";
 import { getTaken } from "../data/taken.mock";
 
+import { getPersoon } from "../data/persoon.mock";
+import { getUserDigitaleAdressen } from "../data/userDigitaleAdressen.mock";
+
 const route = [
   {
     path: paths.overview,
@@ -38,7 +41,7 @@ const routeShowLessTasks = [
     children: [
       {
         index: true,
-        element: <OverviewPage fetchTasksLength={2} />,
+        element: <OverviewPage fetchTasksLengthDefault={2} />,
       },
     ],
   },
@@ -46,14 +49,24 @@ const routeShowLessTasks = [
 
 export const MockOverviewPage = () => (
   <TestProvider
-    mocks={[getZaken({ pageSize: 4 }), getTaken({ pageSize: 5 })]}
+    mocks={[
+      getPersoon,
+      getUserDigitaleAdressen,
+      getZaken({ pageSize: 4 }),
+      getTaken({ pageSize: 5 }),
+    ]}
     routes={route}
   ></TestProvider>
 );
 
 export const MockOverviewPageLessTasks = () => (
   <TestProvider
-    mocks={[getZaken({ pageSize: 4 }), getTaken({ pageSize: 2 })]}
+    mocks={[
+      getPersoon,
+      getUserDigitaleAdressen,
+      getZaken({ pageSize: 4 }),
+      getTaken({ pageSize: 2 }),
+    ]}
     routes={routeShowLessTasks}
   ></TestProvider>
 );
@@ -61,6 +74,8 @@ export const MockOverviewPageLessTasks = () => (
 export const MockOverviewPagePagination = () => (
   <TestProvider
     mocks={[
+      getPersoon,
+      getUserDigitaleAdressen,
       getZaken({ pageSize: 4, totalElements: 20 }),
       getTaken({ pageSize: 5 }),
     ]}

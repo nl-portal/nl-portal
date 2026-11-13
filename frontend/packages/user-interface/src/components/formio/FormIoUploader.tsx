@@ -15,7 +15,7 @@
  */
 import { Components } from "@formio/js";
 import { Root, createRoot } from "react-dom/client";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { get } from "lodash-es";
 import { FormField } from "@gemeente-denhaag/form-field";
 import { FormLabel } from "@gemeente-denhaag/form-label";
@@ -43,7 +43,10 @@ interface PortalFileUploadProps {
   onChange: (fileList: UploadedFile[]) => void;
   onUploadStart: (upload: Promise<void>) => void;
   onUploadEnd: (upload: Promise<void>) => void;
+  getClearCount: () => number;
   informatieobjecttype?: string;
+  documentapi?: string;
+  getBeschrijving?: () => string | undefined;
   initialValue?: UploadedFile[];
   taakId?: string;
 }
@@ -57,20 +60,38 @@ const PortalFileUpload = ({
   onChange,
   onUploadStart,
   onUploadEnd,
+  getClearCount,
   informatieobjecttype,
+  documentapi,
+  getBeschrijving,
   initialValue = [],
   taakId,
 }: PortalFileUploadProps) => {
-  const [error, setError] = useState(false);
+  const [errorMessageId, setErrorMessageId] = useState<string | null>(null);
   const [fileList, setFileList] = useState<UploadedFile[]>(initialValue);
+  const fileListRef = useRef(fileList);
 
   const intl = useIntl();
 
-  const handleError = (tempId?: string) => {
-    setError(true);
+  const updateFileList = (
+    update: (files: UploadedFile[]) => UploadedFile[],
+  ) => {
+    const files = update(fileListRef.current);
+    fileListRef.current = files;
+    setFileList(files);
+
+    // Add only the files that have been successfully uploaded to form.io.
+    onChange(files.filter((file) => file.isUploaded !== false && !!file.url));
+  };
+
+  const handleError = (
+    tempId?: string,
+    messageId = "formio.fileUpload.error",
+  ) => {
+    setErrorMessageId(messageId);
 
     if (tempId) {
-      setFileList((prev) => prev.filter((item) => item.id !== tempId));
+      updateFileList((prev) => prev.filter((item) => item.id !== tempId));
     }
   };
 
@@ -85,9 +106,10 @@ const PortalFileUpload = ({
     );
 
   const uploadFile = (file: File) => {
+    const clearCountAtUploadStart = getClearCount();
     const restUri = sessionStorage.getItem("REST_URI");
     const uploadLink = `${restUri}/taak/${taakId}/document/content`;
-    setError(false);
+    setErrorMessageId(null);
     const formData = new FormData();
     formData.append("file", file);
 
@@ -98,6 +120,15 @@ const PortalFileUpload = ({
       );
     }
 
+    const beschrijving = getBeschrijving?.();
+    if (beschrijving) {
+      formData.append("beschrijving", beschrijving);
+    }
+
+    if (documentapi) {
+      formData.append("documentapi", documentapi);
+    }
+
     const tempId = crypto.randomUUID();
     const tempItem: UploadedFile = {
       id: tempId,
@@ -106,7 +137,7 @@ const PortalFileUpload = ({
       isUploaded: false,
     };
 
-    setFileList((prev) => (multiple ? [tempItem, ...prev] : [tempItem]));
+    updateFileList((prev) => (multiple ? [tempItem, ...prev] : [tempItem]));
 
     const upload = fetch(uploadLink, {
       method: "POST",
@@ -117,20 +148,34 @@ const PortalFileUpload = ({
     })
       .then(async (response) => {
         if (!response.ok) {
-          handleError(tempId);
+          const errorResponse = await response.json().catch(() => null);
+          if (clearCountAtUploadStart !== getClearCount()) return;
+          handleError(
+            tempId,
+            errorResponse?.error === "BESCHRIJVING_TOO_LONG"
+              ? "formio.fileUpload.descriptionTooLong"
+              : undefined,
+          );
           return;
         }
 
         const jsonResponse = await response.json();
+        if (clearCountAtUploadStart !== getClearCount()) return;
+
+        if (typeof jsonResponse?.url !== "string" || !jsonResponse.url.trim()) {
+          handleError(tempId);
+          return;
+        }
+
         const uploadedFile: UploadedFile = {
           url: jsonResponse?.url,
           name: file.name,
           size: file.size,
         };
 
-        setError(false);
+        setErrorMessageId(null);
 
-        setFileList((prev) =>
+        updateFileList((prev) =>
           prev.map((item) =>
             item.id === tempId
               ? { ...item, ...uploadedFile, isUploaded: true }
@@ -139,6 +184,8 @@ const PortalFileUpload = ({
         );
       })
       .catch(() => {
+        if (clearCountAtUploadStart !== getClearCount()) return;
+
         handleError(tempId);
       });
 
@@ -151,21 +198,17 @@ const PortalFileUpload = ({
     });
   };
 
-  useEffect(() => {
-    onChange(fileList);
-  }, [fileList, onChange]);
-
   return (
-    <FormField invalid={error}>
+    <FormField invalid={errorMessageId !== null}>
       {!hideLabel && label && <FormLabel htmlFor={id}>{label}</FormLabel>}
-      {error && (
+      {errorMessageId && (
         <Alert
           close={() => {
-            setError(false);
+            setErrorMessageId(null);
           }}
           text={
             <Paragraph>
-              <FormattedMessage id="formio.fileUpload.error" />
+              <FormattedMessage id={errorMessageId} />
             </Paragraph>
           }
           title=""
@@ -191,10 +234,10 @@ const PortalFileUpload = ({
           name={file.name}
           size={String(file.size)}
           onClick={() =>
-            setFileList((prev) => prev.filter((item) => item.id !== file.id))
+            updateFileList((prev) => prev.filter((item) => item.id !== file.id))
           }
           removable
-          loading={!file.isUploaded}
+          loading={file.isUploaded === false || !file.url}
         />
       ))}
     </FormField>
@@ -205,6 +248,7 @@ const FieldComponent = Components.components.field;
 class FormIoUploader extends FieldComponent {
   private reactRoot: Root | null;
   private pendingUploads = new Set<Promise<void>>();
+  private clearCount = 0;
   static globalOidcToken = "";
 
   constructor(component: any, options: any, data: any) {
@@ -234,6 +278,26 @@ class FormIoUploader extends FieldComponent {
       type: "portalFileUpload",
     });
   }
+
+  static editForm = (...extend: any[]) =>
+    FieldComponent.editForm([
+      {
+        key: "data",
+        components: [
+          {
+            type: "textfield",
+            key: "beschrijvingPath",
+            label: "Beschrijving path",
+            input: true,
+            weight: 200,
+            placeholder: "e.g. bestanden.beschrijving",
+            tooltip:
+              "Dotted path into the form data whose value is stored as the description (beschrijving) of each uploaded document. Inside a data grid the path is first resolved against the uploader's own row. Use a hidden field with a default value for a static description.",
+          },
+        ],
+      },
+      ...extend,
+    ]);
 
   static register: () => void = () => {
     Components.addComponent("portalFileUpload", FormIoUploader);
@@ -266,7 +330,19 @@ class FormIoUploader extends FieldComponent {
     this.emit("fileUploadingEnd", upload);
   };
 
+  getBeschrijving = (): string | undefined => {
+    const path = this.component.beschrijvingPath;
+    if (!path) return undefined;
+
+    const value = get(this.data, path) ?? get(this.rootValue, path);
+    return typeof value === "string" && value.trim() ? value : undefined;
+  };
+
+  getClearCount = () => this.clearCount;
+
   deleteValue() {
+    // Ignore results from uploads started before the field was cleared.
+    this.clearCount++;
     super.deleteValue();
     this.pendingUploads?.forEach(this.onUploadEndHandler);
   }
@@ -297,7 +373,10 @@ class FormIoUploader extends FieldComponent {
           onChange={this.onChangeHandler}
           onUploadStart={this.onUploadStartHandler}
           onUploadEnd={this.onUploadEndHandler}
+          getClearCount={this.getClearCount}
           informatieobjecttype={this.component.informatieobjecttype || ""}
+          documentapi={this.component.documentapi || ""}
+          getBeschrijving={this.getBeschrijving}
           initialValue={this.dataValue}
           taakId={this.options.taakId}
         />

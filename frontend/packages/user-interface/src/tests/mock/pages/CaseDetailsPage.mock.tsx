@@ -84,6 +84,7 @@ export const MockCaseDetailsPageWithoutDocuments = () => (
       getObjectContactMomenten,
       getTakenById,
       getPersoon,
+      getUserDigitaleAdressen,
     ]}
     routes={routes}
     initialIndex={2}
@@ -104,6 +105,7 @@ export const MockCaseDetailsPageWithoutContactMoments = () => (
       cloneContactmomenten(),
       getTakenById,
       getPersoon,
+      getUserDigitaleAdressen,
     ]}
     routes={routes}
     initialIndex={2}

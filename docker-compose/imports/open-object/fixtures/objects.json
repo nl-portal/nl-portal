@@ -158,10 +158,19 @@
                         ]
                     },
                     {
+                        "key": "bestanden.beschrijvingPartnerID",
+                        "type": "hidden",
+                        "input": true,
+                        "label": "Beschrijving identiteitsbewijs partner",
+                        "defaultValue": "Kopie identiteitsbewijs partner",
+                        "tableView": false
+                    },
+                    {
                         "key": "bestanden.partnerID",
                         "type": "portalFileUpload",
                         "input": true,
                         "label": "Een kopie van het identiteitsbewijs van uw partner",
+                        "beschrijvingPath": "bestanden.beschrijvingPartnerID",
                         "tableView": false,
                         "conditional": {
                             "eq": true,
@@ -398,6 +407,265 @@
                         "multipleFiles": true
                     },
                     {
+                        "key": "bestanden.opTeVragenInformatie",
+                        "type": "datagrid",
+                        "input": true,
+                        "label": "",
+                        "reorder": false,
+                        "hideLabel": true,
+                        "initEmpty": false,
+                        "tableView": false,
+                        "attributes": {
+                            "aria-label": "Data Grid",
+                            "data-testid": "portaal-alo-informatieverzoek.opTeVragenInformatie"
+                        },
+                        "components": [
+                            {
+                                "key": "columns",
+                                "type": "columns",
+                                "input": false,
+                                "label": "",
+                                "columns": [
+                                    {
+                                        "pull": 0,
+                                        "push": 0,
+                                        "size": "md",
+                                        "width": 12,
+                                        "offset": 0,
+                                        "components": [
+                                            {
+                                                "key": "informatieverzoekItem.omschrijvingAanvrager",
+                                                "rows": 1,
+                                                "type": "textarea",
+                                                "input": true,
+                                                "label": "Aan te leveren document",
+                                                "disabled": true,
+                                                "tableView": true,
+                                                "autoExpand": true,
+                                                "applyMaskOn": "change",
+                                                "validateWhenHidden": false
+                                            },
+                                            {
+                                                "key": "informatieverzoekItem.toelichting",
+                                                "rows": 1,
+                                                "type": "textarea",
+                                                "input": true,
+                                                "label": "Toelichting",
+                                                "disabled": true,
+                                                "tableView": true,
+                                                "autoExpand": true,
+                                                "applyMaskOn": "change",
+                                                "conditional": {
+                                                    "json": {
+                                                        "and": [
+                                                            {
+                                                                "!=": [
+                                                                    {
+                                                                        "var": "row.informatieverzoekItem.toelichting"
+                                                                    },
+                                                                    null
+                                                                ]
+                                                            },
+                                                            {
+                                                                "!=": [
+                                                                    {
+                                                                        "var": "row.informatieverzoekItem.toelichting"
+                                                                    },
+                                                                    ""
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                "validateWhenHidden": false
+                                            },
+                                            {
+                                                "key": "container",
+                                                "input": false,
+                                                "label": "",
+                                                "hideLabel": true,
+                                                "tableView": false,
+                                                "attributes": {
+                                                    "aria-label": "Container"
+                                                },
+                                                "components": [
+                                                    {
+                                                        "key": "html",
+                                                        "type": "htmlelement",
+                                                        "attrs": [
+                                                            {
+                                                                "attr": "",
+                                                                "value": ""
+                                                            }
+                                                        ],
+                                                        "input": false,
+                                                        "label": "HTML",
+                                                        "content": "<div><div>\n <span style=\"font-weight: 500;\">Toegestane bestanden</span>: PDF, DOCX, XLSX, JPG, JPEG, MSG, EML en Open Documents\n</div><div><span style=\"font-weight: 500;\">Maximale bestandsgrootte</span>: 25 MB</div></div>",
+                                                        "className": "alert alert-info",
+                                                        "tableView": false,
+                                                        "refreshOnChange": false
+                                                    },
+                                                    {
+                                                        "key": "informatieverzoekItem.omschrijvingAanvrager",
+                                                        "type": "hidden",
+                                                        "input": true,
+                                                        "label": "Beschrijving identiteitsbewijs partner",
+                                                        "customDefaultValue": "value = \"Bestand \" + rowIndex",
+                                                        "tableView": false
+                                                    },
+                                                    {
+                                                        "key": "documentUpload",
+                                                        "type": "portalFileUpload",
+                                                        "input": true,
+                                                        "label": "Document upload",
+                                                        "validate": {
+                                                            "json": {
+                                                                "<=": [
+                                                                    {
+                                                                        "if": [
+                                                                            {
+                                                                                "var": "row.documentUpload"
+                                                                            },
+                                                                            {
+                                                                                "var": "row.documentUpload.length"
+                                                                            },
+                                                                            0
+                                                                        ]
+                                                                    },
+                                                                    10
+                                                                ]
+                                                            },
+                                                            "required": true
+                                                        },
+                                                        "hideLabel": true,
+                                                        "tableView": false,
+                                                        "beschrijvingPath": "informatieverzoekItem.omschrijvingAanvrager",
+                                                        "attributes": {
+                                                            "aria-label": "Document upload field"
+                                                        },
+                                                        "description": "Max. 10 bestanden",
+                                                        "multipleFiles": true
+                                                    },
+                                                    {
+                                                        "key": "html1",
+                                                        "type": "htmlelement",
+                                                        "input": false,
+                                                        "label": "HTML",
+                                                        "content": "<div>\nU kunt maximaal 10 bestanden uploaden!\n</div>",
+                                                        "className": "alert alert-danger",
+                                                        "tableView": false,
+                                                        "conditional": {
+                                                            "json": {
+                                                                ">": [
+                                                                    {
+                                                                        "if": [
+                                                                            {
+                                                                                "var": "row.documentUpload"
+                                                                            },
+                                                                            {
+                                                                                "var": "row.documentUpload.length"
+                                                                            },
+                                                                            0
+                                                                        ]
+                                                                    },
+                                                                    10
+                                                                ]
+                                                            }
+                                                        },
+                                                        "refreshOnChange": false
+                                                    }
+
+                                                ],
+                                                "conditional": {
+                                                    "eq": "true",
+                                                    "show": false,
+                                                    "when": "bestandNietAanleveren"
+                                                },
+                                                "validateWhenHidden": false
+                                            },
+                                            {
+                                                "key": "bestandNietAanleveren",
+                                                "type": "checkbox",
+                                                "input": true,
+                                                "label": "Ik kan het gevraagde document momenteel niet aanleveren",
+                                                "tableView": false,
+                                                "validateWhenHidden": false
+                                            },
+                                            {
+                                                "key": "bestandNietAanleverenToelichting",
+                                                "type": "textarea",
+                                                "input": true,
+                                                "label": "Toelichting",
+                                                "validate": {
+                                                    "required": true,
+                                                    "maxLength": 4000
+                                                },
+                                                "tableView": true,
+                                                "autoExpand": true,
+                                                "applyMaskOn": "change",
+                                                "conditional": {
+                                                    "eq": "true",
+                                                    "show": true,
+                                                    "when": "informatieverzoek.opTeVragenInformatie.bestandNietAanleveren"
+                                                },
+                                                "showCharCount": true,
+                                                "validateWhenHidden": false
+                                            }
+                                        ],
+                                        "currentWidth": 12
+                                    },
+                                    {
+                                        "pull": 0,
+                                        "push": 0,
+                                        "size": "md",
+                                        "width": 6,
+                                        "offset": 0,
+                                        "components": [],
+                                        "currentWidth": 6
+                                    }
+                                ],
+                                "hideLabel": true,
+                                "tableView": false
+                            }
+                        ],
+                        "layoutFixed": false,
+                        "enableRowGroups": false,
+                        "validateWhenHidden": false,
+                        "disableAddingRemovingRows": true,
+                        "defaultValue": [
+                            {
+                                "informatieverzoekItem": {
+                                    "categorie": [
+                                        "algemeen"
+                                    ],
+                                    "toelichting": "test",
+                                    "omschrijvingAanvrager": "De uitspraak van de rechtbank over Bewindvoering, Curatele of Mentorschap.",
+                                    "omschrijvingBehandelaar": "De beschikking van de rechtbank"
+                                }
+                            },
+                            {
+                                "informatieverzoekItem": {
+                                    "categorie": [
+                                        "woonsituatie"
+                                    ],
+                                    "toelichting": "1. Wanneer woonde u in het buitenland? Stuur bewijzen mee, zoals tickets of stempels in uw paspoort.\n2. Woonde u in een huurhuis of koophuis?\n3. Woonde u alleen of samen?",
+                                    "omschrijvingAanvrager": "Een brief waarin u schrijft over uw tijd in het buitenland.",
+                                    "omschrijvingBehandelaar": "Bewijs dat gewoond in buitenland"
+                                }
+                            },
+                            {
+                                "informatieverzoekItem": {
+                                    "categorie": [
+                                        "inkomen"
+                                    ],
+                                    "toelichting": "test",
+                                    "omschrijvingAanvrager": "De aangifte inkomstenbelasting over (vrij in te vullen ja(a)r(en)).",
+                                    "omschrijvingBehandelaar": "Aangifte inkomstenbelasting"
+                                }
+                            }
+                        ]
+                    },
+                    {
                         "key": "documenten",
                         "type": "hidden",
                         "input": true,
@@ -417,7 +685,10 @@
                             "/bestanden/belastingaanslag",
                             "/bestanden/jaarrekening",
                             "/bestanden/balansrekening",
-                            "/bestanden/bewijsVanInschrijving"
+                            "/bestanden/bewijsVanInschrijving",
+                            "/bestanden/opTeVragenInformatie/0/documentUpload",
+                            "/bestanden/opTeVragenInformatie/1/documentUpload",
+                            "/bestanden/opTeVragenInformatie/2/documentUpload"
                         ]
                     },
                     {

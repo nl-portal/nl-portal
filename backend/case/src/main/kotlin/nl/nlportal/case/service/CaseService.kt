@@ -15,9 +15,8 @@
  */
 package nl.nlportal.case.service
 
-import tools.jackson.databind.JsonNode
-import tools.jackson.databind.node.ObjectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
 import nl.nlportal.case.domain.Case
 import nl.nlportal.case.domain.CaseDefinition
 import nl.nlportal.case.domain.CaseDefinitionId
@@ -25,23 +24,16 @@ import nl.nlportal.case.domain.CaseId
 import nl.nlportal.case.domain.Status
 import nl.nlportal.case.domain.Submission
 import nl.nlportal.case.repository.CaseRepository
-import nl.nlportal.messaging.`in`.UpdateExternalIdPortalCaseMessage
-import nl.nlportal.messaging.`in`.UpdatePortalCaseMessage
-import nl.nlportal.messaging.`in`.UpdateStatusPortalCaseMessage
-import nl.nlportal.messaging.out.CreateExternalCaseMessage
-import nl.nlportal.messaging.out.ExternalIdUpdatedConfirmationMessage
-import nl.nlportal.messaging.out.PortalMessage
 import org.json.JSONObject
 import org.springframework.security.core.Authentication
 import org.springframework.transaction.annotation.Transactional
-import reactor.core.publisher.Sinks
-import java.util.UUID
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 @Transactional
 class CaseService(
     private val caseRepository: CaseRepository,
     private val caseDefinitionService: CaseDefinitionService,
-    private val sink: Sinks.Many<PortalMessage>,
 ) {
     fun create(
         caseDefinitionId: String,
@@ -68,13 +60,6 @@ class CaseService(
                 caseDefinitionId = caseDefinition.caseDefinitionId,
             )
         caseRepository.save(case)
-        sink.tryEmitNext(
-            CreateExternalCaseMessage(
-                case.caseId.value,
-                messageData,
-                caseDefinition.caseDefinitionId.value,
-            ),
-        )
         return case
     }
 
@@ -86,40 +71,6 @@ class CaseService(
     ): Case? = caseRepository.findCaseByCaseIdAndUserId(id, userId)
 
     fun getCase(externalId: String): Case? = caseRepository.findCaseByExternalId(externalId)
-
-    fun updateExternalId(updateExternalIdPortalCaseMessage: UpdateExternalIdPortalCaseMessage): Case {
-        logger.debug { "Received create case with external id: ${updateExternalIdPortalCaseMessage.externalId}" }
-        val case =
-            caseRepository
-                .findById(CaseId.existingId(updateExternalIdPortalCaseMessage.caseId))
-                .orElseThrow { NullPointerException() }
-        case.externalId = updateExternalIdPortalCaseMessage.externalId
-        caseRepository.save(case)
-        sendUpdateConfirmation(case.externalId!!)
-        return case
-    }
-
-    fun updateStatus(event: UpdateStatusPortalCaseMessage): Case {
-        logger.debug { "Received status update with status: ${event.status} with external id: ${event.externalId}" }
-        val case = caseRepository.findCaseByExternalId(event.externalId)!!
-        val caseDefinition = caseDefinitionService.findById(case.caseDefinitionId)!!
-        caseDefinition.statusDefinition.validateStatus(event.status)
-        case.changeStatus(Status(event.status))
-        caseRepository.save(case)
-        return case
-    }
-
-    fun updateCase(event: UpdatePortalCaseMessage): Case {
-        logger.debug { "Received case update with external id: ${event.externalId}" }
-        val case = caseRepository.findCaseByExternalId(event.externalId)!!
-        case.updateSubmission(event.properties)
-
-        val caseDefinition = caseDefinitionService.findById(case.caseDefinitionId)!!
-        caseDefinition.schema.validateCase(JSONObject(case.submission.value.toString()))
-
-        caseRepository.save(case)
-        return case
-    }
 
     private fun validateSubmissionAgainstSchema(
         submission: ObjectNode,
@@ -151,10 +102,6 @@ class CaseService(
             keys.add(json.asString())
         }
         return keys
-    }
-
-    private fun sendUpdateConfirmation(externalId: String) {
-        sink.tryEmitNext(ExternalIdUpdatedConfirmationMessage(externalId))
     }
 
     companion object {

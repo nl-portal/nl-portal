@@ -38,7 +38,6 @@ deploy:
           - haalcentraal-hr/build/sonatypeCentralStaging
           - haalcentraal2/build/sonatypeCentralStaging
           - iko-api/build/sonatypeCentralStaging
-          - messaging/build/sonatypeCentralStaging
           - payment-direct/build/sonatypeCentralStaging
           - portal-authentication/build/sonatypeCentralStaging
           - product/build/sonatypeCentralStaging
@@ -71,7 +70,6 @@ deploy:
           - haalcentraal-hr/build/sonatypeCentralStaging
           - haalcentraal2/build/sonatypeCentralStaging
           - iko-api/build/sonatypeCentralStaging
-          - messaging/build/sonatypeCentralStaging
           - payment-direct/build/sonatypeCentralStaging
           - portal-authentication/build/sonatypeCentralStaging
           - product/build/sonatypeCentralStaging

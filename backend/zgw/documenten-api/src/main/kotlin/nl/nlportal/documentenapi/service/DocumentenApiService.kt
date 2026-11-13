@@ -15,6 +15,7 @@
  */
 package nl.nlportal.documentenapi.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -62,15 +63,16 @@ class DocumentenApiService(
     suspend fun uploadDocument(
         content: ByteArray,
         filename: String,
-        documentApi: String,
         informatieobjecttype: String? = null,
+        beschrijving: String? = null,
+        documentapi: String? = null,
     ): Document {
+        val documentApi = documentapi ?: documentenApisConfigProperties.defaultDocumentApi
         val auteur =
             ReactiveSecurityContextHolder
                 .getContext()
                 .map { (it.authentication as PortalAuthentication).userId }
                 .awaitSingleOrNull() ?: "valtimo"
-        val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
 
         if (documentenApisConfigProperties.allowedMimeTypes.isNotEmpty()) {
             val mediaType = Tika().detect(content).split(";")[0].trim()
@@ -79,9 +81,11 @@ class DocumentenApiService(
             }
         }
 
+        val documentenApiConfig = documentenApisConfigProperties.getConfig(documentApi)
+
         return documentenApiClient.postDocument(
             PostEnkelvoudiginformatieobjectRequest(
-                bronorganisatie = documentenApiConfig.rsin!!,
+                bronorganisatie = documentenApiConfig.rsin,
                 creatiedatum = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
                 titel = filename,
                 auteur = auteur,
@@ -94,7 +98,8 @@ class DocumentenApiService(
                         .takeUnless {
                             it.isNullOrEmpty()
                         }
-                        ?: documentenApiConfig.documentTypeUrl!!,
+                        ?: documentenApiConfig.documentTypeUrl,
+                beschrijving = beschrijving.takeUnless { it.isNullOrBlank() },
             ),
             content,
             documentApi,
@@ -108,4 +113,8 @@ class DocumentenApiService(
             document.status in documentenApisConfigProperties.statusWhitelist &&
                 document.vertrouwelijkheidaanduiding in documentenApisConfigProperties.vertrouwelijkheidsaanduidingWhitelist
         }
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
+    }
 }
