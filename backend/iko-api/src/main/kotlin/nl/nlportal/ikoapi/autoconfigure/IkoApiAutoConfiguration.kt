@@ -15,31 +15,39 @@
  */
 package nl.nlportal.ikoapi.autoconfigure
 
+import nl.nlportal.core.ssl.ClientSslContextResolver
+import nl.nlportal.core.ssl.ResourceClientSslContextResolver
 import nl.nlportal.ikoapi.client.IkoApiClient
-import nl.nlportal.ikoapi.client.IkoApiConfig
 import nl.nlportal.ikoapi.service.IkoApiService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
+import org.springframework.core.io.ResourceLoader
 import org.springframework.web.reactive.function.client.WebClient
 
 @AutoConfiguration
-@EnableConfigurationProperties(IkoApiConfig::class)
+@EnableConfigurationProperties(IkoApiModuleConfiguration::class)
 @ConditionalOnProperty(prefix = "nl-portal.config.ikoapi", name = ["enabled"], havingValue = "true")
 class IkoApiAutoConfiguration {
     @Bean
+    @ConditionalOnMissingBean(ClientSslContextResolver::class)
+    fun clientSslContextResolver(resourceLoader: ResourceLoader): ClientSslContextResolver = ResourceClientSslContextResolver(resourceLoader)
+
+    @Bean
     @ConditionalOnMissingBean(IkoApiClient::class)
     fun ikoApiClient(
-        ikoApiConfig: IkoApiConfig,
+        ikoApiModuleConfiguration: IkoApiModuleConfiguration,
         webClientBuilder: WebClient.Builder,
-    ): IkoApiClient = IkoApiClient.create(ikoApiConfig.properties, webClientBuilder)
+        @Autowired(required = false) clientSslContextResolver: ClientSslContextResolver? = null,
+    ): IkoApiClient = IkoApiClient.create(ikoApiModuleConfiguration.properties, webClientBuilder, clientSslContextResolver)
 
     @Bean
     @ConditionalOnMissingBean(IkoApiService::class)
     fun ikoApiService(
         ikoApiClient: IkoApiClient,
-        ikoApiConfig: IkoApiConfig,
-    ): IkoApiService = IkoApiService(ikoApiClient, ikoApiConfig.properties)
+        ikoApiModuleConfiguration: IkoApiModuleConfiguration,
+    ): IkoApiService = IkoApiService(ikoApiClient, ikoApiModuleConfiguration.properties)
 }

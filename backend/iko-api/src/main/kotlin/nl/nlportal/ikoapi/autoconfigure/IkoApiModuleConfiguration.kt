@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.ikoapi.client
+package nl.nlportal.ikoapi.autoconfigure
 
+import nl.nlportal.core.ssl.Ssl
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.URI
 
 @ConfigurationProperties(prefix = "nl-portal.config.ikoapi")
-class IkoApiConfig {
+class IkoApiModuleConfiguration {
     var enabled: Boolean = false
-    var properties: IkoApiConfigProperties = IkoApiConfigProperties()
+    var properties: IkoApiConfigurationProperties = IkoApiConfigurationProperties()
 
-    class IkoApiConfigProperties {
+    class IkoApiConfigurationProperties {
         var url: URI? = null
         var tokenUrl: URI? = null
         var clientId: String? = null
         var clientSecret: String? = null
         var allowedProfiles: List<String> = emptyList()
+        var ssl: Ssl? = null
     }
 }
