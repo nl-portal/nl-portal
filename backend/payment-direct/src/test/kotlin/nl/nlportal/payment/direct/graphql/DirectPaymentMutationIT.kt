@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.graphql.test.tester.HttpGraphQlTester
+import org.springframework.http.HttpHeaders
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
 
@@ -101,6 +102,43 @@ internal class DirectPaymentMutationIT(
 
         val responseBody =
             httpGraphQlTester
+                .document(mutation)
+                .execute()
+                .errors()
+                .verify()
+                .path("doDirectPayment")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e", responseBody.get("redirectUrl")?.stringValue())
+    }
+
+    @Test
+    @WithBurgerUser("123")
+    fun doDirectPaymentWithIdentifierAndRefererHeader() {
+        val mutation =
+            """
+            mutation {
+                doDirectPayment(
+                    paymentRequest: { 
+                        identifier: "belastingzaken", 
+                        amount: 100.25, 
+                        orderId: "123456", 
+                        reference: "12345",
+                    }
+                ) {
+                redirectUrl,
+                }
+            }
+            """.trimIndent()
+
+        val tester =
+            httpGraphQlTester
+                .mutate()
+                .header(HttpHeaders.REFERER, "https://example.com/checkout")
+                .build()
+        val responseBody =
+            tester
                 .document(mutation)
                 .execute()
                 .errors()

@@ -22,7 +22,6 @@ export const MUTATION_DO_DIRECT_PAYMENT = gql`
     $langId: String
     $orderId: String!
     $reference: String!
-    $returnUrl: String
   ) {
     doDirectPayment(
       paymentRequest: {
@@ -31,7 +30,6 @@ export const MUTATION_DO_DIRECT_PAYMENT = gql`
         langId: $langId
         orderId: $orderId
         reference: $reference
-        returnUrl: $returnUrl
       }
     ) {
       redirectUrl

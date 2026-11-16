@@ -16,7 +16,6 @@ input DirectPaymentRequestInput {
     langId: String
     orderId: String!
     reference: String!
-    returnUrl: String
 }
 
 type DirectPaymentResponse {
