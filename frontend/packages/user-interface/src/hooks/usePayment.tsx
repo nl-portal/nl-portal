@@ -32,7 +32,6 @@ interface PaymentRequestPayload {
   orderId: string;
   reference: string;
   title?: string;
-  returnUrl?: string;
 }
 
 const usePayment = () => {
@@ -52,7 +51,6 @@ const usePayment = () => {
         orderId: paymentRequestPayload.orderId,
         reference: paymentRequestPayload.reference,
         langId: currentLocale.replace("-", "_"),
-        returnUrl: paymentRequestPayload.returnUrl || returnUrl.href,
       },
       onCompleted: (data) => {
         window.location.href = data.doDirectPayment.redirectUrl;
