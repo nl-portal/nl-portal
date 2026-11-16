@@ -731,7 +731,6 @@ export type DirectPaymentRequestInput = {
   langId?: InputMaybe<Scalars['String']['input']>;
   orderId: Scalars['String']['input'];
   reference: Scalars['String']['input'];
-  returnUrl?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DirectPaymentResponse = {

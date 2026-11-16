@@ -47,4 +47,8 @@ class GraphqlAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(GraphQLExceptionHandler::class)
     fun graphQLExceptionHandler() = GraphQLExceptionHandler()
+
+    @Bean
+    @ConditionalOnMissingBean(GraphqlReferrerHeaderInterceptor::class)
+    fun referrerHeaderInterceptor() = GraphqlReferrerHeaderInterceptor()
 }
