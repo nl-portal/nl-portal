@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DoDirectPaymentDocument } from "@nl-portal/nl-portal-api";
+import { DoTaakPaymentDocument } from "@nl-portal/nl-portal-api";
 import { useMutation } from "@apollo/client/react";
 import { useContext, useState } from "react";
 import { LocaleContext } from "@nl-portal/nl-portal-localization";
@@ -27,16 +27,13 @@ import { LocaleContext } from "@nl-portal/nl-portal-localization";
 // returnUrl: The url to redirect to after a successful payment.
 
 interface PaymentRequestPayload {
-  amount: number;
   identifier: string;
-  orderId: string;
-  reference: string;
-  title?: string;
+  taakId: string;
 }
 
-const usePayment = () => {
+const useTaakPayment = () => {
   const [loading, setLoading] = useState(false);
-  const [mutateFunction] = useMutation(DoDirectPaymentDocument);
+  const [mutateFunction] = useMutation(DoTaakPaymentDocument);
   const { currentLocale } = useContext(LocaleContext);
   const returnUrl = new URL(window.location.href);
   returnUrl.searchParams.set("type", "ogone");
@@ -46,14 +43,12 @@ const usePayment = () => {
     returnUrl.searchParams.set("category", paymentRequestPayload.identifier);
     mutateFunction({
       variables: {
-        amount: paymentRequestPayload.amount,
         identifier: paymentRequestPayload.identifier,
-        orderId: paymentRequestPayload.orderId,
-        reference: paymentRequestPayload.reference,
         langId: currentLocale.replace("-", "_"),
+        taakId: paymentRequestPayload.taakId,
       },
       onCompleted: (data) => {
-        window.location.href = data.doDirectPayment.redirectUrl;
+        window.location.href = data.doTaakPayment.redirectUrl;
       },
       onError: () => {
         setLoading(false);
@@ -62,9 +57,9 @@ const usePayment = () => {
   };
 
   return {
-    loading,
     startPayment,
+    loading,
   };
 };
 
-export default usePayment;
+export default useTaakPayment;

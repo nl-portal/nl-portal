@@ -15,21 +15,17 @@
  */
 import { gql } from "@apollo/client";
 
-export const MUTATION_DO_DIRECT_PAYMENT = gql`
-  mutation DoDirectPayment(
-    $amount: PositiveFloat!
+export const MUTATION_DO_TAAK_PAYMENT = gql`
+  mutation doTaakPayment(
     $identifier: String!
     $langId: String
-    $orderId: String!
-    $reference: String!
+    $taakId: UUID!
   ) {
-    doDirectPayment(
+    doTaakPayment(
       paymentRequest: {
-        amount: $amount
         identifier: $identifier
         langId: $langId
-        orderId: $orderId
-        reference: $reference
+        taakId: $taakId
       }
     ) {
       redirectUrl

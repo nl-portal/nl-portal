@@ -50,9 +50,9 @@ export * from "./interfaces/paths";
 export * from "./interfaces/themes";
 
 export { default as useDownload } from "./hooks/useDownload";
-export { default as usePayment } from "./hooks/usePayment";
-export { default as usePaymentRegistration } from "./hooks/usePaymentRegistration";
-export * from "./hooks/usePaymentRegistration";
+export { default as useTaakPayment } from "./hooks/useTaakPayment";
+export { default as useTaakPaymentRegistration } from "./hooks/useTaakPaymentRegistration";
+export * from "./hooks/useTaakPaymentRegistration";
 export { default as useInput } from "./hooks/useInput";
 export * from "./hooks/useInput";
 
