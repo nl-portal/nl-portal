@@ -21,4 +21,5 @@ data class DirectPaymentRequest(
     val reference: String,
     val orderId: String,
     val langId: String? = null,
+    val returnUrl: String? = null,
 )

@@ -21,7 +21,6 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     api(project(":core"))
     api(project(":graphql"))
-    api(project(":zgw:taak"))
     api("com.worldline-solutions:onlinepayments-sdk-java:6.4.0")
 
     implementation(Dependencies.kotlinCoroutines)

@@ -16,13 +16,8 @@
 package nl.nlportal.payment.direct.autoconfiguration
 
 import nl.nlportal.core.ssl.ClientSslContextResolver
-import nl.nlportal.payment.direct.api.DirectPaymentController
 import nl.nlportal.payment.direct.client.DirectPaymentClient
-import nl.nlportal.payment.direct.graphql.DirectPaymentMutation
-import nl.nlportal.payment.direct.graphql.DirectPaymentQuery
 import nl.nlportal.payment.direct.service.DirectPaymentService
-import nl.nlportal.payment.direct.service.DirectPaymentWebhookService
-import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -55,27 +50,4 @@ class DirectPaymentAutoConfiguration {
             directPaymentModuleConfiguration = directPaymentModuleConfiguration,
             directPaymentClient = directPaymentClient,
         )
-
-    @Bean
-    @ConditionalOnMissingBean(DirectPaymentWebhookService::class)
-    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled"], havingValue = "true")
-    fun directPaymentWebhookService(
-        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
-        objectsApiClient: ObjectsApiClient,
-    ): DirectPaymentWebhookService =
-        DirectPaymentWebhookService(
-            directPaymentModuleConfiguration = directPaymentModuleConfiguration,
-            objectsApiClient = objectsApiClient,
-        )
-
-    @Bean
-    fun directPaymentMutation(directPaymentService: DirectPaymentService): DirectPaymentMutation = DirectPaymentMutation(directPaymentService)
-
-    @Bean
-    fun directPaymentQuery(directPaymentService: DirectPaymentService): DirectPaymentQuery = DirectPaymentQuery(directPaymentService)
-
-    @Bean
-    @ConditionalOnMissingBean(DirectPaymentController::class)
-    @ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled"], havingValue = "true")
-    fun directPaymentController(directPaymentWebhookService: DirectPaymentWebhookService): DirectPaymentController = DirectPaymentController(directPaymentWebhookService)
 }
