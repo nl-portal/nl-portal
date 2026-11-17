@@ -127,8 +127,8 @@ class BerichtenService(
         documentId: UUID,
     ): Pair<Document, Flow<DataBuffer>>? {
         val objectsApiBericht =
-            objectenApiService.getObjectById<Bericht>(berichtId.toString()) ?: return null
-        val bericht = objectsApiBericht.record.data
+            objectenApiService.getObjectById<BerichtObject>(berichtId.toString()) ?: return null
+        val bericht = Bericht.fromBerichtObject(objectsApiBericht)
 
         if (bericht.identificatie.value != authentication.userId) {
             logger.debug {
