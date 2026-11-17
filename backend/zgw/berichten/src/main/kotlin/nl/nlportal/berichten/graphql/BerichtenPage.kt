@@ -16,6 +16,7 @@
 package nl.nlportal.berichten.graphql
 
 import nl.nlportal.berichten.domain.Bericht
+import nl.nlportal.berichten.domain.BerichtObject
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.Page
 import nl.nlportal.vtbapi.client.domain.VTBBericht
@@ -37,9 +38,9 @@ class BerichtenPage(
         fun fromResultPage(
             pageNumber: Int,
             pageSize: Int,
-            resultPage: ResultPage<ObjectsApiObject<Bericht>>,
+            resultPage: ResultPage<ObjectsApiObject<BerichtObject>>,
         ): BerichtenPage {
-            val berichten = resultPage.results.map { it.record.data.copy(uuid = it.uuid) }.sortedByDescending { it.publicatiedatum }
+            val berichten = resultPage.results.map { Bericht.fromBerichtObject(it) }.sortedByDescending { it.publicatiedatum }
 
             return BerichtenPage(
                 number = pageNumber,

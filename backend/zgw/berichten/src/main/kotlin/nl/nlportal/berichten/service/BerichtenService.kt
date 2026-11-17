@@ -21,6 +21,7 @@ import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import nl.nlportal.berichten.autoconfigure.BerichtenConfiguration.BerichtenConfigurationProperties
 import nl.nlportal.berichten.domain.Bericht
+import nl.nlportal.berichten.domain.BerichtObject
 import nl.nlportal.berichten.graphql.BerichtenPage
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.CoreUtils.extractId
@@ -78,7 +79,7 @@ class BerichtenService(
             pageSize = pageSize,
             resultPage =
                 objectenApiService
-                    .getObjects<Bericht>(
+                    .getObjects<BerichtObject>(
                         objectSearchParameters = searchParameters,
                         objectTypeUrl = berichtenConfigurationProperties.berichtObjectTypeUrl!!,
                         pageNumber = pageNumber,
@@ -99,17 +100,17 @@ class BerichtenService(
         authentication: CommonGroundAuthentication,
         id: UUID,
     ): Bericht? {
-        val objectsApiBericht = objectenApiService.getObjectById<Bericht>(id.toString()) ?: return null
+        val objectsApiBericht = objectenApiService.getObjectById<BerichtObject>(id.toString()) ?: return null
 
-        val berichtObject = objectsApiBericht.record.data.copy(uuid = id)
+        val bericht = Bericht.fromBerichtObject(objectsApiBericht)
 
-        if (berichtObject.identificatie.value != authentication.userId) {
+        if (bericht.identificatie.value != authentication.userId) {
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authorized for this Bericht")
         }
 
-        if (berichtObject.geopend) {
+        if (bericht.geopend) {
             // Bericht is already read, so return
-            return berichtObject
+            return bericht
         }
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiBericht)
@@ -117,7 +118,7 @@ class BerichtenService(
         updateRequest.record.correctedBy = authentication.userId
         updateRequest.record.correctionFor = objectsApiBericht.record.index.toString()
         val updatedObjectsApiBericht = objectenApiService.updateObject(objectsApiBericht.uuid, updateRequest)
-        return updatedObjectsApiBericht?.record?.data?.copy(uuid = id)
+        return updatedObjectsApiBericht?.let { Bericht.fromBerichtObject(it) }
     }
 
     suspend fun getBerichtDocumentContent(

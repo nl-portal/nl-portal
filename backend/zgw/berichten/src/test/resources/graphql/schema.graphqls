@@ -36,7 +36,7 @@ type Bericht {
     einddatumHandelingstermijn: ZonedDateTime!
     geopend: Boolean!
     handelingsperspectief: BerichtHandelingsperspectief!
-    uuid: UUID
+    uuid: UUID!
     identificatie: BerichtIdentificatie!
     onderwerp: String!
     publicatiedatum: ZonedDateTime!
