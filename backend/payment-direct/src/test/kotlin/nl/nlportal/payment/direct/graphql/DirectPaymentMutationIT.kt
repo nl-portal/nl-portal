@@ -16,6 +16,8 @@
 package nl.nlportal.payment.direct.graphql
 
 import com.fasterxml.jackson.databind.JsonNode
+import java.util.concurrent.TimeUnit
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.payment.direct.TestHelper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
@@ -75,6 +77,8 @@ internal class DirectPaymentMutationIT(
 
     @BeforeEach
     internal fun setUp() {
+        while (server!!.takeRequest(0, TimeUnit.SECONDS) != null) {
+        }
         setupMockServer()
         url = server?.url("/").toString()
         directPaymentModuleConfiguration.properties.url = url
@@ -110,6 +114,68 @@ internal class DirectPaymentMutationIT(
                 .get()
 
         assertEquals("https://payment.preprod.direct.worldline-solutions.com/hostedcheckout/PaymentMethods/Selection/e61340e579e04172a740676ffdda162e", responseBody.get("redirectUrl")?.textValue())
+    }
+
+    @Test
+    @WithBurgerUser("123")
+    fun doDirectPaymentWithSameOriginReturnUrl() {
+        doDirectPaymentWithReturnUrl("http://localhost:3000/taken/1")
+
+        assertEquals("http://localhost:3000/taken/1", sentReturnUrl())
+    }
+
+    @Test
+    @WithBurgerUser("123")
+    fun doDirectPaymentWithForeignReturnUrl() {
+        doDirectPaymentWithReturnUrl("https://evil.example/")
+
+        assertEquals("http://localhost:3000", sentReturnUrl())
+    }
+
+    @Test
+    @WithBurgerUser("123")
+    fun doDirectPaymentWithNotAbsoluteProfileReturnUrl() {
+        doDirectPaymentWithReturnUrl("https://evil.example/", "zonderorigin")
+
+        assertEquals("localhost:3000", sentReturnUrl())
+    }
+
+    private fun doDirectPaymentWithReturnUrl(
+        returnUrl: String,
+        identifier: String = "belastingzaken",
+    ) {
+        val mutation =
+            """
+            mutation {
+                doDirectPayment(
+                    paymentRequest: {
+                        identifier: "$identifier",
+                        amount: 100.25,
+                        orderId: "123456",
+                        reference: "12345",
+                        returnUrl: "$returnUrl",
+                    }
+                ) {
+                redirectUrl,
+                }
+            }
+            """.trimIndent()
+
+        httpGraphQlTester
+            .document(mutation)
+            .execute()
+            .errors()
+            .verify()
+    }
+
+    private fun sentReturnUrl(): String? {
+        val request = server!!.takeRequest(5, TimeUnit.SECONDS)!!
+        return Mapper
+            .get()
+            .readTree(request.body.readUtf8())
+            .path("hostedCheckoutSpecificInput")
+            .path("returnUrl")
+            .textValue()
     }
 
     fun setupMockServer() {

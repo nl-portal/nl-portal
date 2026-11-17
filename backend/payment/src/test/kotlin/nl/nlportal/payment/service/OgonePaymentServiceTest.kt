@@ -19,6 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentConfigProperties
 import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
+import nl.nlportal.payment.domain.OgonePayment
 import nl.nlportal.payment.domain.OgonePaymentRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -93,5 +94,68 @@ internal class OgonePaymentServiceTest {
             }
 
         assertEquals("Could not found payment profile for the pspId unknown", exception.reason)
+    }
+
+    @Test
+    fun createPaymentUsesSameOriginUrls() {
+        val payment = createPaymentWithUrl("http://dummy.nl/taken/1")
+
+        assertEquals("http://dummy.nl/taken/1", payment.acceptUrl)
+        assertEquals("http://dummy.nl/taken/1", payment.declineUrl)
+    }
+
+    @Test
+    fun createPaymentIgnoresForeignOriginUrls() {
+        listOf(
+            "https://evil.example/",
+            "http://dummy.nl.evil.com/",
+            "http://dummy.nl@evil.com/",
+        ).forEach {
+            val payment = createPaymentWithUrl(it)
+
+            assertEquals("http://dummy.nl", payment.acceptUrl, it)
+            assertEquals("http://dummy.nl", payment.declineUrl, it)
+        }
+    }
+
+    @Test
+    fun createPaymentIgnoresUrlsWhenProfileUrlsAreNotAbsolute() {
+        listOf("", "dummy.nl").forEach {
+            val payment = createPaymentWithUrl("https://evil.example/", it)
+
+            assertEquals(it, payment.acceptUrl, it)
+            assertEquals(it, payment.declineUrl, it)
+        }
+    }
+
+    private fun createPaymentWithUrl(
+        url: String,
+        profileUrl: String = "http://dummy.nl",
+    ): OgonePayment {
+        val paymentRequest =
+            OgonePaymentRequest(
+                amount = 100.00,
+                orderId = "orderId 123",
+                reference = "reference 123",
+                title = "title 123",
+                langId = "nl_NL",
+                successUrl = url,
+                failureUrl = url,
+                pspId = "TAX",
+            )
+
+        val paymentProfile =
+            OgonePaymentProfile().apply {
+                pspId = "TAX"
+                title = "Belastingzaken"
+                shaInKey = "de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00"
+                failureUrl = profileUrl
+                successUrl = profileUrl
+            }
+
+        whenever(paymentConfigProperties.getPaymentProfileByPspPid(anyString())).thenReturn(paymentProfile)
+        whenever(paymentConfigProperties.url).thenReturn("https://secure.ogone.com/ncol/prod/orderstandard.asp")
+
+        return ogonePaymentService.createPayment(paymentRequest)
     }
 }

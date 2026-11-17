@@ -17,6 +17,7 @@ package nl.nlportal.payment.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.math.BigDecimal
+import java.net.URI
 import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
 
 data class OgonePayment(
@@ -60,11 +61,19 @@ data class OgonePayment(
             paymentRequest: OgonePaymentRequest,
         ): OgonePayment {
             val successUrl =
-                paymentRequest.successUrl
-                    ?: (paymentProfile.successUrl)
+                paymentRequest.successUrl?.takeIf {
+                    runCatching { URI(paymentProfile.successUrl) }
+                        .getOrNull()
+                        ?.takeIf { profileUri -> profileUri.isAbsolute && profileUri.host != null }
+                        ?.let { profileUri -> it.startsWith(profileUri.resolve("/").toString()) } == true
+                } ?: paymentProfile.successUrl
             val failureUrl =
-                paymentRequest.failureUrl
-                    ?: (paymentProfile.failureUrl)
+                paymentRequest.failureUrl?.takeIf {
+                    runCatching { URI(paymentProfile.failureUrl) }
+                        .getOrNull()
+                        ?.takeIf { profileUri -> profileUri.isAbsolute && profileUri.host != null }
+                        ?.let { profileUri -> it.startsWith(profileUri.resolve("/").toString()) } == true
+                } ?: paymentProfile.failureUrl
             return OgonePayment(
                 pspId = paymentProfile.pspId,
                 currency = paymentProfile.currency,

@@ -4,18 +4,42 @@ Deze release bevat NL-Portal Backend Libraries 3.1.2 en NL-Portal Frontend Libra
 
 ## Nieuwe Functionaliteit
 
-Deze release bevat alleen beveiligingsupdates van afhankelijkheden, waaronder Spring Boot 3.5.16,
-Netty 4.1.139.Final en React Router 7.18.2. Zie de release notes van
+Deze release bevat een beveiligingsoplossing voor de betaalmodules en beveiligingsupdates van
+afhankelijkheden, waaronder Spring Boot 3.5.16, Netty 4.1.139.Final en React Router 7.18.2. Zie de release notes van
 [NL-Portal Backend Libraries 3.1.2](backend-libraries.md) en
 [NL-Portal Frontend Libraries 3.1.2](frontend-libraries.md).
 
 ## Bugfixes
 
-Er zijn geen bugfixes.
+* De return URL van een betaling wordt alleen nog gebruikt wanneer hij dezelfde origin heeft als de
+  URL in het betaalprofiel. Zie [GHSA-6rxj-f2rp-7mp3](https://github.com/nl-portal/nl-portal/security/advisories/GHSA-6rxj-f2rp-7mp3) en de release notes van
+  [NL-Portal Backend Libraries 3.1.2](backend-libraries.md).
 
 ## Breaking changes
 
-Er zijn geen breaking changes.
+* **De URL's van betaalprofielen zijn verplicht.** Zonder absolute URL in het betaalprofiel komen
+  gebruikers na het betalen niet terug in het portaal. Zie "Migratie".
+* **Return URL's op een andere origin.** Een URL in het betaalprofiel op een andere origin dan het
+  portaal wint nu altijd van de pagina waar de gebruiker de betaling startte. Zie de release notes van
+  [NL-Portal Backend Libraries 3.1.2](backend-libraries.md).
+
+## Migratie
+
+Stel per betaalprofiel de URL van het portaal in, met de origin precies zoals de browser hem toont
+(kleine letters, zonder `:443` of `:80`). Vervang `<PROFIEL>` door de naam van het profiel in
+hoofdletters, bijvoorbeeld `BELASTINGZAKEN`.
+
+```shell
+# Direct betalen, als NLPORTAL_CONFIG_PAYMENT_DIRECT_ENABLED=true
+NLPORTAL_CONFIG_PAYMENT_DIRECT_PROPERTIES_CONFIGURATIONS_<PROFIEL>_RETURNURL=https://portal.example.nl
+
+# Ogone, als NLPORTAL_CONFIG_PAYMENT_OGONE_ENABLED=true
+NLPORTAL_CONFIG_PAYMENT_OGONE_PROPERTIES_CONFIGURATIONS_<PROFIEL>_SUCCESSURL=https://portal.example.nl
+NLPORTAL_CONFIG_PAYMENT_OGONE_PROPERTIES_CONFIGURATIONS_<PROFIEL>_FAILUREURL=https://portal.example.nl
+```
+
+Gebruik je de Helm chart, zie dan de release notes van `nl-portal-backend` chart 3.2.1 in de
+[helm-charts repository](https://github.com/nl-portal/helm-charts).
 
 ## Deprecations
 
