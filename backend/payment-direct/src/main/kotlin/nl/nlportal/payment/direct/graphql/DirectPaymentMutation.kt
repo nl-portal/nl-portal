@@ -20,7 +20,9 @@ import nl.nlportal.payment.direct.domain.DirectPaymentRequest
 import nl.nlportal.payment.direct.domain.DirectPaymentResponse
 import nl.nlportal.payment.direct.service.DirectPaymentService
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -31,8 +33,10 @@ class DirectPaymentMutation(
     suspend fun doDirectPayment(
         authentication: CommonGroundAuthentication,
         @Argument paymentRequest: DirectPaymentRequest,
+        @ContextValue(name = HttpHeaders.REFERER, required = false) referer: String?,
     ): DirectPaymentResponse =
         directPaymentService.doDirectPayment(
             paymentRequest = paymentRequest,
+            returnUrl = referer,
         )
 }
