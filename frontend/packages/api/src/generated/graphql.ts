@@ -62,7 +62,7 @@ export type GetBerichtQueryVariables = Exact<{
 }>;
 
 
-export type GetBerichtQuery = { getBericht: { uuid: string | null, berichtTekst: string, geopend: boolean, onderwerp: string, publicatiedatum: string, documenten: Array<{ uuid: string, documentapi: string, identificatie: string | null, creatiedatum: string | null, titel: string | null, formaat: string | null, bestandsnaam: string | null, bestandsomvang: number | null }> } | null };
+export type GetBerichtQuery = { getBericht: { uuid: string, berichtTekst: string, geopend: boolean, onderwerp: string, publicatiedatum: string, documenten: Array<{ uuid: string, documentapi: string, identificatie: string | null, creatiedatum: string | null, titel: string | null, formaat: string | null, bestandsnaam: string | null, bestandsomvang: number | null }> } | null };
 
 export type GetBerichtenQueryVariables = Exact<{
   pageNumber?: number | null | undefined;
@@ -71,7 +71,7 @@ export type GetBerichtenQueryVariables = Exact<{
 }>;
 
 
-export type GetBerichtenQuery = { getBerichten: { totalElements: number, totalPages: number, content: Array<{ uuid: string | null, publicatiedatum: string, geopend: boolean, onderwerp: string }> } };
+export type GetBerichtenQuery = { getBerichten: { totalElements: number, totalPages: number, content: Array<{ uuid: string, publicatiedatum: string, geopend: boolean, onderwerp: string }> } };
 
 export type GetUnopenedBerichtenCountQueryVariables = Exact<{ [key: string]: never; }>;
 
