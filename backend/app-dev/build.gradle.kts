@@ -29,12 +29,10 @@ dependencies {
     implementation(project(":zgw:documenten-api"))
     implementation(project(":zgw:berichten"))
     implementation(project(":zgw:besluiten"))
-    implementation(project(":payment-direct"))
     implementation(project(":zgw:zaken"))
     implementation(project(":zgw:openproduct"))
     implementation(project(":product"))
     implementation(project(":zgw:verificatie"))
-    implementation(project(":case"))
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     api("org.postgresql:postgresql")
