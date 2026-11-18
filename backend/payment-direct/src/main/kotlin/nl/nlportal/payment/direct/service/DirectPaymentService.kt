@@ -28,6 +28,7 @@ import com.onlinepayments.webhooks.SignatureValidationException
 import com.onlinepayments.webhooks.WebhooksHelper
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.net.URI
 import java.util.UUID
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
@@ -83,7 +84,8 @@ open class DirectPaymentService(
     }
 
     /**
-     * Do Direct Payment at payment provider
+     * Do Direct Payment at payment provider. The returnUrl of the request is only used when the returnUrl of the payment
+     * profile is an absolute URL with the same origin, otherwise the returnUrl of the payment profile is used.
      * @param paymentRequest: properties to create a payment
      * @return redirectUrl to do the actual payment at payment provider
      */
@@ -100,8 +102,14 @@ open class DirectPaymentService(
             val hostedCheckoutSpecificInput =
                 HostedCheckoutSpecificInput()
                     .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
-                    .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl)
-                    .withShowResultPage(directPaymentModuleConfiguration.properties.showResultPage)
+                    .withReturnUrl(
+                        paymentRequest.returnUrl?.takeIf {
+                            runCatching { URI(paymentDirectProfile.returnUrl) }
+                                .getOrNull()
+                                ?.takeIf { profileUri -> profileUri.isAbsolute && profileUri.host != null }
+                                ?.let { profileUri -> it.startsWith(profileUri.resolve("/").toString()) } == true
+                        } ?: paymentDirectProfile.returnUrl,
+                    ).withShowResultPage(directPaymentModuleConfiguration.properties.showResultPage)
 
             directPaymentModuleConfiguration.properties.customTemplateUrl?.let {
                 hostedCheckoutSpecificInput.variant = it

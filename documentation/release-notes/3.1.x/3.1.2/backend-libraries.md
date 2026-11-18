@@ -1,6 +1,7 @@
 # NL-Portal Backend Libraries 3.1.2
 
-Deze release bevat alleen beveiligingsupdates van afhankelijkheden.
+Deze release bevat een beveiligingsoplossing voor de betaalmodules en beveiligingsupdates van
+afhankelijkheden.
 
 ## Nieuwe Functionaliteit
 
@@ -20,11 +21,82 @@ De volgende afhankelijkheden zijn bijgewerkt om bekende kwetsbaarheden te verhel
 
 ## Bugfixes
 
-Er zijn geen bugfixes.
+* De return URL van een betaling (`payment-direct`) en de success- en failure URL van een Ogone
+  betaling (`payment`) kwamen ongecontroleerd uit het verzoek van de client. Daarmee kon een
+  betaallink worden gemaakt die na het betalen naar een willekeurige externe site doorstuurt. Deze URL
+  wordt nu alleen gebruikt wanneer hij dezelfde origin heeft als de `return-url` (direct) of
+  `success-url` / `failure-url` (Ogone) van het betaalprofiel. In alle andere gevallen wordt de URL
+  uit het betaalprofiel gebruikt. Zie [GHSA-6rxj-f2rp-7mp3](https://github.com/nl-portal/nl-portal/security/advisories/GHSA-6rxj-f2rp-7mp3).
 
 ## Breaking changes
 
-Er zijn geen breaking changes.
+* **De URL's van betaalprofielen zijn verplicht.** Deze wijziging is om veiligheidsredenen
+  doorgevoerd. Heeft een betaalprofiel geen absolute `return-url` (direct) of `success-url` en
+  `failure-url` (Ogone), dan wordt de URL uit het verzoek genegeerd en gaat de lege of ongeldige URL
+  uit het profiel naar de betaalprovider. Gebruikers komen na het betalen dan niet terug in het
+  portaal. Zie "Migratie".
+
+* **Return URL's op een andere origin.** Staat de URL van een betaalprofiel op een andere origin dan
+  het portaal, of gebruiken meerdere portalen met een eigen origin hetzelfde betaalprofiel, dan komen
+  gebruikers na het betalen op de geconfigureerde URL terecht in plaats van op de pagina waar ze de
+  betaling startten.
+
+## Migratie
+
+Stel per betaalprofiel de URL van het portaal in. Gebruik de origin precies zoals de browser hem toont:
+schema en host in kleine letters, zonder standaardpoort (`:443` of `:80`). Anders wordt de pagina waar
+de gebruiker de betaling startte niet herkend en komt de gebruiker op de geconfigureerde URL terecht.
+
+Direct betalen:
+
+```yaml
+# Voor
+nl-portal:
+  config:
+    payment:
+      direct:
+        properties:
+          configurations:
+            belastingzaken:
+              psp-id: TAX
+
+# Na
+nl-portal:
+  config:
+    payment:
+      direct:
+        properties:
+          configurations:
+            belastingzaken:
+              psp-id: TAX
+              return-url: https://portal.example.nl
+```
+
+Ogone:
+
+```yaml
+# Voor
+nl-portal:
+  config:
+    payment:
+      ogone:
+        properties:
+          configurations:
+            belastingzaken:
+              psp-id: TAX
+
+# Na
+nl-portal:
+  config:
+    payment:
+      ogone:
+        properties:
+          configurations:
+            belastingzaken:
+              psp-id: TAX
+              success-url: https://portal.example.nl
+              failure-url: https://portal.example.nl
+```
 
 ## Deprecations
 
