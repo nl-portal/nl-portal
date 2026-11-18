@@ -27,7 +27,7 @@ import {
   useActionLabels,
 } from "@nl-portal/nl-portal-localization";
 import { useContext } from "react";
-import usePayment from "../hooks/usePayment";
+import useTaakPayment from "../hooks/useTaakPayment";
 
 interface Props {
   task: TaakV2;
@@ -37,7 +37,7 @@ interface Props {
 const Task = ({ task, openInContext }: Props) => {
   const labels = useActionLabels();
   const { currentLocale } = useContext(LocaleContext);
-  const { startPayment, loading } = usePayment();
+  const { startPayment, loading } = useTaakPayment();
   const taskUrl = useTaskUrl(task, openInContext) ?? "";
   const handleClick = useLinkClickHandler(taskUrl);
 
@@ -77,11 +77,8 @@ const Task = ({ task, openInContext }: Props) => {
       case TaakSoort.Ogonebetaling:
         if (task.ogonebetaling) {
           const paymentRequestPayload = {
-            amount: task.ogonebetaling.bedrag,
             identifier: task.ogonebetaling.pspid,
-            orderId: task.id,
-            reference: task.ogonebetaling.betaalkenmerk,
-            title: task.titel,
+            taakId: task.id,
           };
 
           return (

@@ -47,9 +47,9 @@ import { stringToSlug } from "../utils/string-to-slug";
 import { caseResults } from "../constants/case-results";
 import Pre from "../components/Pre";
 import AppContext from "../contexts/AppContext";
-import usePaymentRegistration, {
+import useTaakPaymentRegistration, {
   PaymentStatus,
-} from "../hooks/usePaymentRegistration";
+} from "../hooks/useTaakPaymentRegistration";
 
 const CaseDetailsPage = () => {
   const intl = useIntl();
@@ -79,7 +79,7 @@ const CaseDetailsPage = () => {
     },
   );
   const { formatDate } = useDateFormatter();
-  const { paymentStatus, orderId } = usePaymentRegistration();
+  const { paymentStatus, orderId } = useTaakPaymentRegistration();
   const loading = caseLoading || taskLoading || momentsLoading;
 
   // Remove task with the orderId to prevent race condition with the payment handling in the backend

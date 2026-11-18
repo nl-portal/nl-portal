@@ -13,11 +13,20 @@ extend type Query {
 
     # Get the form definition for a task the authenticated user owns
     getFormDefinitionByTaskId(taskId: UUID!): FormDefinition
+
+    getTaakPaymentStatus(
+        identifier: String!,
+        hostedCheckoutId: String!
+    ): DirectPaymentStatus!
 }
 
 extend type Mutation {
     # Submit a task
     submitTaakV2(id: UUID!, submission: JSON!): TaakV2!
+
+    doTaakPayment(
+        paymentRequest: TaakPaymentRequestInput!
+    ): DirectPaymentResponse!
 }
 
 type TaakForm {
@@ -96,5 +105,11 @@ type OgoneBetaling {
     bedrag: PositiveFloat!
     betaalkenmerk: String!
     pspid: String!
+}
+
+input TaakPaymentRequestInput {
+    identifier: String!
+    langId: String
+    taakId: UUID!
 }
 

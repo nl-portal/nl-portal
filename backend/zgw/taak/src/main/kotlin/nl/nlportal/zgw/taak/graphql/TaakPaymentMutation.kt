@@ -13,26 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.direct.graphql
+package nl.nlportal.zgw.taak.graphql
 
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
-import nl.nlportal.payment.direct.domain.DirectPaymentRequest
 import nl.nlportal.payment.direct.domain.DirectPaymentResponse
-import nl.nlportal.payment.direct.service.DirectPaymentService
+import nl.nlportal.zgw.taak.domain.TaakPaymentRequest
+import nl.nlportal.zgw.taak.service.TaakPaymentService
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Controller
 
 @Controller
-class DirectPaymentMutation(
-    private val directPaymentService: DirectPaymentService,
+class TaakPaymentMutation(
+    private val taakPaymentService: TaakPaymentService,
 ) {
     @MutationMapping
-    suspend fun doDirectPayment(
+    suspend fun doTaakPayment(
         authentication: CommonGroundAuthentication,
-        @Argument paymentRequest: DirectPaymentRequest,
+        @Argument paymentRequest: TaakPaymentRequest,
+        @ContextValue(name = HttpHeaders.REFERER, required = false) referer: String?,
     ): DirectPaymentResponse =
-        directPaymentService.doDirectPayment(
-            paymentRequest = paymentRequest,
+        taakPaymentService.doTaakPayment(
+            authentication = authentication,
+            taakPaymentRequest = paymentRequest,
+            returnUrl = referer,
         )
 }

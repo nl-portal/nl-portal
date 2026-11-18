@@ -64,7 +64,9 @@ open class DirectPaymentService(
      * @param paymentRequest: properties to create a payment
      * @return redirectUrl to do the actual payment at payment provider
      */
-    suspend fun doDirectPayment(paymentRequest: DirectPaymentRequest): DirectPaymentResponse {
+    suspend fun doDirectPayment(
+        paymentRequest: DirectPaymentRequest,
+    ): DirectPaymentResponse {
         try {
             val paymentDirectProfile =
                 directPaymentModuleConfiguration.properties.getPaymentProfile(paymentRequest.identifier)

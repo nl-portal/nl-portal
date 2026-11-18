@@ -13,11 +13,20 @@ type Query {
 
     # Get the form definition for a task the authenticated user owns
     getFormDefinitionByTaskId(taskId: UUID!): FormDefinition
+
+    getTaakPaymentStatus(
+        identifier: String!,
+        hostedCheckoutId: String!
+    ): DirectPaymentStatus!
 }
 
 type Mutation {
     # Submit a task
     submitTaakV2(id: UUID!, submission: JSON!): TaakV2!
+
+    doTaakPayment(
+        paymentRequest: TaakPaymentRequestInput!
+    ): DirectPaymentResponse!
 }
 
 type TaakForm {
@@ -100,6 +109,26 @@ type OgoneBetaling {
 
 type FormDefinition {
     formDefinition: JSON!
+}
+
+input TaakPaymentRequestInput {
+    identifier: String!
+    langId: String
+    taakId: UUID!
+}
+
+type DirectPaymentResponse {
+    redirectUrl: String!
+}
+
+type DirectPaymentStatus {
+    status: DirectPaymentStatusCategory
+}
+
+enum DirectPaymentStatusCategory {
+    SUCCESSFUL,
+    REJECTED,
+    STATUS_UNKNOWN
 }
 
 scalar JSON
