@@ -13,38 +13,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.direct.graphql
+package nl.nlportal.zgw.taak.graphql
 
-import tools.jackson.databind.JsonNode
+import java.net.URI
 import nl.nlportal.commonground.authentication.WithBurgerUser
-import nl.nlportal.payment.direct.TestHelper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.taak.TestHelper
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
-import org.springframework.boot.test.context.SpringBootTest
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
 import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import tools.jackson.databind.JsonNode
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-internal class DirectPaymentMutationIT(
+internal class TaakPaymentMutationIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     companion object {
         @JvmStatic
@@ -57,6 +60,7 @@ internal class DirectPaymentMutationIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.payment.direct.properties.url") { url }
+            propsRegistry.add("nl-portal.config.objectenapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -79,20 +83,19 @@ internal class DirectPaymentMutationIT(
         setupMockServer()
         url = server?.url("/").toString()
         directPaymentModuleConfiguration.properties.url = url
+        objectsApiClientConfig.properties.url = URI(url)
     }
 
     @Test
-    @WithBurgerUser("123")
+    @WithBurgerUser("569312863")
     fun doDirectPaymentWithIdentifier() {
         val mutation =
             """
             mutation {
-                doDirectPayment(
+                doTaakPayment(
                     paymentRequest: { 
                         identifier: "belastingzaken", 
-                        amount: 100.25, 
-                        orderId: "123456", 
-                        reference: "12345",
+                        taakId: "58fad5ab-dc2f-11ec-9075-f22a405ce708"
                     }
                 ) {
                 redirectUrl,
@@ -106,7 +109,7 @@ internal class DirectPaymentMutationIT(
                 .execute()
                 .errors()
                 .verify()
-                .path("doDirectPayment")
+                .path("doTaakPayment")
                 .entity(JsonNode::class.java)
                 .get()
 
@@ -114,17 +117,15 @@ internal class DirectPaymentMutationIT(
     }
 
     @Test
-    @WithBurgerUser("123")
+    @WithBurgerUser("569312863")
     fun doDirectPaymentWithIdentifierAndRefererHeader() {
         val mutation =
             """
             mutation {
-                doDirectPayment(
+                doTaakPayment(
                     paymentRequest: { 
                         identifier: "belastingzaken", 
-                        amount: 100.25, 
-                        orderId: "123456", 
-                        reference: "12345",
+                        taakId: "58fad5ab-dc2f-11ec-9075-f22a405ce708"
                     }
                 ) {
                 redirectUrl,
@@ -143,7 +144,7 @@ internal class DirectPaymentMutationIT(
                 .execute()
                 .errors()
                 .verify()
-                .path("doDirectPayment")
+                .path("doTaakPayment")
                 .entity(JsonNode::class.java)
                 .get()
 
@@ -160,6 +161,10 @@ internal class DirectPaymentMutationIT(
                         when (request.method + " " + path) {
                             "POST /v2/TAX/hostedcheckouts" -> {
                                 TestHelper.mockResponseFromFile("/data/payment-response.json")
+                            }
+
+                            "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce708" -> {
+                                TestHelper.mockResponseFromFile("/data/get-betaal-taskv2.json")
                             }
 
                             else -> {

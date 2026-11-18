@@ -15,12 +15,9 @@
  */
 import { gql } from "@apollo/client";
 
-export const QUERY_GET_DIRECT_PAYMENT_STATUS = gql`
-  query GetDirectPaymentStatus(
-    $identifier: String!
-    $hostedCheckoutId: String!
-  ) {
-    getDirectPaymentStatus(
+export const QUERY_GET_TAAK_PAYMENT_STATUS = gql`
+  query GetTaakPaymentStatus($identifier: String!, $hostedCheckoutId: String!) {
+    getTaakPaymentStatus(
       identifier: $identifier
       hostedCheckoutId: $hostedCheckoutId
     ) {

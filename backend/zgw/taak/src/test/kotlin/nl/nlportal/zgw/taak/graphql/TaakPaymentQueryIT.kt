@@ -13,39 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.direct.graphql
+package nl.nlportal.zgw.taak.graphql
 
-import tools.jackson.databind.JsonNode
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.net.URI
 import nl.nlportal.commonground.authentication.WithBurgerUser
-import nl.nlportal.payment.direct.TestHelper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.taak.TestHelper
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
-import org.springframework.boot.test.context.SpringBootTest
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
 import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureHttpGraphQlTester
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.graphql.test.tester.HttpGraphQlTester
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
+import tools.jackson.databind.JsonNode
 
 @SpringBootTest
 @AutoConfigureHttpGraphQlTester
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-internal class DirectPaymentQueryIT(
+internal class TaakPaymentQueryIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
@@ -60,6 +63,7 @@ internal class DirectPaymentQueryIT(
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
             propsRegistry.add("nl-portal.config.payment.direct.properties.url") { url }
+            propsRegistry.add("nl-portal.config.objectenapi.properties.url") { url }
         }
 
         @JvmStatic
@@ -82,6 +86,7 @@ internal class DirectPaymentQueryIT(
         setupMockServer()
         url = server?.url("/").toString()
         directPaymentModuleConfiguration.properties.url = url
+        objectsApiClientConfig.properties.url = URI(url)
     }
 
     @Test
@@ -90,7 +95,7 @@ internal class DirectPaymentQueryIT(
         val query =
             """
             query {
-                getDirectPaymentStatus(
+                getTaakPaymentStatus(
                     identifier: "belastingzaken", 
                     hostedCheckoutId: "4373041363"
                 ) {
@@ -105,7 +110,7 @@ internal class DirectPaymentQueryIT(
                 .execute()
                 .errors()
                 .verify()
-                .path("getDirectPaymentStatus")
+                .path("getTaakPaymentStatus")
                 .entity(JsonNode::class.java)
                 .get()
 

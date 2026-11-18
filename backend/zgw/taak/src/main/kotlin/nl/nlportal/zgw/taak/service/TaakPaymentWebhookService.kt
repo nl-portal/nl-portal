@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.direct.service
+package nl.nlportal.zgw.taak.service
 
 import com.onlinepayments.communication.RequestHeader
 import com.onlinepayments.json.DefaultMarshaller
@@ -22,26 +22,26 @@ import com.onlinepayments.webhooks.SignatureValidationException
 import com.onlinepayments.webhooks.WebhooksHelper
 import java.util.UUID
 import nl.nlportal.core.util.Mapper
-import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration.DirectPaymentProperties
 import nl.nlportal.payment.direct.constants.DirectPaymentState
-import nl.nlportal.payment.direct.domain.DirectPaymentWebhookRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
 import nl.nlportal.zgw.objectenapi.domain.UpdateObjectsApiObjectRequest
 import nl.nlportal.zgw.taak.domain.TaakObjectV2
+import nl.nlportal.zgw.taak.domain.TaakPaymentWebhookRequest
 import nl.nlportal.zgw.taak.domain.TaakStatus
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
-class DirectPaymentWebhookService(
-    private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+class TaakPaymentWebhookService(
+    private val directPaymentProperties: DirectPaymentProperties,
     private val objectsApiClient: ObjectsApiClient,
 ) {
     val webhookHelper = WebhooksHelper(DefaultMarshaller.INSTANCE, InMemorySecretKeyStore.INSTANCE)
 
     init {
-        directPaymentModuleConfiguration.properties.configurations.forEach {
+        directPaymentProperties.configurations.forEach {
             InMemorySecretKeyStore.INSTANCE.storeSecretKey(it.value.webhookApiKey, it.value.webhookApiSecret)
         }
     }
@@ -61,14 +61,14 @@ class DirectPaymentWebhookService(
         if (!isValidDirectRequest(httpHeaders, jsonBody)) {
             return "Request is not valid"
         }
-        val directPaymentWebhookRequest =
+        val taakPaymentWebhookRequest =
             Mapper.get().readValue(
                 jsonBody,
-                DirectPaymentWebhookRequest::class.java,
+                TaakPaymentWebhookRequest::class.java,
             )
-        val orderId = directPaymentWebhookRequest.payment.paymentOutput.references.merchantReference
+        val orderId = taakPaymentWebhookRequest.payment.paymentOutput.references.merchantReference
         if (isUUID(orderId)) {
-            val status = directPaymentWebhookRequest.payment.statusOutput.statusCode
+            val status = taakPaymentWebhookRequest.payment.statusOutput.statusCode
             if (status != DirectPaymentState.SUCCESS.status &&
                 status != DirectPaymentState.PENDING.status &&
                 status != DirectPaymentState.PENDING1.status &&
@@ -78,10 +78,27 @@ class DirectPaymentWebhookService(
             }
 
             val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
+
             if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
                 return "Task is already completed"
             }
 
+            if (objectsApiTask.record.data.ogonebetaling == null) {
+                return "Task payment not found"
+            }
+
+            val taakAmount =
+                objectsApiTask.record.data.ogonebetaling!!
+                    .bedrag
+
+            // we have a payment task, just proceed
+            val amount = taakPaymentWebhookRequest.payment.paymentOutput.amountOfMoney.amount
+            if ((taakAmount.times(100)).toLong() != amount) {
+                // payment amount is  not the same as in the amount of the payment task, so the task can be completed
+                return "Amount is not the same as the amount in the task"
+            }
+
+            // all the checks are passed, next submit task
             val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
             updateRequest.record.data.status = TaakStatus.AFGEROND
             updateRequest.record.correctedBy = "Payment provider"
