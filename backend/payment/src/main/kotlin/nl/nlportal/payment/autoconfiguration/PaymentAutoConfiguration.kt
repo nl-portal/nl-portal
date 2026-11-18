@@ -19,15 +19,17 @@ import nl.nlportal.payment.api.OgonePaymentController
 import nl.nlportal.payment.graphql.OgonePaymentMutation
 import nl.nlportal.payment.service.OgonePaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
+@Deprecated("Ogone e-Commerce is no longer supported and will be removed in 4.0.0. Use the payment-direct module instead.")
 @AutoConfiguration
 @EnableConfigurationProperties(OgonePaymentConfig::class)
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "payment.ogone.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "taak.enabled", "payment.ogone.enabled"], havingValue = "true")
 class PaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OgonePaymentService::class)
@@ -41,7 +43,11 @@ class PaymentAutoConfiguration {
         )
 
     @Bean
-    fun ogonePaymentMutation(ogonePaymentService: OgonePaymentService): OgonePaymentMutation = OgonePaymentMutation(ogonePaymentService)
+    fun ogonePaymentMutation(
+        ogonePaymentService: OgonePaymentService,
+        taakService: TaakService,
+        ogonePaymentConfig: OgonePaymentConfig,
+    ): OgonePaymentMutation = OgonePaymentMutation(ogonePaymentService, taakService, ogonePaymentConfig.properties)
 
     @Bean
     @ConditionalOnMissingBean(OgonePaymentController::class)

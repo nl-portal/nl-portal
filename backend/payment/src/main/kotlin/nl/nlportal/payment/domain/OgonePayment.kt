@@ -20,6 +20,7 @@ import java.math.BigDecimal
 import java.net.URI
 import nl.nlportal.payment.autoconfiguration.OgonePaymentConfig.OgonePaymentProfile
 
+@Deprecated("Ogone e-Commerce is no longer supported and will be removed in 4.0.0. Use the payment-direct module instead.")
 data class OgonePayment(
     @JsonIgnore val pspId: String,
     @JsonIgnore val amount: BigDecimal = BigDecimal.ZERO,
@@ -109,6 +110,7 @@ data class OgonePayment(
     }
 }
 
+@Deprecated("Ogone e-Commerce is no longer supported and will be removed in 4.0.0. Use the payment-direct module instead.")
 data class PaymentField(
     val name: String,
     val value: String,

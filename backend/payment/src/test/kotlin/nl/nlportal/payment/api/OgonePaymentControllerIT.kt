@@ -26,6 +26,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -33,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.reactive.server.WebTestClient
+import java.util.concurrent.atomic.AtomicInteger
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
@@ -43,6 +45,7 @@ internal class OgonePaymentControllerIT(
     @Autowired private val paymentConfig: OgonePaymentConfig,
 ) {
     lateinit var server: MockWebServer
+    private val updateRequests = AtomicInteger()
 
     @BeforeEach
     internal fun setUp() {
@@ -55,35 +58,6 @@ internal class OgonePaymentControllerIT(
     @AfterEach
     internal fun tearDown() {
         server.shutdown()
-    }
-
-    @Test
-    fun postSaleTest() {
-        val parameterList =
-            listOf(
-                PaymentField(OgonePayment.PAYMENT_PROPERTY_ORDER_ID, "58fad5ab-dc2f-11ec-9075-f22a405ce707"),
-                PaymentField(OgonePayment.PAYMENT_PROPERTY_STATUS, "91"),
-            )
-
-        val shaSign =
-            OgonePaymentService
-                .hashParameters(
-                    parameterList,
-                    paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaOutKey,
-                    paymentConfig.properties.getPaymentProfile("belastingzaken")!!.shaVersion,
-                ).uppercase()
-
-        webTestClient
-            .get()
-            .uri("/api/public/payment/ogone/postsale?orderID=58fad5ab-dc2f-11ec-9075-f22a405ce707&STATUS=91&SHASIGN=$shaSign")
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .returnResult()
-            .responseBody
-            .contentToString()
-            .contentEquals("Request Successful processed")
     }
 
     @Test
@@ -174,12 +148,56 @@ internal class OgonePaymentControllerIT(
             .contentEquals("400 BAD_REQUEST \"Request has not the correct status\"")
     }
 
+    @Test
+    fun postSalePendingStatusCompletesTask() {
+        signedPostSale(status = "91")
+            .expectStatus()
+            .isOk
+            .expectBody(String::class.java)
+            .isEqualTo("Request successful processed for order $TASK_ID")
+        assertEquals(1, updateRequests.get())
+    }
+
+    @Test
+    fun postSaleSuccessStatusCompletesTask() {
+        signedPostSale(status = "9")
+            .expectStatus()
+            .isOk
+            .expectBody(String::class.java)
+            .isEqualTo("Request successful processed for order $TASK_ID")
+        assertEquals(1, updateRequests.get())
+    }
+
+    private fun signedPostSale(status: String): WebTestClient.ResponseSpec {
+        val profile = paymentConfig.properties.getPaymentProfile("belastingzaken")!!
+        val shaSign =
+            OgonePaymentService
+                .hashParameters(
+                    listOf(
+                        PaymentField(OgonePayment.PAYMENT_PROPERTY_ORDER_ID, TASK_ID),
+                        PaymentField(OgonePayment.PAYMENT_PROPERTY_CURRENCY, "EUR"),
+                        PaymentField(OgonePayment.PAYMENT_PROPERTY_AMOUNT, "147.43"),
+                        PaymentField(OgonePayment.PAYMENT_PROPERTY_STATUS, status),
+                    ),
+                    profile.shaOutKey,
+                    profile.shaVersion,
+                ).uppercase()
+        return webTestClient
+            .get()
+            .uri("/api/public/payment/ogone/postsale?orderID=$TASK_ID&currency=EUR&amount=147.43&STATUS=$status&SHASIGN=$shaSign")
+            .exchange()
+    }
+
     fun setupMockObjectsApiServer() {
+        updateRequests.set(0)
         val dispatcher: Dispatcher =
             object : Dispatcher() {
                 @Throws(InterruptedException::class)
                 override fun dispatch(request: RecordedRequest): MockResponse {
                     val path = request.path?.substringBefore('?')
+                    if (request.method == "PUT" || request.method == "PATCH") {
+                        updateRequests.incrementAndGet()
+                    }
                     val response =
                         when (request.method + " " + path) {
                             "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
@@ -194,5 +212,9 @@ internal class OgonePaymentControllerIT(
                 }
             }
         server.dispatcher = dispatcher
+    }
+
+    companion object {
+        const val TASK_ID: String = "58fad5ab-dc2f-11ec-9075-f22a405ce707"
     }
 }

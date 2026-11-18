@@ -103,7 +103,7 @@ modules, neem dan de vereisten van allemaal samen. Wat er niet bij staat, heb je
 | `openklant2`, `haalcentraal2`, `haalcentraal.hr`, `virusscan.clamav` | niets |
 | `form` | `objectenapi` |
 | `taak` | `objectenapi` |
-| `payment.ogone`, `payment.direct` | `objectenapi` |
+| `payment.ogone`, `payment.direct` | `objectenapi`, `taak` |
 | `berichten` | `objectenapi`, `documentenapis` |
 | `zakenapi` | `objectenapi`, `catalogiapi`, `documentenapis`, `besluitenapi` |
 | `product` ¹ | `objectenapi`, `catalogiapi`, `documentenapis`, `besluitenapi`, `zakenapi`, `taak` |
@@ -145,6 +145,7 @@ flowchart TB
     berichten --> documentenapis
     taak --> objectenapi
     form --> objectenapi
+    payment --> taak
     payment --> objectenapi
 ```
 

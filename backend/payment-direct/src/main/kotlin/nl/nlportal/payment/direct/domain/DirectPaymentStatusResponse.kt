@@ -22,8 +22,25 @@ data class DirectPaymentStatusResponse(
     val status: DirectPaymentStatusResponseStatus,
     val createdPaymentOutput: DirectPaymentOutput,
 ) {
+    @JsonIgnoreProperties(ignoreUnknown = true)
     data class DirectPaymentOutput(
         val paymentStatusCategory: DirectPaymentStatusCategory,
+        val payment: DirectPaymentCreatedPayment? = null,
+    )
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    data class DirectPaymentCreatedPayment(
+        val paymentOutput: DirectPaymentCreatedPaymentOutput? = null,
+    )
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    data class DirectPaymentCreatedPaymentOutput(
+        val references: DirectPaymentCreatedPaymentReferences? = null,
+    )
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    data class DirectPaymentCreatedPaymentReferences(
+        val merchantReference: String? = null,
     )
 }
 

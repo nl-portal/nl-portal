@@ -22,6 +22,7 @@ import nl.nlportal.payment.direct.graphql.DirectPaymentMutation
 import nl.nlportal.payment.direct.graphql.DirectPaymentQuery
 import nl.nlportal.payment.direct.service.DirectPaymentService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
+import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -31,7 +32,7 @@ import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
 @EnableConfigurationProperties(DirectPaymentModuleConfiguration::class)
-@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "payment.direct.enabled"], havingValue = "true")
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "taak.enabled", "payment.direct.enabled"], havingValue = "true")
 class DirectPaymentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(DirectPaymentClient::class)
@@ -58,10 +59,18 @@ class DirectPaymentAutoConfiguration {
         )
 
     @Bean
-    fun directPaymentMutation(directPaymentService: DirectPaymentService): DirectPaymentMutation = DirectPaymentMutation(directPaymentService)
+    fun directPaymentMutation(
+        directPaymentService: DirectPaymentService,
+        taakService: TaakService,
+        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+    ): DirectPaymentMutation = DirectPaymentMutation(directPaymentService, taakService, directPaymentModuleConfiguration)
 
     @Bean
-    fun directPaymentQuery(directPaymentService: DirectPaymentService): DirectPaymentQuery = DirectPaymentQuery(directPaymentService)
+    fun directPaymentQuery(
+        directPaymentService: DirectPaymentService,
+        taakService: TaakService,
+        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+    ): DirectPaymentQuery = DirectPaymentQuery(directPaymentService, taakService, directPaymentModuleConfiguration)
 
     @Bean
     @ConditionalOnMissingBean(DirectPaymentController::class)

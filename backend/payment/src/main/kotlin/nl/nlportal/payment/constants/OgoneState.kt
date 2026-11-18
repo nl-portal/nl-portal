@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.constants
 
+@Deprecated("Ogone e-Commerce is no longer supported and will be removed in 4.0.0. Use the payment-direct module instead.")
 enum class OgoneState(
     val status: Int,
 ) {

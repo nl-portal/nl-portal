@@ -32,11 +32,13 @@ import java.net.URI
 import java.util.UUID
 import nl.nlportal.core.util.Mapper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration.DirectPaymentProfile
 import nl.nlportal.payment.direct.client.DirectPaymentClient
 import nl.nlportal.payment.direct.constants.DirectPaymentState
 import nl.nlportal.payment.direct.domain.DirectPaymentRequest
 import nl.nlportal.payment.direct.domain.DirectPaymentResponse
 import nl.nlportal.payment.direct.domain.DirectPaymentStatus
+import nl.nlportal.payment.direct.domain.DirectPaymentStatusResponse
 import nl.nlportal.payment.direct.domain.DirectPaymentWebhookRequest
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
@@ -64,12 +66,28 @@ open class DirectPaymentService(
         identifier: String,
         hostedCheckoutId: String,
     ): DirectPaymentStatus {
+        val (_, directPaymentStatusResponse) = getDirectPaymentStatusResponse(identifier, hostedCheckoutId)
+
+        return DirectPaymentStatus(
+            status = directPaymentStatusResponse.createdPaymentOutput.paymentStatusCategory,
+        )
+    }
+
+    /**
+     * Get the hosted checkout status from the payment provider, together with the payment profile used for it.
+     * @param identifier: payment profile key or pspId
+     * @param hostedCheckoutId: id of the hosted checkout
+     */
+    open suspend fun getDirectPaymentStatusResponse(
+        identifier: String,
+        hostedCheckoutId: String,
+    ): Pair<DirectPaymentProfile, DirectPaymentStatusResponse> {
         val paymentDirectProfile =
             directPaymentModuleConfiguration.properties.getPaymentProfile(identifier)
                 ?: directPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(identifier)
                 ?: throw ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Could not found direct payment profile for the identifier $identifier",
+                    "Could not find direct payment profile for the identifier $identifier",
                 )
 
         val directPaymentStatusResponse =
@@ -78,9 +96,7 @@ open class DirectPaymentService(
                 hostedCheckoutId = hostedCheckoutId,
             )
 
-        return DirectPaymentStatus(
-            status = directPaymentStatusResponse.createdPaymentOutput.paymentStatusCategory,
-        )
+        return paymentDirectProfile to directPaymentStatusResponse
     }
 
     /**
@@ -96,7 +112,7 @@ open class DirectPaymentService(
                     ?: directPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(paymentRequest.identifier)
                     ?: throw ResponseStatusException(
                         HttpStatus.BAD_REQUEST,
-                        "Could not found direct payment profile for the identifier $paymentRequest.identifier",
+                        "Could not find direct payment profile for the identifier ${paymentRequest.identifier}",
                     )
 
             val hostedCheckoutSpecificInput =
@@ -121,7 +137,7 @@ open class DirectPaymentService(
                         Order()
                             .withAmountOfMoney(
                                 AmountOfMoney()
-                                    .withAmount((paymentRequest.amount * 100).toLong())
+                                    .withAmount(toCents(paymentRequest.amount))
                                     .withCurrencyCode(paymentDirectProfile.currency),
                             ).withReferences(
                                 OrderReferences()
@@ -167,6 +183,7 @@ open class DirectPaymentService(
         jsonBody: String,
     ): String {
         if (!isValidDirectRequest(httpHeaders, jsonBody)) {
+            logger.info { "Direct payment webhook rejected: invalid signature" }
             return "Request is not valid"
         }
         val ogoneDirectPaymentWebhookRequest =
@@ -177,17 +194,34 @@ open class DirectPaymentService(
         val orderId = ogoneDirectPaymentWebhookRequest.payment.paymentOutput.references.merchantReference
         if (isUUID(orderId)) {
             val status = ogoneDirectPaymentWebhookRequest.payment.statusOutput.statusCode
-            if (status != DirectPaymentState.SUCCESS.status &&
-                status != DirectPaymentState.PENDING.status &&
-                status != DirectPaymentState.PENDING1.status &&
-                status != DirectPaymentState.PENDING2.status
-            ) {
+            if (status != DirectPaymentState.SUCCESS.status) {
+                logger.info { "Direct payment webhook for taak $orderId not processed: status $status" }
                 return "Request has not the correct status: $status"
             }
 
             val objectsApiTask = getObjectsApiTaak(UUID.fromString(orderId))
             if (objectsApiTask.record.data.status != TaakStatus.OPEN) {
                 return "Task is already completed"
+            }
+
+            val ogonebetaling = objectsApiTask.record.data.ogonebetaling
+            if (ogonebetaling == null) {
+                logger.warn { "Direct payment webhook for taak $orderId rejected: taak has no ogonebetaling" }
+                return "Task payment not found"
+            }
+            val merchantId = ogoneDirectPaymentWebhookRequest.merchantId
+            if (merchantId != directPaymentModuleConfiguration.properties.findPaymentProfile(ogonebetaling.pspid)?.pspId) {
+                logger.warn {
+                    "Direct payment webhook for taak $orderId rejected: merchantId $merchantId does not match pspid ${ogonebetaling.pspid}"
+                }
+                return "Merchant does not match the task"
+            }
+            val amount = ogoneDirectPaymentWebhookRequest.payment.paymentOutput.amountOfMoney.amount
+            if (toCents(ogonebetaling.bedrag) != amount) {
+                logger.warn {
+                    "Direct payment webhook for taak $orderId rejected: amount $amount does not match bedrag ${ogonebetaling.bedrag}"
+                }
+                return "Amount is not the same as the amount in the task"
             }
 
             val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
@@ -239,6 +273,12 @@ open class DirectPaymentService(
             } catch (e: IllegalArgumentException) {
                 false
             }
+
+        /**
+         * Converts an amount in euros to the cents charged by the checkout. The webhook uses the same conversion, so the
+         * amount of a checkout always matches the amount of its task.
+         */
+        fun toCents(amount: Double): Long = (amount * 100).toLong()
 
         fun checkAndRemovePath(url: String): String {
             if (url.endsWith("/")) {

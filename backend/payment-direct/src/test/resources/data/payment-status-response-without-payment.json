@@ -1,0 +1,6 @@
+{
+  "createdPaymentOutput": {
+    "paymentStatusCategory": "SUCCESSFUL"
+  },
+  "status": "PAYMENT_CREATED"
+}

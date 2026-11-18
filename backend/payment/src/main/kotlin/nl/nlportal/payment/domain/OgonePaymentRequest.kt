@@ -15,6 +15,7 @@
  */
 package nl.nlportal.payment.domain
 
+@Deprecated("Ogone e-Commerce is no longer supported and will be removed in 4.0.0. Use the payment-direct module instead.")
 data class OgonePaymentRequest(
     val pspId: String,
     val amount: Double,
