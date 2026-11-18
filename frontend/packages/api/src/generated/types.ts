@@ -63,7 +63,7 @@ export type Bericht = {
   onderwerp: Scalars['String']['output'];
   publicatiedatum: Scalars['ZonedDateTime']['output'];
   referentie?: Maybe<Scalars['String']['output']>;
-  uuid?: Maybe<Scalars['UUID']['output']>;
+  uuid: Scalars['UUID']['output'];
 };
 
 export enum BerichtHandelingsperspectief {
