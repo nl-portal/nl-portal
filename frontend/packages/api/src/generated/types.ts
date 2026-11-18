@@ -725,14 +725,6 @@ export enum DigitaleAdresType {
   Telefoonnummer = 'TELEFOONNUMMER'
 }
 
-export type DirectPaymentRequestInput = {
-  amount: Scalars['PositiveFloat']['input'];
-  identifier: Scalars['String']['input'];
-  langId?: InputMaybe<Scalars['String']['input']>;
-  orderId: Scalars['String']['input'];
-  reference: Scalars['String']['input'];
-};
-
 export type DirectPaymentResponse = {
   __typename?: 'DirectPaymentResponse';
   redirectUrl: Scalars['String']['output'];
@@ -887,8 +879,7 @@ export type Mutation = {
   createVerificatie?: Maybe<VerificatieCreateResponse>;
   /**  Delete DigitaleAdres of User by Id */
   deleteUserDigitaleAdres?: Maybe<Scalars['Boolean']['output']>;
-  /**  Do Worldline Direct payment */
-  doDirectPayment: DirectPaymentResponse;
+  doTaakPayment: DirectPaymentResponse;
   processSubmission?: Maybe<CaseCreated>;
   /**  Submit a task */
   submitTaakV2: TaakV2;
@@ -924,8 +915,8 @@ export type MutationDeleteUserDigitaleAdresArgs = {
 };
 
 
-export type MutationDoDirectPaymentArgs = {
-  paymentRequest: DirectPaymentRequestInput;
+export type MutationDoTaakPaymentArgs = {
+  paymentRequest: TaakPaymentRequestInput;
 };
 
 
@@ -1975,7 +1966,6 @@ export type Query = {
   getBewonersAantalV2?: Maybe<Scalars['Int']['output']>;
   getCaseInstance?: Maybe<CaseInstance>;
   getDecision: Array<Scalars['JSON']['output']>;
-  getDirectPaymentStatus: DirectPaymentStatus;
   /**  find single form definition from repository */
   getFormDefinitionByName?: Maybe<FormDefinition>;
   /**  Get the form definition for a task the authenticated user owns */
@@ -2055,6 +2045,7 @@ export type Query = {
   getProducten: ProductPage;
   /**  Get task by id V2 */
   getTaakByIdV2?: Maybe<TaakV2>;
+  getTaakPaymentStatus: DirectPaymentStatus;
   /**  Get a list of tasks. Optional filter for zaak V2 */
   getTakenV2: TaakPageV2;
   /**  Returns the total amount of unopened VTBBerichten */
@@ -2106,12 +2097,6 @@ export type QueryGetDecisionArgs = {
   productName: Scalars['String']['input'];
   productTypeId?: InputMaybe<Scalars['UUID']['input']>;
   sources?: InputMaybe<Scalars['JSON']['input']>;
-};
-
-
-export type QueryGetDirectPaymentStatusArgs = {
-  hostedCheckoutId: Scalars['String']['input'];
-  identifier: Scalars['String']['input'];
 };
 
 
@@ -2338,6 +2323,12 @@ export type QueryGetTaakByIdV2Args = {
 };
 
 
+export type QueryGetTaakPaymentStatusArgs = {
+  hostedCheckoutId: Scalars['String']['input'];
+  identifier: Scalars['String']['input'];
+};
+
+
 export type QueryGetTakenV2Args = {
   pageNumber?: InputMaybe<Scalars['Int']['input']>;
   pageSize?: InputMaybe<Scalars['Int']['input']>;
@@ -2486,6 +2477,12 @@ export type TaakPageV2 = {
   totalElements: Scalars['Int']['output'];
   /**  The total number of available pages */
   totalPages: Scalars['Int']['output'];
+};
+
+export type TaakPaymentRequestInput = {
+  identifier: Scalars['String']['input'];
+  langId?: InputMaybe<Scalars['String']['input']>;
+  taakId: Scalars['UUID']['input'];
 };
 
 export enum TaakSoort {

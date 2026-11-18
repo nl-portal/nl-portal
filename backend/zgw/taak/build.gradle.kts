@@ -27,6 +27,7 @@ dependencies {
     api(project(":zgw:objectenapi"))
     api(project(":zgw:documenten-api"))
     api(project(":form"))
+    api(project(":payment-direct"))
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)

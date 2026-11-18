@@ -16,6 +16,7 @@
 package nl.nlportal.zgw.taak.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.UUID
 import nl.nlportal.commonground.authentication.AuthenticationMachtigingsDienstService
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.core.util.Mapper
@@ -34,12 +35,11 @@ import nl.nlportal.zgw.taak.graphql.TaakPageV2
 import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.server.ResponseStatusException
-import java.util.UUID
 import tools.jackson.core.type.TypeReference
 
 open class TaakService(
-    private val objectsApiClient: ObjectsApiClient,
-    private val taakConfigProperties: TaakConfigProperties,
+    val objectsApiClient: ObjectsApiClient,
+    val taakConfigProperties: TaakConfigProperties,
     val authenticationMachtigingsDienstService: AuthenticationMachtigingsDienstService,
 ) {
     suspend fun getTaken(
@@ -118,18 +118,19 @@ open class TaakService(
     ): TaakV2 {
         val submittedTask =
             submitTaakV2(
-                id,
-                submission,
-                authentication,
+                authentication = authentication,
+                id = id,
+                submission = submission,
             )
 
         return submittedTask
     }
 
     suspend fun submitTaakV2(
-        id: UUID,
-        submission: Any,
         authentication: CommonGroundAuthentication,
+        id: UUID,
+        submission: Any? = null,
+        correctedBy: String? = null,
     ): TaakV2 {
         val objectsApiTask =
             getObjectsApiTaak<TaakObjectV2>(id)
@@ -140,20 +141,23 @@ open class TaakService(
                 String.format("Status is niet open, taak [%s] kan niet afgerond worden", id),
             )
         }
-        val submissionAsMap = Mapper.get().convertValue(submission, object : TypeReference<Map<String, Any>>() {})
 
         val updateRequest = UpdateObjectsApiObjectRequest.fromObjectsApiObject(objectsApiTask)
-        updateRequest.record.data.portaalformulier
-            ?.verzondenData = submissionAsMap
+
+        submission?.let {
+            updateRequest.record.data.portaalformulier
+                ?.verzondenData = Mapper.get().convertValue(it, object : TypeReference<Map<String, Any>>() {})
+        }
+
         updateRequest.record.data.status = TaakStatus.AFGEROND
-        updateRequest.record.correctedBy = authentication.getUserRepresentation()
+        updateRequest.record.correctedBy = correctedBy ?: authentication.getUserRepresentation()
         updateRequest.record.correctionFor = objectsApiTask.record.index.toString()
 
         val updatedObjectsApiTask = objectsApiClient.updateObject(objectsApiTask.uuid, updateRequest)
         return TaakV2.fromObjectsApi(updatedObjectsApiTask)
     }
 
-    private suspend inline fun <reified T> getObjectsApiTaak(taskId: UUID): ObjectsApiObject<T> {
+    suspend inline fun <reified T> getObjectsApiTaak(taskId: UUID): ObjectsApiObject<T> {
         val objectsApiTask = objectsApiClient.getObjectById<T>(taskId.toString())
         if (objectsApiTask == null) {
             throw ResponseStatusException(
