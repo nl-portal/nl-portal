@@ -374,6 +374,7 @@ class OpenKlant2Service(
         authentication: CommonGroundAuthentication,
         digitaleAdresId: UUID,
     ) {
+        val digitaleAdres = findDigitalAdres(digitaleAdresId)
         val userDigitaleAdressen = findDigitaleAdressen(authentication)
 
         if (userDigitaleAdressen.none { it.uuid == digitaleAdresId }) {
