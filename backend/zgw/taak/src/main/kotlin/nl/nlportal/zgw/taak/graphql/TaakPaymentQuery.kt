@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.direct.graphql
+package nl.nlportal.zgw.taak.graphql
 
 import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.payment.direct.domain.DirectPaymentStatus
-import nl.nlportal.payment.direct.service.DirectPaymentService
+import nl.nlportal.zgw.taak.service.TaakPaymentService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
 
 @Controller
-class DirectPaymentQuery(
-    private val directPaymentService: DirectPaymentService,
+class TaakPaymentQuery(
+    private val taakPaymentService: TaakPaymentService,
 ) {
     @QueryMapping
-    suspend fun getDirectPaymentStatus(
+    suspend fun getTaakPaymentStatus(
         authentication: CommonGroundAuthentication,
         @Argument identifier: String,
         @Argument hostedCheckoutId: String,
     ): DirectPaymentStatus =
-        directPaymentService.getDirectPaymentStatus(
+        taakPaymentService.getTaakPaymentStatus(
+            authentication = authentication,
             identifier = identifier,
             hostedCheckoutId = hostedCheckoutId,
         )

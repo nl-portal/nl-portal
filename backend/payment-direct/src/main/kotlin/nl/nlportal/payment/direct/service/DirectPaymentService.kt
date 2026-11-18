@@ -66,7 +66,6 @@ open class DirectPaymentService(
      */
     suspend fun doDirectPayment(
         paymentRequest: DirectPaymentRequest,
-        returnUrl: String? = null,
     ): DirectPaymentResponse {
         try {
             val paymentDirectProfile =
@@ -80,7 +79,7 @@ open class DirectPaymentService(
             val hostedCheckoutSpecificInput =
                 HostedCheckoutSpecificInput()
                     .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
-                    .withReturnUrl(returnUrl ?: paymentDirectProfile.returnUrl)
+                    .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl)
                     .withShowResultPage(directPaymentModuleConfiguration.properties.showResultPage)
                     .withAllowedNumberOfPaymentAttempts(paymentDirectProfile.allowedNumberOfPayments)
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 Den Haag, Ritense, the Netherlands.
+ * Copyright 2015-2026 Den Haag, Ritense, the Netherlands.
  *
  * Licensed under EUPL, Version 1.2 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.direct.api
+package nl.nlportal.zgw.taak.web.rest
 
-import nl.nlportal.payment.direct.service.DirectPaymentService
-import nl.nlportal.payment.direct.service.DirectPaymentWebhookService
+import nl.nlportal.zgw.taak.service.TaakPaymentWebhookService
 import org.springframework.http.ResponseEntity
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.bind.annotation.PostMapping
@@ -26,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(value = ["/api/public"])
-class DirectPaymentController(
-    private val directPaymentWebhookService: DirectPaymentWebhookService,
+class TaakPaymentWebhookResource(
+    private val taakPaymentWebhookService: TaakPaymentWebhookService,
 ) {
     @PostMapping(value = ["/payment/direct/postsale"])
     suspend fun postSale(
@@ -35,7 +34,7 @@ class DirectPaymentController(
         @RequestBody directPaymentWebhookRequest: String,
     ): ResponseEntity<String> =
         ResponseEntity.ok(
-            directPaymentWebhookService.handlePostSale(
+            taakPaymentWebhookService.handlePostSale(
                 httpServletRequest.headers,
                 directPaymentWebhookRequest,
             ),

@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.payment.direct.api
+package nl.nlportal.zgw.taak.web.rest
 
-import nl.nlportal.payment.direct.TestHelper
+import java.nio.charset.Charset
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
-import nl.nlportal.payment.direct.service.DirectPaymentService
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
+import nl.nlportal.zgw.taak.TestHelper
+import nl.nlportal.zgw.taak.service.TaakPaymentWebhookService
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -29,20 +32,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
-import java.nio.charset.Charset
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
-import nl.nlportal.payment.direct.service.DirectPaymentWebhookService
 
 @SpringBootTest
 @AutoConfigureWebTestClient(timeout = "36000")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class DirectPaymentControllerIT(
+internal class TaakPaymentWebhookResourceIT(
     @Autowired private val webTestClient: WebTestClient,
     @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
@@ -106,9 +105,9 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(TaakPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
+            TaakPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
         webTestClient
@@ -172,9 +171,9 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(TaakPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
+            TaakPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
         webTestClient
@@ -234,9 +233,9 @@ internal class DirectPaymentControllerIT(
                 ?.webhookApiSecret
                 .toString()
         val headers = HttpHeaders()
-        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(TaakPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
+            TaakPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
         webTestClient
@@ -300,9 +299,9 @@ internal class DirectPaymentControllerIT(
                         .toString(),
             )
         val headers = HttpHeaders()
-        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(TaakPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
+            TaakPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
         webTestClient

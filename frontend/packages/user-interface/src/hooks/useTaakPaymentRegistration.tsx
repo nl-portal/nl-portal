@@ -15,7 +15,7 @@
  */
 import {
   DirectPaymentStatusCategory,
-  GetDirectPaymentStatusDocument,
+  GetTaakPaymentStatusDocument,
 } from "@nl-portal/nl-portal-api";
 import { useLazyQuery } from "@apollo/client/react";
 import { useEffect, useState } from "react";
@@ -27,8 +27,8 @@ export enum PaymentStatus {
   FAILURE,
 }
 
-const usePaymentRegistration = () => {
-  const [getPaymentStatus] = useLazyQuery(GetDirectPaymentStatusDocument);
+const useTaakPaymentRegistration = () => {
+  const [getPaymentStatus] = useLazyQuery(GetTaakPaymentStatusDocument);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>();
   const [orderId, setOrderId] = useState<string | undefined>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,7 +53,7 @@ const usePaymentRegistration = () => {
     })
       .then(({ data: paymentStatusData }) => {
         if (
-          paymentStatusData?.getDirectPaymentStatus.status ===
+          paymentStatusData?.getTaakPaymentStatus.status ===
           DirectPaymentStatusCategory.Successful
         ) {
           setPaymentStatus(PaymentStatus.SUCCESS);
@@ -72,4 +72,4 @@ const usePaymentRegistration = () => {
   return { paymentStatus, orderId };
 };
 
-export default usePaymentRegistration;
+export default useTaakPaymentRegistration;
