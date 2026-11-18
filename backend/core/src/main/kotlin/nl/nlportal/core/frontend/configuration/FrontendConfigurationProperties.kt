@@ -61,6 +61,7 @@ class FrontendConfigurationProperties {
         var casesContactMomentsEnabled: Boolean? = null
         var overviewIntroEnabled: Boolean? = null
         var overviewMaintenanceAlertEnabled: Boolean? = null
+        var vtbBerichtenEnabled: Boolean? = false
         var custom: String? = null
     }
 }

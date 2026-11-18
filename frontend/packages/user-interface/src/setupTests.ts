@@ -56,6 +56,12 @@ const featuresResponse = {
     openProductEnabled: false,
     overviewIntroEnabled: false,
     overviewMaintenanceAlertEnabled: false,
+    vtbBerichtenEnabled: false,
+  },
+  modules: {
+    berichten: {
+      enabled: true,
+    },
   },
 };
 

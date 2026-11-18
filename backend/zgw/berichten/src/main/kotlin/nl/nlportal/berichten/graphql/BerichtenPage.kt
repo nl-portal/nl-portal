@@ -16,7 +16,12 @@
 package nl.nlportal.berichten.graphql
 
 import nl.nlportal.berichten.domain.Bericht
+import nl.nlportal.berichten.domain.BerichtObject
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
 import nl.nlportal.graphql.Page
+import nl.nlportal.vtbapi.client.domain.VTBBericht
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.ResultPage
 
 class BerichtenPage(
     number: Int,
@@ -28,4 +33,21 @@ class BerichtenPage(
         size,
         content,
         totalElements,
-    )
+    ) {
+    companion object {
+        fun fromResultPage(
+            pageNumber: Int,
+            pageSize: Int,
+            resultPage: ResultPage<ObjectsApiObject<BerichtObject>>,
+        ): BerichtenPage {
+            val berichten = resultPage.results.map { Bericht.fromBerichtObject(it) }.sortedByDescending { it.publicatiedatum }
+
+            return BerichtenPage(
+                number = pageNumber,
+                size = pageSize,
+                content = berichten,
+                totalElements = resultPage.count,
+            )
+        }
+    }
+}

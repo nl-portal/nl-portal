@@ -61,13 +61,14 @@ network namespace), so from your host every service is reachable on `localhost:<
 | Open Object                             | 8010 | `--profile zgw`, `--profile objecten`                                                                       |
 | Open Notificaties                       | 8012 | `--profile zgw`, `--profile objecten`                                                                       |
 | OpenProduct                             | 8015 | `--profile zgw`, `--profile openproduct`                                                                    |
+| OpenVTB                                 | 8016 | `--profile zgw`, `--profile openvtb`     |
 | Redis                                   | -    | `--profile zgw`, `--profile openzaak`, `--profile objecten`, `--profile openklant`, `--profile openproduct` |
 | Haalcentraal BRP                        | 5010 | `--profile haalcentraal`                                                                                    |
 | Haalcentraal Bewoning                   | 5011 | `--profile haalcentraal`                                                                                    |
 | Configuration Panel Router              | 3001 | `--profile config`                                                                                          |
 | Configuration Panel Backend             | 8090 | `--profile config`                                                                                          |
 | Configuration Panel Frontend            | 8091 | `--profile config`                                                                                          |
-| Configuration Panel Database (postgres) | -    | `--profile config`                                                                                          |
+| Configuration Panel Database (postgres) | -    | `--profile config`
 
 > **NB!** `RUN_MODE` selects exactly one app-run mode, so `local` and `remote` can never bind the
 > app ports 8080/3000 at the same time. ClamAV now runs by default (no profile) and virus scanning is
@@ -154,22 +155,23 @@ docker compose --profile zgw up -d
 
 The following services will be started:
 
-| Service                           |      Mapped port      |
-|-----------------------------------|:-------------:|
-| NL Portal database (postgres)     |  5432         |
-| Keycloak                          |  8082         |
-| Keycloak database (postgres)      |    -   |
-| Open Zaak                         | 8001 |
-| Open Zaak database (postgis)      | - |
-| Open Objecten                     | 8010 |
-| Open Objecten database (postgis)  | - |
-| Open Notificaties                 | 8012 |
-| Open Notificaties database (postgres) | - |
-| OpenKlant 2                       | 8014 |
-| OpenKlant 2 database (postgres)   | - |
-| OpenProduct                       | 8015 |
-| OpenProduct database (postgres)   | - |
-| Redis                             | - |
+| Service                               | Mapped port |
+|---------------------------------------|:-----------:|
+| NL Portal database (postgres)         |    5432     |
+| Keycloak                              |    8082     |
+| Keycloak database (postgres)          |      -      |
+| Open Zaak                             |    8001     |
+| Open Zaak database (postgis)          |      -      |
+| Open Objecten                         |    8010     |
+| Open Objecten database (postgis)      |      -      |
+| Open Notificaties                     |    8012     |
+| Open Notificaties database (postgres) |      -      |
+| OpenKlant 2                           |    8014     |
+| OpenKlant 2 database (postgres)       |      -      |
+| OpenProduct                           |    8015     |
+| OpenProduct database (postgres)       |      -      |
+| OpenVTB                               |    8016     |
+| Redis                                 |      -      |
 
 #### Haalcentraal only
 Execute the following command:
