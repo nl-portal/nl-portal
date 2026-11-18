@@ -46,7 +46,10 @@ import {
   MenuEntry,
   withMenuEntries,
 } from "../utils/menu-entries";
-import { MENU_ENTRY_RENDERERS } from "../utils/menu-entry-renderers";
+import {
+  MENU_ENTRY_RENDERERS,
+  MenuEntryRenderers,
+} from "../utils/menu-entry-renderers";
 import { resolveMenuEntryIcon } from "../utils/menu-entry-icon";
 
 type Themes =
@@ -58,6 +61,7 @@ interface AppContextType {
   themes: Themes;
   messagesCount: number;
   menuEntries: MenuEntry[];
+  menuEntryRenderers: MenuEntryRenderers;
   refetchThemes: () => void;
   refetchMessages: () => void;
 }
@@ -66,9 +70,18 @@ const AppContext = createContext<AppContextType>({} as AppContextType);
 
 interface MessagesProviderProps {
   children: ReactNode;
+  menuEntryRenderers?: MenuEntryRenderers;
 }
 
-export const AppProvider = ({ children }: MessagesProviderProps) => {
+/**
+ * Loads the app configuration, themes, message count and menu entries.
+ * `menuEntryRenderers` overrides the renderer per menu entry `route.type` (default `MENU_ENTRY_RENDERERS`).
+ * Define it outside the component: menu entries are loaded once, with the renderers of the first render.
+ */
+export const AppProvider = ({
+  children,
+  menuEntryRenderers = MENU_ENTRY_RENDERERS,
+}: MessagesProviderProps) => {
   const location = useLocation();
   const navType = useNavigationType();
   const [firstLoad, setFirstLoad] = useState(true);
@@ -122,7 +135,7 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
         const { renderable, skipped } = getRenderableMenuEntries(
           entries,
           routes,
-          MENU_ENTRY_RENDERERS,
+          menuEntryRenderers,
         );
         skipped.forEach(({ entry, reason }) =>
           console.warn(`Menu entry "${entry.name}" skipped: ${reason}`),
@@ -213,6 +226,7 @@ export const AppProvider = ({ children }: MessagesProviderProps) => {
         themes,
         messagesCount,
         menuEntries: menuEntries ?? [],
+        menuEntryRenderers,
         refetchThemes,
         refetchMessages,
       }}

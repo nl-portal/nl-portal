@@ -28,6 +28,7 @@ export type MenuEntry = {
   icon: string;
   group?: number;
   ordering?: number;
+  hidden?: boolean;
   route: MenuEntryRoute;
 };
 
@@ -75,7 +76,7 @@ export const getRenderableMenuEntries = (
       return;
     }
 
-    const matches = matchRoutes(routes, entry.route.path);
+    const matches = matchRoutes(routes, withoutSubPaths(entry.route.path));
     const deepestRoute = matches?.[matches.length - 1]?.route;
 
     if (deepestRoute && deepestRoute.path !== "*") {
@@ -105,13 +106,15 @@ export const withMenuEntries = (
   const result = groups.map((group) => [...group]);
   const entriesByGroup = new Map<number, MenuEntry[]>();
 
-  entries.forEach((entry) => {
-    const index = Math.min(
-      entry.group ?? DEFAULT_MENU_ENTRY_GROUP,
-      groups.length,
-    );
-    entriesByGroup.set(index, [...(entriesByGroup.get(index) ?? []), entry]);
-  });
+  entries
+    .filter((entry) => !entry.hidden)
+    .forEach((entry) => {
+      const index = Math.min(
+        entry.group ?? DEFAULT_MENU_ENTRY_GROUP,
+        groups.length,
+      );
+      entriesByGroup.set(index, [...(entriesByGroup.get(index) ?? []), entry]);
+    });
 
   entriesByGroup.forEach((groupEntries, index) => {
     if (index === result.length) result.push([]);
@@ -133,6 +136,13 @@ export const withMenuEntries = (
   return result;
 };
 
+const SUB_PATHS_SUFFIX = "/*";
+
+const withoutSubPaths = (path: string) =>
+  path.endsWith(SUB_PATHS_SUFFIX)
+    ? path.slice(0, -SUB_PATHS_SUFFIX.length)
+    : path;
+
 const getOrdering = (entry: MenuEntry) =>
   entry.ordering ?? Number.MAX_SAFE_INTEGER;
 
@@ -142,7 +152,7 @@ const toNavigationItem = (
 ): NavigationItem => ({
   titleTranslationKey: entry.name,
   titleTranslationId: `menu-entries.${entry.name}`,
-  path: entry.route.path,
+  path: withoutSubPaths(entry.route.path),
   icon: resolveIcon(entry.icon),
-  matchSubPaths: entry.route.type === "custom" || undefined,
+  matchSubPaths: entry.route.path.endsWith(SUB_PATHS_SUFFIX) || undefined,
 });

@@ -20,6 +20,7 @@ import java.security.SecureRandom
 import java.util.Base64
 import java.util.UUID
 import org.apache.commons.codec.digest.DigestUtils
+import org.springframework.web.reactive.function.client.WebClientResponseException
 
 object CoreUtils {
     @JvmStatic
@@ -43,6 +44,18 @@ object CoreUtils {
             else -> {
                 DigestUtils.sha1Hex(input)
             }
+        }
+
+    /**
+     * A short description of [e] for a log line: its type, plus the status of a failed WebClient call.
+     * Never the message: for WebClient calls it holds the full request URL, identifiers such as a BSN in the query string included.
+     * Log the exception itself at trace level for debugging.
+     */
+    @JvmStatic
+    fun logSummary(e: Throwable): String =
+        when (e) {
+            is WebClientResponseException -> "${e.javaClass.simpleName} ${e.statusCode.value()}"
+            else -> e.javaClass.simpleName
         }
 
     @JvmStatic

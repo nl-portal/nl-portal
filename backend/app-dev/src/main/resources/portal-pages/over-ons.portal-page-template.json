@@ -1,0 +1,34 @@
+{
+  "naam": "Over ons",
+  "template": "{% page-header title: \"titel\" %}{% endpage-header %}\n{% rich-text %}{% paragraph %}{{ 'intro' | i18n }}{% endparagraph %}\n{% paragraph %}{{ 'meer' | i18n }} {% link href: \"https://www.nlportal.nl\" title: \"nlportal.nl\" target: \"_blank\" %}{% endparagraph %}{% endrich-text %}\n{% heading level: 2 %}{{ 'regelen' | i18n }}{% endheading %}\n{% unordered-list %}\n{{ 'zaken' | i18n }}\n{{ 'taken' | i18n }}\n{{ 'producten' | i18n }}\n{% endunordered-list %}\n{% alert variant: \"info\" title: \"let-op\" %}{{ 'onderhoud' | i18n }}{% endalert %}\n{% link-list %}\n{{ 'mijn-zaken' | i18n }} | /zaken\n{{ 'mijn-producten' | i18n }} | /mijn-producten\n{{ 'contact' | i18n }} | /contact\n{% endlink-list %}\n",
+  "messages": {
+    "nl-NL": {
+      "titel": "Over ons",
+      "intro": "In deze portal regelt u uw zaken met de gemeente online.",
+      "meer": "Meer informatie vindt u op",
+      "regelen": "Wat kunt u hier regelen?",
+      "zaken": "De voortgang van uw zaken bekijken",
+      "taken": "Taken van de gemeente afhandelen",
+      "producten": "Uw producten en vergunningen inzien",
+      "let-op": "Let op",
+      "onderhoud": "Door onderhoud kan de portal 's avonds kort niet bereikbaar zijn.",
+      "mijn-zaken": "Mijn zaken",
+      "mijn-producten": "Mijn producten",
+      "contact": "Contact"
+    },
+    "en-GB": {
+      "titel": "About us",
+      "intro": "In this portal you arrange your affairs with the municipality online.",
+      "meer": "More information is available at",
+      "regelen": "What can you arrange here?",
+      "zaken": "Follow the progress of your cases",
+      "taken": "Complete tasks from the municipality",
+      "producten": "View your products and permits",
+      "let-op": "Please note",
+      "onderhoud": "Due to maintenance the portal may briefly be unavailable in the evening.",
+      "mijn-zaken": "My cases",
+      "mijn-producten": "My products",
+      "contact": "Contact"
+    }
+  }
+}

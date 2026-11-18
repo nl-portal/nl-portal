@@ -28,7 +28,10 @@ import RouterContext from "../contexts/RouterContext";
 import UserContext from "../contexts/UserContext";
 import { Paths } from "../interfaces/paths";
 import { getNavigationItemTitleId } from "../utils/navigation-item-title";
-import { getUnlabeledNavigationPage } from "../utils/get-current-navigation-page";
+import {
+  getHiddenMenuEntryPage,
+  getUnlabeledNavigationPage,
+} from "../utils/get-current-navigation-page";
 
 type HeaderProps = {
   logo?: AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -39,7 +42,7 @@ const Header = ({ logo, paths }: HeaderProps) => {
   const { logout } = useLogout();
   const { currentLocale, setCurrentLocale, supportedLocales } =
     useContext(LocaleContext);
-  const { messagesCount } = useContext(AppContext);
+  const { messagesCount, menuEntries } = useContext(AppContext);
   const { navigationItems } = useContext(RouterContext);
   const { username, usernameVolmacht } = useContext(UserContext);
   const intl = useIntl();
@@ -71,8 +74,20 @@ const Header = ({ logo, paths }: HeaderProps) => {
         }),
       });
     }
+    const hiddenEntry = getHiddenMenuEntryPage(
+      matches,
+      navigationItems,
+      menuEntries ?? [],
+    );
+    const hiddenTitleId = hiddenEntry && `menu-entries.${hiddenEntry.name}`;
+    if (hiddenTitleId && intl.messages[hiddenTitleId]) {
+      list.push({
+        href: matches[matches.length - 1].pathname,
+        label: intl.formatMessage({ id: hiddenTitleId }),
+      });
+    }
     return { navigationPath: list, Link: PortalLink };
-  }, [matches, navigationItems, intl]);
+  }, [matches, navigationItems, menuEntries, intl]);
 
   const languages = useMemo(
     () =>

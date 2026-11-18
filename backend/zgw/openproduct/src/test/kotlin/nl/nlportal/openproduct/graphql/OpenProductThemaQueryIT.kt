@@ -17,12 +17,15 @@ package nl.nlportal.openproduct.graphql
 
 import tools.jackson.databind.JsonNode
 import java.net.URI
+import java.net.URLDecoder
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlinx.coroutines.test.runTest
 import nl.nlportal.commonground.authentication.WithBedrijfUser
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.openproduct.TestHelper
 import nl.nlportal.openproduct.TestHelper.readFileAsString
 import nl.nlportal.openproduct.autoconfigure.OpenProductModuleConfiguration
+import nl.nlportal.core.util.Mapper
 import nl.nlportal.zakenapi.client.ZakenApiConfig
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
@@ -60,6 +63,27 @@ class OpenProductThemaQueryIT(
         @JvmStatic
         var url: String = ""
 
+        private val requests = CopyOnWriteArrayList<String>()
+
+        private val ZAKEN_BY_NAME =
+            """
+            query(${'$'}naam: String!) { getOpenProductThemaZakenByName(naam: ${'$'}naam) { uuid, omschrijving } }
+            """.trimIndent()
+
+        private val ZAKEN_BY_NAME_PAGED =
+            """
+            query(${'$'}naam: String!, ${'$'}pageSize: Int) {
+                getOpenProductThemaZakenByName(naam: ${'$'}naam, pageSize: ${'$'}pageSize) { uuid }
+            }
+            """.trimIndent()
+
+        private val TAKEN_BY_NAME =
+            """
+            query(${'$'}naam: String!, ${'$'}pageSize: Int) {
+                getOpenProductThemaTakenByName(naam: ${'$'}naam, pageSize: ${'$'}pageSize) { id }
+            }
+            """.trimIndent()
+
         @JvmStatic
         @DynamicPropertySource
         fun properties(propsRegistry: DynamicPropertyRegistry) {
@@ -86,6 +110,7 @@ class OpenProductThemaQueryIT(
 
     @BeforeEach
     internal fun setUp() {
+        requests.clear()
         setupMockServer()
         url = server?.url("/").toString()
         openProductModuleConfiguration.properties.productTypeApiUrl = URI(url)
@@ -272,11 +297,95 @@ class OpenProductThemaQueryIT(
             assertEquals("Sub thema", responseBody.requiredAt("/0/subThemas/0/thema/naam")?.stringValue())
         }
 
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get open zaken of a thema by name`() =
+        runTest {
+            val responseBody = byName(ZAKEN_BY_NAME, "getOpenProductThemaZakenByName", "Parkeren")
+
+            assertEquals(1, responseBody.size())
+            assertEquals("Lopende zaak", responseBody.requiredAt("/0/omschrijving")?.stringValue())
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `zaken by name are empty without searching zaken for an unknown thema or one without zaaktypen`() =
+        runTest {
+            listOf("Onbekend", "Sub thema", "Belastingzaken", " ").forEach { naam ->
+                assertEquals(0, byName(ZAKEN_BY_NAME, "getOpenProductThemaZakenByName", naam).size(), naam)
+            }
+            assertEquals(emptyList<String>(), requests.filter { it.contains("_zoek") })
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `get taken of a thema by name, linked to a zaak or product, limited after filtering`() =
+        runTest {
+            val all = byName(TAKEN_BY_NAME, "getOpenProductThemaTakenByName", "Parkeren")
+            val first = byName(TAKEN_BY_NAME, "getOpenProductThemaTakenByName", "Parkeren", pageSize = 1)
+
+            assertEquals(
+                listOf("2d725c07-2f26-4705-8637-438a42b5ac2d", "2d725c07-2f26-4705-8637-438a42b5ac2e"),
+                all.toList().map { it.path("id").stringValue() },
+            )
+            assertEquals(listOf("2d725c07-2f26-4705-8637-438a42b5ac2d"), first.toList().map { it.path("id").stringValue() })
+            assertEquals(0, byName(TAKEN_BY_NAME, "getOpenProductThemaTakenByName", "Onbekend").size())
+        }
+
+    @Test
+    @WithBurgerUser("569312863")
+    fun `by-name queries reject a page size outside 1 to 100 without calling Open Product`() =
+        runTest {
+            listOf(0, -1, 101).forEach { pageSize ->
+                listOf(TAKEN_BY_NAME to "getOpenProductThemaTakenByName", ZAKEN_BY_NAME_PAGED to "getOpenProductThemaZakenByName").forEach { (document, path) ->
+                    httpGraphQlTester
+                        .document(document)
+                        .variable("naam", "Parkeren")
+                        .variable("pageSize", pageSize)
+                        .execute()
+                        .errors()
+                        .expect { it.message == "pageSize must be between 1 and 100" && it.path == path }
+                        .verify()
+                }
+            }
+            assertEquals(emptyList<String>(), requests.toList())
+        }
+
+    private fun byName(
+        document: String,
+        path: String,
+        naam: String,
+        pageSize: Int? = null,
+    ): JsonNode =
+        httpGraphQlTester
+            .document(document)
+            .variable("naam", naam)
+            .variable("pageSize", pageSize)
+            .execute()
+            .errors()
+            .verify()
+            .path(path)
+            .entity(JsonNode::class.java)
+            .get()
+
+    private fun themas(naam: String?): MockResponse {
+        val themas = Mapper.get().readTree(TestHelper.readFileAsString("/config/data/get-themas.json"))
+        if (naam == null) return TestHelper.mockResponse(themas.toString())
+        val results = themas.path("results").filter { it.path("naam").stringValue() == naam }
+        return TestHelper.mockResponse(Mapper.get().writeValueAsString(mapOf("count" to results.size, "next" to null, "previous" to null, "results" to results)))
+    }
+
+    private fun productTypeWithoutZaaktypeUrl(): MockResponse {
+        val productType = TestHelper.readFileAsString("/config/data/get-producttype.json")
+        return TestHelper.mockResponse(productType.replace("\"http://localhost:8001/catalogi/api/v1/744ca059-f412-49d4-8963-5800e4afd486\"", "null"))
+    }
+
     private fun setupMockServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
                 @Throws(InterruptedException::class)
                 override fun dispatch(request: RecordedRequest): MockResponse {
+                    requests += request.path.orEmpty()
                     val path = request.path?.substringBefore('?')
                     val queryParams = request.path?.substringAfter('?')?.split('&') ?: emptyList()
                     val response =
@@ -294,7 +403,11 @@ class OpenProductThemaQueryIT(
                             }
 
                             "GET /themas" -> {
-                                TestHelper.mockResponseFromFile("/config/data/get-themas.json")
+                                themas(
+                                    queryParams
+                                        .firstOrNull { it.startsWith("naam=") }
+                                        ?.let { URLDecoder.decode(it.removePrefix("naam="), Charsets.UTF_8) },
+                                )
                             }
 
                             "POST /zaken/api/v1/zaken/_zoek" -> {
@@ -306,7 +419,7 @@ class OpenProductThemaQueryIT(
                             }
 
                             "GET /producttypen/202fef9d-4594-45c5-86e4-4bccb06a2679" -> {
-                                TestHelper.mockResponseFromFile("/config/data/get-producttype.json")
+                                productTypeWithoutZaaktypeUrl()
                             }
 
                             "GET /producten" -> {

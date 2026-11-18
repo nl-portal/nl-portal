@@ -1,0 +1,22 @@
+{
+  "naam": "Erfpacht",
+  "template": "{% page-header title: \"titel\" %}{% endpage-header %}\n{% paragraph %}{{ 'intro' | i18n }}{% endparagraph %}\n{% table title: \"overzicht\" binding: \"producten\" page-param: \"page\" page-size: 5 total: producten.total %}\n{{ 'naam' | i18n }} | {{ 'status' | i18n }} | {{ 'startdatum' | i18n }}\n{% for product in producten.items %}[{{ product.naam }}](/erfpacht/{{ product.id }}) | {{ product.status | capitalize }} | {{ product.startDatum | date }}\n{% endfor %}{% endtable %}\n",
+  "messages": {
+    "nl-NL": {
+      "titel": "Erfpacht",
+      "intro": "Hier ziet u uw erfpachtrechten. Kies er een voor de details.",
+      "overzicht": "Uw erfpacht",
+      "naam": "Naam",
+      "status": "Status",
+      "startdatum": "Startdatum"
+    },
+    "en-GB": {
+      "titel": "Ground lease",
+      "intro": "Here you see your ground leases. Choose one for its details.",
+      "overzicht": "Your ground lease",
+      "naam": "Name",
+      "status": "Status",
+      "startdatum": "Start date"
+    }
+  }
+}
