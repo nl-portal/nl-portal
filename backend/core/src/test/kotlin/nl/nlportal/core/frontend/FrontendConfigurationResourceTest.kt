@@ -62,6 +62,10 @@ class FrontendConfigurationResourceTest(
         )
         assertEquals(
             true,
+            responseJson.requiredAt("/toggles/menuEntriesEnabled").booleanValue(),
+        )
+        assertEquals(
+            true,
             responseJson.requiredAt("/modules/taak/enabled").booleanValue(),
         )
         assertEquals(
