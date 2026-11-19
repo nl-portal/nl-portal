@@ -2466,6 +2466,7 @@ export type TaakPageV2 = {
 export type TaakPaymentRequestInput = {
   identifier: Scalars['String']['input'];
   langId?: InputMaybe<Scalars['String']['input']>;
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
   taakId: Scalars['UUID']['input'];
 };
 

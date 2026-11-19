@@ -21,4 +21,5 @@ data class TaakPaymentRequest(
     val identifier: String,
     val taakId: UUID,
     val langId: String? = null,
+    val returnUrl: String? = null,
 )

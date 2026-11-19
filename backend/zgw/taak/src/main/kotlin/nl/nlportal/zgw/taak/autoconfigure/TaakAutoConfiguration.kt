@@ -20,8 +20,8 @@ import nl.nlportal.core.security.config.HttpSecurityConfigurer
 import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.documentenapi.service.VirusScanService
 import nl.nlportal.form.service.ObjectsApiFormDefinitionService
-import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
 import nl.nlportal.payment.direct.service.DirectPaymentService
+import nl.nlportal.payment.direct.service.DirectPaymentWebhookService
 import nl.nlportal.zgw.objectenapi.client.ObjectsApiClient
 import nl.nlportal.zgw.taak.graphql.TaakFormQuery
 import nl.nlportal.zgw.taak.graphql.TaakMutationV2
@@ -30,7 +30,6 @@ import nl.nlportal.zgw.taak.graphql.TaakPaymentQuery
 import nl.nlportal.zgw.taak.graphql.TaakQueryV2
 import nl.nlportal.zgw.taak.security.config.TaakDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.zgw.taak.service.TaakPaymentService
-import nl.nlportal.zgw.taak.service.TaakPaymentWebhookService
 import nl.nlportal.zgw.taak.service.TaakService
 import nl.nlportal.zgw.taak.web.rest.TaakDocumentResource
 import nl.nlportal.zgw.taak.web.rest.TaakPaymentWebhookResource
@@ -41,7 +40,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @AutoConfiguration
-@EnableConfigurationProperties(TaakConfig::class, DirectPaymentModuleConfiguration::class)
+@EnableConfigurationProperties(TaakConfig::class)
 @ConditionalOnProperty(prefix = "nl-portal.config", name = ["objectenapi.enabled", "taak.enabled"], havingValue = "true")
 class TaakAutoConfiguration {
     @Bean
@@ -91,11 +90,15 @@ class TaakAutoConfiguration {
     @ConditionalOnProperty(prefix = "nl-portal.config.payment.direct", name = ["enabled"], havingValue = "true")
     fun taakPaymentService(
         taakService: TaakService,
+        objectsApiClient: ObjectsApiClient,
         directPaymentService: DirectPaymentService,
+        directPaymentWebhookService: DirectPaymentWebhookService,
     ): TaakPaymentService =
         TaakPaymentService(
             taakService = taakService,
+            objectsApiClient = objectsApiClient,
             directPaymentService = directPaymentService,
+            directPaymentWebhookService = directPaymentWebhookService,
         )
 
     @Bean
@@ -119,24 +122,12 @@ class TaakAutoConfiguration {
         )
 
     @Bean
-    @ConditionalOnMissingBean(TaakPaymentWebhookService::class)
-    @ConditionalOnProperty(prefix = "nl-portal.config.payment.direct", name = ["enabled"], havingValue = "true")
-    fun taakWebhookService(
-        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
-        objectsApiClient: ObjectsApiClient,
-    ): TaakPaymentWebhookService =
-        TaakPaymentWebhookService(
-            objectsApiClient = objectsApiClient,
-            directPaymentProperties = directPaymentModuleConfiguration.properties,
-        )
-
-    @Bean
     @ConditionalOnMissingBean(TaakPaymentWebhookResource::class)
     @ConditionalOnProperty(prefix = "nl-portal.config.payment.direct", name = ["enabled"], havingValue = "true")
     fun taakPaymentWebhookResource(
-        taakPaymentWebhookService: TaakPaymentWebhookService,
+        taakPaymentService: TaakPaymentService,
     ): TaakPaymentWebhookResource =
         TaakPaymentWebhookResource(
-            taakPaymentWebhookService = taakPaymentWebhookService,
+            taakPaymentService = taakPaymentService,
         )
 }
