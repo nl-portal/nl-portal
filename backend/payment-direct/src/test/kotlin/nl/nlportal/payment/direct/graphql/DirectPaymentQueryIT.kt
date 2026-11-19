@@ -21,6 +21,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.commonground.authentication.WithBurgerUser
 import nl.nlportal.payment.direct.TestHelper
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -33,6 +34,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
 import org.springframework.graphql.test.tester.HttpGraphQlTester
@@ -46,9 +48,11 @@ import org.springframework.test.context.DynamicPropertySource
 internal class DirectPaymentQueryIT(
     @Autowired private val httpGraphQlTester: HttpGraphQlTester,
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+    @Autowired private val objectsApiClientConfig: ObjectsApiClientConfig,
 ) {
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
+        const val TASK_BSN = "569312863"
 
         @JvmStatic
         var server: MockWebServer? = null
@@ -82,26 +86,15 @@ internal class DirectPaymentQueryIT(
         setupMockServer()
         url = server?.url("/").toString()
         directPaymentModuleConfiguration.properties.url = url
+        objectsApiClientConfig.properties.url = server!!.url("/").toUri()
     }
 
     @Test
-    @WithBurgerUser("123")
+    @WithBurgerUser(TASK_BSN)
     fun getDirectPaymentStatus() {
-        val query =
-            """
-            query {
-                getDirectPaymentStatus(
-                    identifier: "belastingzaken", 
-                    hostedCheckoutId: "4373041363"
-                ) {
-                status,
-                }
-            }
-            """.trimIndent()
-
         val responseBody =
             httpGraphQlTester
-                .document(query)
+                .document(statusQuery(hostedCheckoutId = "4373041363"))
                 .execute()
                 .errors()
                 .verify()
@@ -110,6 +103,72 @@ internal class DirectPaymentQueryIT(
                 .get()
 
         assertEquals("SUCCESSFUL", responseBody.get("status")?.textValue())
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusForTaakWithProfileKeyAsPspid() {
+        val responseBody =
+            httpGraphQlTester
+                .document(statusQuery(hostedCheckoutId = "5555555555"))
+                .execute()
+                .errors()
+                .verify()
+                .path("getDirectPaymentStatus")
+                .entity(JsonNode::class.java)
+                .get()
+
+        assertEquals("SUCCESSFUL", responseBody.get("status")?.textValue())
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusForTaakOfOtherUser() {
+        assertRejected(statusQuery(hostedCheckoutId = "1111111111"), "Access denied to this taak")
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusWithReferenceNotUUID() {
+        assertRejected(statusQuery(hostedCheckoutId = "2222222222"), "Payment not found")
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusWithoutPayment() {
+        assertRejected(statusQuery(hostedCheckoutId = "3333333333"), "Payment not found")
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusWithProfileOfOtherMerchant() {
+        assertRejected(statusQuery(identifier = "anderemerchant", hostedCheckoutId = "4373041363"), "Payment not found")
+    }
+
+    private fun statusQuery(
+        identifier: String = "belastingzaken",
+        hostedCheckoutId: String,
+    ): String =
+        """
+        query {
+            getDirectPaymentStatus(
+                identifier: "$identifier",
+                hostedCheckoutId: "$hostedCheckoutId"
+            ) {
+            status,
+            }
+        }
+        """.trimIndent()
+
+    private fun assertRejected(
+        query: String,
+        reason: String,
+    ) {
+        httpGraphQlTester
+            .document(query)
+            .execute()
+            .errors()
+            .satisfy { errors -> assertTrue(errors.any { it.message?.contains(reason) == true }, errors.toString()) }
     }
 
     fun setupMockServer() {
@@ -122,6 +181,30 @@ internal class DirectPaymentQueryIT(
                         when (request.method + " " + path) {
                             "GET /v2/TAX/hostedcheckouts/4373041363" -> {
                                 TestHelper.mockResponseFromFile("/data/payment-status-response.json")
+                            }
+                            "GET /v2/OTHER/hostedcheckouts/4373041363" -> {
+                                TestHelper.mockResponseFromFile("/data/payment-status-response.json")
+                            }
+                            "GET /v2/TAX/hostedcheckouts/1111111111" -> {
+                                TestHelper.mockResponseFromFile("/data/payment-status-response-other-user.json")
+                            }
+                            "GET /v2/TAX/hostedcheckouts/2222222222" -> {
+                                TestHelper.mockResponseFromFile("/data/payment-status-response-reference-not-uuid.json")
+                            }
+                            "GET /v2/TAX/hostedcheckouts/3333333333" -> {
+                                TestHelper.mockResponseFromFile("/data/payment-status-response-without-payment.json")
+                            }
+                            "GET /v2/TAX/hostedcheckouts/5555555555" -> {
+                                TestHelper.mockResponseFromFile("/data/payment-status-response-pspid-profielnaam.json")
+                            }
+                            "GET /api/v2/objects/3d5f7b9c-1e2a-4c6e-8a0b-5d7f9b1c3e5a" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task-pspid-profielnaam.json")
+                            }
+                            "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task.json")
+                            }
+                            "GET /api/v2/objects/1c9e7a5b-2d4f-4a6c-8e0b-3f5a7c9e1b2d" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task-other-user.json")
                             }
                             else -> MockResponse().setResponseCode(404)
                         }

@@ -44,3 +44,11 @@ nl-portal:
                             shaOutKey: de14f0e3-2ff0-45eb-95a6-1cdc35ca7a00
                             failureUrl: http://localhost:3000
                             successUrl: http://localhost:3000
+                        anderemerchant:
+                            pspId: OTHER
+                            title: Andere merchant
+                            language: "en_US"
+                            shaInKey: 6a2f8c4e-1b3d-4e5f-9a7c-0d2e4f6a8b1c
+                            shaOutKey: 6a2f8c4e-1b3d-4e5f-9a7c-0d2e4f6a8b1c
+                            failureUrl: http://localhost:3000
+                            successUrl: http://localhost:3000

@@ -15,22 +15,54 @@
  */
 package nl.nlportal.payment.direct.graphql
 
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
 import nl.nlportal.payment.direct.domain.DirectPaymentRequest
 import nl.nlportal.payment.direct.domain.DirectPaymentResponse
 import nl.nlportal.payment.direct.service.DirectPaymentService
+import nl.nlportal.zgw.taak.domain.TaakStatus
+import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
+import org.springframework.web.server.ResponseStatusException
+import java.util.UUID
 
+/**
+ * Starts a direct payment for an open payment taak of the logged-in user. The orderId must be the id of that taak and
+ * the identifier must resolve to the payment profile of the taak. The amount and reference of the request are ignored,
+ * they are taken from the taak.
+ */
 @Controller
 class DirectPaymentMutation(
     private val directPaymentService: DirectPaymentService,
+    private val taakService: TaakService,
+    private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
     @MutationMapping
     suspend fun doDirectPayment(
+        authentication: CommonGroundAuthentication,
         @Argument paymentRequest: DirectPaymentRequest,
-    ): DirectPaymentResponse =
-        directPaymentService.doDirectPayment(
-            paymentRequest = paymentRequest,
+    ): DirectPaymentResponse {
+        val taakId =
+            runCatching { UUID.fromString(paymentRequest.orderId) }.getOrNull()
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Taak payment not found")
+        val taak = taakService.getTaakByIdV2(id = taakId, authentication = authentication)
+        val betaling =
+            taak.ogonebetaling?.takeIf { taak.status == TaakStatus.OPEN }
+                ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Taak payment not found")
+        val properties = directPaymentModuleConfiguration.properties
+        val profile = properties.findPaymentProfile(paymentRequest.identifier)
+        if (profile == null || profile.pspId != properties.findPaymentProfile(betaling.pspid)?.pspId) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment profile does not match the taak")
+        }
+        return directPaymentService.doDirectPayment(
+            paymentRequest.copy(
+                amount = betaling.bedrag,
+                reference = betaling.betaalkenmerk,
+                orderId = taak.id.toString(),
+            ),
         )
+    }
 }

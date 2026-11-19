@@ -35,6 +35,7 @@ import org.springframework.web.server.ResponseStatusException
 import java.util.Locale
 import java.util.UUID
 
+@Deprecated("Ogone e-Commerce is no longer supported and will be removed in 4.0.0. Use the payment-direct module instead.")
 open class OgonePaymentService(
     private val paymentConfig: OgonePaymentConfigProperties,
     private val objectsApiClient: ObjectsApiClient,

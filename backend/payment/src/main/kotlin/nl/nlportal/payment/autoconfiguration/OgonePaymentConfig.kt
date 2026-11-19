@@ -18,6 +18,7 @@ package nl.nlportal.payment.autoconfiguration
 import nl.nlportal.core.util.ShaVersion
 import org.springframework.boot.context.properties.ConfigurationProperties
 
+@Deprecated("Ogone e-Commerce is no longer supported and will be removed in 4.0.0. Use the payment-direct module instead.")
 @ConfigurationProperties(prefix = "nl-portal.config.payment.ogone", ignoreUnknownFields = true)
 class OgonePaymentConfig {
     var enabled: Boolean = true
@@ -38,6 +39,11 @@ class OgonePaymentConfig {
             }
             return null
         }
+
+        /**
+         * Finds a payment profile by its key or, when no profile has that key, by its pspId.
+         */
+        fun findPaymentProfile(identifier: String?): OgonePaymentProfile? = identifier?.let { getPaymentProfile(it) ?: getPaymentProfileByPspPid(it) }
     }
 
     class OgonePaymentProfile {

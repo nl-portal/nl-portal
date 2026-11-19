@@ -43,6 +43,11 @@ data class DirectPaymentModuleConfiguration(
             }
             return null
         }
+
+        /**
+         * Finds a payment profile by its key or, when no profile has that key, by its pspId.
+         */
+        fun findPaymentProfile(identifier: String?): DirectPaymentProfile? = identifier?.let { getPaymentProfile(it) ?: getPaymentProfileByPspPid(it) }
     }
 
     data class DirectPaymentProfile(

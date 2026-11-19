@@ -15,23 +15,45 @@
  */
 package nl.nlportal.payment.direct.graphql
 
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
 import nl.nlportal.payment.direct.domain.DirectPaymentStatus
 import nl.nlportal.payment.direct.service.DirectPaymentService
+import nl.nlportal.zgw.taak.service.TaakService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
+import org.springframework.web.server.ResponseStatusException
+import java.util.UUID
 
+/**
+ * Returns the status of a hosted checkout only when it belongs to a payment taak of the logged-in user.
+ */
 @Controller
 class DirectPaymentQuery(
     private val directPaymentService: DirectPaymentService,
+    private val taakService: TaakService,
+    private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
     @QueryMapping
     suspend fun getDirectPaymentStatus(
+        authentication: CommonGroundAuthentication,
         @Argument identifier: String,
         @Argument hostedCheckoutId: String,
-    ): DirectPaymentStatus =
-        directPaymentService.getDirectPaymentStatus(
-            identifier = identifier,
-            hostedCheckoutId = hostedCheckoutId,
-        )
+    ): DirectPaymentStatus {
+        val (profile, response) = directPaymentService.getDirectPaymentStatusResponse(identifier, hostedCheckoutId)
+        val taakId =
+            response.createdPaymentOutput.payment
+                ?.paymentOutput
+                ?.references
+                ?.merchantReference
+                ?.let { runCatching { UUID.fromString(it) }.getOrNull() }
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Payment not found")
+        val taak = taakService.getTaakByIdV2(id = taakId, authentication = authentication)
+        if (directPaymentModuleConfiguration.properties.findPaymentProfile(taak.ogonebetaling?.pspid)?.pspId != profile.pspId) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "Payment not found")
+        }
+        return DirectPaymentStatus(status = response.createdPaymentOutput.paymentStatusCategory)
+    }
 }

@@ -21,10 +21,18 @@
         "isAuthorized": true,
         "isRefundable": true
       },
-      "id": 30660197300
+      "id": 30660197300,
+      "paymentOutput": {
+        "amountOfMoney": {
+          "amount": 14743,
+          "currencyCode": "EUR"
+        },
+        "references": {
+          "merchantReference": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
+        }
+      }
     },
     "paymentStatusCategory": "SUCCESSFUL"
   },
   "status": "PAYMENT_CREATED"
 }
-
