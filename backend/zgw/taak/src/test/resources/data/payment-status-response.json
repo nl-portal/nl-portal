@@ -21,6 +21,11 @@
         "isAuthorized": true,
         "isRefundable": true
       },
+      "paymentOutput": {
+        "references": {
+          "merchantReference": "58fad5ab-dc2f-11ec-9075-f22a405ce708"
+        }
+      },
       "id": 30660197300
     },
     "paymentStatusCategory": "SUCCESSFUL"

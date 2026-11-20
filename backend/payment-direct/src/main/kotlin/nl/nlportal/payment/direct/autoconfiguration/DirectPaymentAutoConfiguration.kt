@@ -18,6 +18,7 @@ package nl.nlportal.payment.direct.autoconfiguration
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.payment.direct.client.DirectPaymentClient
 import nl.nlportal.payment.direct.service.DirectPaymentService
+import nl.nlportal.payment.direct.service.DirectPaymentWebhookService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -49,5 +50,14 @@ class DirectPaymentAutoConfiguration {
         DirectPaymentService(
             directPaymentModuleConfiguration = directPaymentModuleConfiguration,
             directPaymentClient = directPaymentClient,
+        )
+
+    @Bean
+    @ConditionalOnMissingBean(DirectPaymentWebhookService::class)
+    fun directPaymentWebhookService(
+        directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
+    ): DirectPaymentWebhookService =
+        DirectPaymentWebhookService(
+            directPaymentModuleConfiguration = directPaymentModuleConfiguration,
         )
 }

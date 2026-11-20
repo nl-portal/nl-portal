@@ -49,6 +49,13 @@ nl-portal:
                             apiSecret: gdgdggd
                             webhookApiKey: 65325525d7b846168fa4784f94485a
                             webhookApiSecret: 418f68e5-fcff-413f-9b06-77649ba3c52e
+                        anderemerchant:
+                            pspId: OTHER
+                            returnUrl: http://localhost:3000
+                            apiKey: tetetette
+                            apiSecret: gdgdggd
+                            webhookApiKey: 2f4e6a8c0b1d3f5e7a9c1e3b5d7f9a
+                            webhookApiSecret: 5c3a1e9f-7b5d-4f3a-8e1c-9a7b5d3f1e2c
 
     authentication:
         machtingsdienst:

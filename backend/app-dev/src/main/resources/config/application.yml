@@ -50,7 +50,8 @@ graphql:
 
 logging:
     level:
-        root: DEBUG
+        root: INFO
+        nl.nlportal: DEBUG
         liquibase: WARN
 
 nl-portal:

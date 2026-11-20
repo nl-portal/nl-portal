@@ -23,6 +23,10 @@ data class DirectPaymentModuleConfiguration(
     var enabled: Boolean = false,
     var properties: DirectPaymentProperties = DirectPaymentProperties(),
 ) {
+    /**
+     * @property acceptLegacyAmountRounding also accept webhook amounts converted to cents the 3.x way (rounded down, up to
+     * 1 cent lower), so payments started before the update to 4.x can complete. Temporary, off by default, removed in 5.0.
+     */
     data class DirectPaymentProperties(
         var url: String = "",
         val ssl: Ssl? = null,
@@ -31,6 +35,7 @@ data class DirectPaymentModuleConfiguration(
         val webhookUrl: String? = null,
         val customTemplateUrl: String? = null,
         val showResultPage: Boolean = false,
+        val acceptLegacyAmountRounding: Boolean = false,
         val configurations: Map<String, DirectPaymentProfile> = emptyMap(),
     ) {
         fun getPaymentProfile(profileIdentifier: String): DirectPaymentProfile? = configurations[profileIdentifier]
