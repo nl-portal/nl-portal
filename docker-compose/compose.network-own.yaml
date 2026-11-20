@@ -1,0 +1,4 @@
+# NETWORK=own (default): this stack's own network.
+networks:
+    default:
+        name: nl-portal

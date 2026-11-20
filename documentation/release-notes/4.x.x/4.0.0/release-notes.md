@@ -30,6 +30,8 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 * **Images verhuisd naar de monorepo.** De backend- en frontend-images worden nu vanuit `nl-portal/nl-portal` gepubliceerd op een gedeeld versienummer (`ghcr.io/nl-portal/nl-portal-backend` / `-frontend`). Wijs je deployment naar de nieuwe images. Zie migratie-instructies.
 * **Frontend feature-configuratie via `window.*` is verwijderd** (`config.js` / `config.template.js`). `window.*` bevat nu alleen nog OIDC- en API-URL-configuratie; alle feature-toggles en -eigenschappen worden nu op de backend gezet. Zie migratie-instructies.
 * **Documenten API: `rsin` en `document-type-url` zijn verplicht.** Elke configuratie onder `nl-portal.config.documentenapis.properties.configurations.<naam>` moet nu een `rsin` en een `document-type-url` hebben (env: `NLPORTAL_CONFIG_DOCUMENTENAPIS_PROPERTIES_CONFIGURATIONS_<NAAM>_RSIN` en `..._DOCUMENTTYPEURL`). `document-type-url` is het standaard informatieobjecttype (bijvoorbeeld "Bijlage") voor uploads waarbij het formulier geen specifiek type meegeeft, zodat elk document een type heeft. Ontbrak een van beide, dan gaf uploaden een nullpointer; nu weigert de Documenten API de upload. Zie migratie-instructies.
+* **Actuator-toegang is opt-in.** Alleen `/actuator/health` is nog open. `/actuator/refresh`, `/actuator/restart` en andere actuator-endpoints zijn alleen bereikbaar als je actuator-toegang aanzet. Zie migratie-instructies.
+* **Configuration Panel 3.0.0 vereist, met versleuteling.** NL Portal 4.0 werkt niet met een Configuration Panel 2.x. Met `CONFIGURATION_PANEL_ENABLED=true` is `CONFIGURATION_PANEL_ENCRYPTION_KEY` verplicht, tenzij `CONFIGURATION_PANEL_ENCRYPTION_ENABLED=false`. Zie migratie-instructies.
 
 **Alleen voor broncode-ontwikkelaars en maatwerkimplementaties:**
 
@@ -57,6 +59,10 @@ Bekend probleem in 3.x (ook beschreven in de release notes van 3.1.2), voor wie 
 Kom je van een oudere 3.x-versie? Lees eerst de release notes van de 3.x-versies na de jouwe in de 3.x-documentatie (versiekiezer linksboven).
 
 **Messaging-module verwijderd.** Verwijder de dependency `nl.nl-portal:messaging` uit je `pom.xml` of `build.gradle`, en verwijder de `spring.cloud.stream`-bindings voor de portal case- en taakberichten uit je configuratie.
+
+**Actuator-toegang.** Roep je `/actuator/refresh`, `/actuator/restart` of andere actuator-endpoints aan (bijvoorbeeld notify van het Configuration Panel), zet dan `NLPORTAL_SECURITY_ACTUATOR_JWKSETURI` en geef de aanroepende client de actuator-autoriteit (standaard `ROLE_ACTUATOR`). `/actuator/health` werkt zonder wijziging. Zie [Actuator](../../../configuratie/beveiliging/actuator.md).
+
+**Configuration Panel.** NL Portal 4.0 breekt een bestaand Configuration Panel 2.x. Werk daarom eerst het Configuration Panel bij naar 3.0.0, met versleuteling uit (`CONFIG_ENCRYPTION_ENABLED=false`, zodat je NL Portal 3.x blijft werken), en upgrade daarna NL Portal met `CONFIGURATION_PANEL_ENCRYPTION_ENABLED=false`. Zet versleuteling pas aan als alle NL Portal-instanties op 4.0 draaien, met dezelfde sleutel in beide: eerst in NL Portal (`CONFIGURATION_PANEL_ENCRYPTION_KEY`), dan in het Configuration Panel. Zie [Configuration Panel versleuteling](../../../configuratie/configuration-panel-versleuteling.md) en de release notes van Configuration Panel 3.0.0.
 
 **Documenten API-configuratie.** Controleer dat elke documenten-API-configuratie een `rsin` en een `document-type-url` heeft. Ontbreekt er een, dan mislukken uploads naar die documenten-API.
 

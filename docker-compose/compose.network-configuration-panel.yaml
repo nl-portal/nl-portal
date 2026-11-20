@@ -1,0 +1,5 @@
+# NETWORK=configuration-panel: joins the Configuration Panel compose stack's network; start that stack first.
+networks:
+    default:
+        name: nl-portal-configuration-panel
+        external: true

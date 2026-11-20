@@ -41,7 +41,8 @@ import org.springframework.web.reactive.result.method.annotation.RequestMappingH
  *    (nl-portal.security.endpoints.unsecured in application.yml)
  * 3. Classifies each endpoint as PUBLIC or SECURED by matching its path against:
  *    - Hardcoded-public patterns from OauthSecurityAutoConfiguration:
- *        /graphiql, /graphql, /actuator
+ *        /graphiql, /graphql
+ *      (actuator has its own filter chain, covered by ActuatorSecurityTest in core)
  *    - Configured unsecured patterns from SecurityEndpointsConfig (e.g. /api/public)
  *    - All other paths are considered SECURED
  * 4. For SECURED endpoints: asserts HTTP 401 is returned without a JWT token
@@ -81,7 +82,6 @@ class RestEndpointAuthorizationIT {
             listOf(
                 "/graphiql",
                 "/graphql",
-                "/actuator/**",
             )
     }
 
@@ -126,7 +126,7 @@ class RestEndpointAuthorizationIT {
                                 |returned 401 Unauthorized without a JWT token!
                                 |
                                 |This endpoint's path matches a public pattern in SecurityEndpointsConfig
-                                |or is a known-public path (graphql, actuator), but it is returning 401.
+                                |or is a known-public path (graphiql, graphql), but it is returning 401.
                                 |
                                 |Check OauthSecurityAutoConfiguration and nl-portal.security.endpoints.unsecured.
                                 """.trimMargin()

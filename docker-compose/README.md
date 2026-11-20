@@ -9,6 +9,7 @@
       * [Local (build from source)](#local-build-from-source)
       * [Remote (published images)](#remote-published-images)
       * [From sources (active development, fast inner loop)](#from-sources-active-development-fast-inner-loop)
+    * [Side by side with the Configuration Panel](#side-by-side-with-the-configuration-panel)
     * [Starting up supporting services only](#starting-up-supporting-services-only)
       * [Including all ZGW related services](#including-all-zgw-related-services)
       * [Keycloak and database only](#keycloak-and-database-only)
@@ -42,7 +43,14 @@ app ports free, `local` builds and runs the app from source, `remote` runs the p
 See [Running the application](#running-the-application).
 
 All ports below are exposed via the `localhost` helper container (the services share its
-network namespace), so from your host every service is reachable on `localhost:<port>`.
+network namespace), so from your host every service is reachable on `localhost:<port>`. The same URLs work from
+your host, your browser and the containers. That matters because the ZGW APIs store absolute URLs, and Keycloak
+puts the host it was called on into the token's issuer.
+
+The `NETWORK` variable picks the network the stack runs on: `own` (default) creates the network `nl-portal`,
+`configuration-panel` joins the Configuration Panel's compose stack (see
+[Side by side with the Configuration Panel](#side-by-side-with-the-configuration-panel)). On either network the
+helper container has the alias `nl-portal`.
 
 | Service                                 | Port | Profile / RUN_MODE                                                                                          |
 |-----------------------------------------|------|-------------------------------------------------------------------------------------------------------------|
@@ -64,10 +72,6 @@ network namespace), so from your host every service is reachable on `localhost:<
 | Redis                                   | -    | `--profile zgw`, `--profile openzaak`, `--profile objecten`, `--profile openklant`, `--profile openproduct` |
 | Haalcentraal BRP                        | 5010 | `--profile haalcentraal`                                                                                    |
 | Haalcentraal Bewoning                   | 5011 | `--profile haalcentraal`                                                                                    |
-| Configuration Panel Router              | 3001 | `--profile config`                                                                                          |
-| Configuration Panel Backend             | 8090 | `--profile config`                                                                                          |
-| Configuration Panel Frontend            | 8091 | `--profile config`                                                                                          |
-| Configuration Panel Database (postgres) | -    | `--profile config`                                                                                          |
 
 > **NB!** `RUN_MODE` selects exactly one app-run mode, so `local` and `remote` can never bind the
 > app ports 8080/3000 at the same time. ClamAV now runs by default (no profile) and virus scanning is
@@ -79,7 +83,7 @@ This stack can run the whole NL Portal product (backend + frontend) together wit
 supporting services. NL Portal is now a single monorepo, so the images are named
 `nl-portal-backend` and `nl-portal-frontend` (the old `nl-portal-app-*` names are retired).
 The `RUN_MODE` variable selects how the app runs (`sources` default / `local` / `remote`); the
-supporting-service profiles (`zgw`, `config`, ...) are chosen independently:
+supporting-service profiles (`zgw`, `haalcentraal`, ...) are chosen independently:
 
 #### Local (build from source)
 `RUN_MODE=local` builds the backend and frontend images straight from this monorepo's `../backend`
@@ -138,6 +142,40 @@ shippable app); changing a library rebuilds it and the app hot-reloads. Full con
 > - **CMD:** `set "RUN_MODE=remote" && docker compose --profile zgw up -d`
 > - **Any shell:** add `RUN_MODE=remote` to a `.env` file in this directory (Compose reads it
 >   automatically). This persists across runs, so remove it to go back to the `sources` default.
+>
+> `NETWORK` works the same way, e.g. `$env:NETWORK="configuration-panel"` in PowerShell.
+
+### Side by side with the Configuration Panel
+The Configuration Panel integration is off by default. To work on NL Portal and the
+[Configuration Panel](https://github.com/nl-portal/nl-portal-configuration-panel) together, run the panel's own
+compose stack and let this stack join its network with `NETWORK=configuration-panel`. NL Portal reaches the panel as
+`configuration-panel` (backend 8090, Keycloak 8083), and the panel notifies NL Portal as `nl-portal` (8080). Start the
+panel first: NL Portal fetches its configuration at startup.
+
+1. Start the panel, from a checkout of the panel repository (see its README for the run modes):
+   ```shell
+   RUN_MODE=local docker compose up -d --build
+   ```
+2. In [`imports/backend.env`](imports/backend.env), uncomment the lines under **Configuration Panel**. Their values
+   match the panel's `imports/backend.env`: the configuration server token and the encryption key. For notify, also
+   uncomment `NLPORTAL_SECURITY_ACTUATOR_JWKSETURI` under **Security - Actuator**; it points at the panel's Keycloak.
+3. Start NL Portal on the panel's network:
+   ```shell
+   NETWORK=configuration-panel RUN_MODE=local docker compose --profile zgw --profile haalcentraal up -d --build
+   ```
+4. Log in to the panel at http://localhost:3001 (`admin:admin`) and change a setting. The NL Portal backend logs a
+   refresh.
+5. To stop, stop NL Portal first (`NETWORK=configuration-panel docker compose down`), then the panel. While NL Portal
+   is attached, the panel's network stays.
+
+`RUN_MODE=remote` works the same. In `sources` an app runs on your host, which the other stack's containers can't reach, so not every combination works:
+
+| NL Portal `RUN_MODE` | Panel `RUN_MODE`   | Configuration at startup | Notify                                          |
+|----------------------|--------------------|--------------------------|-------------------------------------------------|
+| `local` / `remote`   | `local` / `remote` | works                    | works                                           |
+| `sources`            | `sources`          | works                    | works                                           |
+| `sources`            | `local` / `remote` | works (`localhost:8090`) | fails, WARN only; restart NL Portal for changes |
+| `local` / `remote`   | `sources`          | fails                    | works                                           |
 
 ### Starting up supporting services only
 To run only the supporting services (e.g. when running the application from your IDE),
