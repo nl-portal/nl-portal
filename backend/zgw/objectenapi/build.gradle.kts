@@ -28,6 +28,7 @@ dependencies {
     testImplementation(TestDependencies.springBootTest)
     testImplementation(TestDependencies.okHttpMockWebserver)
     testImplementation(TestDependencies.okHttp)
+    testImplementation(TestDependencies.kotlinCoroutines)
 }
 
 val jar: Jar by tasks

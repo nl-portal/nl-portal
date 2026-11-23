@@ -14,10 +14,91 @@
  * limitations under the License.
  */
 import { describe, it, expect } from "vitest";
+import { ContextType } from "react";
+import { render, screen } from "@testing-library/react";
+import { IntlProvider } from "react-intl";
+import { createMemoryRouter, RouterProvider } from "react-router";
+import { DocumentIcon, GridIcon } from "@gemeente-denhaag/icons";
 import Menu from "../../components/Menu";
+import AppContext from "../../contexts/AppContext";
+import RouterContext from "../../contexts/RouterContext";
+import { MenuEntry } from "../../utils/menu-entries";
+
+const hidden: MenuEntry = {
+  name: "erfpacht-product",
+  icon: "DocumentIcon",
+  hidden: true,
+  route: { type: "portal-page", page: "product", path: "/erfpacht/:id" },
+};
+
+const renderAt = (path: string, menuEntries: MenuEntry[]) => {
+  const router = createMemoryRouter(
+    [
+      {
+        path: "/",
+        handle: { label: "breadcrumb.overview" },
+        element: (
+          <IntlProvider locale="nl" messages={{}} onError={() => {}}>
+            <RouterContext.Provider
+              value={
+                {
+                  navigationItems: [
+                    [
+                      {
+                        titleTranslationKey: "overview",
+                        titleTranslationId: "Overzicht",
+                        path: "/",
+                        icon: GridIcon,
+                      },
+                      {
+                        titleTranslationKey: "erfpacht",
+                        titleTranslationId: "Erfpacht",
+                        path: "/erfpacht",
+                        icon: DocumentIcon,
+                      },
+                    ],
+                  ],
+                } as unknown as ContextType<typeof RouterContext>
+              }
+            >
+              <AppContext.Provider
+                value={
+                  { menuEntries, messagesCount: 0 } as unknown as ContextType<
+                    typeof AppContext
+                  >
+                }
+              >
+                <Menu />
+              </AppContext.Provider>
+            </RouterContext.Provider>
+          </IntlProvider>
+        ),
+        children: [{ path: "*", element: null }],
+      },
+    ],
+    { initialEntries: [path] },
+  );
+  render(<RouterProvider router={router} />);
+};
+
+const isCurrent = (label: string) =>
+  screen
+    .getByText(label)
+    .closest("a")!
+    .classList.contains("denhaag-side-navigation__link--current");
 
 describe("Menu", () => {
-  it("is truthy", () => {
-    expect(Menu).toBeTruthy();
+  it("highlights the visible entry above a hidden entry route", () => {
+    renderAt("/erfpacht/abc", [hidden]);
+
+    expect(isCurrent("Erfpacht")).toBe(true);
+    expect(isCurrent("Overzicht")).toBe(false);
+  });
+
+  it("highlights overview on an unknown sub path", () => {
+    renderAt("/erfpacht/abc/def", [hidden]);
+
+    expect(isCurrent("Erfpacht")).toBe(false);
+    expect(isCurrent("Overzicht")).toBe(true);
   });
 });

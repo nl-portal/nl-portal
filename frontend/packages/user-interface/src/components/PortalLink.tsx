@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import classNames from "classnames";
+import { REGEX_PATTERNS } from "../constants/regex-patterns";
 import { AnchorHTMLAttributes } from "react";
 import { Link } from "react-router";
 import { Link as DHLink } from "@gemeente-denhaag/link";
@@ -28,8 +29,7 @@ const PortalLink = ({
   className,
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
-  const isExternalLink =
-    href && (href.startsWith("https://") || href.startsWith("tel:"));
+  const isExternalLink = href && REGEX_PATTERNS.externalLink.test(href);
   const linkClassNames = classNames("nl-link", className);
 
   if (href && !isExternalLink) {

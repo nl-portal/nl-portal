@@ -15,10 +15,7 @@
  */
 package nl.nlportal.core.frontend.service
 
-import kotlin.reflect.KClass
-import kotlin.reflect.full.memberProperties
 import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties
-import nl.nlportal.core.frontend.configuration.FrontendConfigurationProperties.FrontendProperties
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties
 import nl.nlportal.core.frontend.configuration.FrontendModuleConfigurationProperties.FrontendModuleProperties
 import nl.nlportal.core.frontend.domain.FrontendData

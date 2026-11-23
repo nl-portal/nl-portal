@@ -15,25 +15,39 @@
  */
 import { useContext, useEffect } from "react";
 import { useIntl } from "react-intl";
-import { useMatches } from "react-router";
-import { getCurrentNavigationPage } from "../utils/get-current-navigation-page";
+import { UIMatch, useMatches } from "react-router";
+import {
+  getCurrentNavigationPage,
+  getHiddenMenuEntryPage,
+} from "../utils/get-current-navigation-page";
+import AppContext from "../contexts/AppContext";
 import RouterContext from "../contexts/RouterContext";
 import { getNavigationItemTitleId } from "../utils/navigation-item-title";
 
 // TODO: heeft wat aandacht nodig, React heeft nieuwe api waar dit makkelijker kan
 const PageMetaData = () => {
   const intl = useIntl();
-  const matches = useMatches();
+  const matches = useMatches() as UIMatch<unknown, { label?: string }>[];
   const { navigationItems } = useContext(RouterContext);
-  const currentPage =
-    getCurrentNavigationPage(matches, navigationItems) || navigationItems[0][0];
-  const pageTitle =
-    currentPage &&
-    intl.formatMessage({ id: getNavigationItemTitleId(currentPage) });
+  const { menuEntries } = useContext(AppContext);
   const appName = intl.formatMessage({ id: "app.appName" });
-  const documentTitle = currentPage?.titleTranslationKey
-    ? `${pageTitle} - ${appName}`
-    : appName;
+  const hiddenEntry = getHiddenMenuEntryPage(
+    matches,
+    navigationItems,
+    menuEntries ?? [],
+  );
+  const hiddenTitleId = hiddenEntry && `menu-entries.${hiddenEntry.name}`;
+  const currentPage = hiddenEntry
+    ? undefined
+    : getCurrentNavigationPage(matches, navigationItems) ||
+      navigationItems[0][0];
+  const pageTitle = hiddenEntry
+    ? hiddenTitleId &&
+      intl.messages[hiddenTitleId] &&
+      intl.formatMessage({ id: hiddenTitleId })
+    : currentPage?.titleTranslationKey &&
+      intl.formatMessage({ id: getNavigationItemTitleId(currentPage) });
+  const documentTitle = pageTitle ? `${pageTitle} - ${appName}` : appName;
 
   useEffect(() => {
     document.title = documentTitle;

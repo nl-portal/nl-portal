@@ -87,3 +87,47 @@ Een document is een verwijzing naar een EnkelvoudigInformatieObject uit de docum
 De onderdelen die getoond worden zijn op basis van de ingelogde gebruiker. 
 Bijvoorbeeld om hoofdthema's in het zijmenu te tonen, worden alleen hoofdthema's getoond op basis van de producten van de ingelogde gebruiker.
 
+### GraphQL-queries per thema en product
+Alle queries geven alleen gegevens van de ingelogde gebruiker terug.
+
+| Query | Geeft |
+|---|---|
+| `getOpenProductThemaZakenByName(naam, pageSize)` | de lopende zaken van de zaaktypen van de producttypen in het gepubliceerde thema met deze `naam`, als de machtigingsdienst die zaaktypen toestaat |
+| `getOpenProductThemaTakenByName(naam, pageSize)` | de taken van de gebruiker die horen bij die zaken of bij een product van de gebruiker in het thema, gesorteerd op verloopdatum |
+| `getOpenProductZaken(id)` | de zaken van product `id` |
+| `getOpenProductTaken(id)` | de taken van product `id` |
+| `getOpenProductDocumenten(id)` | de documenten van product `id` |
+| `getOpenProductDecisions(id)` | de uitkomsten van de DMN-beslissingen van product `id` |
+
+`pageSize` is optioneel; als hij is meegegeven moet hij tussen 1 en 100 liggen, anders geeft de query de fout `pageSize must be between 1 and 100`.
+
+Het thema wordt gezocht op de exacte `naam` (hoofdlettergevoelig). Een onbekend thema of product geeft een lege lijst, net als een thema zonder zaaktypen (producttypen zonder zaaktype, of zaaktypen zonder url); een product van iemand anders geeft een fout.
+
+### Voorwaarde `thema`
+De module levert de [voorwaarde](../../../features/menu-entries.md#voorwaarden) `thema` voor menu-items:
+
+```yaml
+conditional:
+  thema: Wonen en bouwen
+```
+
+* `thema: <naam>` geldt als de gebruiker minstens één product heeft in het gepubliceerde thema met die exacte `naam` (hoofdlettergevoelig).
+* Een onbekend thema, of een gebruiker die niet als burger of bedrijf is ingelogd, geldt niet.
+* Een storing bij Open Product geldt niet, met een waarschuwing in de log; de volledige fout staat op TRACE voor `nl.nlportal.openproduct`.
+* Elke controle kost een aanroep naar de thema's en een naar de producten van Open Product.
+
+### Resolver `openproduct`
+De module levert de [resolver](../../../features/portal-pages.md#resolvers) `openproduct` voor portaalpagina's: producten van de ingelogde burger of het ingelogde bedrijf. Zonder id een lijst, met een id één product met een content-element als template (voor `source: binding`).
+
+| Param | Gebruik |
+|---|---|
+| `product-type-code`, `product-type-codes` | filter op producttype; met een id moet het product van dit type zijn |
+| `filter.status` | filter op status (`actief`, `gereed`, …) |
+| `page` (vanaf 0), `size` (1–100) | paginering; standaard 0 en 10 |
+| `content-label` | met een id: label van het content-element dat het template is |
+
+Vast (niet in `overrides`): `product-type-code`, `product-type-codes`, `content-label`.
+
+* Met een id is het template de inhoud van het eerste content-element van het producttype met het label `content-label`, in de taal van de gebruiker. Zonder zo'n element toont de pagina "Er zijn geen details beschikbaar.".
+* Een product dat niet van de gebruiker is, niet gepubliceerd is of een ongeldig id heeft, geeft een 404.
+* De eigenaren van een product (`eigenaren`) worden nooit teruggegeven.

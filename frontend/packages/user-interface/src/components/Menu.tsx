@@ -31,12 +31,13 @@ import RouterContext from "../contexts/RouterContext";
 
 const Menu = () => {
   const { hrefLang } = useContext(LocaleContext);
-  const { messagesCount } = useContext(AppContext);
+  const { messagesCount, menuEntries } = useContext(AppContext);
   const { navigationItems } = useContext(RouterContext);
   const matches = useMatches();
   const currentNavigationItem = getCurrentNavigationPage(
     matches,
     navigationItems,
+    menuEntries ?? [],
   );
 
   return (

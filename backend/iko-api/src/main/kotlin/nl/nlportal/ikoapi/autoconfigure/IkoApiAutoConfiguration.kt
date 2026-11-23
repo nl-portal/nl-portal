@@ -18,6 +18,7 @@ package nl.nlportal.ikoapi.autoconfigure
 import nl.nlportal.core.ssl.ClientSslContextResolver
 import nl.nlportal.core.ssl.ResourceClientSslContextResolver
 import nl.nlportal.ikoapi.client.IkoApiClient
+import nl.nlportal.ikoapi.portalpage.IkoPortalPageBindingResolver
 import nl.nlportal.ikoapi.service.IkoApiService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.AutoConfiguration
@@ -50,4 +51,8 @@ class IkoApiAutoConfiguration {
         ikoApiClient: IkoApiClient,
         ikoApiModuleConfiguration: IkoApiModuleConfiguration,
     ): IkoApiService = IkoApiService(ikoApiClient, ikoApiModuleConfiguration.properties)
+
+    @Bean
+    @ConditionalOnMissingBean(IkoPortalPageBindingResolver::class)
+    fun ikoPortalPageBindingResolver(ikoApiService: IkoApiService): IkoPortalPageBindingResolver = IkoPortalPageBindingResolver(ikoApiService)
 }

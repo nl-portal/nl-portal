@@ -19,8 +19,10 @@ import { UIMatch } from "react-router";
 import { NavigationItem } from "../../interfaces/navigation-item";
 import {
   getCurrentNavigationPage,
+  getHiddenMenuEntryPage,
   getUnlabeledNavigationPage,
 } from "../../utils/get-current-navigation-page";
+import { MenuEntry } from "../../utils/menu-entries";
 
 const entry: NavigationItem = {
   titleTranslationKey: "thema-concept",
@@ -78,7 +80,7 @@ describe("getCurrentNavigationPage", () => {
     ).toBe(customEntry);
   });
 
-  it("does not return a templated entry on a sub path", () => {
+  it("does not return a portal-page entry on a sub path", () => {
     expect(
       getCurrentNavigationPage(
         [root, match("/thema-concept/a")],
@@ -98,6 +100,92 @@ describe("getCurrentNavigationPage", () => {
         navigationItems,
       ),
     ).toBe(cases);
+  });
+
+  describe("with menu entries", () => {
+    const hiddenEntry = (path: string): MenuEntry => ({
+      name: "detail",
+      icon: "DocumentIcon",
+      hidden: true,
+      route: { type: "portal-page", page: "detail", path },
+    });
+    const themaDetail = hiddenEntry("/thema-concept/:id");
+
+    it("returns the visible entry above a hidden entry route", () => {
+      expect(
+        getCurrentNavigationPage(
+          [root, match("/thema-concept/abc")],
+          navigationItems,
+          [themaDetail],
+        ),
+      ).toBe(entry);
+    });
+
+    it("returns the visible entry with the longest path above a hidden entry route", () => {
+      const archive: NavigationItem = {
+        titleTranslationKey: "thema-archief",
+        path: "/thema-concept/archief",
+        icon: GridIcon,
+      };
+
+      expect(
+        getCurrentNavigationPage(
+          [root, match("/thema-concept/archief/abc")],
+          [[entry, overview], [archive]],
+          [hiddenEntry("/thema-concept/archief/:id")],
+        ),
+      ).toBe(archive);
+    });
+
+    it("returns overview for a hidden entry without a visible entry above it", () => {
+      expect(
+        getCurrentNavigationPage(
+          [root, match("/erfpacht/abc")],
+          navigationItems,
+          [hiddenEntry("/erfpacht/:id")],
+        ),
+      ).toBe(overview);
+    });
+
+    it("returns overview for an unknown sub path that is no hidden entry route", () => {
+      expect(
+        getCurrentNavigationPage(
+          [root, match("/thema-concept/a/b")],
+          navigationItems,
+          [themaDetail],
+        ),
+      ).toBe(overview);
+    });
+
+    it("leaves custom sub paths and app child routes as they are", () => {
+      expect(
+        getCurrentNavigationPage(
+          [root, match("/extern/a/b")],
+          navigationItems,
+          [themaDetail],
+        ),
+      ).toBe(customEntry);
+      expect(
+        getCurrentNavigationPage(
+          [
+            root,
+            match("/zaken", "breadcrumb.cases"),
+            match("/zaken/zaak/1", "breadcrumb.case"),
+          ],
+          navigationItems,
+          [hiddenEntry("/zaken/:id")],
+        ),
+      ).toBe(cases);
+    });
+
+    it("returns overview on a hidden entry route without menu entries", () => {
+      expect(
+        getCurrentNavigationPage(
+          [root, match("/thema-concept/abc")],
+          navigationItems,
+        ),
+      ).toBe(overview);
+    });
   });
 });
 
@@ -132,6 +220,63 @@ describe("getUnlabeledNavigationPage", () => {
         [root, match("/bestaat-niet")],
         navigationItems,
       ),
+    ).toBeUndefined();
+  });
+});
+
+describe("getHiddenMenuEntryPage", () => {
+  const hidden: MenuEntry = {
+    name: "erfpacht-product",
+    icon: "DocumentIcon",
+    hidden: true,
+    route: { type: "portal-page", page: "product", path: "/erfpacht/:id" },
+  };
+  const visibleWithParam: MenuEntry = {
+    name: "thema-detail",
+    icon: "DocumentIcon",
+    route: { type: "portal-page", page: "detail", path: "/thema-concept/:id" },
+  };
+
+  it("returns the hidden entry whose route path matches the deepest match", () => {
+    expect(
+      getHiddenMenuEntryPage([root, match("/erfpacht/abc")], navigationItems, [
+        hidden,
+      ]),
+    ).toBe(hidden);
+  });
+
+  it("returns nothing for a labeled match or a path without hidden entry", () => {
+    expect(
+      getHiddenMenuEntryPage(
+        [root, match("/erfpacht/abc", "breadcrumb.x")],
+        navigationItems,
+        [hidden],
+      ),
+    ).toBeUndefined();
+    expect(
+      getHiddenMenuEntryPage([root, match("/erfpacht")], navigationItems, [
+        hidden,
+      ]),
+    ).toBeUndefined();
+    expect(
+      getHiddenMenuEntryPage(
+        [root, match("/thema-concept/abc")],
+        navigationItems,
+        [visibleWithParam],
+      ),
+    ).toBeUndefined();
+  });
+
+  it("lets an entry with a menu item win over a hidden entry", () => {
+    const hiddenOnEntryPath: MenuEntry = {
+      ...hidden,
+      route: { ...hidden.route, path: "/thema-concept" },
+    };
+
+    expect(
+      getHiddenMenuEntryPage([root, match("/thema-concept")], navigationItems, [
+        hiddenOnEntryPath,
+      ]),
     ).toBeUndefined();
   });
 });
