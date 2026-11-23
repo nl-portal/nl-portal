@@ -16,18 +16,20 @@
 package nl.nlportal.zgw.taak.web.rest
 
 import java.nio.charset.Charset
+import java.util.concurrent.atomic.AtomicInteger
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.service.DirectPaymentWebhookService
 import nl.nlportal.zgw.objectenapi.autoconfiguration.ObjectsApiClientConfig
 import nl.nlportal.zgw.taak.TestHelper
-import nl.nlportal.zgw.taak.service.TaakPaymentWebhookService
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.apache.commons.codec.binary.Base64
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -47,9 +49,11 @@ internal class TaakPaymentWebhookResourceIT(
     @Autowired private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
 ) {
     lateinit var server: MockWebServer
+    private val objectUpdates = AtomicInteger()
 
     @BeforeEach
     internal fun setUp() {
+        objectUpdates.set(0)
         server = MockWebServer()
         setupMockObjectsApiServer()
         server.start()
@@ -63,248 +67,89 @@ internal class TaakPaymentWebhookResourceIT(
 
     @Test
     fun postSaleTest() {
-        val body =
-            """
-            {
-              "apiVersion": "v1",
-              "created": "2020-12-09T11:20:40.3744722+01:00",
-              "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
-              "merchantId": "TAX",
-              "payment": {
-                "paymentOutput": {
-                  "amountOfMoney": {
-                    "amount": 1000,
-                    "currencyCode": "EUR"
-                  },
-                  "references": {
-                    "merchantReference": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
-                  },
-                  "paymentMethod": "card"
-                },
-                "status": "COMPLETED",
-                "statusOutput": {
-                  "isCancellable": false,
-                  "statusCategory": "CREATED",
-                  "statusCode": 9,
-                  "isAuthorized": false,
-                  "isRefundable": false
-                },
-                "id": "***3092546156***"
-              },
-              "type": "payment.created"
-            }
+        val response = postSale(webhookBody(amount = 14743))
 
-            """.trimIndent()
-
-        val signature =
-            createSignature(
-                body = body,
-                secretKey =
-                    directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
-                        ?.webhookApiSecret
-                        .toString(),
-            )
-        val headers = HttpHeaders()
-        headers.add(TaakPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
-        headers.add(
-            TaakPaymentWebhookService.HEADER_X_GCS_KEYID,
-            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
-        )
-        webTestClient
-            .post()
-            .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
-            .headers {
-                it.addAll(headers)
-            }.contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(body)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .returnResult()
-            .responseBody
-            .contentToString()
-            .contentEquals("Request Successful processed")
+        assertEquals("Request successful processed for order $TASK_ID", response)
+        assertEquals(1, objectUpdates.get())
     }
 
     @Test
     fun postSaleTestOrderIdNotUUID() {
-        val body =
-            """
-            {
-              "apiVersion": "v1",
-              "created": "2020-12-09T11:20:40.3744722+01:00",
-              "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
-              "merchantId": "TAX",
-              "payment": {
-                "paymentOutput": {
-                  "amountOfMoney": {
-                    "amount": 1000,
-                    "currencyCode": "EUR"
-                  },
-                  "references": {
-                    "merchantReference": "58fad5ab"
-                  },
-                  "paymentMethod": "card"
-                },
-                "status": "COMPLETED",
-                "statusOutput": {
-                  "isCancellable": false,
-                  "statusCategory": "CREATED",
-                  "statusCode": 9,
-                  "isAuthorized": false,
-                  "isRefundable": false
-                },
-                "id": "***3092546156***"
-              },
-              "type": "payment.created"
-            }
+        val response = postSale(webhookBody(merchantReference = "58fad5ab", amount = 14743))
 
-            """.trimIndent()
-
-        val signature =
-            createSignature(
-                body = body,
-                secretKey =
-                    directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
-                        ?.webhookApiSecret
-                        .toString(),
-            )
-        val headers = HttpHeaders()
-        headers.add(TaakPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
-        headers.add(
-            TaakPaymentWebhookService.HEADER_X_GCS_KEYID,
-            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
-        )
-        webTestClient
-            .post()
-            .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
-            .headers {
-                it.addAll(headers)
-            }.contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(body)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .returnResult()
-            .responseBody
-            .contentToString()
-            .contentEquals("Request Successful processed")
+        assertEquals("Request successful processed for order 58fad5ab", response)
+        assertEquals(0, objectUpdates.get())
     }
 
     @Test
     fun postSaleTestInvalid() {
-        val body =
-            """
-            {
-              "apiVersion": "v1",
-              "created": "2020-12-09T11:20:40.3744722+01:00",
-              "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
-              "merchantId": "TAX",
-              "payment": {
-                "paymentOutput": {
-                  "amountOfMoney": {
-                    "amount": 1000,
-                    "currencyCode": "EUR"
-                  },
-                  "references": {
-                    "merchantReference": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
-                  },
-                  "paymentMethod": "card"
-                },
-                "status": "COMPLETED",
-                "statusOutput": {
-                  "isCancellable": false,
-                  "statusCategory": "CREATED",
-                  "statusCode": 9,
-                  "isAuthorized": false,
-                  "isRefundable": false
-                },
-                "id": "***3092546156***"
-              },
-              "type": "payment.created"
-            }
+        val response = postSale(webhookBody(amount = 14743), signature = webhookApiSecret())
 
-            """.trimIndent()
-
-        val signature =
-            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
-                ?.webhookApiSecret
-                .toString()
-        val headers = HttpHeaders()
-        headers.add(TaakPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
-        headers.add(
-            TaakPaymentWebhookService.HEADER_X_GCS_KEYID,
-            directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
-        )
-        webTestClient
-            .post()
-            .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
-            .headers {
-                it.addAll(headers)
-            }.contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(body)
-            .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody()
-            .returnResult()
-            .responseBody
-            .contentToString()
-            .contentEquals("Request is not valid")
+        assertEquals("Request is not valid", response)
+        assertEquals(0, objectUpdates.get())
     }
 
     @Test
     fun postSaleTestIncorrectOgoneStatus() {
-        val body =
-            """
-            {
-              "apiVersion": "v1",
-              "created": "2020-12-09T11:20:40.3744722+01:00",
-              "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
-              "merchantId": "TAX",
-              "payment": {
-                "paymentOutput": {
-                  "amountOfMoney": {
-                    "amount": 1000,
-                    "currencyCode": "EUR"
-                  },
-                  "references": {
-                    "merchantReference": "58fad5ab-dc2f-11ec-9075-f22a405ce707"
-                  },
-                  "paymentMethod": "card"
-                },
-                "status": "COMPLETED",
-                "statusOutput": {
-                  "isCancellable": false,
-                  "statusCategory": "CREATED",
-                  "statusCode": 50,
-                  "isAuthorized": false,
-                  "isRefundable": false
-                },
-                "id": "***3092546156***"
-              },
-              "type": "payment.created"
-            }
+        listOf(50, 91, 92, 93).forEach { statusCode ->
+            val response = postSale(webhookBody(amount = 14743, statusCode = statusCode))
 
-            """.trimIndent()
+            assertEquals("Request has not the correct status: $statusCode", response)
+        }
+        assertEquals(0, objectUpdates.get())
+    }
 
-        val signature =
-            createSignature(
-                body = body,
-                secretKey =
-                    directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
-                        ?.webhookApiSecret
-                        .toString(),
-            )
+    @Test
+    fun postSaleTestOtherMerchant() {
+        val response = postSale(webhookBody(merchantId = "OTHER", amount = 14743))
+
+        assertEquals("Merchant does not match the task", response)
+        assertEquals(0, objectUpdates.get())
+    }
+
+    @Test
+    fun postSaleTestAmountOneCentOff() {
+        val response = postSale(webhookBody(amount = 14742))
+
+        assertEquals("Amount is not the same as the amount in the task", response)
+        assertEquals(0, objectUpdates.get())
+    }
+
+    @Test
+    fun postSaleTestExactCents() {
+        val response = postSale(webhookBody(merchantReference = TASK_ID_BEDRAG_0_29, amount = 29))
+
+        assertEquals("Request successful processed for order $TASK_ID_BEDRAG_0_29", response)
+        assertEquals(1, objectUpdates.get())
+    }
+
+    @Test
+    fun postSaleTestTruncatedCents() {
+        val response = postSale(webhookBody(merchantReference = TASK_ID_BEDRAG_0_29, amount = 28))
+
+        assertEquals("Amount is not the same as the amount in the task", response)
+        assertEquals(0, objectUpdates.get())
+    }
+
+    @Test
+    fun postSaleTestPspidIsProfileKey() {
+        val response = postSale(webhookBody(merchantReference = TASK_ID_PSPID_PROFIELNAAM, amount = 14743))
+
+        assertEquals("Request successful processed for order $TASK_ID_PSPID_PROFIELNAAM", response)
+        assertEquals(1, objectUpdates.get())
+    }
+
+    private fun postSale(
+        body: String,
+        signature: String = createSignature(body = body, secretKey = webhookApiSecret()),
+    ): String? {
         val headers = HttpHeaders()
-        headers.add(TaakPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
+        headers.add(DirectPaymentWebhookService.HEADER_X_GCS_SIGNATURE, signature)
         headers.add(
-            TaakPaymentWebhookService.HEADER_X_GCS_KEYID,
+            DirectPaymentWebhookService.HEADER_X_GCS_KEYID,
             directPaymentModuleConfiguration.properties.configurations["belastingzaken"]?.webhookApiKey,
         )
-        webTestClient
+        return webTestClient
             .post()
             .uri(PAYMENT_DIRECT_POSTSALE_ENDPOINT)
             .headers {
@@ -314,26 +159,81 @@ internal class TaakPaymentWebhookResourceIT(
             .exchange()
             .expectStatus()
             .isOk
-            .expectBody()
+            .expectBody(String::class.java)
             .returnResult()
             .responseBody
-            .contentToString()
-            .contentEquals("200 OK \"Request has not the correct status\"")
     }
+
+    private fun webhookApiSecret(): String =
+        directPaymentModuleConfiguration.properties.configurations["belastingzaken"]
+            ?.webhookApiSecret
+            .toString()
+
+    private fun webhookBody(
+        merchantReference: String = TASK_ID,
+        merchantId: String = "TAX",
+        amount: Long,
+        statusCode: Int = 9,
+    ): String =
+        """
+        {
+          "apiVersion": "v1",
+          "created": "2020-12-09T11:20:40.3744722+01:00",
+          "id": "34b8a607-1fce-4003-b3ae-a4d29e92b232",
+          "merchantId": "$merchantId",
+          "payment": {
+            "paymentOutput": {
+              "amountOfMoney": {
+                "amount": $amount,
+                "currencyCode": "EUR"
+              },
+              "references": {
+                "merchantReference": "$merchantReference"
+              },
+              "paymentMethod": "card"
+            },
+            "status": "COMPLETED",
+            "statusOutput": {
+              "isCancellable": false,
+              "statusCategory": "CREATED",
+              "statusCode": $statusCode,
+              "isAuthorized": false,
+              "isRefundable": false
+            },
+            "id": "***3092546156***"
+          },
+          "type": "payment.created"
+        }
+
+        """.trimIndent()
 
     fun setupMockObjectsApiServer() {
         val dispatcher: Dispatcher =
             object : Dispatcher() {
                 @Throws(InterruptedException::class)
                 override fun dispatch(request: RecordedRequest): MockResponse {
+                    if (request.method == "PUT" || request.method == "PATCH") {
+                        objectUpdates.incrementAndGet()
+                    }
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
+                            "GET /api/v2/objects/$TASK_ID" -> {
                                 TestHelper.mockResponseFromFile("/data/get-task.json")
                             }
 
-                            "PUT /api/v2/objects/58fad5ab-dc2f-11ec-9075-f22a405ce707" -> {
+                            "GET /api/v2/objects/$TASK_ID_BEDRAG_0_29" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task-bedrag-0-29.json")
+                            }
+
+                            "GET /api/v2/objects/$TASK_ID_PSPID_PROFIELNAAM" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task-pspid-profielnaam.json")
+                            }
+
+                            "PUT /api/v2/objects/$TASK_ID",
+                            "PUT /api/v2/objects/$TASK_ID_BEDRAG_0_29",
+                            "PUT /api/v2/objects/$TASK_ID_PSPID_PROFIELNAAM",
+                            -> {
                                 TestHelper.mockResponseFromFile("/data/put-task.json")
                             }
 
@@ -349,6 +249,9 @@ internal class TaakPaymentWebhookResourceIT(
 
     companion object {
         const val PAYMENT_DIRECT_POSTSALE_ENDPOINT: String = "/api/public/payment/direct/postsale"
+        const val TASK_ID = "58fad5ab-dc2f-11ec-9075-f22a405ce707"
+        const val TASK_ID_BEDRAG_0_29 = "58fad5ab-dc2f-11ec-9075-f22a405ce709"
+        const val TASK_ID_PSPID_PROFIELNAAM = "58fad5ab-dc2f-11ec-9075-f22a405ce710"
 
         fun createSignature(
             body: String,

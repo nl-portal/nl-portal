@@ -20,9 +20,7 @@ import nl.nlportal.payment.direct.domain.DirectPaymentResponse
 import nl.nlportal.zgw.taak.domain.TaakPaymentRequest
 import nl.nlportal.zgw.taak.service.TaakPaymentService
 import org.springframework.graphql.data.method.annotation.Argument
-import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.MutationMapping
-import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -33,11 +31,9 @@ class TaakPaymentMutation(
     suspend fun doTaakPayment(
         authentication: CommonGroundAuthentication,
         @Argument paymentRequest: TaakPaymentRequest,
-        @ContextValue(name = HttpHeaders.REFERER, required = false) referer: String?,
     ): DirectPaymentResponse =
         taakPaymentService.doTaakPayment(
             authentication = authentication,
             taakPaymentRequest = paymentRequest,
-            returnUrl = referer,
         )
 }

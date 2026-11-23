@@ -15,7 +15,7 @@
  */
 package nl.nlportal.zgw.taak.web.rest
 
-import nl.nlportal.zgw.taak.service.TaakPaymentWebhookService
+import nl.nlportal.zgw.taak.service.TaakPaymentService
 import org.springframework.http.ResponseEntity
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.bind.annotation.PostMapping
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(value = ["/api/public"])
 class TaakPaymentWebhookResource(
-    private val taakPaymentWebhookService: TaakPaymentWebhookService,
+    private val taakPaymentService: TaakPaymentService,
 ) {
     @PostMapping(value = ["/payment/direct/postsale"])
     suspend fun postSale(
@@ -34,7 +34,7 @@ class TaakPaymentWebhookResource(
         @RequestBody directPaymentWebhookRequest: String,
     ): ResponseEntity<String> =
         ResponseEntity.ok(
-            taakPaymentWebhookService.handlePostSale(
+            taakPaymentService.handlePostSale(
                 httpServletRequest.headers,
                 directPaymentWebhookRequest,
             ),

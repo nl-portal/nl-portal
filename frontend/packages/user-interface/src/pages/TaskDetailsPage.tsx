@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { useEffect, useMemo } from "react";
-import { Form } from "@formio/react";
+import { lazy, Suspense, useEffect, useMemo } from "react";
 import { merge } from "lodash-es";
 import {
   SubmitTaakV2Document,
@@ -41,6 +40,15 @@ import {
   applyNativeSelectsToForm,
   convertPortalFileUploadResult,
 } from "../components/formio/FormIoTemplateUtils";
+
+const FormIoForm = lazy(async () => {
+  const [component, { initializeFormio }] = await Promise.all([
+    import("../components/formio/FormIoForm"),
+    import("../components/formio/initializeFormio"),
+  ]);
+  initializeFormio();
+  return component;
+});
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const buildPrefillPayload = (submissionData: any) => {
@@ -205,18 +213,22 @@ const TaskDetailsPage = () => {
         <PageHeader title={task?.getTaakByIdV2?.titel} />
       </div>
       <div className={styles["task-details-page"]}>
-        <Form
-          src={adjustedForm}
-          submission={submission}
-          onSubmit={onFormSubmit}
-          options={
-            {
-              noAlerts: true,
-              template: "nl-portal",
-              taakId: id,
-            } as Record<string, unknown>
-          }
-        />
+        <Suspense
+          fallback={<Skeleton height={64} style={{ maxWidth: "100%" }} />}
+        >
+          <FormIoForm
+            src={adjustedForm}
+            submission={submission}
+            onSubmit={onFormSubmit}
+            options={
+              {
+                noAlerts: true,
+                template: "nl-portal",
+                taakId: id,
+              } as Record<string, unknown>
+            }
+          />
+        </Suspense>
       </div>
     </PageGrid>
   );

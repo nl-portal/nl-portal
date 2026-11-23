@@ -19,12 +19,14 @@ export const MUTATION_DO_TAAK_PAYMENT = gql`
   mutation doTaakPayment(
     $identifier: String!
     $langId: String
+    $returnUrl: String
     $taakId: UUID!
   ) {
     doTaakPayment(
       paymentRequest: {
         identifier: $identifier
         langId: $langId
+        returnUrl: $returnUrl
         taakId: $taakId
       }
     ) {

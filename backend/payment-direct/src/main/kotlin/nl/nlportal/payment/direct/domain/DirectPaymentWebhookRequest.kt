@@ -13,35 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package nl.nlportal.zgw.taak.domain
+package nl.nlportal.payment.direct.domain
 
-data class TaakPaymentWebhookRequest(
+data class DirectPaymentWebhookRequest(
     val merchantId: String,
     val id: String,
     val type: String,
-    val payment: TaakDirectPayment,
+    val payment: DirectPaymentWebhookPayment,
 )
 
-data class TaakDirectPayment(
+data class DirectPaymentWebhookPayment(
     val status: String,
-    val statusOutput: TaakPaymentStatusOutput,
-    val paymentOutput: TaakPaymentOutput,
+    val statusOutput: DirectPaymentWebhookStatusOutput,
+    val paymentOutput: DirectPaymentWebhookPaymentOutput,
 )
 
-data class TaakPaymentStatusOutput(
+data class DirectPaymentWebhookStatusOutput(
     val statusCode: Int,
 )
 
-data class TaakPaymentOutput(
-    val amountOfMoney: TaakPaymentAmountOfMoney,
-    val references: TaakPaymentReference,
+data class DirectPaymentWebhookPaymentOutput(
+    val amountOfMoney: DirectPaymentWebhookAmountOfMoney,
+    val references: DirectPaymentWebhookReference,
 )
 
-data class TaakPaymentAmountOfMoney(
+data class DirectPaymentWebhookAmountOfMoney(
     val amount: Long,
     val currencyCode: String,
 )
 
-data class TaakPaymentReference(
+data class DirectPaymentWebhookReference(
     val merchantReference: String,
 )
