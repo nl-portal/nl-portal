@@ -28,6 +28,7 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -52,6 +53,12 @@ internal class TaakPaymentQueryIT(
 ) {
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
+        const val TASK_BSN = "569312863"
+        const val TASK_ID = "58fad5ab-dc2f-11ec-9075-f22a405ce708"
+        const val TASK_ID_PSPID_PROFIELNAAM = "58fad5ab-dc2f-11ec-9075-f22a405ce710"
+        const val TASK_ID_OTHER_USER = "58fad5ab-dc2f-11ec-9075-f22a405ce711"
+        const val TASK_ID_OTHER_MERCHANT = "58fad5ab-dc2f-11ec-9075-f22a405ce714"
+        const val CHECKOUT_WITHOUT_PAYMENT = "4373041363"
 
         @JvmStatic
         var server: MockWebServer? = null
@@ -90,32 +97,85 @@ internal class TaakPaymentQueryIT(
     }
 
     @Test
-    @WithBurgerUser("123")
+    @WithBurgerUser(TASK_BSN)
     fun getDirectPaymentStatus() {
-        val query =
-            """
-            query {
-                getTaakPaymentStatus(
-                    identifier: "belastingzaken", 
-                    hostedCheckoutId: "4373041363"
-                ) {
-                status,
-                }
-            }
-            """.trimIndent()
-
-        val responseBody =
-            httpGraphQlTester
-                .document(query)
-                .execute()
-                .errors()
-                .verify()
-                .path("getTaakPaymentStatus")
-                .entity(JsonNode::class.java)
-                .get()
-
-        assertEquals("SUCCESSFUL", responseBody.get("status")?.stringValue())
+        assertEquals("SUCCESSFUL", getTaakPaymentStatus(TASK_ID))
     }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusForTaakWithProfileKeyAsPspid() {
+        assertEquals("SUCCESSFUL", getTaakPaymentStatus(TASK_ID_PSPID_PROFIELNAAM))
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusForTaakOfOtherUser() {
+        assertRejected(TASK_ID_OTHER_USER, "Access denied to this taak")
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusWithMerchantReferenceNotUUID() {
+        assertRejected("123456")
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusForTaakOfOtherMerchant() {
+        assertRejected(TASK_ID_OTHER_MERCHANT)
+    }
+
+    @Test
+    @WithBurgerUser(TASK_BSN)
+    fun getDirectPaymentStatusWithoutPayment() {
+        assertRejected(CHECKOUT_WITHOUT_PAYMENT)
+    }
+
+    private fun statusQuery(hostedCheckoutId: String): String =
+        """
+        query {
+            getTaakPaymentStatus(
+                identifier: "belastingzaken",
+                hostedCheckoutId: "$hostedCheckoutId"
+            ) {
+            status,
+            }
+        }
+        """.trimIndent()
+
+    private fun getTaakPaymentStatus(hostedCheckoutId: String): String? =
+        httpGraphQlTester
+            .document(statusQuery(hostedCheckoutId))
+            .execute()
+            .errors()
+            .verify()
+            .path("getTaakPaymentStatus")
+            .entity(JsonNode::class.java)
+            .get()
+            .get("status")
+            ?.stringValue()
+
+    private fun assertRejected(
+        hostedCheckoutId: String,
+        reason: String = "Payment not found",
+    ) {
+        httpGraphQlTester
+            .document(statusQuery(hostedCheckoutId))
+            .execute()
+            .errors()
+            .satisfy { errors -> assertTrue(errors.any { it.message?.contains(reason) == true }, errors.toString()) }
+    }
+
+    private fun statusResponse(merchantReference: String): MockResponse =
+        TestHelper
+            .mockResponseFromFile("/data/payment-status-response.json")
+            .setBody(
+                javaClass
+                    .getResource("/data/payment-status-response.json")!!
+                    .readText()
+                    .replace(TASK_ID, merchantReference),
+            )
 
     fun setupMockServer() {
         val dispatcher: Dispatcher =
@@ -125,12 +185,34 @@ internal class TaakPaymentQueryIT(
                     val path = request.path?.substringBefore('?')
                     val response =
                         when (request.method + " " + path) {
-                            "GET /v2/TAX/hostedcheckouts/4373041363" -> {
-                                TestHelper.mockResponseFromFile("/data/payment-status-response.json")
+                            "GET /v2/TAX/hostedcheckouts/$CHECKOUT_WITHOUT_PAYMENT" -> {
+                                TestHelper
+                                    .mockResponseFromFile("/data/payment-status-response.json")
+                                    .setBody("""{"createdPaymentOutput": {"paymentStatusCategory": "SUCCESSFUL"}, "status": "PAYMENT_CREATED"}""")
+                            }
+
+                            "GET /api/v2/objects/$TASK_ID" -> {
+                                TestHelper.mockResponseFromFile("/data/get-betaal-taskv2.json")
+                            }
+
+                            "GET /api/v2/objects/$TASK_ID_OTHER_USER" -> {
+                                TestHelper.mockResponseFromFile("/data/get-betaal-task-other-user.json")
+                            }
+
+                            "GET /api/v2/objects/$TASK_ID_OTHER_MERCHANT" -> {
+                                TestHelper.mockResponseFromFile("/data/get-betaal-task-other-merchant.json")
+                            }
+
+                            "GET /api/v2/objects/$TASK_ID_PSPID_PROFIELNAAM" -> {
+                                TestHelper.mockResponseFromFile("/data/get-task-pspid-profielnaam.json")
                             }
 
                             else -> {
-                                MockResponse().setResponseCode(404)
+                                if (request.method == "GET" && path?.startsWith("/v2/TAX/hostedcheckouts/") == true) {
+                                    statusResponse(path.substringAfterLast('/'))
+                                } else {
+                                    MockResponse().setResponseCode(404)
+                                }
                             }
                         }
                     return response
