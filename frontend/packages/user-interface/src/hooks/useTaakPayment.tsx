@@ -18,14 +18,6 @@ import { useMutation } from "@apollo/client/react";
 import { useContext, useState } from "react";
 import { LocaleContext } from "@nl-portal/nl-portal-localization";
 
-// -- Variables for the Ogone direct payment request:
-// amount, required, The amount to be paid (float).
-// identifier, required, The identifier of the merchant. Can be found in product eigenschappen or in the taak pspid.
-// orderId, required, The unique order id. This id will be used to identify the payment in the Ogone system.
-// reference, required, The reference of the payment. This reference will be shown on the bank statement of the payer.
-// langId: The language id of the payment page. This id should be in the format of nl_NL.
-// returnUrl: The url to redirect to after a successful payment.
-
 interface PaymentRequestPayload {
   identifier: string;
   taakId: string;
@@ -45,6 +37,7 @@ const useTaakPayment = () => {
       variables: {
         identifier: paymentRequestPayload.identifier,
         langId: currentLocale.replace("-", "_"),
+        returnUrl: returnUrl.href,
         taakId: paymentRequestPayload.taakId,
       },
       onCompleted: (data) => {
