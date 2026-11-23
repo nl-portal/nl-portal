@@ -25,12 +25,18 @@ import com.onlinepayments.domain.OrderReferences
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration
+import nl.nlportal.payment.direct.autoconfiguration.DirectPaymentModuleConfiguration.DirectPaymentProfile
 import nl.nlportal.payment.direct.client.DirectPaymentClient
+import nl.nlportal.payment.direct.domain.DirectPaymentCheckout
+import nl.nlportal.payment.direct.domain.DirectPaymentException
 import nl.nlportal.payment.direct.domain.DirectPaymentRequest
 import nl.nlportal.payment.direct.domain.DirectPaymentResponse
 import nl.nlportal.payment.direct.domain.DirectPaymentStatus
+import nl.nlportal.payment.direct.domain.DirectPaymentStatusCategory
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
+import java.math.BigDecimal
+import java.net.URI
 
 open class DirectPaymentService(
     private val directPaymentModuleConfiguration: DirectPaymentModuleConfiguration,
@@ -39,7 +45,21 @@ open class DirectPaymentService(
     suspend fun getDirectPaymentStatus(
         identifier: String,
         hostedCheckoutId: String,
-    ): DirectPaymentStatus {
+    ): DirectPaymentStatus =
+        DirectPaymentStatus(
+            status = getDirectPaymentCheckout(identifier, hostedCheckoutId).status,
+        )
+
+    /**
+     * Get the hosted checkout from the payment provider.
+     * @param identifier: payment profile key or pspId
+     * @param hostedCheckoutId: id of the hosted checkout
+     * @return orderId of the created payment, if any, and the payment status
+     */
+    suspend fun getDirectPaymentCheckout(
+        identifier: String,
+        hostedCheckoutId: String,
+    ): DirectPaymentCheckout {
         val paymentDirectProfile =
             directPaymentModuleConfiguration.properties.getPaymentProfile(identifier)
                 ?: directPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(identifier)
@@ -54,19 +74,54 @@ open class DirectPaymentService(
                 hostedCheckoutId = hostedCheckoutId,
             )
 
-        return DirectPaymentStatus(
-            status = directPaymentStatusResponse.createdPaymentOutput.paymentStatusCategory,
-        )
+        val createdPaymentOutput = directPaymentStatusResponse.createdPaymentOutput
+        val checkout =
+            DirectPaymentCheckout(
+                orderId =
+                    createdPaymentOutput
+                        ?.payment
+                        ?.paymentOutput
+                        ?.references
+                        ?.merchantReference,
+                status = createdPaymentOutput?.paymentStatusCategory ?: DirectPaymentStatusCategory.STATUS_UNKNOWN,
+            )
+        logger.debug {
+            "Hosted checkout $hostedCheckoutId for order ${checkout.orderId} has status ${directPaymentStatusResponse.status}, " +
+                "payment status ${checkout.status}"
+        }
+        return checkout
     }
 
     /**
-     * Do Direct Payment at payment provider
+     * Verifies that the payment profile of the identifier belongs to the merchant.
+     * @param identifier: payment profile key or pspId used for the payment
+     * @param merchant: payment profile key or pspId of the merchant the order belongs to
+     * @throws DirectPaymentException.MerchantMismatch when the identifier has no profile or another pspId than the merchant
+     */
+    fun verifyMerchant(
+        identifier: String,
+        merchant: String,
+    ) {
+        val pspId = findPaymentProfile(identifier)?.pspId
+        if (pspId == null || pspId != findPaymentProfile(merchant)?.pspId) {
+            throw DirectPaymentException.MerchantMismatch()
+        }
+    }
+
+    private fun findPaymentProfile(identifier: String): DirectPaymentProfile? =
+        directPaymentModuleConfiguration.properties.getPaymentProfile(identifier)
+            ?: directPaymentModuleConfiguration.properties.getPaymentProfileByPspPid(identifier)
+
+    /**
+     * Do Direct Payment at payment provider. The returnUrl of the request is only used when the returnUrl of the payment
+     * profile is an absolute URL with the same origin, otherwise the returnUrl of the payment profile is used.
      * @param paymentRequest: properties to create a payment
      * @return redirectUrl to do the actual payment at payment provider
      */
     suspend fun doDirectPayment(
         paymentRequest: DirectPaymentRequest,
     ): DirectPaymentResponse {
+        val amount = toCents(paymentRequest.amount)
         try {
             val paymentDirectProfile =
                 directPaymentModuleConfiguration.properties.getPaymentProfile(paymentRequest.identifier)
@@ -79,8 +134,14 @@ open class DirectPaymentService(
             val hostedCheckoutSpecificInput =
                 HostedCheckoutSpecificInput()
                     .withLocale(paymentRequest.langId ?: paymentDirectProfile.language)
-                    .withReturnUrl(paymentRequest.returnUrl ?: paymentDirectProfile.returnUrl)
-                    .withShowResultPage(directPaymentModuleConfiguration.properties.showResultPage)
+                    .withReturnUrl(
+                        paymentRequest.returnUrl?.takeIf {
+                            runCatching { URI(paymentDirectProfile.returnUrl) }
+                                .getOrNull()
+                                ?.takeIf { profileUri -> profileUri.isAbsolute && profileUri.host != null }
+                                ?.let { profileUri -> it.startsWith(profileUri.resolve("/").toString()) } == true
+                        } ?: paymentDirectProfile.returnUrl,
+                    ).withShowResultPage(directPaymentModuleConfiguration.properties.showResultPage)
                     .withAllowedNumberOfPaymentAttempts(paymentDirectProfile.allowedNumberOfPayments)
 
             directPaymentModuleConfiguration.properties.customTemplateUrl?.let {
@@ -93,7 +154,7 @@ open class DirectPaymentService(
                         Order()
                             .withAmountOfMoney(
                                 AmountOfMoney()
-                                    .withAmount((paymentRequest.amount * 100).toLong())
+                                    .withAmount(amount)
                                     .withCurrencyCode(paymentDirectProfile.currency),
                             ).withReferences(
                                 OrderReferences()
@@ -124,6 +185,7 @@ open class DirectPaymentService(
                     directPaymentProfile = paymentDirectProfile,
                     checkoutRequest = checkoutRequest,
                 )
+            logger.debug { "Hosted checkout ${response.hostedCheckoutId} created for order ${paymentRequest.orderId}" }
 
             return DirectPaymentResponse(
                 redirectUrl = response.redirectUrl,
@@ -136,5 +198,18 @@ open class DirectPaymentService(
 
     companion object {
         private val logger: KLogger = KotlinLogging.logger {}
+
+        /**
+         * Converts an amount in euros to cents exactly. Amounts with more than 2 decimals are rejected.
+         * @param amount: amount in euros
+         * @return amount in cents
+         * @throws DirectPaymentException.AmountNotConvertible when the amount can not be converted exactly
+         */
+        fun toCents(amount: Double): Long =
+            try {
+                BigDecimal.valueOf(amount).movePointRight(2).longValueExact()
+            } catch (ex: ArithmeticException) {
+                throw DirectPaymentException.AmountNotConvertible()
+            }
     }
 }

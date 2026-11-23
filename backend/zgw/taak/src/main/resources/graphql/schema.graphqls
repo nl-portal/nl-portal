@@ -110,6 +110,7 @@ type OgoneBetaling {
 input TaakPaymentRequestInput {
     identifier: String!
     langId: String
+    returnUrl: String
     taakId: UUID!
 }
 

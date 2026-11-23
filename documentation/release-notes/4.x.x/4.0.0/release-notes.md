@@ -21,6 +21,8 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 * De toegestane status `in_aanvraag` van een product ging mis bij het serialiseren en deserialiseren. Dit is opgelost.
 * Form.io-componenten in taakformulieren tonen het label en de beschrijving niet meer dubbel. Dit gold onder andere voor `datetime`, `phoneNumber`, `url`, `currency`, `time`, `address` en `radio`.
 * De instelling `hideLabel` (Hide label) werkt nu voor tekstvelden, tekstvakken, datum/tijd, select, adres, radio en selectboxes. Het label wordt verborgen en het veld krijgt een `aria-label`, zodat het voor schermlezers benoemd blijft. Formulieren die `hideLabel` al aan hadden staan, tonen dit label vanaf deze versie dus niet meer.
+* `payment-direct` gaat nauwkeuriger om met decimalen in bedragen.
+* `payment-direct` gebruikt een meegegeven return URL alleen als die dezelfde origin heeft als de `return-url` van het betaalprofiel, anders die `return-url`.
 
 ## Breaking changes
 
@@ -37,6 +39,7 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 * **Den Haag design tokens bijgewerkt naar `@gemeente-denhaag/design-tokens` 1.6.0.** Deze versie hernoemt de kleurschalen en verwijdert een aantal tokens. De Den Haag-componenten die met de libraries meekomen gebruiken de nieuwe namen. Overschrijf je in je eigen thema Den Haag-tokens, of verwijs je ernaar (bijvoorbeeld in je `--nlportal-*` tokens), dan hebben die geen effect meer: de Den Haag-kleuren komen weer door en spacing valt weg. Zie migratie-instructies.
 * **Haalcentraal HR:** in de GraphQL-response is `hoofdvestiging` gewijzigd naar `vestiging`. Hierdoor krijg je ook het juiste adres als je bent ingelogd voor een vestiging.
 * `DocumentApisConfig.DocumentenApisConfigProperties.DocumentApiConfig`: `rsin` en `documentTypeUrl` zijn niet langer nullable (`String` met standaardwaarde `""`).
+* **`payment-direct` is opgesplitst in producent en afnemer.** `payment-direct` is nu alleen de interne API voor Worldline Direct (`DirectPaymentService` voor checkout en status, `DirectPaymentWebhookService` voor het controleren van webhooks) en heeft geen eigen GraphQL of REST meer. De taak-module neemt het betalen van taken over via deze API: `doDirectPayment` en `getDirectPaymentStatus` zijn vervangen door `doTaakPayment` en `getTaakPaymentStatus`, die bedrag, kenmerk en order-id uit de taak halen. Het webhook-endpoint `/api/public/payment/direct/postsale` is ongewijzigd en zit nu in de taak-module. Maatwerk en toekomstige app-features kunnen dezelfde interne API gebruiken voor hun eigen betalingen.
 
 ## Deprecations
 
@@ -108,6 +111,8 @@ Let op: de nieuwe `--basis-space-*` tokens hebben een andere schaal (`md` is 8px
 **Broncode / maatwerk.** Bouw en draai met Java 21; bouw de frontend met Node 24 en pnpm 11. Controleer eigen uitbreidingen op Spring Boot 4- / Spring Security 7-wijzigingen.
 
 **Payment-module verwijderd.** Verwijder de dependency op de `payment`-module uit je `pom.xml` of `build.gradle`.
+
+**Betalingen die nog met 3.x zijn gestart (optioneel).** Door de nauwkeurigere omrekening naar centen accepteert `payment-direct` een betaling die vóór de update is gestart en erna wordt afgerond niet altijd meer. Zet `nl-portal.config.payment.direct.properties.accept-legacy-amount-rounding` (env `NLPORTAL_CONFIG_PAYMENT_DIRECT_PROPERTIES_ACCEPTLEGACYAMOUNTROUNDING`) tijdelijk op `true` om ook de oude omrekening te accepteren, en zet de instelling daarna weer uit. De instelling verdwijnt in 5.0.
 
 ## Bekende problemen
 
