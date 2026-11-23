@@ -51,6 +51,24 @@ nl-portal:
       open-product-enabled: true
       my-inhabitant-count-enabled: false
       cases-contact-moments-enabled: true
+      menu-entries-enabled: true
+    menu-entries:
+      - name: thema-concept
+        icon: ParkingIcon
+        group: 2
+        ordering: 0
+        route:
+          type: templated
+          page: template-a
+          path: /thema-concept
+      - name: extern-portaal
+        icon: GridIcon
+        audience:
+          - bedrijf
+        route:
+          type: custom
+          page: remote-a
+          path: /extern
 ---
 spring:
   config:

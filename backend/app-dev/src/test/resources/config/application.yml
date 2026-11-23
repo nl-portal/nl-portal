@@ -43,6 +43,15 @@ nl-portal:
                     allowedMethods: "*"
         endpoints:
             unsecured: /api/public/**
+    frontend:
+        toggles:
+            menu-entries-enabled: true
+        menu-entries:
+            -   name: test-entry
+                route:
+                    type: templated
+                    page: template-a
+                    path: /test-entry
     authentication:
         keycloak:
             resource: test-client

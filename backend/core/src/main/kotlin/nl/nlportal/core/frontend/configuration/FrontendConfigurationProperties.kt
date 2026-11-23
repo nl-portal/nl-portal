@@ -25,6 +25,7 @@ class FrontendConfigurationProperties {
     var properties: FrontendProperties = FrontendProperties()
     var toggles: FrontendToggles = FrontendToggles()
     var modulesWhitelist: List<String> = emptyList()
+    var menuEntries: List<FrontendMenuEntryProperties> = emptyList()
 
     class FrontendTheme(
         var style: String? = null,
@@ -61,6 +62,22 @@ class FrontendConfigurationProperties {
         var casesContactMomentsEnabled: Boolean? = null
         var overviewIntroEnabled: Boolean? = null
         var overviewMaintenanceAlertEnabled: Boolean? = null
+        var menuEntriesEnabled: Boolean? = null
         var custom: String? = null
     }
+
+    class FrontendMenuEntryProperties(
+        var name: String = "",
+        var icon: String = "DocumentIcon",
+        var group: Int? = null,
+        var ordering: Int? = null,
+        var audience: List<String> = emptyList(),
+        var route: FrontendMenuRouteProperties = FrontendMenuRouteProperties(),
+    )
+
+    class FrontendMenuRouteProperties(
+        var type: String = "",
+        var page: String = "",
+        var path: String = "",
+    )
 }

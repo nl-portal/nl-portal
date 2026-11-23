@@ -22,4 +22,6 @@ export type NavigationItem = {
   hasMessagesCount?: boolean;
   themeSlug?: string;
   showInQuickLinks?: boolean;
+  titleTranslationId?: string;
+  matchSubPaths?: boolean;
 };
