@@ -975,6 +975,11 @@ class OpenProductService(
             }
         }
 
+        // if there are no zaaktype configured in the producttypes linked to the thema, just return an empty list
+        if (zaakTypes.isEmpty()) {
+            return emptyList()
+        }
+
         // 3. get Zaken with filters
         if (!authenticationMachtigingsDienstService.isAllowedZaakTypes(authentication, zaakTypes.toList())) {
             return emptyList()
