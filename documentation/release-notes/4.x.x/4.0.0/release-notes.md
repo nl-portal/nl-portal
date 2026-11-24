@@ -36,6 +36,7 @@ NL-Portal is samengevoegd tot een monorepo met een enkele, gedeelde versie voor 
 
 * **Upgrade naar Spring Boot 4.1.0** (Spring Framework 7 / Spring Security 7), Kotlin 2.4.10. Bouwen en uitbreiden vereist Java 21; controleer eigen code, configuratie en dependencies op Spring Boot 4- / Spring Security 7-wijzigingen.
 * **Frontend-platform bijgewerkt**: React 19, Vite 8, TypeScript 5.9. Bouwen vereist Node 24 en pnpm 11.
+* **Nieuwe base images.** Het backend-image draait op `eclipse-temurin:21-jre-noble` (Ubuntu 24.04) in plaats van Alpine; het frontend-image op `nginx/nginx-unprivileged:1.31.9-alpine-slim`. Bouw je een eigen image op basis van het backend-image, gebruik dan `apt-get` in plaats van `apk`.
 * **Den Haag design tokens bijgewerkt naar `@gemeente-denhaag/design-tokens` 1.6.0.** Deze versie hernoemt de kleurschalen en verwijdert een aantal tokens. De Den Haag-componenten die met de libraries meekomen gebruiken de nieuwe namen. Overschrijf je in je eigen thema Den Haag-tokens, of verwijs je ernaar (bijvoorbeeld in je `--nlportal-*` tokens), dan hebben die geen effect meer: de Den Haag-kleuren komen weer door en spacing valt weg. Zie migratie-instructies.
 * **Haalcentraal HR:** in de GraphQL-response is `hoofdvestiging` gewijzigd naar `vestiging`. Hierdoor krijg je ook het juiste adres als je bent ingelogd voor een vestiging.
 * `DocumentApisConfig.DocumentenApisConfigProperties.DocumentApiConfig`: `rsin` en `documentTypeUrl` zijn niet langer nullable (`String` met standaardwaarde `""`).
