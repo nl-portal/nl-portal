@@ -91,6 +91,10 @@
         * [Backend Libraries](release-notes/3.1.x/3.1.3/backend-libraries.md)
         * [Frontend Libraries](release-notes/3.1.x/3.1.3/frontend-libraries.md)
         * [App](release-notes/3.1.x/3.1.3/app.md)
+    * 3.1.4
+        * [Backend Libraries](release-notes/3.1.x/3.1.4/backend-libraries.md)
+        * [Frontend Libraries](release-notes/3.1.x/3.1.4/frontend-libraries.md)
+        * [App](release-notes/3.1.x/3.1.4/app.md)
 
 ## Contributing to NL portal
 

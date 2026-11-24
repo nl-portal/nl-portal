@@ -22,7 +22,7 @@ COPY packages/app/build ./packages/app/build
 # --- select the build source via BUILD_MODE; BuildKit prunes the other stage ---
 FROM build-${BUILD_MODE} AS build
 
-FROM nginxinc/nginx-unprivileged:stable-alpine AS image
+FROM nginx/nginx-unprivileged:1.31.9-alpine-slim AS image
 
 # Remove default config that listens on 8080
 RUN rm /etc/nginx/conf.d/default.conf
