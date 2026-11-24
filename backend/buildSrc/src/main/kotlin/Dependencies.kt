@@ -31,8 +31,6 @@ object Dependencies {
 
     val jacksonKotlinModule by lazy { "tools.jackson.module:jackson-module-kotlin" }
     val kotlinLogging by lazy { "io.github.oshai:kotlin-logging-jvm:${Versions.kotlinLogging}" }
-    val springCloudStream by lazy { "org.springframework.cloud:spring-cloud-stream:${Versions.springCloud}" }
-    val springCloudStreamBinderRabbit by lazy { "org.springframework.cloud:spring-cloud-stream-binder-rabbit:${Versions.springCloud}" }
     val springBootStarter by lazy { "org.springframework.boot:spring-boot-starter" }
     val springWebFlux by lazy { "org.springframework.boot:spring-boot-starter-webflux" }
     val springBootWebClient by lazy { "org.springframework.boot:spring-boot-starter-webclient" }

@@ -138,14 +138,6 @@ subprojects {
                 mavenBom("io.netty:netty-bom:${Versions.netty}")
                 mavenBom("org.jetbrains.kotlinx:kotlinx-coroutines-bom:${Versions.kotlinCoroutines}")
             }
-            dependencies {
-                // Security overrides on top of the Spring Boot 4.1.0 BOM.
-                dependency("org.postgresql:postgresql:${Versions.postgresql}")
-                dependency("org.apache.httpcomponents.core5:httpcore5:${Versions.httpCore5}")
-                dependency("org.apache.httpcomponents.core5:httpcore5-h2:${Versions.httpCore5}")
-                dependency("org.apache.logging.log4j:log4j-api:${Versions.log4j2}")
-                dependency("org.apache.logging.log4j:log4j-to-slf4j:${Versions.log4j2}")
-            }
         }
     }
 
