@@ -21,10 +21,10 @@ COPY app/build/libs/app.jar ./app/build/libs/app.jar
 # --- select the build source via BUILD_MODE; BuildKit prunes the other stage ---
 FROM build-${BUILD_MODE} AS build
 
-FROM eclipse-temurin:21-jre-alpine AS image
+FROM eclipse-temurin:21-jre-noble AS image
 
 # Create non-root user
-RUN addgroup -S -g 1001 appgroup && adduser -S -u 1001 -G appgroup -H appuser
+RUN groupadd --system --gid 1001 appgroup && useradd --system --uid 1001 --gid appgroup --no-create-home --shell /usr/sbin/nologin appuser
 
 # Copy the Spring Boot fat jar with proper ownership
 COPY --chown=1001:1001 --from=build /workspace/app/build/libs/app.jar /opt/app.jar
