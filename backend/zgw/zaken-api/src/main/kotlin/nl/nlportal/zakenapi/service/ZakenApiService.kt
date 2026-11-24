@@ -86,16 +86,18 @@ class ZakenApiService(
             request.ofOmschrijving(it)
         }
 
+        // collect all zaaktype uuids
+        val zaakTypeUUIDFilter = zaakTypeUUIDs.toMutableSet()
         authenticationMachtigingsDienstService.zaakTypes(authentication)?.let {
-            request.ofZaakTypes(it)
+            zaakTypeUUIDFilter.addAll(it)
         }
 
         if (zakenApiConfigProperties.zaakTypesIdsExcluded.isNotEmpty()) {
             request.notInZaakTypes(zakenApiConfigProperties.zaakTypesIdsExcluded)
         }
 
-        if (zaakTypeUUIDs.isNotEmpty()) {
-            request.ofZaakTypes(zaakTypeUUIDs.toList())
+        if (zaakTypeUUIDFilter.isNotEmpty()) {
+            request.ofZaakTypes(zaakTypeUUIDFilter.toList())
         }
 
         return request.retrieve().let {
