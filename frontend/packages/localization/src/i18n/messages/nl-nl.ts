@@ -304,8 +304,6 @@ export const NL_NL_MESSAGES: Messages = {
     "descriptionList.empty": "Er zijn geen details beschikbaar.",
     "messagesList.fetchError": "Er is een fout opgetreden.",
     "messagesList.empty": "Er zijn geen berichten.",
-    "messagesList.subject": "Onderwerp",
-    "messagesList.date": "Datum bericht",
     "messagesList.new": "Nieuw",
     "messageContent.fetchError":
       "Er ging iets niet goed, probeer het later opnieuw.",

@@ -37,7 +37,7 @@ const Header = ({ logo, paths }: HeaderProps) => {
   const { logout } = useLogout();
   const { currentLocale, setCurrentLocale, supportedLocales } =
     useContext(LocaleContext);
-  const { messagesCount } = useContext(AppContext);
+  const { messageCount } = useContext(AppContext);
   const { navigationItems } = useContext(RouterContext);
   const { username, usernameVolmacht } = useContext(UserContext);
   const intl = useIntl();
@@ -108,12 +108,12 @@ const Header = ({ logo, paths }: HeaderProps) => {
           href: item.path,
         };
         if (item.hasMessagesCount) {
-          return { badgeCounter: messagesCount, ...navItem };
+          return { badgeCounter: messageCount, ...navItem };
         }
         return navItem;
       }),
     }),
-    [navigationItems, intl, messagesCount],
+    [navigationItems, intl, messageCount],
   );
 
   const mijnDenHaagMobileMenu = useMemo(
@@ -128,12 +128,12 @@ const Header = ({ logo, paths }: HeaderProps) => {
           icon: item.icon,
         };
         if (item.hasMessagesCount) {
-          return { badgeCounter: messagesCount, ...navItem };
+          return { badgeCounter: messageCount, ...navItem };
         }
         return navItem;
       }),
     }),
-    [navigationItems, intl, messagesCount],
+    [navigationItems, intl, messageCount],
   );
 
   const welcomeLabel = intl.formatMessage({ id: "menu.welcome" });

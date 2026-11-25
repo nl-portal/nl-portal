@@ -18,16 +18,11 @@ import { gql } from "@apollo/client";
 export const QUERY_GET_BERICHT = gql`
   query GetBericht($id: UUID!) {
     getBericht(id: $id) {
-      id
+      uuid
       berichtTekst
-      berichtType
-      einddatumHandelingstermijn
       geopend
-      handelingsperspectief
-      identificatie {
-        type
-        value
-      }
+      onderwerp
+      publicatiedatum
       documenten {
         uuid
         documentapi
@@ -38,9 +33,6 @@ export const QUERY_GET_BERICHT = gql`
         bestandsnaam
         bestandsomvang
       }
-      onderwerp
-      publicatiedatum
-      referentie
     }
   }
 `;

@@ -25,6 +25,7 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:objectenapi"))
     api(project(":zgw:documenten-api"))
+    api(project(":zgw:vtb-api"))
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(Dependencies.springBootStarter)

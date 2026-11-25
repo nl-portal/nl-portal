@@ -18,13 +18,24 @@ package nl.nlportal.berichten.domain
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime
 import java.util.UUID
+import nl.nlportal.berichten.graphql.BerichtenPage
+import nl.nlportal.commonground.authentication.BSN_KEY
+import nl.nlportal.commonground.authentication.BedrijfAuthentication
+import nl.nlportal.commonground.authentication.BurgerAuthentication
+import nl.nlportal.commonground.authentication.CommonGroundAuthentication
+import nl.nlportal.commonground.authentication.VESTIGINGNUMMER_KEY
+import nl.nlportal.vtbapi.client.domain.VTBBericht
+import nl.nlportal.zgw.objectenapi.domain.Comparator
+import nl.nlportal.zgw.objectenapi.domain.ObjectSearchParameter
+import nl.nlportal.zgw.objectenapi.domain.ObjectsApiObject
+import nl.nlportal.zgw.objectenapi.domain.ResultPage
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Bericht(
-    val id: UUID? = null,
+    val uuid: UUID,
     val berichtTekst: String,
-    val berichtType: BerichtType,
-    val bijlages: List<String>,
+    var berichtType: BerichtType,
+    val bijlages: List<String>? = emptyList(),
     val einddatumHandelingstermijn: LocalDateTime,
     var geopend: Boolean,
     val handelingsperspectief: BerichtHandelingsperspectief,
@@ -32,4 +43,23 @@ data class Bericht(
     val onderwerp: String,
     val publicatiedatum: LocalDateTime,
     val referentie: String? = null,
-)
+) {
+    companion object {
+        fun fromBerichtObject(
+            berichtObject: ObjectsApiObject<BerichtObject>,
+        ): Bericht =
+            Bericht(
+                uuid = berichtObject.uuid,
+                berichtTekst = berichtObject.record.data.berichtTekst,
+                berichtType = berichtObject.record.data.berichtType,
+                bijlages = berichtObject.record.data.bijlages,
+                einddatumHandelingstermijn = berichtObject.record.data.einddatumHandelingstermijn,
+                geopend = berichtObject.record.data.geopend,
+                handelingsperspectief = berichtObject.record.data.handelingsperspectief,
+                identificatie = berichtObject.record.data.identificatie,
+                onderwerp = berichtObject.record.data.onderwerp,
+                publicatiedatum = berichtObject.record.data.publicatiedatum,
+                referentie = berichtObject.record.data.referentie,
+            )
+    }
+}

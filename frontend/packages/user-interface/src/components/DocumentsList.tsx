@@ -27,6 +27,7 @@ interface Props {
   loading?: boolean;
   error?: boolean;
   errorTranslationId?: string;
+  showEmpty?: boolean;
   emptyTranslationId?: string;
   titleTranslationId?: string | null;
   documents?: Array<PortalDocument>;
@@ -37,6 +38,7 @@ const DocumentsList = ({
   loading,
   error,
   errorTranslationId = "documentsList.fetchError",
+  showEmpty = true,
   emptyTranslationId = "documentsList.empty",
   titleTranslationId = "documentsList.title",
   documents,
@@ -68,13 +70,15 @@ const DocumentsList = ({
       </section>
     );
 
-  if (!documents || documents.length === 0)
+  if (!documents || documents.length === 0) {
+    if (!showEmpty) return null;
     return (
       <section>
         <SectionHeader title={title} />
         <Paragraph>{emptyMessage}</Paragraph>
       </section>
     );
+  }
 
   return (
     <section>

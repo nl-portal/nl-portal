@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { InMemoryCacheConfig } from "@apollo/client";
+import { defaultDataIdFromObject, InMemoryCacheConfig } from "@apollo/client";
 
 export const defaultInMemoryCacheOptions: InMemoryCacheConfig = {
-  typePolicies: {
-    Zaak: {
-      keyFields: ["uuid"],
-    },
+  dataIdFromObject(object) {
+    const id = object.id ?? object.uuid;
+
+    if (id == null) return undefined;
+
+    return defaultDataIdFromObject({ ...object, id });
   },
 };

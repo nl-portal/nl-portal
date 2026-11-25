@@ -17,9 +17,11 @@ import {
   ApiContext,
   Bericht,
   GetBerichtDocument,
+  GetVtbBerichtDocument,
+  VtbBericht,
 } from "@nl-portal/nl-portal-api";
-import { skipToken, useQuery } from "@apollo/client/react";
-import { useOutletContext, useParams } from "react-router";
+import { useQuery } from "@apollo/client/react";
+import { useOutletContext } from "react-router";
 import BackLink from "../components/BackLink";
 import PageGrid from "../components/PageGrid";
 import PageHeader from "../components/PageHeader";
@@ -30,40 +32,52 @@ import { useContext, useEffect } from "react";
 import AppContext from "../contexts/AppContext";
 import MessageContent from "../components/MessageContent";
 import DocumentsList from "../components/DocumentsList";
+import useRequiredParams from "../hooks/useRequiredParams";
 
 const MessageDetailsPage = () => {
-  const { id } = useParams();
-  const { refetchMessages } = useContext(AppContext);
+  const { id } = useRequiredParams<{ id: string }>();
+  const { features, refetchMessageCount } = useContext(AppContext);
   const { restUri } = useContext(ApiContext);
   const { paths } = useOutletContext<RouterOutletContext>();
+  const berichtenEnabled = features?.modules.berichten?.enabled;
+  const vtbBerichtenEnabled = features?.toggles.vtbBerichtenEnabled;
+  const berichtenApi = vtbBerichtenEnabled ? "vtbberichten" : "berichten";
   const {
-    data: messageData,
-    loading: messageLoading,
-    error: messageError,
-  } = useQuery(
-    GetBerichtDocument,
-    id
-      ? {
-          variables: { id },
-        }
-      : skipToken,
-  );
+    data: berichtenData,
+    loading: berichtenLoading,
+    error: berichtenError,
+  } = useQuery(GetBerichtDocument, {
+    variables: { id },
+    skip: !berichtenEnabled || vtbBerichtenEnabled,
+  });
+  const {
+    data: vtbData,
+    loading: vtbLoading,
+    error: vtbError,
+  } = useQuery(GetVtbBerichtDocument, {
+    variables: { id },
+    skip: !berichtenEnabled || !vtbBerichtenEnabled,
+  });
 
   useEffect(() => {
     try {
-      refetchMessages();
+      refetchMessageCount();
     } catch (error) {
       console.error("Error refetching messages:", error);
     }
-  }, [messageData]);
+  }, [berichtenData, vtbData]);
 
-  const message = messageData?.getBericht as Bericht | undefined;
+  const loading = berichtenLoading || vtbLoading;
+  const error = berichtenError || vtbError;
+  const message =
+    (berichtenData?.getBericht as Bericht | undefined) ||
+    (vtbData?.getVTBBericht as VtbBericht | undefined);
 
   return (
     <PageGrid variant="medium">
       <div>
         <BackLink href={paths.messages} />
-        <PageHeader loading={messageLoading} title={message?.onderwerp}>
+        <PageHeader loading={loading} title={message?.onderwerp}>
           {message?.publicatiedatum && (
             <Paragraph>
               <FormattedMessage
@@ -91,18 +105,21 @@ const MessageDetailsPage = () => {
         </PageHeader>
       </div>
       <MessageContent
-        loading={messageLoading}
-        error={Boolean(messageError)}
+        loading={loading}
+        error={Boolean(error)}
         messageText={message?.berichtTekst}
       />
-      <DocumentsList
-        loading={messageLoading}
-        error={Boolean(messageError)}
-        documents={message?.documenten}
-        getDownloadLink={(doc) =>
-          `${restUri}/berichten/${id}/document/${doc.uuid}/content`
-        }
-      />
+      {!loading && (
+        <DocumentsList
+          loading={loading}
+          error={Boolean(error)}
+          documents={message?.documenten}
+          showEmpty={false}
+          getDownloadLink={(doc) =>
+            `${restUri}/${berichtenApi}/${id}/document/${doc.uuid}/content`
+          }
+        />
+      )}
     </PageGrid>
   );
 };

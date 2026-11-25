@@ -11,5 +11,6 @@ Integraties kunnen worden toegevoegd. De volgende integraties worden meegeleverd
 5. [**Objects API**](https://vng.nl/projecten/overige-objecten-registratie-api). Voor informatie-arm notificeren van Verzoeken, Taken en Berichten.
 6. [**Keycloak**](https://www.keycloak.org/). Voor authenticatie, eventueel gekoppeld aan SIAM / TMA / DigiD / eHerkenning.
 7. [**OpenKlant 1.0**](https://vng-realisatie.github.io/gemma-zaken/standaard/klantinteracties/index). Voor de opslag van klantgegevens binnen een organisatiedomein.
+8. [**OpenVTB**](https://dienstverleningsplatform.gitbook.io/platform-generieke-dienstverlening-public/onderzoeken/vtb-component-concept) Voor de standardisering van Taken, Berichten en Verzoeken
 
 &#x20;

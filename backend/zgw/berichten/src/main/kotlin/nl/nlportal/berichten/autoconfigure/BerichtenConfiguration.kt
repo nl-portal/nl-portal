@@ -23,6 +23,6 @@ class BerichtenConfiguration {
     var properties: BerichtenConfigurationProperties = BerichtenConfigurationProperties()
 
     class BerichtenConfigurationProperties {
-        var berichtObjectTypeUrl: String = ""
+        var berichtObjectTypeUrl: String? = null
     }
 }

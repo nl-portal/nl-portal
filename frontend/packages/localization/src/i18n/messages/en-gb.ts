@@ -296,8 +296,6 @@ export const EN_GB_MESSAGES: Messages = {
     "descriptionList.empty": "There are no details available.",
     "messagesList.fetchError": "Something went wrong, please try again later.",
     "messagesList.empty": "There are no messages.",
-    "messagesList.subject": "Subject",
-    "messagesList.date": "Message date",
     "messagesList.new": "New",
     "messageContent.fetchError":
       "Something went wrong, please try again later.",

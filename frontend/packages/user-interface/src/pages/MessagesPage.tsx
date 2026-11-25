@@ -17,17 +17,57 @@ import { useIntl } from "react-intl";
 import PageGrid from "../components/PageGrid";
 import PageHeader from "../components/PageHeader";
 import MessagesList from "../components/MessagesList";
-import { Bericht, GetBerichtenDocument } from "@nl-portal/nl-portal-api";
+import {
+  Bericht,
+  GetBerichtenDocument,
+  GetVtbBerichtenDocument,
+  VtbBericht,
+} from "@nl-portal/nl-portal-api";
 import { useQuery } from "@apollo/client/react";
 import SearchForm from "../components/SearchForm";
+import AppContext from "../contexts/AppContext";
+import { useContext } from "react";
 
 const MessagesPage = () => {
   const intl = useIntl();
-  const { data, loading, error, refetch } = useQuery(GetBerichtenDocument, {
+  const { features } = useContext(AppContext);
+  const berichtenEnabled = features?.modules.berichten?.enabled;
+  const vtbBerichtenEnabled = features?.toggles.vtbBerichtenEnabled;
+  const {
+    data: berichtenData,
+    loading: berichtenLoading,
+    error: berichtenError,
+    refetch: refetchBerichten,
+  } = useQuery(GetBerichtenDocument, {
+    skip: !berichtenEnabled || vtbBerichtenEnabled,
     variables: { pageSize: 10 },
     fetchPolicy: "cache-and-network",
   });
-  const messages = data?.getBerichten.content as Bericht[] | undefined;
+  const {
+    data: vtbData,
+    loading: vtbLoading,
+    error: vtbError,
+    refetch: refetchVtbMessages,
+  } = useQuery(GetVtbBerichtenDocument, {
+    skip: !berichtenEnabled || !vtbBerichtenEnabled,
+    variables: { pageSize: 10 },
+    fetchPolicy: "cache-and-network",
+  });
+
+  const loading = berichtenLoading || vtbLoading;
+  const error = berichtenError || vtbError;
+  const refetch = berichtenData ? refetchBerichten : refetchVtbMessages;
+  const messages =
+    (berichtenData?.getBerichten.content as Bericht[] | undefined) ||
+    (vtbData?.getVTBBerichten?.content as VtbBericht[] | undefined);
+  const totalElements =
+    berichtenData?.getBerichten.totalElements ||
+    vtbData?.getVTBBerichten?.totalElements ||
+    0;
+  const totalPages =
+    berichtenData?.getBerichten.totalPages ||
+    vtbData?.getVTBBerichten?.totalPages ||
+    0;
 
   const handleFormSubmit = (searchValue: string) => {
     try {
@@ -50,18 +90,18 @@ const MessagesPage = () => {
       <PageHeader
         title={intl.formatMessage({ id: "pageTitles.messages" })}
       ></PageHeader>
-      <SearchForm
-        translationId="messages"
-        totalElements={data?.getBerichten.totalElements ?? 0}
-        onSubmit={handleFormSubmit}
-      />
+      {!Boolean(vtbBerichtenEnabled) && (
+        <SearchForm
+          translationId="messages"
+          totalElements={totalElements}
+          onSubmit={handleFormSubmit}
+        />
+      )}
       <MessagesList
         loading={loading}
         error={Boolean(error)}
         messages={messages}
-        indexLimit={
-          data?.getBerichten.totalPages && data.getBerichten.totalPages - 1
-        }
+        indexLimit={totalPages && totalPages - 1}
         onChange={onPageChange}
       />
     </PageGrid>

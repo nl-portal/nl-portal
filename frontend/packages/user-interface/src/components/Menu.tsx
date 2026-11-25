@@ -30,7 +30,7 @@ import RouterContext from "../contexts/RouterContext";
 
 const Menu = () => {
   const { hrefLang } = useContext(LocaleContext);
-  const { messagesCount } = useContext(AppContext);
+  const { messageCount } = useContext(AppContext);
   const { navigationItems } = useContext(RouterContext);
   const matches = useMatches();
   const currentNavigationItem = getCurrentNavigationPage(
@@ -57,8 +57,8 @@ const Menu = () => {
                     <FormattedMessage
                       id={`pageTitles.${item.titleTranslationKey}`}
                     />
-                    {item.hasMessagesCount && messagesCount > 0 && (
-                      <NumberBadge>{messagesCount}</NumberBadge>
+                    {item.hasMessagesCount && messageCount > 0 && (
+                      <NumberBadge>{messageCount}</NumberBadge>
                     )}
                   </SideNavigationLinkLabel>
                 </Link>
