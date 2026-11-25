@@ -24,7 +24,7 @@ import org.springframework.security.config.web.server.ServerHttpSecurity
 class ProductDocumentResourceHttpSecurityConfigurer : HttpSecurityConfigurer {
     override fun configure(http: ServerHttpSecurity) {
         http.authorizeExchange { authorize ->
-            authorize.pathMatchers(GET, "/api/product/{productId}/documentapi/{documentapi}/document/{documentId}/content").authenticated()
+            authorize.pathMatchers(GET, "/api/product/{productId}/document/{documentId}/content").authenticated()
         }
     }
 }
