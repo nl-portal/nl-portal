@@ -33,6 +33,7 @@ dependencies {
     api(project(":zgw:common-ground-authentication"))
     api(project(":zgw:idtoken-authentication"))
     api(project(":zgw:verificatie"))
+    api(project(":zgw:documenten-api"))
 
     implementation(Dependencies.kotlinCoroutines)
     implementation(Dependencies.kotlinCoroutinesReactor)

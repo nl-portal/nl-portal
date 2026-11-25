@@ -53,10 +53,16 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
+import kotlinx.coroutines.flow.Flow
+import nl.nlportal.core.util.CoreUtils.extractId
+import nl.nlportal.documentenapi.domain.Document
+import nl.nlportal.documentenapi.service.DocumentenApiService
+import org.springframework.core.io.buffer.DataBuffer
 
 class OpenKlant2Service(
     private val openKlant2Client: OpenKlant2KlantinteractiesClient,
     private val openKlantConfigurationProperties: OpenKlantConfigurationProperties,
+    private val documentenApiService: DocumentenApiService,
 ) {
     suspend fun findPartijByAuthentication(authentication: CommonGroundAuthentication): OpenKlant2Partij? {
         val searchVariables = searchVariablesPartij(authentication)
@@ -441,6 +447,67 @@ class OpenKlant2Service(
         return openKlant2Client
             .path<KlantContacten>()
             .get(klantContactId)
+    }
+
+    suspend fun getKlantcontactDocumenten(
+        klantContact: OpenKlant2Klantcontact,
+    ): List<Document> {
+        val documents = mutableListOf<Document>()
+        klantContact.omvatteBijlagen.forEach {
+            try {
+                documents.add(
+                    documentenApiService
+                        .getDocument(it.url),
+                )
+            } catch (e: Exception) {
+                logger.error { "Error getting klantcontact document: ${e.message}" }
+            }
+        }
+        return documentenApiService.filterDocuments(documents)
+    }
+
+    suspend fun getKlantcontactDocumentContent(
+        authentication: CommonGroundAuthentication,
+        klantContactId: UUID,
+        documentId: UUID,
+    ): Pair<Document, Flow<DataBuffer>> {
+        try {
+            // get klantcontact, if not authorized throws an unauthorized
+            val klantContact =
+                findKlantContact(
+                    authentication = authentication,
+                    klantContactId = klantContactId,
+                )
+
+            // if klantContact is not found, return a 404
+            if (klantContact == null) {
+                throw ResponseStatusException(HttpStatus.NOT_FOUND, "Klantcontact not found")
+            }
+
+            val documentUrl =
+                klantContact.omvatteBijlagen.firstOrNull { extractId(it.url) == documentId }
+                    ?: run {
+                        logger.debug {
+                            "Access denied to document $documentId on klantcontact $klantContactId for user ${authentication.userId}"
+                        }
+                        throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied")
+                    }
+            val document =
+                documentenApiService.getDocument(
+                    documentUrl = documentUrl.url,
+                )
+            val content =
+                documentenApiService.getDocumentContentStreaming(
+                    informatieobejctUrl = documentUrl.url,
+                )
+            return document to content
+        } catch (e: Exception) {
+            logger.error(e) { "Error getting klantcontact document: " + e.message }
+            if (e is NullPointerException) {
+                throw ResponseStatusException(HttpStatus.BAD_REQUEST)
+            }
+            throw e
+        }
     }
 
     private fun createPartijIndicator(authentication: CommonGroundAuthentication): OpenKlant2Identificator =

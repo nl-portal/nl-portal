@@ -15,15 +15,22 @@
  */
 package nl.nlportal.openklant.autoconfigure
 
+import nl.nlportal.documentenapi.client.DocumentApisConfig
+import nl.nlportal.documentenapi.service.DocumentenApiService
 import nl.nlportal.openklant.client.OpenKlant2KlantinteractiesClient
+import nl.nlportal.openklant.security.config.KlantcontactDocumentResourceHttpSecurityConfigurer
 import nl.nlportal.openklant.service.OpenKlant2Service
+import nl.nlportal.openklant.web.rest.KlantcontactDocumentResource
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 @EnableConfigurationProperties(
     OpenKlantModuleConfiguration::class,
+    DocumentApisConfig::class,
 )
+@ConditionalOnProperty(prefix = "nl-portal.config", name = ["openklant2.enabled", "documentenapis.enabled"], havingValue = "true")
 class OpenKlantAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(OpenKlant2KlantinteractiesClient::class)
@@ -34,9 +41,24 @@ class OpenKlantAutoConfiguration {
     fun openKlant2Service(
         openklant2Client: OpenKlant2KlantinteractiesClient,
         openKlantModuleConfiguration: OpenKlantModuleConfiguration,
+        documentenApiService: DocumentenApiService,
     ): OpenKlant2Service =
         OpenKlant2Service(
             openKlant2Client = openklant2Client,
             openKlantConfigurationProperties = openKlantModuleConfiguration.properties,
+            documentenApiService = documentenApiService,
         )
+
+    @Bean
+    @ConditionalOnMissingBean(KlantcontactDocumentResource::class)
+    fun openKlantContactDocumentResource(
+        openKlant2Service: OpenKlant2Service,
+    ): KlantcontactDocumentResource =
+        KlantcontactDocumentResource(
+            openKlant2Service = openKlant2Service,
+        )
+
+    @Bean
+    @ConditionalOnMissingBean(KlantcontactDocumentResourceHttpSecurityConfigurer::class)
+    fun klantcontactDocumentResourceHttpSecurityConfigurer(): KlantcontactDocumentResourceHttpSecurityConfigurer = KlantcontactDocumentResourceHttpSecurityConfigurer()
 }
