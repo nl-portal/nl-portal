@@ -17,12 +17,14 @@
     * [Authentication en authorization](fundamentals/architectuur/authentication-en-authorization.md)
 * [Features](features/features.md)
 * [Document filtering](features/document-filtering/document-filtering.md)
+* [Menu-items vanuit de backend](features/menu-entries.md)
 * [Open source](fundamentals/open-source.md)
 
 ## Configuratie
 
 * [Opzetten NL Portal](configuratie/opzetten-nl-portal.md)
 * [Module Dependency Guide](configuratie/module-dependency-guide.md)
+* [IKO API](configuratie/iko-api.md)
 * [Configuration Panel](configuratie/configuration-panel.md)
 * [Eigen vormgeving](configuratie/eigen-vormgeving.md)
 * [Connectiviteit](configuratie/connectiviteit.md)
