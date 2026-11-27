@@ -180,7 +180,7 @@ jobs:
                     if gh release view "${VERSION}" > /dev/null 2>&1; then
                       echo "::notice::Release ${VERSION} already exists - skipping."
                     else
-                      gh release create "${VERSION}" --title "${VERSION}" --notes "Release ${VERSION}. Release notes are published in the NL Portal documentation."
+                      gh release create "${VERSION}" --title "${VERSION}" --notes "Release notes and documentation: https://nl-portal.nl"
                     fi
             -   name: Delete the release candidate branch
                 env:

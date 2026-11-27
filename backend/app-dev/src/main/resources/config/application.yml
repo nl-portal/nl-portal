@@ -52,6 +52,7 @@ logging:
     level:
         root: INFO
         nl.nlportal: DEBUG
+        org.springframework.security: INFO
         liquibase: WARN
 
 nl-portal:
@@ -65,6 +66,14 @@ nl-portal:
             credentials:
                 secret: ookVRUAxmEWMcosfcGR5nxeoUC4Rgwbc
     security:
+        actuator:
+            # Empty: every actuator endpoint except health is denied
+            jwk-set-uri:
+            # Empty: the token's issuer is not checked
+            issuer-uri:
+            # Left out: an empty value would replace the defaults (['realm_access']['roles'], ROLE_ACTUATOR)
+            # authorities-claim-expression:
+            # authorities:
         cors:
             -   path: "/**"
                 config:

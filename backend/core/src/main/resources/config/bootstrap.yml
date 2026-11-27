@@ -5,3 +5,8 @@ spring:
             uri: ${CONFIGURATION_PANEL_URI}
             token: ${CONFIGURATION_PANEL_TOKEN}
             name: ${CONFIGURATION_PANEL_APPLICATION_NAME}
+
+nl-portal:
+    configuration-panel:
+        encryption-enabled: ${CONFIGURATION_PANEL_ENCRYPTION_ENABLED:true}
+        encryption-key: ${CONFIGURATION_PANEL_ENCRYPTION_KEY:}

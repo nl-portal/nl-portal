@@ -2,6 +2,7 @@ name: nl-portal-docker-compose
 
 include:
     - path: "compose.localhost-${RUN_MODE:-sources}.yaml"
+    - path: "compose.network-${NETWORK:-own}.yaml"
 
 services:
 
@@ -20,6 +21,10 @@ services:
             - "5010:5010" # Haalcentraal BRP
             - "5011:5011" # Haalcentraal Bewoning
             - "3310:3310" # ClamAV virus scan
+        networks:
+            default:
+                aliases:
+                    - nl-portal
 
     nl-portal-database:
         container_name: nl-portal-database
@@ -457,56 +462,5 @@ services:
             retries: 5
             start_period: 120s
 
-    nl-portal-configuration-panel-router:
-        container_name: nl-portal-configuration-panel-router
-        image: nginx:stable-alpine-slim
-        profiles:
-            - config
-        ports:
-            - "3001:8080"
-        volumes:
-            - "./imports/configuration-panel/router/conf.d/:/etc/nginx/conf.d/"
-            - "./imports/configuration-panel/router/templates/:/etc/nginx/templates/"
-        environment:
-            CONFIG_PANEL_BACKEND_HOST: http://host.docker.internal:8090
-            CONFIG_PANEL_FRONTEND_HOST: http://host.docker.internal:8091
-
-    nl-portal-configuration-panel-backend:
-        container_name: nl-portal-configuration-panel-backend
-        image: ghcr.io/nl-portal/configuration-panel-backend
-        profiles:
-            - config
-        depends_on:
-            - nl-portal-configuration-panel-database
-            - nl-portal-keycloak
-        ports:
-            - "8090:8080"
-        env_file: imports/configuration-panel/env/backend.env
-
-    nl-portal-configuration-panel-frontend:
-        container_name: nl-portal-configuration-panel-frontend
-        profiles:
-            - config
-        image: ghcr.io/nl-portal/configuration-panel-frontend
-        depends_on:
-            - nl-portal-configuration-panel-backend
-            - nl-portal-keycloak
-        ports:
-            - "8091:8080"
-        env_file: imports/configuration-panel/env/frontend.env
-
-    nl-portal-configuration-panel-database:
-        container_name: nl-portal-configuration-panel-database
-        image: postgres:15
-        profiles:
-            - config
-        environment:
-            POSTGRES_USER: config
-            POSTGRES_PASSWORD: password
-            POSTGRES_DB: nl-portal-config
-        volumes:
-            - nl-portal-configuration-panel-database-data:/var/lib/postgres # persist data even if container shuts down
-
 volumes:
     nl-portal-database-data:
-    nl-portal-configuration-panel-database-data:

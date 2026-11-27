@@ -55,6 +55,7 @@ dependencies {
     testImplementation(TestDependencies.springBootTestWebClient)
     testImplementation(TestDependencies.kotlinCoroutines)
     testImplementation(TestDependencies.mockitoKotlin)
+    testImplementation(TestDependencies.okHttpMockWebserver)
 }
 
 apply(from = "gradle/publishing.gradle.kts")

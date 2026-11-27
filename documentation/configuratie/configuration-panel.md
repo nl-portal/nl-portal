@@ -40,11 +40,7 @@ Zie [Eigen vormgeving](eigen-vormgeving.md) voor meer informatie over design tok
 
 ## Uitproberen via de demo-omgeving
 
-De eenvoudigste manier om het Configuration Panel te gebruiken is via de docker-compose demo-omgeving in de monorepo. Start het `config` profiel mee:
-
-```shell
-RUN_MODE=remote docker compose --profile zgw --profile haalcentraal --profile config up -d
-```
+Het Configuration Panel heeft een eigen docker-compose omgeving in de [Configuration Panel repository](https://github.com/nl-portal/nl-portal-configuration-panel). Start die eerst. Haal daarna in `docker-compose/imports/backend.env` van de monorepo het commentaar weg bij de regels onder **Configuration Panel** (en voor notify bij `NLPORTAL_SECURITY_ACTUATOR_JWKSETURI`), en start de docker-compose omgeving van de monorepo met `NETWORK=configuration-panel`, zodat NL Portal bij het opstarten zijn configuratie uit het Configuration Panel haalt. Zie "Side by side with the Configuration Panel" in [`docker-compose/README.md`](https://github.com/nl-portal/nl-portal/blob/main/docker-compose/README.md#side-by-side-with-the-configuration-panel) voor de stappen.
 
 Het Configuration Panel is daarna bereikbaar op `http://localhost:3001` met gebruikersnaam **admin** en wachtwoord **admin**.
 
@@ -67,12 +63,17 @@ Voorbeeld:
 
 ```shell
 CONFIGURATION_PANEL_ENABLED=true
-CONFIGURATION_PANEL_URI=http://host.docker.internal:8090/configuration
+CONFIGURATION_PANEL_URI=http://configuration-panel:8090/configuration
 CONFIGURATION_PANEL_TOKEN=VerySecretToken
 CONFIGURATION_PANEL_APPLICATION_NAME=nl-portal-app
+CONFIGURATION_PANEL_ENCRYPTION_KEY=<CONFIG_ENCRYPTION_KEY van het Configuration Panel>
 ```
 
-De NL Portal backend haalt bij opstarten de configuratie op uit het Configuration Panel. Waarden uit het Configuration Panel hebben voorrang op environment variabelen. Als notify is ingeschakeld op het Configuration Panel, kan de backend automatisch herstarten bij wijzigingen via Spring Actuator endpoints.
+De NL Portal backend haalt bij opstarten de configuratie op uit het Configuration Panel. Waarden uit het Configuration Panel hebben voorrang op environment variabelen.
+
+* [Versleuteling](configuration-panel-versleuteling.md): het Configuration Panel levert waarden versleuteld aan; NL Portal heeft dezelfde sleutel nodig (`CONFIGURATION_PANEL_ENCRYPTION_KEY`).
+* Notify: de backend laadt de configuratie altijd bij het opstarten. Wil je dat wijzigingen direct doorkomen, dan roept het Configuration Panel na een wijziging `refresh` of `restart` aan. Daarvoor moet [actuator-toegang](beveiliging/actuator.md) aan staan voor de client van het Configuration Panel. Zonder actuator-toegang werkt het Configuration Panel ook; wijzigingen gelden dan vanaf de volgende herstart.
+* De instellingen van het Configuration Panel zelf staan in de documentatie van het Configuration Panel voor de versie die je gebruikt.
 
 ## Helm charts
 

@@ -67,13 +67,13 @@ Start daarna de backend (`./gradlew :app:bootRun` vanuit `backend/`; vereist een
 
 ### Configureren via het Configuration Panel
 
-Het [Configuration Panel](configuration-panel.md) laat je backend modules, logo en huisstijl configureren zonder code en zonder eigen images te bouwen. Voeg het `config`-profiel toe aan de route die je draait, bijvoorbeeld:
+Het [Configuration Panel](configuration-panel.md) laat je backend modules, logo en huisstijl configureren zonder code en zonder eigen images te bouwen. Start de docker-compose omgeving van het Configuration Panel eerst. Haal daarna in `docker-compose/imports/backend.env` het commentaar weg bij de regels onder **Configuration Panel** (en voor notify bij `NLPORTAL_SECURITY_ACTUATOR_JWKSETURI` onder **Security - Actuator**), en start de route die je draait met `NETWORK=configuration-panel`, bijvoorbeeld:
 
 ```shell
-RUN_MODE=remote docker compose --profile zgw --profile haalcentraal --profile config up -d
+NETWORK=configuration-panel RUN_MODE=remote docker compose --profile zgw --profile haalcentraal up -d
 ```
 
-Het Configuration Panel is bereikbaar op `http://localhost:3001` met gebruikersnaam **admin** en wachtwoord **admin**. Zie de [Configuration Panel](configuration-panel.md) pagina voor het aansluiten van een bestaande NL Portal instantie.
+Het Configuration Panel is bereikbaar op `http://localhost:3001` met gebruikersnaam **admin** en wachtwoord **admin**. Zie de [Configuration Panel](configuration-panel.md) pagina voor de stappen en voor het aansluiten van een bestaande NL Portal instantie.
 
 ### Maatwerk
 
