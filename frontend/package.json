@@ -34,7 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^8.67.0",
     "@typescript-eslint/parser": "^8.67.0",
     "eslint": "^9.39.5",
-    "eslint-config-prettier": "10.1.8",
+    "eslint-config-prettier": "10.1.9",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-notice": "1.0.0",
@@ -42,9 +42,9 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.11.0",
     "husky": "9.1.7",
-    "lint-staged": "17.6.0",
+    "lint-staged": "17.6.2",
     "npm-check-updates": "^23.1.0",
-    "prettier": "3.9.10",
+    "prettier": "3.10.1",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "stylelint": "17.16.0",
     "stylelint-config-standard-scss": "17.0.0",
@@ -55,5 +55,5 @@
     "node": ">=24.0.0",
     "pnpm": ">=11.0.0 <12"
   },
-  "packageManager": "pnpm@11.28.10"
+  "packageManager": "pnpm@11.29.0"
 }
